@@ -47,7 +47,7 @@ All tests must pass. Zero tolerance for failing tests.
 
 Run `{{TEST_COVERAGE_COMMAND}}`.
 
-Minimum thresholds:
+Read `docs/plans/ENGINEERING-STANDARDS.md` and use the coverage thresholds defined in the "Test Coverage" section. If the file doesn't exist or thresholds aren't defined, fall back to these defaults:
 - Statements: 80%
 - Branches: 75%
 - Functions: 80%

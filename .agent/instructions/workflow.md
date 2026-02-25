@@ -3,7 +3,7 @@
 Before taking any action on a task:
 
 ## 1. Understand Context
-- Read `AGENTS.md` at project root
+- Read the agent config file at project root (`AGENTS.md` for Antigravity, `GEMINI.md` for Gemini CLI, or equivalent for your agent)
 - Read relevant `.agent/instructions/` files for the task type
 - Check [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) for quality bar
 

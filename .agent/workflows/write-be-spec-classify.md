@@ -47,6 +47,14 @@ Not every IA shard produces the same output. Before writing anything, classify t
 - For multi-domain: the proposed split boundaries
 - For structural reference: confirmation that no BE spec is needed
 
+## 2.5. Verify tech stack skills are provisioned
+
+Before loading the skill bundle, scan the skill bundle list in Step 3 for any values still containing literal `{{` characters.
+
+If `{{DATABASE_SKILL}}`, `{{AUTH_SKILL}}`, or `{{BACKEND_FRAMEWORK_SKILL}}` are still unfilled → **stop** and tell the user: *"Tech stack skills haven't been provisioned yet. The skill bundle placeholders are still unfilled. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
+
+Only proceed to Step 3 when all skill bundle placeholders are filled with actual file paths.
+
 ## 3. Load skill bundle
 
 Load skill bundle: [`{{DATABASE_SKILL}}`, `{{AUTH_SKILL}}`, `{{BACKEND_FRAMEWORK_SKILL}}`, `.agent/skills/rest-api-design/SKILL.md`, `.agent/skills/api-design-principles/SKILL.md`, `.agent/skills/error-handling-patterns/SKILL.md`, `.agent/skills/database-schema-design/SKILL.md`, `.agent/skills/migration-management/SKILL.md`, `.agent/skills/testing-strategist/SKILL.md`, `.agent/skills/logging-best-practices/SKILL.md`] — read each SKILL.md before proceeding.

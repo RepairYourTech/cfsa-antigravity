@@ -67,6 +67,16 @@ For each feature in the phase:
 
 Sort slices so each builds on the last:
 - Infrastructure slices first (DB schema, auth middleware)
+
+**Phase 1 special rule**: The `00-infrastructure` shard is always the first slice in Phase 1. Before any feature slices, verify that the infrastructure slice covers all five items:
+1. CI/CD pipeline setup (using the confirmed CI/CD skill)
+2. Environment configuration (`.env.example` with all required variables documented)
+3. Deployment pipeline (using the confirmed hosting skill)
+4. Project scaffolding (directory structure, base configuration files)
+5. Database initialization (schema creation, migration tooling setup)
+
+If any of these five items are missing from the infrastructure slice, add them before proceeding to feature slices.
+
 - Core entity CRUD second
 - Dependent features next
 - Cross-cutting concerns (logging, monitoring, error handling) woven throughout

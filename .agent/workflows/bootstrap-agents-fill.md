@@ -145,7 +145,8 @@ Replace: `{{FRAMEWORK_PATTERNS}}` if provided
 Replace: `{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}` if provided
 
 ### `.agent/instructions/tech-stack.md`
-Replace: `{{TECH_STACK_SUMMARY}}`, `{{FRONTEND_FRAMEWORK}}`, `{{BACKEND_RUNTIME}}`, `{{DATABASE}}`, `{{AUTH_PROVIDER}}`, `{{HOSTING}}`, `{{CDN_ASSETS}}`, `{{CICD}}`, `{{MONITORING}}`, `{{PACKAGE_MANAGER}}`, `{{TEST_RUNNER}}`, `{{LINTER}}`, `{{TYPE_CHECKER}}`, `{{INSTALLED_SKILLS}}`
+Replace: `{{TECH_STACK_SUMMARY}}`, `{{FRONTEND_FRAMEWORK}}`, `{{BACKEND_RUNTIME}}`, `{{DATABASE}}`, `{{AUTH_PROVIDER}}`, `{{HOSTING}}`, `{{CDN_ASSETS}}`, `{{CICD}}`, `{{MONITORING}}`, `{{PACKAGE_MANAGER}}`, `{{TEST_RUNNER}}`, `{{LINTER}}`, `{{TYPE_CHECKER}}`, `{{INSTALLED_SKILLS}}`, `{{ARCHITECTURE_DOC}}`
+Replace: `{{ARCHITECTURE_DOC}}` with the dated architecture design filename (e.g., `docs/plans/YYYY-MM-DD-architecture-design.md`)
 
 ---
 
@@ -174,8 +175,9 @@ Replace: `{{VALIDATION_COMMAND}}`, `{{TEST_RUNNER}}`
 
 ## 5. Fill AGENTS.md
 
-Replace in `.agent/AGENTS.md`:
+Replace in `AGENTS.md`:
 - `{{PROJECT_NAME}}`
 - `{{DESCRIPTION}}`
 - `{{TECH_STACK_SUMMARY}}`
 - `{{VALIDATION_COMMAND}}`
+- `{{ARCHITECTURE_DOC}}`

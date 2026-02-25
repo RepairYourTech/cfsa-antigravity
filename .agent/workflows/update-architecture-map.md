@@ -61,4 +61,4 @@ Use `notify_user` to present a summary of the architecture map updates.
 
 ### Proposed next steps
 
-"Architecture map updated. Next: Run `/plan-phase` for the next phase, or if all phases are done, the project is ready for deployment via `/deploy`."
+"Architecture map updated. Next: Run `/plan-phase` for the next phase, or if all phases are complete, the project is ready for deployment — refer to your CI/CD pipeline configuration and the deployment procedures documented in `docs/plans/ENGINEERING-STANDARDS.md`."

@@ -105,12 +105,12 @@ In `.agent/workflows/create-prd.md`:
 In `.agent/workflows/write-architecture-spec.md`:
 - `{{DATABASE_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `DATABASE`)
 
-In `.agent/workflows/write-be-spec.md`:
+In `.agent/workflows/write-be-spec-classify.md`:
 - `{{DATABASE_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `DATABASE`)
 - `{{AUTH_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `AUTH_PROVIDER`)
 - `{{BACKEND_FRAMEWORK_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `BACKEND_FRAMEWORK` or `API_LAYER`)
 
-In `.agent/workflows/write-fe-spec.md`:
+In `.agent/workflows/write-fe-spec-classify.md`:
 - `{{FRONTEND_FRAMEWORK_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `FRONTEND_FRAMEWORK`)
 - `{{FRONTEND_DESIGN_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `CSS_FRAMEWORK` or `UI_LIBRARY`)
 - `{{ACCESSIBILITY_SKILL}}` → `.agent/skills/[installed-as]/SKILL.md` (for `accessibility-compliance` surface skill)
@@ -121,7 +121,7 @@ In `.agent/workflows/write-fe-spec.md`:
 
 Workflows use `{{COMMAND}}` placeholders for test, lint, build, and validation commands. Replace them with the values gathered during tech stack decisions (step 1).
 
-In `.agent/workflows/implement-slice.md`:
+In `.agent/workflows/implement-slice-tdd.md`:
 - `{{TEST_COMMAND}}` → the project's test runner command
 - `{{VALIDATION_COMMAND}}` → the full validation pipeline command
 

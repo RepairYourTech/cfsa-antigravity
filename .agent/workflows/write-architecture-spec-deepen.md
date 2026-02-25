@@ -110,6 +110,8 @@ Use `notify_user` to present the completed IA shard for review. Your message MUS
 3. **Ambiguity Gate confirmation** (confirmation that no implementer would need to guess)
 4. **The Pipeline State** (propose the next task from the options below)
 
+Do NOT proceed to the next step until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval. Wait for explicit approval before continuing.
+
 Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then propose the appropriate next step:
 
 - **More skeleton shards remain** → "Next: Run `/write-architecture-spec` for shard [next-shard-number]"

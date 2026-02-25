@@ -79,6 +79,6 @@ Use `notify_user` to present:
 - `docs/plans/index.md`
 - `.agent/progress/spec-pipeline.md`
 
-The decomposition must be approved before filling in shards with `/write-architecture-spec`.
+The decomposition must be approved before filling in shards with `/write-architecture-spec`. Do NOT proceed to the next step until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval. Wait for explicit approval before continuing.
 
 **Proposed next step**: Once approved, run `/write-architecture-spec` starting with the lowest-numbered skeleton shard. Read `.agent/progress/spec-pipeline.md` to identify which shard to start with.

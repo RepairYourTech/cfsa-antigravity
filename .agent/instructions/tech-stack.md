@@ -39,5 +39,5 @@
 
 ## Reference
 
-- [Architecture Design](../../docs/plans/architecture-design.md) — Full system design with rationale
+- [Architecture Design](../../{{ARCHITECTURE_DOC}}) — full system design with rationale
 - [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) — Quality thresholds

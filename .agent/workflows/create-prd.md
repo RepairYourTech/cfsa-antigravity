@@ -143,7 +143,7 @@ Use `notify_user` to present to the user:
 - Summary of the self-check results (all 9 dimensions + completeness checklist)
 - Any areas where you resolved gaps during the self-check
 
-Both documents must be approved before proceeding.
+Both documents must be approved before proceeding. Do NOT proceed to the next step until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval. Wait for explicit approval before continuing.
 
 ### Proposed next steps
 
