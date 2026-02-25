@@ -1,6 +1,6 @@
 ---
 description: Features ship across all four surfaces or they don't ship — no half-built slices
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Vertical Slices
@@ -27,6 +27,9 @@ A feature slice is complete when:
 - [ ] User-facing: component renders, handles loading/error/empty states
 - [ ] Admin: can create/read/update/delete the resource
 - [ ] Tests pass at all levels (contract, unit, integration, E2E)
+- [ ] Navigation: every new route is reachable from at least one navigation element
+- [ ] Auth gates: every route that requires auth has the auth gate implemented (not stubbed)
+- [ ] The feature is reachable from the app's entry point via normal user navigation
 
 ## Anti-Patterns
 

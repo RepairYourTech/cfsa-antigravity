@@ -124,6 +124,15 @@ Open the slice file matching the slice you just implemented (e.g., `phase-02-sli
 
 ## 8. Completion Gate
 
+### UI Completeness Check (FE slices only)
+
+- [ ] (FE slices only) Every acceptance criterion mentioning "user sees", "user can", "displays", or "shows" has a rendered implementation — not just a passing test
+- [ ] (FE slices only) Every new route in this slice is wired into the app's navigation (not just exported as a component)
+- [ ] (FE slices only) Loading, error, and empty states are rendered in the UI — not just covered by tests
+- [ ] (FE slices only) The feature is reachable from the app's entry point via normal user navigation
+
+These items apply only when the slice is tagged `FE`. Non-FE slices skip this block.
+
 You may not call `notify_user` until you have physically edited **all four** file targets above (7a–7d).
 
 Verify your edits by reading each of the following files:

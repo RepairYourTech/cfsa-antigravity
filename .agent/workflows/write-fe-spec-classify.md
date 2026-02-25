@@ -23,6 +23,14 @@ Identify the target FE spec, classify it, load skills, and read all source mater
 
 ---
 
+## 0. Brand-guidelines prerequisite check
+
+1. Read `.agent/skills/brand-guidelines/SKILL.md`.
+2. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → stop and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd` first to establish the design direction before writing FE specs."_
+3. If all placeholders are filled → extract and store for this session: confirmed design direction, color palette, typography choices, motion philosophy, and anti-patterns. These become requirements for every component spec written in this session.
+
+---
+
 ## 1. Identify the target spec
 
 Determine which FE spec to write. Match it to its BE spec and IA shard sources (if applicable).

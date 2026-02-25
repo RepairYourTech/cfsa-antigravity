@@ -34,6 +34,20 @@ For each surface identified in the architecture design, plus a `shared/` surface
 Each surface gets its own independent spec pipeline. The `shared/` surface contains
 cross-surface domain models and API contracts that both surfaces depend on.
 
+### Mandatory: 00-infrastructure shard (all project types)
+
+This shard is **always** created for every project, regardless of what the architecture design says. It must be numbered `00` and created before any feature shards.
+
+The `00-infrastructure` skeleton must contain these five items:
+
+1. CI/CD pipeline setup (using the confirmed CI/CD skill from bootstrap)
+2. Environment configuration (`.env.example`, environment variable documentation)
+3. Deployment pipeline (using the confirmed hosting skill)
+4. Project scaffolding (directory structure, base configuration files)
+5. Database initialization (schema creation, migration tooling setup)
+
+> _"This shard must be the first slice in Phase 1 — it is the foundation everything else builds on."_
+
 ### Shard skeletons (all project types)
 
 For each shard, create a skeleton file:

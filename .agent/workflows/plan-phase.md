@@ -31,6 +31,24 @@ Read these skills for slice planning guidance:
 
 ---
 
+## 0.5. Application Completeness Audit
+
+Read all FE specs in `docs/plans/fe/` and check the following table. **If ANY check fails → stop and tell the user exactly which FE specs need to be updated. Do NOT proceed to create a phase plan.**
+
+| Check | What It Verifies |
+|---|---|
+| **Route coverage** | Every route in the app is specced in at least one FE spec |
+| **Navigation coverage** | Every route is reachable from at least one navigation element |
+| **Auth state coverage** | Every auth state (logged out, logged in, insufficient permissions) has a UI |
+| **Empty state coverage** | Every data-fetching view has an empty state spec |
+| **Error state coverage** | Every data-fetching view has an error state spec |
+| **Onboarding coverage** | If the app has accounts, an onboarding/first-run flow is specced |
+| **404/error pages** | Global error pages (404, 500, offline) are specced |
+
+Only when all checks pass does the workflow continue to the next step.
+
+---
+
 ## 1. Read phase scope
 
 Read the file at `docs/plans/*-architecture-design.md` (phasing section) and the file at `docs/plans/be/index.md` (which specs to include).

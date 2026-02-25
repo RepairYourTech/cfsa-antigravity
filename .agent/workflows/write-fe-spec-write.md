@@ -47,6 +47,13 @@ Write the new UI specification. Follow the conventions from `fe/index.md`. Every
 | Responsive Behavior | [ia-shard.md or conventions] | § Device Strategy |
 | Data Mapping | [be-spec.md or conventions] | § Request/Response Contracts |
 
+## Design Requirements
+**Direction**: [from brand-guidelines — confirmed direction]
+**Typography**: [which font/size/weight for each text element in this component]
+**Colors**: [primary/secondary/accent usage for default, hover, active, disabled, error states]
+**Motion**: [animation/transition behavior, or "none" if static]
+**Anti-patterns**: [what AI slop looks like for this component and how to avoid it]
+
 ## Component Inventory
 [Tree with props interfaces]
 
@@ -82,6 +89,7 @@ Write the new UI specification. Follow the conventions from `fe/index.md`. Every
 - [ ] IA shard's user flows reflected in interaction specification
 - [ ] Account-tier conditional rendering rules from IA access model included
 - [ ] Source Map is complete — no FE spec section lacks a traceable source
+- [ ] Design Requirements section is filled from brand-guidelines (not left as placeholders)
 
 ## 7. Update the FE index
 
@@ -142,3 +150,14 @@ Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then pr
 - **More BE specs need FE specs** → "Next: Run `/write-fe-spec` for spec [next-spec-number]"
 - **All FE specs complete** → "Next: Run `/audit-ambiguity fe` to validate the full FE layer before moving to implementation planning"
 - **Cross-cutting FE patterns emerged** → Recommend updating `00-*` cross-cutting FE spec before proceeding
+
+## 14. Navigation Completeness Check
+
+> **This step only runs when ALL FE shards for the current phase are complete** — not per-shard. The agent must check `docs/plans/fe/index.md` to confirm all specs are ✅ before running this step.
+
+1. Collect every route defined across all FE specs in `docs/plans/fe/`
+2. For each route, verify at least one navigation element (nav link, button, redirect, deep link) points to it
+3. Verify the navigation structure itself is specced (nav component, sidebar, mobile menu, etc.)
+4. Flag any orphan routes (specced but unreachable) as spec gaps
+5. If any orphan routes found → tell the user which FE specs need navigation wiring before `/plan-phase` can proceed. Do NOT propose `/plan-phase` until resolved.
+6. If all routes are reachable → confirm navigation completeness and propose `/plan-phase`
