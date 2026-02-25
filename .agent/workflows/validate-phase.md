@@ -1,0 +1,133 @@
+---
+description: Full validation of a completed phase — all tests, coverage thresholds, lint, type-check, build
+pipeline:
+  position: 8
+  stage: verification
+  predecessors: [implement-slice]
+  successors: [update-architecture-map]
+  loop: true # one validate per phase
+  skills: [testing-strategist, code-review-pro, deployment-procedures]
+  calls-bootstrap: false
+---
+
+// turbo-all
+
+# Validate Phase
+
+Comprehensive validation of a completed implementation phase.
+
+---
+
+## 0. Load validation skills
+
+Read these skills before running checks:
+1. `.agent/skills/testing-strategist/SKILL.md` — Coverage strategy and test quality
+2. `.agent/skills/code-review-pro/SKILL.md` — Review checklist for self-audit
+3. `.agent/skills/deployment-procedures/SKILL.md` — Build and release readiness
+
+---
+
+## 0.5. Parallel dispatch option
+
+If the phase contains independent slices that don't share files, validation can run in parallel:
+
+1. **Identify independent slices** — slices that don't import from or export to each other
+2. **Dispatch parallel validation** — run Steps 1–5 concurrently for independent slices using the `parallel-agents` skill
+3. **Sequential for shared** — slices that share contracts or utilities must validate sequentially
+
+This is an optimization, not a requirement. Sequential validation is always correct.
+
+## 1. Run test suite
+
+Run `{{TEST_COMMAND}}`.
+
+All tests must pass. Zero tolerance for failing tests.
+
+## 2. Check coverage
+
+Run `{{TEST_COVERAGE_COMMAND}}`.
+
+Minimum thresholds:
+- Statements: 80%
+- Branches: 75%
+- Functions: 80%
+- Lines: 80%
+
+## 3. Lint
+
+Run `{{LINT_COMMAND}}`.
+
+Zero lint errors. Warnings should be reviewed and addressed.
+
+## 4. Type check
+
+Run `{{TYPE_CHECK_COMMAND}}`.
+
+Zero type errors. Strict mode must be enabled.
+
+## 5. Build
+
+Run `{{BUILD_COMMAND}}`.
+
+Build must succeed with no errors.
+
+## 6. Accessibility audit (if UI changes)
+
+Use the accessibility skill (if installed) to audit new UI components for WCAG 2.1 AA compliance.
+
+## 7. Performance check (if web surface exists)
+
+Check if the `web-performance-optimization` skill is installed (look for `.agent/skills/web-performance-optimization/SKILL.md`).
+
+**If installed**:
+1. Read `.agent/skills/web-performance-optimization/SKILL.md`
+2. Run the skill's audit protocol against the phase's changed pages/routes
+3. Compare results to the targets in `docs/plans/ENGINEERING-STANDARDS.md` (LCP, FID, CLS, bundle size)
+4. Report any metrics that exceed the defined thresholds
+
+**If not installed**:
+- Note: "No web performance skill installed. Skipping automated performance audit."
+- Manually verify that no obviously expensive operations were added (large synchronous imports, unoptimized images, missing lazy loading)
+- If performance is critical for this project, recommend installing the skill via `find-skills`
+
+## 8. Security review
+
+Check for installed security skills in order of preference:
+1. `.agent/skills/owasp-web-security/SKILL.md`
+2. `.agent/skills/security-scanning-hardening/SKILL.md`
+3. `.agent/skills/security-scanning-security-hardening/SKILL.md`
+
+**If any security skill is installed**:
+1. Read the installed skill's SKILL.md
+2. Run its audit protocol against the phase's changes (new endpoints, new data flows, new auth checks)
+3. Report any findings with severity levels
+4. Block the phase if any Critical or High severity issues are found
+
+**If no security skill is installed**:
+Fall back to this minimal manual checklist:
+- [ ] No hardcoded secrets (API keys, passwords, tokens) in source code
+- [ ] All user inputs validated (Zod schemas or equivalent)
+- [ ] Auth/authz checks on all protected endpoints
+- [ ] Rate limits configured for public endpoints
+- [ ] No sensitive data in client-side logs or error messages
+- [ ] CORS/CSP headers configured (web surfaces)
+
+If security is critical for this project, recommend installing a security skill via `find-skills`.
+
+## 9. Document results
+
+Create or update `docs/audits/phase-N-validation.md` with:
+- Test results and coverage
+- Lint and type-check status
+- Build status
+- Any accessibility or performance findings
+- Pass/fail verdict
+
+## 10. Present results and next steps
+
+Use `notify_user` to present the validation report.
+
+### Proposed next steps
+
+- **If all checks pass**: "Phase N validation complete. Next: Run `/update-architecture-map` to ensure the project's living architecture document is up-to-date."
+- **If any checks fail**: "Fix the failures listed in the validation report and re-run `/validate-phase` for Phase N."
