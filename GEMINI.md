@@ -1,22 +1,21 @@
-# {{PROJECT_NAME}}
+# Vibe to Production — the anti-MVP spec pipeline
 
-{{DESCRIPTION}}
+This is a **Constraint-First Specification Architecture (CFSA)** pipeline. It turns a raw idea into exhaustively specified, test-driven, production-quality code through a series of progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Every line of code, every spec, every test is production-grade from the moment it's written. Phases control scope, never quality. There is no "fix it later."
 
----
+### Entry Point
 
-## Pre-Pipeline Orientation
+Start the pipeline with:
 
-This is a **Spec Pipeline Starter Kit** project — a workflow toolkit that builds 
-production-grade software from line one. Stack-agnostic. Agent-agnostic. Cross-platform.
+```
+/ideate                              # From scratch — deep interview
+/ideate @path/to/your-idea.md        # From existing document
+```
 
-> **This project does not build MVPs.** Every line of code, every spec, every
-> test is production-grade from the moment it's written. Phases control scope,
-> never quality. There is no "fix it later."
+The `@file` pattern works with any pipeline command. The workflow reads the referenced file and detects the input type automatically.
 
 ### Progressive Decision Lock
 
-Decisions in this pipeline are **progressively locked**. Each pipeline stage
-builds on the locked decisions of previous stages:
+Decisions in this pipeline are **progressively locked**. Each pipeline stage builds on the locked decisions of previous stages:
 
 1. `/ideate` locks the **vision** — problem, personas, features, constraints
 2. `/create-prd` locks the **architecture** — tech stack, system design, security model
@@ -27,8 +26,7 @@ builds on the locked decisions of previous stages:
 7. `/plan-phase` locks the **implementation order** — dependency-ordered TDD slices
 8. `/implement-slice` locks the **code** — tests → implementation → validation
 
-Once a stage is locked, downstream stages may not contradict it. To change a
-locked decision, re-run the originating stage and cascade changes downstream.
+Once a stage is locked, downstream stages may not contradict it. To change a locked decision, re-run the originating stage and cascade changes downstream.
 
 ### Pipeline Workflow Table
 
@@ -71,77 +69,27 @@ locked decision, re-run the originating stage and cascade changes downstream.
 > can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
 > sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
 
-### Warnings
+> [!WARNING]
+> If `docs/plans/vision.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
 
 > [!WARNING]
-> If `docs/plans/vision.md` does not exist, the only valid command is `/ideate`.
-> All other pipeline commands require a vision document. Run `/ideate` first.
-
-> [!WARNING]
-> If `{{PLACEHOLDER}}` values appear below (in the Project Configuration section),
-> the PRD workflow has not been completed. Run `/create-prd` to fill them.
-> Do not begin implementation work with unfilled placeholders.
-
-### Entry Point
-
-Start the pipeline with:
-
-```
-/ideate                              # From scratch — deep interview
-/ideate @path/to/your-idea.md        # From existing document
-```
-
-The `@file` pattern works with any pipeline command. The workflow reads the 
-referenced file and detects the input type automatically.
-
-### Decision Tree
-
-```mermaid
-graph TD
-    A[Task Received] --> B[Read GEMINI.md]
-    B --> BA[Read .agent/rules/*]
-    BA --> BB[Read .agent/instructions/*]
-    BB --> C{Is this a pipeline command?}
-    C -->|Yes| D{Pipeline prerequisites met?}
-    D -->|vision.md missing| D1[Tell user: run /ideate first]
-    D -->|placeholders unfilled| D2[Tell user: run /create-prd first]
-    D -->|Prerequisites met| E[Read .agent/workflows/command.md]
-    E --> F[Execute workflow steps]
-    C -->|No| G{Scan Skills}
-    G -->|Found| H[Load Skill]
-    G -->|None| I{Scan MCP}
-    I -->|Found| J[Use MCP Tools]
-    I -->|None| K[Plan: Contract → Test → Implement]
-    K --> L[Execute]
-    F --> M[MANDATORY: Run Validation]
-    H --> L
-    J --> L
-    L --> M
-    M --> N[Complete]
-```
+> If `{{PLACEHOLDER}}` values appear anywhere in this file, bootstrap has not run — do not attempt implementation work.
 
 ---
 
 ## Project Configuration
 
-> [!IMPORTANT]
-> Everything below this line contains `{{PLACEHOLDER}}` values that get filled
-> by `/bootstrap-agents` during `/create-prd`. If you see unfilled placeholders,
-> the PRD workflow has not been completed — run `/create-prd` first.
+# {{PROJECT_NAME}}
+
+{{DESCRIPTION}}
 
 ### Tech Stack
 
 **{{TECH_STACK_SUMMARY}}**
 
-### Development Methodology
+### Architecture
 
-This project follows **Contract-First Progressive Architecture (CFPA)**:
-
-```
-Contract (Zod schema) → Tests (failing) → Implementation (make them pass) → Never reverse this.
-```
-
-- [Architecture Design](docs/plans/architecture-design.md) — System design document
+- [Architecture Design]({{ARCHITECTURE_DOC}}) — System design document
 - [Engineering Standards](docs/plans/ENGINEERING-STANDARDS.md) — Non-negotiable quality bar
 - [Data Placement Strategy](docs/plans/data-placement-strategy.md) — Entity placement + PII boundaries
 
@@ -177,13 +125,31 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 
 ### Key Principles
 
-1. **Production-grade from line one** — No throwaway code, no shortcuts, no tech debt by design
-2. **Cost-blind execution** — Your operational cost (API calls, tokens, compute) is never a factor
-3. **Proactive effort** — Big task? Commit harder. Never defer or reduce quality
-4. **Security first** — PII never leaks, inputs validated, secrets server-side only
-5. **Contract-first** — Zod schema → failing test → implementation (never reverse)
-6. **Context-window aware** — Small files, clear exports, TypeScript strict
-7. **Accessible and performant** — WCAG 2.1, Core Web Vitals, responsive
+1. **Production-grade always** — No throwaway code, no shortcuts, no tech debt by design
+2. **Constraints before decisions** — Map what's already decided before presenting options
+3. **Contract-first** — Zod schema → failing test → implementation (never reverse)
+4. **TDD: failing test before code** — Red → Green → Refactor, every slice, every surface
+5. **Security-first** — PII never leaks, inputs validated, secrets server-side only
+
+### Decision Tree
+
+```mermaid
+graph TD
+    A[Task Received] --> B{Pipeline complete?}
+    B -->|No - vision.md missing| C[Run /ideate first]
+    B -->|No - placeholders unfilled| D[Run /create-prd first]
+    B -->|Yes| E[Read Rules]
+    E --> F[Read Instructions]
+    F --> G{Scan Skills}
+    G -->|Found| H[Load Skill]
+    G -->|None| I{Scan MCP}
+    I -->|Found| J[Use MCP Tools]
+    I -->|None| K[Plan: Contract → Test → Implement]
+    K --> L[Execute]
+    L --> M[MANDATORY: Run Validation]
+    M --> N[Update Progress Tracking]
+    N --> O[Complete]
+```
 
 ### Mandatory Validation
 

@@ -66,6 +66,9 @@ When a stack key matches a value pattern (case-insensitive), install the listed 
 | `UI_LIBRARY` | `*react-flow*` OR `*xyflow*` | `stack/ui/react-flow` | `react-flow` |
 | `FRONTEND_FRAMEWORK` | `*react*` | `stack/ui/react-best-practices` | `react-best-practices` |
 | `FRONTEND_FRAMEWORK` | `*react*` | `stack/ui/react-composition-patterns` | `react-composition-patterns` |
+| `DESIGN_DIRECTION` | `*` (any confirmed value) | Fills `{{PLACEHOLDER}}`s in `.agent/skills/brand-guidelines/SKILL.md` in-place | `brand-guidelines` (in-place fill, not copy) |
+
+Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills placeholders in the pre-placed `.agent/skills/brand-guidelines/SKILL.md` template.
 
 ### Authentication
 
@@ -311,9 +314,7 @@ These skills are NOT auto-installed. Install via `/find-skills` or manually copy
 | Library Path | Description |
 |-------------|-------------|
 | `meta/skill-creator` | Guide for creating new skills |
-| `meta/agent-development` | Creating and managing agents |
-| `meta/hook-development` | Creating lifecycle hooks |
-| `meta/plugin-structure` | Plugin architecture |
+
 | `meta/mcp-builder` | Building MCP servers |
 | `meta/antigravity-workflow-authoring` | Antigravity workflow files |
 | `meta/systematic-debugging` | Four-phase root cause debugging methodology |
@@ -324,6 +325,18 @@ These skills are NOT auto-installed. Install via `/find-skills` or manually copy
 | `meta/brand-guidelines` | Brand color and typography application |
 | `meta/regex-patterns` | Regular expression mastery and common patterns |
 | `meta/git-advanced` | Advanced Git operations and workflows |
+
+---
+
+## Claude Code Skills (manual install only)
+
+These skills are specific to Claude Code's plugin and agent system. Not applicable to Antigravity or other agents.
+
+| Library Path | Description |
+|-------------|-------------|
+| `meta/claude-code/hook-development` | Claude Code hook system (PreToolUse, PostToolUse, Stop, SessionStart) |
+| `meta/claude-code/plugin-structure` | Claude Code plugin architecture (.claude-plugin/plugin.json) |
+| `meta/claude-code/agent-development` | Claude Code agent frontmatter (model, color, triggering examples) |
 
 ---
 
@@ -370,3 +383,4 @@ To add a new skill to the library:
 | `3D_FRAMEWORK` | 3D rendering | Three.js, React Three Fiber |
 | `GAME_ENGINE` | Game engine | Godot, Unity |
 | `SECURITY` | Security focus area | OWASP, Crypto, CSP/CORS, Dependency Auditing, Input Sanitization |
+| `DESIGN_DIRECTION` | Confirmed visual design direction | Minimal/Functional, Editorial, Luxury/Refined, Playful/Expressive, Technical/Brutalist, or Hybrid |
