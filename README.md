@@ -169,6 +169,11 @@ the appropriate mode. See `examples/README.md` for details.
               /update-architecture-map ► living architecture doc
 ```
 
+> **Note**: The master workflows above (`/ideate`, `/create-prd`, `/decompose-architecture`,
+> `/bootstrap-agents`) are each composed of independently-invocable shards. The parent
+> orchestrates them in sequence, but each shard can be run standalone with its own
+> prerequisites. Run the parent command to see its shard overview.
+
 ---
 
 ## Bootstrap Provisioning

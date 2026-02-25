@@ -35,8 +35,17 @@ locked decision, re-run the originating stage and cascade changes downstream.
 | # | Command | Input | Output | Stage |
 |---|---------|-------|--------|-------|
 | 1 | `/ideate` | Raw idea or `@file` | `docs/plans/vision.md` | Discovery |
+| ↳ | `/ideate-extract` | User input | Classified input + loaded skills | Discovery |
+| ↳ | `/ideate-discover` | Classified input | Domain map + feature inventory | Discovery |
+| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` | Discovery |
 | 2 | `/create-prd` | `vision.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
+| ↳ | `/create-prd-stack` | `vision.md` constraints | Tech stack decisions | Design |
+| ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
+| ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
+| ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |
 | 3 | `/decompose-architecture` | `architecture-design.md` | IA shards + layer indexes | Design |
+| ↳ | `/decompose-architecture-structure` | Approved domains | Directory structure + shard skeletons + indexes | Design |
+| ↳ | `/decompose-architecture-validate` | Skeletons | Deep dives + type annotations + validation | Design |
 | 4 | `/write-architecture-spec` | Skeleton IA shard | Full interaction spec | Specification |
 | 5 | `/write-be-spec` | IA shard | Backend specification | Specification |
 | 6 | `/write-fe-spec` | BE spec + IA shard | Frontend specification | Specification |
@@ -46,6 +55,11 @@ locked decision, re-run the originating stage and cascade changes downstream.
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
 | 11 | `/evolve-contract` | Changed Zod schema | Safe schema migration | Maintenance |
 | 12 | `/sync-kit` | Upstream starter kit | Merged improvements | Maintenance |
+
+> **Note**: Rows marked with ↳ are independently-invocable sub-workflows (shards)
+> of their parent command. The parent orchestrates them in sequence, but each shard
+> can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
+> sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
 
 ### Warnings
 
