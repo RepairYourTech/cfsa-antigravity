@@ -25,6 +25,7 @@ alwaysApply: true
 - **Every** form validates client-side with Zod AND server-side with the same schema
 - **No** raw user input reaches a database query — always parameterized
 - **No** user input is rendered as HTML — always escaped
+- **Rate limiting** — Every public-facing endpoint must have rate limiting configured. No exceptions. Use the project's configured rate limiting utility (see `patterns.md` for the approach). Unauthenticated endpoints must have stricter limits than authenticated ones.
 
 ## Secrets Management
 

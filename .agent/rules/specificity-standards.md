@@ -1,4 +1,5 @@
 ---
+description: Every spec item must have testable acceptance criteria — no ambiguity, no adjectives, only numbers and types
 alwaysApply: true
 ---
 

@@ -71,6 +71,10 @@ Run `{{VALIDATION_COMMAND}}` (see `.agent/instructions/commands.md` for the conf
 
 All must pass.
 
+## 6.5 — Spec cascade check
+
+For each consumer updated in Step 5, identify which BE spec and FE spec reference this contract. Check whether the change (additive/narrowing/breaking) requires updating those specs. For breaking changes, the BE spec and FE spec MUST be updated before proceeding. For additive changes, update the spec if the new field is user-visible or API-facing. Update the IA Source Map in the BE spec to reflect the change.
+
 ## 7. Document the change and next steps
 
 Add an entry to the decisions log in `docs/plans/*-architecture-design.md` explaining why the contract changed.

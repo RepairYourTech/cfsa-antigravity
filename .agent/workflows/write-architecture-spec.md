@@ -39,11 +39,11 @@ Fill in a skeleton IA shard with full interaction details, data models, access c
 
 ## Orchestration
 
-### Step A — Run `/write-architecture-spec-design`
+### Step A — Run `.agent/workflows/write-architecture-spec-design.md`
 
 Uses the brainstorming skill to clarify scope, then systematically designs all sections: interaction maps, contract shapes, data models, access control, event schemas, and edge cases. Each section is presented to the user for discussion and refinement.
 
-### Step B — Run `/write-architecture-spec-deepen`
+### Step B — Run `.agent/workflows/write-architecture-spec-deepen.md`
 
 Runs multiple deepening passes (cross-section consistency, "what if" scenarios, adversarial thinking), writes the completed spec to the IA directory, updates the IA index, runs the ambiguity gate, and presents for review.
 

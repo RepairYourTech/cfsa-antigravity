@@ -55,7 +55,7 @@ annotation to each shard skeleton. `/write-architecture-spec` confirms or reclas
 
 Verify the decomposition (structural checks only — content doesn't exist yet):
 
-- [ ] Every "Must Have" feature from `vision.md` appears in at least one shard
+- **Must Have coverage gate**: Read `docs/plans/vision.md` and extract every feature listed under "Must Have". For each Must Have feature, verify it appears in at least one shard's Features section. If any Must Have feature is not covered by any shard → **STOP**: "The following Must Have features from vision.md are not covered by any shard: [list]. Add them to the appropriate shards before proceeding."
 - [ ] No circular dependencies between shards
 - [ ] Cross-cutting shards (00-*) don't depend on feature shards
 - [ ] Every shard has a preliminary Document Type annotation

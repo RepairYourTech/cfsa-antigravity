@@ -119,10 +119,16 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
   from this FE spec? If yes — fix it now. The spec is not done until the downstream
   phase can work from it without assumptions.
 
-## 11. Optional: Full ambiguity audit
+## 11. Full ambiguity audit (mandatory when this is the last FE spec)
 
-For a comprehensive scored report across the completed FE layer, run `/audit-ambiguity`.
-This is optional but recommended before moving to implementation.
+1. Read `docs/plans/fe/index.md`
+2. Check if all FE specs show ✅
+
+**More specs remain**: Proceed to the next spec. Do not propose `/plan-phase` yet — the FE layer is not complete.
+
+**This is the last FE spec** (all specs show ✅): Run `/audit-ambiguity fe` now. This is **not optional** — it is a mandatory gate before any implementation planning begins.
+
+**Hard gate**: Do NOT propose `/plan-phase` until `/audit-ambiguity fe` scores 0% ambiguity.
 
 ## 12. Check for new dependencies
 
@@ -148,7 +154,7 @@ Use `notify_user` to present the new FE spec and updated index for review. Your 
 Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then propose the appropriate next step:
 
 - **More BE specs need FE specs** → "Next: Run `/write-fe-spec` for spec [next-spec-number]"
-- **All FE specs complete** → "Next: Run `/audit-ambiguity fe` to validate the full FE layer before moving to implementation planning"
+- **All FE specs complete** → "All FE specs complete and /audit-ambiguity fe has already run (mandatory Step 11 above). If it scored 0%, proceed to /plan-phase. If it found gaps, resolve them and re-run /audit-ambiguity fe as a fresh invocation before proceeding."
 - **Cross-cutting FE patterns emerged** → Recommend updating `00-*` cross-cutting FE spec before proceeding
 
 ## 14. Navigation Completeness Check

@@ -16,6 +16,8 @@ This workflow scans the current state of the repository and produces a "living" 
 
 ---
 
+**Prerequisite**: Verify that `/validate-phase` passed for the current phase before updating the architecture map. Read `docs/audits/phase-N-validation.md` (where N is the current phase number) and confirm the verdict is PASS. If the phase has not been validated or the verdict is FAIL → **STOP**: "Run `/validate-phase` for Phase N and ensure it passes before updating the architecture map."
+
 ## 0. Load architecture mapping skill
 
 Read the skill before proceeding:

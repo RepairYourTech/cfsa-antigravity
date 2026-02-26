@@ -53,37 +53,65 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
     Step 5: /decompose-architecture
       Breaks architecture into numbered domain shards.
-      Output: docs/plans/ia/ (shard index + shards)
+      Output: docs/plans/ia/ (shard index + skeleton shards)
 
-    Step 6: /write-architecture-spec
+    Step 6: /write-architecture-spec       ← repeat for EVERY shard
       Takes one skeleton shard. Writes full interaction spec — contracts, data models, RBAC, events.
       Output: docs/plans/ia/[shard-name].md (filled)
 
-    Step 7: /write-be-spec
+    ► /audit-ambiguity ia                  [MANDATORY — 0% before Step 7]
+      Runs after ALL IA shards are complete. Hard gate — no BE specs until this passes.
+      Output: docs/audits/ia-audit.md
+
+    Step 7: /write-be-spec                 ← repeat for EVERY shard
       Reads IA shard. Writes backend spec — endpoints, schemas, middleware, DAL.
       Output: docs/plans/be/[shard-name].md
 
-    Step 8: /write-fe-spec
+    ► /audit-ambiguity be                  [MANDATORY — 0% before Step 8]
+      Runs after ALL BE specs are complete. Hard gate — no FE specs until this passes.
+      Output: docs/audits/be-audit.md
+
+    Step 8: /write-fe-spec                 ← repeat for EVERY shard
       Reads BE spec + IA shard. Writes frontend spec — components, state, interactions.
       Output: docs/plans/fe/[shard-name].md
 
-    Step 9: /audit-ambiguity all
-      Cascade audit across all layers. Final quality gate before implementation.
-      Output: Full ambiguity report + remediation
+    ► /audit-ambiguity fe                  [MANDATORY — 0% before Step 9]
+      Runs after ALL FE specs are complete. Hard gate — no planning until this passes.
+      Output: docs/audits/fe-audit.md
 
-    Step 10: /plan-phase
+    ─── ALL specs (IA + BE + FE) must be complete before Step 9 ───
+
+    Step 9: /plan-phase
       Reads architecture + specs. Creates dependency-ordered TDD vertical slices.
+      Only runs after Phase N-1 is complete (skipped for Phase 1).
       Output: docs/plans/phases/phase-[n].md
 
-    Step 11: /implement-slice
-      Takes one slice. Red → Green → Refactor across all four surfaces.
-      Output: Working code + passing tests
+    Step 10: /implement-slice (infrastructure slice)
+      First slice — CI/CD, environment, deployment, scaffolding, database.
+      Output: Working infrastructure + passing tests
 
-    Step 12: /validate-phase
-      Full validation gate — tests, coverage, lint, type-check, build.
+    Step 10.5: /verify-infrastructure      ── HARD GATE ──
+      Verifies CI/CD green, staging live, migrations clean. Must pass before feature slices.
+      Output: docs/audits/verify-infrastructure-[date].md
+
+    Step 11: /implement-slice (auth slice)
+      Auth middleware, registration, login, token management.
+      Output: Working auth + passing tests
+
+    Step 11.5: /verify-infrastructure      ── HARD GATE (auth pass) ──
+      Re-runs with auth smoke test enabled. Must pass before auth-dependent feature slices.
+      Output: docs/audits/verify-infrastructure-[date].md
+
+    Step 12: /implement-slice (remaining feature slices)
+      Takes one slice at a time. Red → Green → Refactor across all four surfaces.
+      Output: Working code + passing tests per slice
+
+    Step 13: /validate-phase
+      Full validation gate — tests, coverage, lint, type-check, build,
+      CI/CD verification, staging deployment, migration check.
       Output: Pass/fail with details
 
-    Repeat Steps 10–12 for each slice in the phase, then repeat from Step 10 for the next phase.
+    ─── Repeat Steps 9–13 for each phase ───
 
 ---
 

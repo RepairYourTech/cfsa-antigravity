@@ -1,4 +1,5 @@
 ---
+description: Code plus tests plus tracking equals done — never mark complete without updating progress files
 alwaysApply: true
 ---
 

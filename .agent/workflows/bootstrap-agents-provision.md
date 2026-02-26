@@ -136,8 +136,6 @@ In `.agent/workflows/evolve-contract.md`:
 - `{{TEST_COMMAND}}` → the project's test runner command
 - `{{VALIDATION_COMMAND}}` → the full validation pipeline command
 
-In `.agent/workflows/sync-kit.md`:
-- `{{VALIDATION_COMMAND}}` → the full validation pipeline command
 
 ---
 

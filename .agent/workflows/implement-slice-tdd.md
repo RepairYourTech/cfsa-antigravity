@@ -148,3 +148,5 @@ Your `notify_user` payload **MUST** include:
 3. The name of the next slice to be implemented.
 
 If any command output shows unchecked criteria, a stale fraction, or a missing file, you have failed the workflow.
+
+**Infrastructure/Auth slice gate**: After completing progress tracking, check the slice name against the phase plan. If this was the `00-infrastructure` slice or the auth slice, the next step is NOT the next feature slice — it is `/verify-infrastructure`. Do not propose the next feature slice until `/verify-infrastructure` passes and produces a green report in `docs/audits/`.

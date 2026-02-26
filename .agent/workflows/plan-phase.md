@@ -23,7 +23,16 @@ Break a phase into TDD vertical slices, each spanning all four surfaces (contrac
 
 ---
 
-## 0. Load planning skills
+## 0. Phase sequencing gate
+
+Read `.agent/progress/index.md` to identify the current phase number N.
+
+- **If N = 1** → this is the first phase. Skip this gate.
+- **If N > 1** → read `.agent/progress/phases/phase-[N-1].md` and verify its status is `complete` with a passing `/validate-phase`. **Hard stop** if the previous phase is not complete: "Phase [N-1] must be complete with a passing `/validate-phase` before planning Phase [N]. Run `/validate-phase` for Phase [N-1] first."
+
+---
+
+## 0.1. Load planning skills
 
 Read these skills for slice planning guidance:
 1. `.agent/skills/testing-strategist/SKILL.md` — Test strategy per slice
@@ -76,6 +85,10 @@ Sort slices so each builds on the last:
 5. Database initialization (schema creation, migration tooling setup)
 
 If any of these five items are missing from the infrastructure slice, add them before proceeding to feature slices.
+
+**Infrastructure verification gate**: `/verify-infrastructure` MUST pass after the infrastructure slice completes, before any feature slice begins. This is a hard gate — not a recommendation. Add `/verify-infrastructure` explicitly to the phase plan as a gate between the infrastructure slice and the first feature slice.
+
+**Auth verification gate**: `/verify-infrastructure` MUST pass again after the auth slice completes (with the auth smoke test enabled), before any auth-dependent feature slice begins. Add `/verify-infrastructure` explicitly to the phase plan as a gate between the auth slice and the first auth-dependent feature slice.
 
 - Core entity CRUD second
 - Dependent features next
@@ -148,6 +161,8 @@ Write to `docs/plans/phases/phase-N.md`:
 ## Definition of Done
 - [ ] All slices implemented
 - [ ] All acceptance criteria pass
+- [ ] /verify-infrastructure passed after infrastructure slice
+- [ ] /verify-infrastructure passed after auth slice (if auth slice exists in this phase)
 - [ ] /validate-phase passes
 ```
 

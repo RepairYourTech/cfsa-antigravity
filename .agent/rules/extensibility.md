@@ -1,6 +1,6 @@
 ---
 description: A mid-level developer must be able to add a feature by reading READMEs alone
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Extensibility

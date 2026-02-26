@@ -1,4 +1,5 @@
 ---
+description: Zod schema before implementation, failing test before code — Red Green Refactor every slice
 alwaysApply: true
 ---
 

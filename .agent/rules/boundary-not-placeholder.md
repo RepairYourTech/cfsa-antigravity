@@ -1,6 +1,6 @@
 ---
 description: TODOs and placeholders are banned — boundary stubs are allowed ONLY when required information doesn't exist yet
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Boundary Not Placeholder

@@ -69,19 +69,19 @@ Check `.agent/skills/` for relevant skills. Read `.agent/skills/find-skills/SKIL
 
 ## Orchestration
 
-### Step A — Run `/create-prd-stack`
+### Step A — Run `.agent/workflows/create-prd-stack.md`
 
 Builds the constraints map from vision.md, presents tech stack options per axis, gets user decisions, fires bootstrap after each confirmation.
 
-### Step B — Run `/create-prd-architecture`
+### Step B — Run `.agent/workflows/create-prd-architecture.md`
 
 Designs system architecture (components, data flow, deployment topology, API surface) and data strategy (placement, schema, queries, migrations, PII boundaries). Creates `docs/plans/data-placement-strategy.md`.
 
-### Step C — Run `/create-prd-security`
+### Step C — Run `.agent/workflows/create-prd-security.md`
 
 Defines the security model (auth, authorization, validation, rate limits). Escalates compliance-heavy domains to full-depth sections. Documents integration points with failure modes and fallbacks.
 
-### Step D — Run `/create-prd-compile`
+### Step D — Run `.agent/workflows/create-prd-compile.md`
 
 Documents development methodology and phasing strategy. Compiles `docs/plans/YYYY-MM-DD-architecture-design.md` and `docs/plans/ENGINEERING-STANDARDS.md`.
 

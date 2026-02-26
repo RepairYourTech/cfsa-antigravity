@@ -27,6 +27,8 @@ Read the file at `docs/plans/*-architecture-design.md`.
 
 If no architecture design exists, tell the user to run `/create-prd` first. Do not proceed without an approved design.
 
+Also check the document's `**Status**:` field. If the status is `Draft` or `Review` → **STOP**: "The architecture design is not yet approved (current status: [status]). Get explicit approval from the user and update the status to `Approved` before decomposing."
+
 Also read the file at `docs/plans/vision.md`.
 
 Identify the **Project Type** from the architecture design header:
@@ -93,10 +95,10 @@ Ask:
 
 ## Orchestration
 
-### Step A — Run `/decompose-architecture-structure`
+### Step A — Run `.agent/workflows/decompose-architecture-structure.md`
 
 Creates the directory structure (with multi-surface subdirectories if needed), writes shard skeleton files, and creates the IA, BE, FE, and master index files.
 
-### Step B — Run `/decompose-architecture-validate`
+### Step B — Run `.agent/workflows/decompose-architecture-validate.md`
 
 Identifies deep dive candidates, annotates expected shard document types, validates the dependency graph, generates the spec pipeline tracker, and requests user review.

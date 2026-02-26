@@ -31,11 +31,11 @@ Implement a single vertical slice using strict TDD: Red → Green → Refactor.
 
 ## Orchestration
 
-### Step A — Run `/implement-slice-setup`
+### Step A — Run `.agent/workflows/implement-slice-setup.md`
 
 Checks progress state and session continuity, loads all bundled skills, reads the slice acceptance criteria, determines if parallel mode applies, and writes the contract (Zod schema). If parallel mode is detected, dispatches agents for the TDD cycle.
 
-### Step B — Run `/implement-slice-tdd`
+### Step B — Run `.agent/workflows/implement-slice-tdd.md`
 
 Executes the TDD cycle (RED: write failing tests → GREEN: implement → REFACTOR: improve quality), runs full validation, handles synthesis for parallel mode, and updates all 4 progress tracking targets (slice file, phase file, index, memory).
 

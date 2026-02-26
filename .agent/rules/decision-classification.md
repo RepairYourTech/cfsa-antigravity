@@ -1,4 +1,5 @@
 ---
+description: Product decisions belong to the user, architecture gets options, implementation belongs to the agent
 alwaysApply: true
 ---
 

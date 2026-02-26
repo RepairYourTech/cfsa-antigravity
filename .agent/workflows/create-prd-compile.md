@@ -43,6 +43,7 @@ Break the feature inventory from `vision.md` into dependency-ordered phases.
 
 1. **Phase 1 (Foundation)** — Infrastructure + core entities. Must-haves that
    everything else depends on. Production-grade from day one.
+   Phase 1 must begin with the `00-infrastructure` slice (CI/CD, environment, deployment, scaffolding, database). After this slice, `/verify-infrastructure` must pass before any feature slice begins. After the auth slice, `/verify-infrastructure` must pass again. Document these as hard gates in the phase entry/exit criteria — they are not recommendations.
 2. **Phase 2 (Core Experience)** — Primary user flows built on the foundation.
    No shortcuts — same quality bar as Phase 1.
 3. **Phase 3+ (Expansion)** — Additional features, integrations, scale.

@@ -45,11 +45,11 @@ If a needed skill is missing, check if a matching entry exists in `.agent/skill-
 
 ## Orchestration
 
-### Step A — Run `/write-fe-spec-classify`
+### Step A — Run `.agent/workflows/write-fe-spec-classify.md`
 
 Identifies the target FE spec, classifies it (feature spec / cross-cutting), loads the skill bundle, reads all source documents (BE spec, IA shard, cross-shard references, deep dives with FE implications), and reads cross-cutting FE specs.
 
-### Step B — Run `/write-fe-spec-write`
+### Step B — Run `.agent/workflows/write-fe-spec-write.md`
 
 Writes the FE spec to `docs/plans/fe/`, updates the FE index, runs cross-reference checks and the ambiguity gate, checks for new dependencies (firing bootstrap if needed), and presents for review.
 

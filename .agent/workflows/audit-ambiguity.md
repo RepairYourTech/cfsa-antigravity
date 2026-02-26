@@ -37,11 +37,11 @@ Read these skills for review guidance:
 
 ## Orchestration
 
-### Step A — Run `/audit-ambiguity-rubrics`
+### Step A — Run `.agent/workflows/audit-ambiguity-rubrics.md`
 
 Asks the user which layer(s) to audit, loads the source documents, and provides the scoring rubrics for each applicable layer.
 
-### Step B — Run `/audit-ambiguity-execute`
+### Step B — Run `.agent/workflows/audit-ambiguity-execute.md`
 
 Audits each document one at a time (read → score with evidence → classify gaps → verify → finalize), compiles the report to `docs/audits/`, remediates gaps using `resolve-ambiguity`, and proposes next steps.
 

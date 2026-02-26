@@ -53,15 +53,15 @@ Transform a raw idea into a comprehensive vision document through exhaustive exp
 
 ## Orchestration
 
-### Step 1 — Run `/ideate-extract`
+### Step 1 — Run `.agent/workflows/ideate-extract.md`
 
 Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), applies noise filtering if needed, and loads the idea-extraction and resolve-ambiguity skills.
 
-### Step 2 — Run `/ideate-discover`
+### Step 2 — Run `.agent/workflows/ideate-discover.md`
 
 Maps domains from the classified input, explores the problem space (personas, pain points, competitive landscape), and builds the full MoSCoW feature inventory with multi-level deepening.
 
-### Step 3 — Run `/ideate-validate`
+### Step 3 — Run `.agent/workflows/ideate-validate.md`
 
 Explores constraints, success metrics, and competitive positioning. Runs domain exhaustion and vision deepening passes. Compiles `docs/plans/vision.md`.
 
@@ -107,7 +107,4 @@ The vision must be approved before proceeding. Do NOT proceed to the next step u
 
 ### Proposed next steps
 
-Once approved, present the user with the appropriate next step:
-
-- **Default recommendation**: Run `/audit-ambiguity vision` — recommended for any input that was NOT already a rich document
-- **Skip condition**: Only skip `/audit-ambiguity vision` if the input was a rich document AND all 10 dimensions scored ✅. In that case, recommend `/create-prd` directly.
+**Mandatory next step**: Run `/audit-ambiguity vision` for all inputs, regardless of input type. Even a rich document can have gaps the agent missed. The audit is cheap; the cost of a gap propagating to architecture is high. Do not propose `/create-prd` until `/audit-ambiguity vision` has run.

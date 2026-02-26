@@ -78,6 +78,6 @@
    ```
 
 5. **Initialize memory files** (only if they don't already exist):
-   - `.agent/memory/patterns.md` — empty with header
-   - `.agent/memory/blockers.md` — empty with header
-   - `.agent/memory/decisions.md` — empty with header
+   - `.agent/progress/memory/patterns.md` — empty with header
+   - `.agent/progress/memory/blockers.md` — empty with header
+   - `.agent/progress/memory/decisions.md` — empty with header

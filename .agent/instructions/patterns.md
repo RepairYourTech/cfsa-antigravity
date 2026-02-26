@@ -14,13 +14,14 @@
 - **Zod inference** — Derive TypeScript types from Zod schemas with `z.infer<typeof schema>`
 
 ## File Organization → skill: `clean-code`
-- **Max 300 lines** per file — Split when approaching limit
+- **File size limits** — Per-type limits (enforced by extensibility rule): 200 lines for components (.tsx), 300 for utilities (.ts), 150 for schemas (.schema.ts), 400 for tests (.test.ts), 100 for config files
 - **Single responsibility** — One component/module per file
 - **Named exports** — No default exports for utilities
 - **Direct imports** — Import from specific files, avoid barrel files
 
 ## Components
 <!-- {{FRAMEWORK_PATTERNS}} — Filled by /bootstrap-agents based on chosen frontend framework -->
+> ⚠️ **Framework component patterns not yet configured.** Run /bootstrap-agents with FRAMEWORK_PATTERNS to fill this section. Until then, follow the framework's official documentation for component conventions and apply the naming and file organisation rules above.
 
 ## API & Data → skill: `rest-api-design`
 - **Input validation** — Zod schemas on every endpoint

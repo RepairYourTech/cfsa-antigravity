@@ -24,6 +24,7 @@ Decisions in this pipeline are **progressively locked**. Each pipeline stage bui
 5. `/write-be-spec` locks the **backend contracts** — API endpoints, schemas, middleware
 6. `/write-fe-spec` locks the **frontend specs** — components, state, interactions
 7. `/plan-phase` locks the **implementation order** — dependency-ordered TDD slices
+7.5. `/verify-infrastructure` locks the **operational foundation** — CI/CD green, staging live, migrations clean, auth working
 8. `/implement-slice` locks the **code** — tests → implementation → validation
 
 Once a stage is locked, downstream stages may not contradict it. To change a locked decision, re-run the originating stage and cascade changes downstream.
@@ -60,9 +61,9 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |
+| 9.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
 | 11 | `/evolve-contract` | Changed Zod schema | Safe schema migration | Maintenance |
-| 12 | `/sync-kit` | Upstream starter kit | Merged improvements | Maintenance |
 
 > **Note**: Rows marked with ↳ are independently-invocable sub-workflows (shards)
 > of their parent command. The parent orchestrates them in sequence, but each shard

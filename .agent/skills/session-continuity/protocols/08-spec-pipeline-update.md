@@ -22,12 +22,12 @@
    **Overall**: 8/45 specs (18%)
    ```
 
-4. **Update "Ready for Implementation"** — if a shard now has all three specs
-   complete (IA ✅ + BE ✅ + FE ✅), add it to the ready list:
+4. **Update "Spec Completion Tracking"** — if a shard now has all three specs
+   complete (IA ✅ + BE ✅ + FE ✅), add it to the completion tracking list. Note: /plan-phase requires ALL shards to be complete, not just this one.
    ```markdown
-   ## Ready for Implementation
+   ## Spec Completion Tracking
 
-   Shards with all three specs complete are ready for `/plan-phase`:
+   Shards with all three specs complete (tracking only — /plan-phase requires ALL shards to be complete, not just individual ones):
    - ✅ Shard 00: API conventions
    - ✅ Shard 01: Authentication
    ```

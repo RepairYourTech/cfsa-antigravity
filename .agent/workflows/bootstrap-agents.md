@@ -46,11 +46,11 @@ Bootstrap does two things:
 
 ## Orchestration
 
-### Step A — Run `/bootstrap-agents-fill`
+### Step A — Run `.agent/workflows/bootstrap-agents-fill.md`
 
 Receives template values from the calling workflow and fills `{{PLACEHOLDER}}` values across instruction templates, rule templates, skill templates, and `AGENTS.md`.
 
-### Step B — Run `/bootstrap-agents-provision`
+### Step B — Run `.agent/workflows/bootstrap-agents-provision.md`
 
 Reads the skill library manifest, provisions matching skills based on stack/surface triggers, updates the installed skills list, fills workflow command/skill placeholders, and reports results.
 

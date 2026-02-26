@@ -21,6 +21,25 @@ Check progress state, load skills, read the slice, detect parallel mode, and wri
 
 ---
 
+## -1. Placeholder verification (CRITICAL — run before anything else)
+
+Scan for unfilled placeholders before writing a single line of code:
+
+1. Read `AGENTS.md` — scan for any literal `{{` characters
+2. Read `.agent/instructions/workflow.md` — scan for `{{VALIDATION_COMMAND}}`
+3. Read `.agent/instructions/commands.md` — scan for any `{{` patterns
+
+**If ANY `{{PLACEHOLDER}}` pattern is found**:
+
+> **STOP immediately.** Do not proceed with implementation. Tell the user:
+> "Found unfilled placeholders: [list each one with file and line number]. These must be filled before implementation begins. Run `/create-prd` to make tech stack decisions and trigger bootstrap provisioning."
+
+**Why this is critical**: An unfilled `{{VALIDATION_COMMAND}}` makes every validation step in the pipeline a no-op — tests never run, lint never runs, builds never run. The entire TDD cycle silently does nothing.
+
+Only proceed to Step 0 when zero `{{` patterns remain in all three files.
+
+---
+
 ## 0. Check progress state
 
 Read `.agent/skills/session-continuity/protocols/01-session-resumption.md` and follow the **Session Resumption Protocol** to confirm this slice is next and load context from previous sessions.

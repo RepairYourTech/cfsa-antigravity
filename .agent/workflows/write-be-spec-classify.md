@@ -23,7 +23,23 @@ Identify the target IA shard, classify it, load skills, and read all source mate
 
 ---
 
-## 1. Identify the target IA shard
+## 1. Verify IA layer is complete, then identify the target shard
+
+Before identifying the target shard, verify the entire IA layer is ready:
+
+1. Read `docs/plans/ia/index.md`
+2. Check every shard's status column
+3. **Hard stop** if any shard is not ✅:
+
+> ❌ **Cannot write BE spec — IA layer is incomplete.**
+> The following shards are not yet complete:
+> - [shard-name]: [status]
+>
+> Run `/write-architecture-spec` for each incomplete shard before proceeding to `/write-be-spec`.
+
+**Why**: BE specs resolve cross-shard IA references. If referenced shards are still skeletons, the BE spec will contain gaps or guesses that cascade into FE specs and implementation. The cost of waiting for IA completion is hours; the cost of writing BE specs against incomplete IA is days of rework.
+
+---
 
 Determine which IA shard to process. Read it in full before proceeding.
 

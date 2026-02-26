@@ -50,11 +50,11 @@ If a needed skill is missing, check if a matching entry exists in `.agent/skill-
 
 ## Orchestration
 
-### Step A — Run `/write-be-spec-classify`
+### Step A — Run `.agent/workflows/write-be-spec-classify.md`
 
 Identifies the target IA shard, classifies it (feature domain / multi-domain / cross-cutting / structural reference / composite), loads the skill bundle, reads all source material (primary shard, cross-shard references, deep dives, testability section), and reads cross-cutting specs.
 
-### Step B — Run `/write-be-spec-write`
+### Step B — Run `.agent/workflows/write-be-spec-write.md`
 
 Writes the BE spec(s) to `docs/plans/be/`, updates the BE index, runs cross-reference checks and the ambiguity gate, checks for new dependencies (firing bootstrap if needed), and presents for review.
 

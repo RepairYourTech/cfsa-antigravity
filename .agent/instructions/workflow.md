@@ -5,7 +5,7 @@ Before taking any action on a task:
 ## 1. Understand Context
 - Read the agent config file at project root (`AGENTS.md` for Antigravity, `GEMINI.md` for Gemini CLI, or equivalent for your agent)
 - Read relevant `.agent/instructions/` files for the task type
-- Check [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) for quality bar
+- Check [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) for quality bar — if this file doesn't exist yet, the pipeline hasn't reached /create-prd; run /ideate then /create-prd first
 
 ## 2. Check Skills
 - Scan `.agent/skills/` for applicable skills

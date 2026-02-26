@@ -27,9 +27,9 @@ have IA specs, BE specs, and FE specs completed.
    | 01 | {{shard-name}} | ❌ | ❌ | ❌ |
    | ... | ... | ... | ... | ... |
 
-   ## Ready for Implementation
+   ## Spec Completion Tracking
 
-   Shards with all three specs complete are ready for `/plan-phase`:
+   Shards with all three specs complete (tracking only — /plan-phase requires ALL shards to be complete, not just individual ones):
    - (none yet)
    ```
 

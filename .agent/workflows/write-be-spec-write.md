@@ -100,10 +100,16 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
   If yes — fix it now. The spec is not done until the downstream phase can work
   from it without assumptions.
 
-## 12. Optional: Full ambiguity audit
+## 12. Full ambiguity audit (mandatory when this is the last BE spec)
 
-For a comprehensive scored report across the completed BE layer, run `/audit-ambiguity`.
-This is optional but recommended before moving to FE specs.
+1. Read `docs/plans/be/index.md`
+2. Check if all BE specs show ✅
+
+**More specs remain**: Proceed to the next spec. Do not propose `/write-fe-spec` yet — the BE layer is not complete.
+
+**This is the last BE spec** (all specs show ✅): Run `/audit-ambiguity be` now. This is **not optional** — it is a mandatory gate before any FE spec work begins.
+
+**Hard gate**: Do NOT propose `/write-fe-spec` until `/audit-ambiguity be` scores 0% ambiguity.
 
 ## 13. Check for new dependencies
 
@@ -129,5 +135,5 @@ Use `notify_user` to present the new BE spec(s) and updated index for review. Yo
 Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then propose the appropriate next step:
 
 - **More IA shards need BE specs** → "Next: Run `/write-be-spec` for shard [next-shard-number]"
-- **All BE specs complete** → "Next: Run `/audit-ambiguity be` to validate the full BE layer before moving to FE specs"
+- **All BE specs complete** → "All BE specs complete and /audit-ambiguity be has already run (mandatory Step 12 above). If it scored 0%, proceed to /write-fe-spec. If it found gaps, resolve them and re-run /audit-ambiguity be as a fresh invocation before proceeding."
 - **Classification decision needed** → Present the classification question for discussion before proceeding

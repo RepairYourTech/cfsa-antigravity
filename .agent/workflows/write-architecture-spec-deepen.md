@@ -95,10 +95,18 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
   If yes — fix it now. The shard is not done until the downstream phase can work
   from it without assumptions.
 
-## 13. Optional: Full ambiguity audit
+## 13. Full ambiguity audit (mandatory when this is the last IA shard)
 
-For a comprehensive scored report across the completed IA layer, run `/audit-ambiguity`.
-This is optional but recommended before moving to BE specs.
+1. Read `docs/plans/ia/index.md`
+2. Check if all shards show ✅
+
+**More shards remain**: Proceed to the next shard. Do not propose `/write-be-spec` yet — the IA layer is not complete.
+
+**This is the last shard** (all shards show ✅): Run `/audit-ambiguity ia` now. This is **not optional** — it is a mandatory gate before any BE spec work begins.
+
+> **Why**: Catching ambiguity across the full IA layer costs minutes. Discovering it during BE spec writing — or worse, during implementation — costs days of rework across multiple specs and slices.
+
+**Hard gate**: Do NOT propose `/write-be-spec` until `/audit-ambiguity ia` scores 0% ambiguity.
 
 ## 14. Request review and propose next steps
 
@@ -115,5 +123,5 @@ Do NOT proceed to the next step until the user sends a message explicitly approv
 Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then propose the appropriate next step:
 
 - **More skeleton shards remain** → "Next: Run `/write-architecture-spec` for shard [next-shard-number]"
-- **All IA shards complete** → "Next: Run `/audit-ambiguity ia` to validate the full IA layer before moving to BE specs"
+- **All IA shards complete** → "All IA shards complete and /audit-ambiguity ia has already run (mandatory Step 13 above). If it scored 0%, proceed to /write-be-spec. If it found gaps, resolve them and re-run /audit-ambiguity ia as a fresh invocation before proceeding."
 - **Self-audit found unresolvable issues** → Present the issues for discussion before proposing next step

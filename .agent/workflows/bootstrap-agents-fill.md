@@ -21,6 +21,9 @@ Receive template values from the calling workflow and fill `{{PLACEHOLDER}}` val
 
 **Prerequisite**: If invoked standalone, the caller must provide at least one template key-value pair. If no values are provided, there is nothing to fill — report and exit.
 
+> [!IMPORTANT]
+> This workflow fills template-level placeholders (project name, description, tech stack summary, architecture doc path). It does **NOT** fill workflow command placeholders (`{{VALIDATION_COMMAND}}`, `{{TEST_COMMAND}}`, `{{LINT_COMMAND}}`, etc.) or skill path placeholders (`{{DATABASE_SKILL}}`, `{{AUTH_SKILL}}`, etc.). Those are filled exclusively by `.agent/workflows/bootstrap-agents-provision.md` during the `/create-prd` stage. Running this workflow standalone will leave those placeholders unfilled with no indication — they require the provision step.
+
 ---
 
 ## 1. Receive template values
@@ -166,14 +169,7 @@ Scan all `.agent/skills/*/SKILL.md` files for `{{PLACEHOLDER}}` values and fill 
 
 ---
 
-## 4. Fill rule templates
-
-### `.agent/rules/tdd-contract-first.md`
-Replace: `{{VALIDATION_COMMAND}}`, `{{TEST_RUNNER}}`
-
----
-
-## 5. Fill AGENTS.md
+## 4. Fill AGENTS.md
 
 Replace in `AGENTS.md`:
 - `{{PROJECT_NAME}}`
