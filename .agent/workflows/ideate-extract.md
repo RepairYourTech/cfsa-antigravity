@@ -79,3 +79,10 @@ Read `.agent/skills/idea-extraction/SKILL.md` and follow its methodology through
 Also read `.agent/skills/resolve-ambiguity/SKILL.md` — use it reactively when encountering
 ambiguity that can be resolved without user input (technical/factual questions). For
 intent/choice questions, use the decision classification rule.
+
+### Propose next step
+
+Once input is classified and skills are loaded, proceed to `/ideate-discover` to map domains and build the feature inventory.
+
+> If this shard was invoked standalone (not from `/ideate`), surface this via `notify_user`. If invoked by the parent `/ideate`, this is a natural handoff — the parent orchestrates the transition.
+

@@ -144,3 +144,10 @@ For each tier, explicitly state what it stores AND what it does NOT store:
 ```
 
 This document is consumed by `/write-be-spec` and `/write-architecture-spec` to ensure every spec places data consistently.
+
+### Propose next step
+
+System architecture and data placement strategy are complete. Next: Run `/create-prd-security` to define the security model, compliance escalation, and integration points.
+
+> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
+

@@ -214,3 +214,29 @@ This document codifies every quality decision from the architecture design into 
 ```
 
 Fill in concrete values based on the tech stack decisions from step 3 and the methodology from step 8. **No TBDs allowed** — every threshold must be a specific number or explicit decision.
+
+## 12. Request review and propose next steps
+
+Call `notify_user` presenting:
+- `docs/plans/YYYY-MM-DD-architecture-design.md` (use the actual dated filename)
+- `docs/plans/ENGINEERING-STANDARDS.md`
+- The self-check summary covering all 9 Architecture rubric dimensions:
+  1. Tech stack completeness — Every axis has an explicit decision with rationale
+  2. System architecture depth — Component diagram, data flow, deployment topology, failure modes
+  3. Data strategy — Placement, schema, query patterns, migrations, PII boundaries
+  4. Security model — Auth, authorization, validation, rate limits, compliance escalation
+  5. API design — Surface type, versioning, conventions, error format
+  6. Integration points — External services with failure modes and fallbacks
+  7. Development methodology — Contract-first, TDD, vertical slices, quality gates
+  8. Phasing strategy — Dependency-ordered phases with entry/exit criteria
+  9. Engineering standards — All thresholds are specific numbers, no TBDs
+- The completeness checklist: every threshold in ENGINEERING-STANDARDS.md is a concrete value, every section in the architecture document has ≥200 words of depth, every decision has rationale
+- Any gaps resolved during the self-check
+
+> **Both documents must be approved before proceeding. Do NOT proceed until the user sends a message explicitly approving this output.**
+
+### Proposed next steps
+
+Default recommendation: Run `/audit-ambiguity architecture` to verify the architecture and engineering standards against the full rubric.
+
+Only skip `/audit-ambiguity architecture` if all 9 dimensions scored ✅ AND the project has zero compliance constraints. In that case, recommend `/decompose-architecture` directly.

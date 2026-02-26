@@ -111,3 +111,20 @@ Refine based on discussion before proceeding.
 - "What happens when related data is deleted?"
 
 Refine based on discussion before proceeding.
+
+## 8. Present all sections and request approval
+
+Call `notify_user` presenting a summary of all designed sections:
+- Interaction map (Step 2)
+- Contracts (Step 3)
+- Data models (Step 4)
+- Access control (Step 5)
+- Event schemas if applicable (Step 6)
+- Edge cases (Step 7)
+
+> **Do NOT proceed to `/write-architecture-spec-deepen` until the user approves all sections. Proposing next steps is not the same as receiving approval.**
+
+Once approved, run `/write-architecture-spec-deepen`.
+
+> **Note**: The deepen shard will run iterative passes over the approved content — the user does not need to re-approve individual sections during deepening.
+

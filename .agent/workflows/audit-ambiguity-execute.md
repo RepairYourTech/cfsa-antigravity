@@ -54,19 +54,18 @@ Create report at `docs/audits/[layer]-ambiguity-report.md`:
 - Punch list: every ⚠️ and ❌ with evidence citation, gap description, and fix location
 - Upstream dependency gaps (for Architecture/BE/FE)
 
-## 5. Remediate gaps using `resolve-ambiguity`
+## 5. Remediate gaps (mandatory — execute automatically after Step 4)
 
-For each gap in the punch list, use the `resolve-ambiguity` skill to classify and resolve it:
+Do NOT stop and ask the user what to do. After compiling the report in Step 4, immediately execute this step for every ⚠️ and ❌ in the punch list.
 
-1. **Read** `.agent/skills/resolve-ambiguity/SKILL.md`
-2. **For each ⚠️/❌ gap**, classify using `resolve-ambiguity`:
-   - **Technical/Factual gap** → Run tiered lookup. If the answer exists in project docs, architecture files, upstream specs, or official sources, the gap is **mechanical** — propose the fix with the source citation.
-   - **Intent/Choice gap** → No source has the answer. The gap is a **judgment call** — present to user with smart options ordered by recommendation.
-3. **Present findings** organized by type:
-   - **Judgment calls first** — these need user discussion before anything can be fixed
-   - **Mechanical fixes second** — propose all fixes with source citations for user approval
-4. **Apply approved fixes** to the relevant specs
-5. **Propose fresh audit**: "Next: Re-run `/audit-ambiguity [layer]` as a **fresh audit** to verify"
+1. Read `.agent/skills/resolve-ambiguity/SKILL.md` and execute the resolution process inline — do not invoke it as a separate command.
+2. For each gap, classify using the skill's two-path model:
+   - **Judgment calls** (Intent/Choice gaps — no source has the answer): present to user with smart options ordered by recommendation; wait for user decision before applying any fix.
+   - **Mechanical fixes** (Technical/Factual gaps — answer exists in project docs, architecture files, upstream specs, or official sources): propose the fix with source citation; apply after user approval.
+3. Resolve judgment calls first — they may change what mechanical fixes are needed.
+4. Present findings organized by type: judgment calls first, mechanical fixes second.
+5. Apply all approved fixes to the relevant spec documents.
+6. After all fixes are applied, propose: "Next: Re-run `/audit-ambiguity [layer]` as a fresh invocation to verify the fixes. The session that fixed gaps cannot be the session that passes them."
 
 > **Fresh-run rule**: The session that fixed gaps cannot be the session that passes them. The agent that fixed the gaps cannot grade its own homework.
 
@@ -75,7 +74,7 @@ For each gap in the punch list, use the `resolve-ambiguity` skill to classify an
 Use `notify_user` to present the audit report.
 
 ### If gaps were found:
-Follow the remediation process in Step 5.
+After completing remediation in Step 5, propose: "Next: Re-run `/audit-ambiguity [layer]` as a fresh invocation. The session that fixed gaps cannot grade its own homework."
 
 ### If ambiguity is 0%:
 

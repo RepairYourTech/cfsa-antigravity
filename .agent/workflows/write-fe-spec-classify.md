@@ -109,3 +109,15 @@ any that contain FE-relevant decisions.
 ## 5. Check cross-cutting FE specs
 
 Read any completed cross-cutting FE specs — feature specs must follow their patterns. List the files matching `docs/plans/fe/00-*.md` (cross-cutting specs).
+
+## 6. Present classification and request approval
+
+Call `notify_user` presenting:
+- The classification type and reasoning (from Step 2)
+- The source mapping (which BE spec(s) and IA shard this FE spec covers)
+- The brand-guidelines extraction summary (design direction, colors, typography, anti-patterns extracted in Step 0)
+
+> **Do NOT proceed to `/write-fe-spec-write` until the user confirms the classification and source mapping.**
+
+Once approved, run `/write-fe-spec-write`.
+

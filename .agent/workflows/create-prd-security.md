@@ -60,3 +60,10 @@ For each external service:
 2. **Failure mode** — What happens when it's down?
 3. **Fallback strategy** — Graceful degradation plan
 4. **Cost model** — Pricing tier, expected usage
+
+### Propose next step
+
+Security model and integration points are defined. Next: Run `/create-prd-compile` to document the development methodology, phasing strategy, and compile the final architecture design document and Engineering Standards.
+
+> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
+

@@ -173,3 +173,32 @@ as additional context alongside the main vision document.
 - A domain section in vision.md would exceed ~100 lines of detail
 - The domain has specific technical artifacts (state machines, algorithms, formulas)
 - The domain has enumeration-heavy content (lists of items, types, categories)
+
+## 12. Request review and propose next steps
+
+Before presenting to the user, run a **self-check against the Vision rubric** (all 10 dimensions):
+
+1. Problem clarity — Is the problem statement specific and testable?
+2. Persona depth — Do all personas have name, role, pain point, success criteria, switching trigger?
+3. Feature completeness — Are all Must Haves explored to ≥Level 2 depth?
+4. MoSCoW accuracy — Is every feature categorized with clear rationale?
+5. Constraint specificity — Are budget, timeline, team, compliance, performance all addressed?
+6. Surface classification — Are all project surfaces identified with cross-platform decisions?
+7. Success metrics — Are launch criteria, growth targets, and technical targets defined?
+8. Competitive positioning — Are competitors, unique angle, and moat identified?
+9. Domain coverage — Is overall coverage ≥80% with every Must Have at ≥Level 2?
+10. Open questions — Are unresolved items listed with owners and deadlines?
+
+For any dimension scoring ⚠️ or ❌, resolve it before presenting. Do not present a vision document with known gaps.
+
+Call `notify_user` presenting:
+- `docs/plans/vision.md` and any appendices (`docs/plans/vision-appendix-*.md`)
+- The self-check summary (all 10 dimensions with their ✅/⚠️/❌ scores)
+- Any gaps that were resolved during the self-check (what was found and how it was fixed)
+- The final domain coverage map
+
+> **Do NOT proceed until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval.**
+
+### Proposed next steps
+
+Mandatory next step: Run `/audit-ambiguity vision` for all inputs, regardless of input type. Even a rich document can have gaps the agent missed. The audit is cheap; the cost of a gap propagating to architecture is high. Do not propose `/create-prd` until `/audit-ambiguity vision` has run.

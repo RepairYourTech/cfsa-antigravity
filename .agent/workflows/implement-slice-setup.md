@@ -126,3 +126,12 @@ Scan the slice's tasks for surface tags (`BE`, `FE`, `QA`):
 ## 2. Write the contract (Zod schema)
 
 Define the request/response shapes as Zod schemas in the project's contracts directory (see `.agent/instructions/structure.md` for the exact path — typically `src/contracts/`). This is the source of truth.
+
+### Propose next step
+
+Contract (Zod schema) is written. Next: Run `/implement-slice-tdd` to execute the Red→Green→Refactor cycle, run validation, and update all progress tracking files.
+
+For parallel mode: If parallel mode was activated in Step 1.5, the QA-RED and BE/FE/QA-GREEN dispatch is already underway — proceed to `/implement-slice-tdd` to handle synthesis and progress tracking.
+
+> If this shard was invoked standalone (not from `/implement-slice`), surface this via `notify_user`.
+

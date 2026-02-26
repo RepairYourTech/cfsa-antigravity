@@ -120,3 +120,18 @@ If the shard has a testability/acceptance criteria section, read it — these be
 ## 6. Check cross-cutting specs
 
 Read any completed cross-cutting specs — feature specs must follow their patterns. List the files matching `docs/plans/be/00-*.md` (cross-cutting specs).
+
+## 7. Present classification and request approval
+
+Call `notify_user` presenting:
+- The classification type and reasoning (from Step 2)
+- The number of BE specs to be produced
+- The Referenced Material Inventory (from Step 5)
+- For multi-domain splits: the proposed split boundaries
+
+> **Do NOT proceed to `/write-be-spec-write` until the user confirms the classification is correct. For multi-domain splits, the user must confirm the split boundaries.**
+
+Once approved, run `/write-be-spec-write`.
+
+For structural reference classification (0 BE specs): confirm no write shard is needed and propose moving to the next IA shard instead.
+

@@ -107,3 +107,10 @@ to explore at least 2 levels deep:
 
 For Should Have features, explore Level 1 (sub-features) only. Note that these will get
 full Level 2-3 treatment in `/create-prd` when they enter scope.
+
+### Propose next step
+
+Once the feature inventory is complete and the user has confirmed the MoSCoW matrix, proceed to `/ideate-validate` to explore constraints, success metrics, and compile the vision document.
+
+> If this shard was invoked standalone (not from `/ideate`), surface this via `notify_user`. If invoked by the parent `/ideate`, this is a natural handoff — the parent orchestrates the transition.
+

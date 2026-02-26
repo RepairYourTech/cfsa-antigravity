@@ -235,3 +235,10 @@ Shared surface specs must be completed first — other surfaces depend on them.
 
 Each surface's own `index.md` contains the standard three-layer table (IA/BE/FE)
 scoped to that surface, following the same format as the single-surface master index.
+
+### Propose next step
+
+Directory structure, shard skeletons, and all layer indexes are created. Next: Run `/decompose-architecture-validate` to identify deep dive candidates, annotate shard types, validate the dependency graph, and generate the spec pipeline tracker.
+
+> If this shard was invoked standalone (not from `/decompose-architecture`), surface this via `notify_user`.
+

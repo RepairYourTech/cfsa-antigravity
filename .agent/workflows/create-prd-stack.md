@@ -221,3 +221,10 @@ Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=cre
 - After confirming `FRONTEND_FRAMEWORK=Astro`, call bootstrap with just that key
 - Each invocation fills the relevant placeholders and provisions the matching skills
 - At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename
+
+### Propose next step
+
+All tech stack decisions are locked and bootstrap has been called for each confirmed decision. Next: Run `/create-prd-architecture` to design the system architecture and data strategy.
+
+> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
+

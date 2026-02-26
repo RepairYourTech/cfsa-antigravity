@@ -177,3 +177,12 @@ Replace in `AGENTS.md`:
 - `{{TECH_STACK_SUMMARY}}`
 - `{{VALIDATION_COMMAND}}`
 - `{{ARCHITECTURE_DOC}}`
+
+### Report and proceed
+
+Report which `{{PLACEHOLDER}}`s were filled and their values, which remain unfilled, and any errors encountered.
+
+If invoked standalone, the next step is `/bootstrap-agents-provision` to provision skills from the library based on the stack values just filled.
+
+If invoked by another workflow (e.g., `/create-prd`), return this report to the calling workflow — the caller will invoke `/bootstrap-agents-provision` automatically.
+

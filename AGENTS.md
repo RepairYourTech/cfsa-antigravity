@@ -57,6 +57,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | 7 | `/audit-ambiguity` | Any layer | Scored ambiguity report | Quality Gate |
 | ↳ | `/audit-ambiguity-rubrics` | Layer selection | Scope + documents + scoring rubrics | Quality Gate |
 | ↳ | `/audit-ambiguity-execute` | Rubrics + documents | Per-document audit + report + remediation | Quality Gate |
+| | `/resolve-ambiguity` | Any pipeline document or layer | Resolved gaps applied to source documents | Quality Gate |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
@@ -69,6 +70,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > of their parent command. The parent orchestrates them in sequence, but each shard
 > can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
 > sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
+> `/resolve-ambiguity` is a utility command callable from any stage — it is not a sequential pipeline step.
 
 > [!WARNING]
 > If `docs/plans/vision.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
