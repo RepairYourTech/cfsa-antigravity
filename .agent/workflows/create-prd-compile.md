@@ -62,7 +62,7 @@ Refine based on discussion before proceeding.
 
 ## 10. Compile architecture design document
 
-Create `docs/plans/YYYY-MM-DD-architecture-design.md` (use today's date) with:
+Read `docs/plans/architecture-draft.md` as the source of all decisions made in prior shards. Do not rely on the context window — the draft document is the authoritative source. Compile it into the final `docs/plans/YYYY-MM-DD-architecture-design.md` (use today's date) with:
 
 > **Template depth rule**: The section descriptions below are MINIMUM headings, not
 > maximum content. Each section must contain the full detail gathered during steps

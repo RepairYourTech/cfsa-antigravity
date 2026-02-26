@@ -19,7 +19,7 @@ pipeline:
 
 Create directory structure, shard skeleton files, and all layer indexes.
 
-**Prerequisite**: Domain boundaries and shard numbering must be approved (from `/decompose-architecture` Steps 3-4.5 or equivalent). The agent should have the approved domain boundary table and shard numbering available.
+**Prerequisite**: Read the approved domain boundaries from `docs/plans/ia/decomposition-plan.md`. If this file does not exist, the boundaries have not been approved — tell the user to run `/decompose-architecture` Steps 3-4.5 first to approve and persist the domain boundaries before running this shard.
 
 ---
 

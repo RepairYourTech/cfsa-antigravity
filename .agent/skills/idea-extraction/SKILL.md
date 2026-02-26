@@ -96,7 +96,45 @@ know" or "I haven't decided" — and even then, help them decide.
 
 ---
 
+## Expansion Mode Awareness
+
+Before beginning any drilling, read the current expansion mode from `ideation.md`. The mode overrides the default depth-first behavior:
+
+| Mode | Drilling Strategy |
+|---|---|
+| Full | Breadth-first during horizontal sweep; depth-first during vertical drilling; interaction-first during synthesis |
+| Vertical | Depth-first — finish one domain before moving to the next |
+| Horizontal | Breadth-first — map all domains before deepening any |
+| Cross-cutting | Interaction-first — focus on connection points, not individual domain depth |
+| Combination | User-directed — follow the user's specified sequence of modes in order |
+| As-is | No active drilling — scan only |
+
+### Cross-cut Watch Protocol
+
+Cross-cut detection is always-on regardless of mode. During all active drilling, ask these questions:
+
+- After each sub-feature: "Does this behavior depend on or affect any other domain?"
+- After each edge case: "Which other parts of the system need to know about this failure mode?"
+- After each state transition: "Does this state change trigger anything in another domain?"
+
+When a cross-cut is identified, immediately log it to `## Cross-cutting Candidates` in `ideation.md`:
+`[Domain A] × [Domain B]: [what the connection is]` — status: pending
+
+Do not stop to explore the cross-cut immediately — flag and continue the current drill. The synthesis pass will address all candidates.
+
+### Cross-cut Candidate Format
+
+After synthesis, annotate each candidate with its outcome:
+- `✅ confirmed → see [Interaction Name]`
+- `❌ rejected: [reason]`
+
+Never clear the candidates section — it is the audit trail.
+
+---
+
 ## Domain Exhaustion Protocol
+
+> **Mode-aware**: This protocol operates differently depending on the active expansion mode. Read the Expansion Mode Awareness section above before applying this protocol. In Full Mode, apply breadth-first during the horizontal sweep and depth-first during vertical drilling. In As-is Mode, skip active drilling entirely.
 
 This is the core mechanism. For every domain identified, drill systematically using these
 questions. **Never accept a bucket label as a feature.** "Risk management" is a category,

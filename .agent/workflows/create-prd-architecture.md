@@ -48,6 +48,8 @@ For each component, also define:
 
 Refine based on discussion before proceeding.
 
+Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user.
+
 ## 5. Data strategy
 
 Using `{{DATABASE_SKILL}}`. Each sub-item must be explored to field-level depth:
@@ -67,6 +69,8 @@ For multi-surface projects, additionally define:
 - "Are there query patterns I'm missing that could become hot paths?"
 
 Refine based on discussion before proceeding.
+
+Write the completed `## Data Strategy` section to `docs/plans/architecture-draft.md`. Do not wait until the end — write this section as soon as it is completed and confirmed by the user.
 
 ### Data placement strategy document
 

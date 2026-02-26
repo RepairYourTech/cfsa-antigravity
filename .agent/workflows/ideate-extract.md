@@ -57,20 +57,57 @@ uses and how the rest of the workflow behaves.
 3. From that sentence, identify the key nouns — these become initial domains
 4. Proceed to domain mapping (in `/ideate-discover`)
 
-## 1.5. Noise filter (chat transcripts only)
+## 1.4. Re-run check
 
-> **This step activates only when the input is classified as "Conversational dump".** Skip for all other input types.
+Before seeding, check whether `docs/plans/ideation.md` already exists.
+- If it **exists**: Present a summary of its current state (expansion mode, domain count, depth markers, cross-cutting candidate count). Ask: "An ideation document already exists. Do you want to **continue from it** or **start fresh**?"
+  - **Continue** → skip seeding, jump directly to Step 1.6.
+  - **Start fresh** → archive existing file to `docs/plans/ideation-archive-[timestamp].md`, then proceed with seeding.
+- If it **does not exist**: proceed with seeding.
 
-Chat transcripts contain signal buried in noise. Before proceeding to domain mapping, extract the signal:
+## 1.5. Seed `ideation.md`
 
-1. **Read the full transcript** end-to-end without summarizing
-2. **Extract all decisions made** — explicit commitments, confirmed directions, agreed-upon approaches
-3. **Extract all ideas proposed** — suggestions, feature ideas, design concepts (whether accepted or not yet decided)
-4. **Extract all explicitly rejected ideas** — ideas that were discussed and deliberately discarded (with reasons if stated)
-5. **Discard filler** — repetition, tangents, social pleasantries, overridden AI responses, abandoned threads
-6. **Present the extracted signal** to the user for confirmation before proceeding: "Here's the signal I extracted from your conversation. Is anything missing or incorrectly categorized?"
+Create `docs/plans/ideation.md` based on classified input type:
 
-Only proceed to Step 2 after the user confirms the extracted signal is accurate.
+- **Rich document**: Restructure source content into ideation format preserving all detail. Add reference at top: `> Source: path/to/original.md`. Do not modify the original.
+- **Chat transcript**: Run the noise filter (read full transcript, extract decisions/ideas/rejections, discard filler, present extracted signal to user for confirmation), then write the clean structured signal into `ideation.md` with section headers. Attribute decisions: `> Decided in conversation: [decision]`.
+- **Thin document**: Copy content into `ideation.md` and annotate each section with `[SURFACE]`, `[PARTIAL]`, or `[DEEP]` depth markers.
+- **Verbal / one-liner**: Create `ideation.md` with domain scaffolding based on the initial description. Sections are empty placeholders.
+
+## 1.6. User Intent Check (ALL input types)
+
+After seeding, present a summary of what was captured and ask how the user wants to proceed. Framing adapts to input type:
+
+- **Rich document**: "I've organized your document into `ideation.md`. Here's what I found: [domain summary with depth indicators]. How would you like to proceed?"
+- **Chat transcript**: "I've extracted the signal from your conversation into `ideation.md` — [N] decisions, [N] feature ideas, [N] rejected directions. Here's the summary: [domain summary]. How would you like to proceed?"
+- **Thin document**: "I've annotated your document in `ideation.md`. I found [N] sections at surface depth, [N] at partial depth, [N] implementation-ready. How would you like to proceed?"
+- **Verbal / one-liner**: "I've scaffolded `ideation.md` with [N] initial domains based on your description. How would you like to approach this?"
+
+Present all options for every input type:
+1. **Full exploration** *(recommended for 3+ domains)* — Horizontal sweep → vertical drilling → cross-cutting synthesis, with cross-cut detection active throughout
+2. **Process as-is** — Proceed with what's captured; fill gaps via interview as they arise
+3. **Expand vertically** — Drill deeper into existing features
+4. **Expand horizontally** — Add new feature domains not yet covered
+5. **Explore cross-cutting concerns** — Map how existing features interact and conflict
+6. **Combination** — User specifies which dimensions and order
+7. **Audit ambiguity first** — Run inline check on `ideation.md` before deciding
+
+Recommendation logic: suggest Full if 3+ domains, vertical if 1-2 domains, Full if no domains (verbal). Always present all options. **Wait for user answer — do not assume.**
+
+> **Note**: Cross-cut detection is always-on regardless of mode. Even if the user picks vertical-only, maintain a `## Cross-cutting Candidates` list in `ideation.md` and surface it at the end.
+
+## 1.7. Expansion Mode Routing
+
+Based on the user's choice, write the expansion mode to `ideation.md`:
+
+```
+## Expansion Mode
+- Type: [full | vertical | horizontal | cross-cutting | combination | as-is]
+- Targets: [list of domains/features to focus on, if applicable]
+- Cross-cut Detection: always-on
+```
+
+This flag is read by `ideate-discover.md` to shape domain mapping behavior.
 
 ## 2. Load skills
 

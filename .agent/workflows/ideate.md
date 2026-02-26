@@ -27,6 +27,7 @@ shards: [ideate-extract, ideate-discover, ideate-validate]
 | Thin PRD | <5KB, structured but shallow (bullet list, rough PRD) | Expansion — deepens every section via domain exhaustion |
 | Chat transcript | Chat logs, unstructured conversation transcripts | Extraction + noise filter — extracts signal, discards noise, fills gaps |
 | One-liner / verbal | User describes idea in chat, no files | Interview (deep) — builds vision from scratch domain by domain |
+| Full exploration | Any input with 3+ domains | Full — Horizontal sweep → vertical drilling → cross-cutting synthesis, cross-cut detection active throughout |
 
 **Quality guarantee**: All four input types produce the **same output quality**. The vision document that emerges from a one-liner is structurally and substantively identical to one produced from a rich document. Only the amount of interview work differs.
 
@@ -37,7 +38,7 @@ Transform a raw idea into a comprehensive vision document through exhaustive exp
 > every line of code downstream will be shallow. Treat this phase with the seriousness it
 > deserves.
 
-**Output**: `docs/plans/vision.md` (and optional domain appendices)
+**Output**: `docs/plans/ideation.md` (intermediary, permanent) + `docs/plans/vision.md` (and optional domain appendices)
 
 ---
 
@@ -45,7 +46,7 @@ Transform a raw idea into a comprehensive vision document through exhaustive exp
 
 | # | Shard | What It Does |
 |---|-------|-------------|
-| 1 | [`ideate-extract`](ideate-extract.md) | Classifies input, applies noise filter for chat transcripts, loads skills |
+| 1 | [`ideate-extract`](ideate-extract.md) | Classifies input, seeds `docs/plans/ideation.md`, applies noise filter for chat transcripts (integrated into seeding), runs user intent check, sets expansion mode, loads skills |
 | 2 | [`ideate-discover`](ideate-discover.md) | Domain mapping, problem exploration, feature inventory (MoSCoW + deepening) |
 | 3 | [`ideate-validate`](ideate-validate.md) | Constraints, metrics, competitive positioning, domain exhaustion, vision compilation |
 
@@ -55,7 +56,7 @@ Transform a raw idea into a comprehensive vision document through exhaustive exp
 
 ### Step 1 — Run `.agent/workflows/ideate-extract.md`
 
-Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), applies noise filtering if needed, and loads the idea-extraction and resolve-ambiguity skills.
+Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), checks for an existing `ideation.md` (re-run check), seeds `docs/plans/ideation.md` from the input, runs the universal user intent check to determine expansion mode, sets the expansion mode flag in `ideation.md`, and loads the idea-extraction and resolve-ambiguity skills.
 
 ### Step 2 — Run `.agent/workflows/ideate-discover.md`
 
@@ -84,7 +85,7 @@ Before presenting to the user, self-check the vision document:
 | 7 | Open Question Resolution | Do all open questions have owners + deadlines? |
 | 8 | **Input-Output Proportionality** | Is the vision output proportional to input richness? Rich inputs must produce rich visions. |
 | 9 | **Domain Coverage** | Has every identified domain been explored to ≥3 levels of depth? Are appendices created for complex domains? |
-| 10 | **Input-Output Fidelity** | For rich inputs, every major section of the source document maps to at least one section of the vision output. If a source section has no corresponding vision content, it was dropped — find it and recover it. |
+| 10 | **Input-Output Fidelity** | Two-layer check: (1) Source → `ideation.md`: every major section of the original source maps to `ideation.md` (checked during seeding in Step 1.5); (2) `ideation.md` → `vision.md`: every section in `ideation.md` maps to `vision.md` — nothing dropped during compilation (checked in Step 11). |
 
 For any dimension that scores ⚠️ or ❌, resolve it NOW — don't present a document with known gaps.
 Loop back to the relevant step and work through it with the user.

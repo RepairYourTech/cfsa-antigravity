@@ -65,6 +65,8 @@ Check `.agent/skills/` for relevant skills. Read `.agent/skills/find-skills/SKIL
 | 3 | [`create-prd-security`](create-prd-security.md) | Security model, compliance escalation, integration points |
 | 4 | [`create-prd-compile`](create-prd-compile.md) | Development methodology, phasing, compile architecture-design.md + ENGINEERING-STANDARDS.md |
 
+> **Progressive working artifact**: `docs/plans/architecture-draft.md` is written incrementally by shards 1–3 (stack decisions, system architecture, data strategy, security model, integration points) and read by shard 4 (compile) to produce the final dated `architecture-design.md`.
+
 ---
 
 ## Orchestration

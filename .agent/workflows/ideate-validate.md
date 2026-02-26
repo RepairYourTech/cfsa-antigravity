@@ -114,6 +114,8 @@ Present findings to the user. Refine based on discussion.
 
 ## 11. Compile vision document
 
+Compile `docs/plans/vision.md` from the current state of `docs/plans/ideation.md`. The ideation document is the authoritative source — do not add material that isn't in it, and do not drop material that is.
+
 Create `docs/plans/vision.md` with this structure:
 
 ```markdown
@@ -134,6 +136,17 @@ Create `docs/plans/vision.md` with this structure:
 [Each feature with sub-features identified]
 ### Could Have (Phase 3+)
 ### Won't Have (explicitly excluded)
+
+## Feature Interactions
+[Confirmed cross-cutting interactions from ideation. Empty if no cross-cutting work was done.]
+
+### [Interaction Name]
+- **Domains involved**: [list]
+- **Trigger**: [what causes the interaction]
+- **Source of truth**: [which domain owns the state]
+- **Behavior per domain**: [what each domain does when triggered]
+- **Conflicts & resolution**: [if any]
+- **Cascading effects**: [second-order interactions, if any]
 
 ## Constraints
 [Budget, timeline, team, compliance, performance]
@@ -187,7 +200,7 @@ Before presenting to the user, run a **self-check against the Vision rubric** (a
 7. Success metrics — Are launch criteria, growth targets, and technical targets defined?
 8. Competitive positioning — Are competitors, unique angle, and moat identified?
 9. Domain coverage — Is overall coverage ≥80% with every Must Have at ≥Level 2?
-10. Open questions — Are unresolved items listed with owners and deadlines?
+10. Input-Output Fidelity — Two-layer check: (1) Source → `ideation.md`: every major section of the original source maps to `ideation.md` (checked during seeding); (2) `ideation.md` → `vision.md`: every section in `ideation.md` maps to `vision.md` — nothing dropped during compilation.
 
 For any dimension scoring ⚠️ or ❌, resolve it before presenting. Do not present a vision document with known gaps.
 

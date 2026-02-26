@@ -222,6 +222,8 @@ Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=cre
 - Each invocation fills the relevant placeholders and provisions the matching skills
 - At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename
 
+After firing bootstrap, also append the confirmed decision to `docs/plans/architecture-draft.md` (create the file if it does not exist). Format: a `## Tech Stack Decisions` section with one entry per confirmed axis, added incrementally as each axis is confirmed.
+
 ### Propose next step
 
 All tech stack decisions are locked and bootstrap has been called for each confirmed decision. Next: Run `/create-prd-architecture` to design the system architecture and data strategy.

@@ -25,21 +25,25 @@ Map domains, explore the problem space, and build the feature inventory.
 
 ## 3. Domain mapping
 
-Before diving into features, enumerate the **domains** of the project. This creates the
-coverage map that drives the exhaustion protocol.
+Read the `## Expansion Mode` section from `docs/plans/ideation.md` and route accordingly. All findings are written to `ideation.md` in real time — not held in context.
 
-**How to identify domains:**
-- Parse the user's input (or initial description) for key nouns and concepts
-- Group related concepts into domains
-- Present the domain list to the user: "Based on what you've described, I see these domains: [list]. Is anything missing?"
+**Full Mode** (three-pass orchestration):
 
-**Examples by project type:**
-- **Trading platform:** Strategies, Risk Management, Execution, Market Data, AI/ML, Analytics, Portfolio, UI/UX, Infrastructure, Security, Compliance
-- **MOBA game:** Heroes, Abilities, Maps, Items, Matchmaking, Progression, Monetization, Social, Anti-cheat, Spectating
-- **SaaS platform:** User Management, Billing, Core Product, Integrations, Analytics, Support, Admin/Ops, Security, Compliance
+- **Pass 1 — Horizontal Sweep**: Audit `ideation.md` for all domains present. Apply domain exhaustion protocol to identify missing domains. Add all confirmed domains with `[SURFACE]` marker. Do NOT drill yet. Present complete domain map to user and get confirmation before Pass 2.
+- **Pass 2 — Vertical Drilling**: For each domain (dependency order — foundational first), drill to Level 2-3 depth. Cross-cut watch active: after each sub-feature/edge case, ask "Does this touch any other domain?" If yes, immediately add to `## Cross-cutting Candidates` in `ideation.md` as `[Domain A] × [Domain B]: [connection]`. Do not stop to explore — flag and continue. Update depth markers as drilling progresses. Pause after each domain: "Here's what I captured. Anything missing?"
+- **Pass 3 — Cross-cutting Synthesis**: Present full candidates list. For each candidate: explore shared state/trigger, source of truth, behavior per domain, conflicts, cascading effects. Document confirmed interactions in `## Feature Interactions`. Discard rejected ones with a note. Check for second-order cross-cuts.
 
-The domain list becomes the coverage map. Track exploration depth for each domain throughout
-the conversation.
+**Vertical Mode**: Focus on existing domains. Identify shallowest sub-topics. Drive to Level 2-3 depth. Cross-cut watch active — surface candidates list at end. Do not introduce new domains unless user requests.
+
+**Horizontal Mode**: Audit for missing domains. Present gap list. Add confirmed new domains with Level 1 exploration. Cross-cut watch active for new domains vs existing. Offer to continue with vertical drilling after.
+
+**Cross-cutting Mode (standalone)**: Read all features, identify interaction points. For each significant pair, ask about conflicts/dependencies/shared state. Document confirmed interactions. Note: works best after vertical drilling.
+
+**Combination Mode**: User specifies sequence. Apply each mode in order. Cross-cut detection always active.
+
+**As-is Mode**: Skip active expansion. Proceed to domain exhaustion check. Cross-cut watch still active — scan `ideation.md` for obvious interaction points and surface before compiling `vision.md`.
+
+> **Mid-session mode switching**: If you want to change expansion direction, update the `Expansion Mode` in `ideation.md` and re-run `/ideate-discover`.
 
 ## 4. Problem exploration
 
