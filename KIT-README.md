@@ -36,9 +36,26 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
       The pipeline interviews you until every domain is explored.
       Output: docs/plans/vision.md
 
-    Step 2: /audit-ambiguity vision (recommended)
-      Scores the vision document on a rubric. Fills gaps before architecture.
+    Step 2: /audit-ambiguity vision    ── MANDATORY ──
+      Scores the vision document against a rubric.
+      Agent auto-remediates any gaps found, then requires a fresh re-run.
+      Not optional — /ideate will not propose /create-prd until this passes.
       Output: docs/audits/vision-audit.md
+
+> [!IMPORTANT]
+> **Fresh-run rule:** The session that fixed gaps cannot be the session that passes.
+> Re-run `/audit-ambiguity [layer]` as a new invocation so the agent re-reads the
+> updated source document from disk. The audit only passes when a clean session scores 0%.
+
+      /resolve-ambiguity [layer or @file]  ── UTILITY — callable at any stage ──
+        Targeted ambiguity resolution for any pipeline document or layer.
+        Use when a specific section needs clarification without a full audit cycle.
+        After resolving, re-run the relevant audit as a fresh invocation to confirm the fix.
+
+        Examples:
+          /resolve-ambiguity vision
+          /resolve-ambiguity architecture
+          /resolve-ambiguity @docs/plans/ia/auth.md
 
     Step 3: /create-prd
       Reads vision.md. Walks you through tech stack decisions one at a time.
@@ -50,6 +67,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
     Step 4: /audit-ambiguity architecture (recommended)
       Scores the architecture document on a rubric. Fills gaps before decomposition.
       Output: docs/audits/architecture-audit.md
+      If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 5: /decompose-architecture
       Breaks architecture into numbered domain shards.
@@ -62,6 +80,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
     ► /audit-ambiguity ia                  [MANDATORY — 0% before Step 7]
       Runs after ALL IA shards are complete. Hard gate — no BE specs until this passes.
       Output: docs/audits/ia-audit.md
+      If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 7: /write-be-spec                 ← repeat for EVERY shard
       Reads IA shard. Writes backend spec — endpoints, schemas, middleware, DAL.
@@ -70,6 +89,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
     ► /audit-ambiguity be                  [MANDATORY — 0% before Step 8]
       Runs after ALL BE specs are complete. Hard gate — no FE specs until this passes.
       Output: docs/audits/be-audit.md
+      If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 8: /write-fe-spec                 ← repeat for EVERY shard
       Reads BE spec + IA shard. Writes frontend spec — components, state, interactions.
@@ -78,6 +98,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
     ► /audit-ambiguity fe                  [MANDATORY — 0% before Step 9]
       Runs after ALL FE specs are complete. Hard gate — no planning until this passes.
       Output: docs/audits/fe-audit.md
+      If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     ─── ALL specs (IA + BE + FE) must be complete before Step 9 ───
 
