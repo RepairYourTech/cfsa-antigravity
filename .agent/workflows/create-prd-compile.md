@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-security]
   successors: [decompose-architecture]
-  skills: [technical-writer]
+  skills: [technical-writer, prd-templates, pipeline-rubrics]
   calls-bootstrap: true
 ---
 
@@ -41,18 +41,13 @@ Break the feature inventory from `vision.md` into dependency-ordered phases.
 > fully tested, fully specified, fully accessible. Phases exist to manage
 > dependency order and incremental delivery, not to defer quality.
 
-1. **Phase 1 (Foundation)** — Infrastructure + core entities. Must-haves that
-   everything else depends on. Production-grade from day one.
-   Phase 1 must begin with the `00-infrastructure` slice (CI/CD, environment, deployment, scaffolding, database). After this slice, `/verify-infrastructure` must pass before any feature slice begins. After the auth slice, `/verify-infrastructure` must pass again. Document these as hard gates in the phase entry/exit criteria — they are not recommendations.
-2. **Phase 2 (Core Experience)** — Primary user flows built on the foundation.
-   No shortcuts — same quality bar as Phase 1.
-3. **Phase 3+ (Expansion)** — Additional features, integrations, scale.
-   Same standards. Never "clean up later."
+1. **Phase 1 (Foundation)** — Infrastructure + core entities. Must-haves that everything else depends on. Production-grade from day one. Phase 1 must begin with the `00-infrastructure` slice (CI/CD, environment, deployment, scaffolding, database). After this slice, `/verify-infrastructure` must pass before any feature slice begins. After the auth slice, `/verify-infrastructure` must pass again. Document these as hard gates.
+2. **Phase 2 (Core Experience)** — Primary user flows built on the foundation. Same quality bar as Phase 1.
+3. **Phase 3+ (Expansion)** — Additional features, integrations, scale. Same standards.
 
-For multi-surface projects, consider whether phases are **per-surface** (build desktop first, then web) or **cross-surface** (build shared auth across both, then features across both). The decision depends on whether surfaces have independent value.
+For multi-surface projects, consider whether phases are **per-surface** or **cross-surface**. The decision depends on whether surfaces have independent value.
 
-Each phase should have a rough timeline estimate. Every phase must pass the
-full validation suite before the next phase begins.
+Each phase should have a rough timeline estimate and must pass the full validation suite before the next phase begins.
 
 **Present to user**: Show the phasing breakdown. Walk through the dependency order. Ask:
 - "Are there features in Phase 2 that actually depend on something not in Phase 1?"
@@ -62,236 +57,39 @@ Refine based on discussion before proceeding.
 
 ## 9.5. Lock project directory structure
 
-Based on the locked tech stack (frontend framework, backend runtime, ORM, test runner, surfaces, contracts directory), generate a canonical directory tree for the project.
+Based on the locked tech stack, generate a canonical directory tree.
 
 1. Build the tree showing where source code, contracts/schemas, tests, config files, and build output live — tailored to the confirmed stack
-2. Present the tree to the user with one-line descriptions per top-level directory:
+2. Present the tree to the user with one-line descriptions per top-level directory. Adapt the tree to the actual stack — e.g., a CLI project won't have `components/`, a monorepo will have `apps/` and `packages/`
+3. Build an architecture separation table mapping each concern to its directory and runtime
+4. **Present to user**: Show the directory tree and architecture table. Ask: "Does this structure match your expectations?" **Do not proceed until explicit approval.**
+5. After approval, fire bootstrap with: `PROJECT_STRUCTURE`, `ARCHITECTURE_TABLE`, `CONTRACTS_DIR`, `BUILD_OUTPUT_DIR`
+6. Append a `## Directory Structure` section to `docs/plans/architecture-draft.md`
 
-```
-src/              — Application source code
-  contracts/      — Zod schemas (shared source of truth)
-  components/     — UI components (if frontend surface exists)
-  routes/         — API routes / page routes
-  lib/            — Shared utilities and helpers
-tests/            — Test files mirroring src/ structure
-public/           — Static assets (if web surface)
-docs/             — Specifications and plans
-dist/             — Build output (gitignored)
-```
-
-   Adapt the tree to the actual stack — e.g., a CLI project won't have `components/` or `public/`, a monorepo will have `apps/` and `packages/`, etc.
-
-3. Build an architecture separation table mapping each architectural concern to its directory and the runtime where it executes:
-
-| Concern | Location | Runtime |
-|---------|----------|---------|
-| Contracts/schemas | `src/contracts/` | Shared (build-time) |
-| API routes | `src/routes/api/` | Server |
-| UI components | `src/components/` | Client |
-| Business logic | `src/lib/` | Server |
-| Tests | `tests/` | Test runner |
-
-4. **Present to user**: Show the directory tree and architecture table. Ask: "Does this structure match your expectations? Any directories to add, rename, or reorganize?" **Do not proceed until explicit approval.**
-
-5. After approval, fire bootstrap with these keys:
-   - `PROJECT_STRUCTURE` — the approved directory tree
-   - `ARCHITECTURE_TABLE` — the concern/location/runtime table
-   - `CONTRACTS_DIR` — path to the contracts directory (e.g., `src/contracts/`)
-   - `BUILD_OUTPUT_DIR` — path to the build output directory (e.g., `dist/`)
-
-   Bootstrap writes these into `.agent/instructions/structure.md` via `bootstrap-agents-fill`.
-
-6. Append a `## Directory Structure` section to `docs/plans/architecture-draft.md` containing the approved tree and architecture table.
-
-> If invoked standalone (not from `/create-prd`), surface via `notify_user`.
+> If invoked standalone, surface via `notify_user`.
 
 ## 10. Compile architecture design document
 
-Read `docs/plans/architecture-draft.md` as the source of all decisions made in prior shards. Do not rely on the context window — the draft document is the authoritative source. Compile it into the final `docs/plans/YYYY-MM-DD-architecture-design.md` (use today's date) with:
+Read `docs/plans/architecture-draft.md` as the authoritative source. Read `.agent/skills/prd-templates/references/architecture-design-template.md` for the document structure. Compile it into `docs/plans/YYYY-MM-DD-architecture-design.md` (use today's date).
 
-> **Template depth rule**: The section descriptions below are MINIMUM headings, not
-> maximum content. Each section must contain the full detail gathered during steps
-> 3-9 — every decision with rationale, every flow with steps, every error case
-> with handling. If a section is under 200 words, it's almost certainly too shallow.
-> The depth-standards rule applies: could a developer interpret this two different
-> ways? If yes, add more detail.
-
-```markdown
-# [Project Name] — Architecture Design
-
-> **Vision**: [link to vision.md]
-> **Date**: YYYY-MM-DD
-> **Status**: Draft | Review | Approved
-> **Project Type**: [Single-surface: web/desktop/mobile/CLI/API | Multi-surface: list surfaces]
-
-## Tech Stack
-[Explicit decision for each applicable axis with rationale — not just the choice,
-but WHY this choice over alternatives, what trade-offs were accepted, and what
-constraints drove the decision. For multi-surface projects, organized by surface.]
-
-## System Architecture
-[Component diagram, data flow, deployment topology — every service named, every
-communication path documented, every failure mode identified. For multi-surface:
-include surface interconnection diagram and shared domain boundary.]
-
-## Data Strategy
-[Placement, schema design, query patterns, migrations — which data lives where
-and why, what the hot paths are, how schema evolves. For multi-surface: data
-ownership, sync protocol, conflict resolution.]
-
-## Security Model
-[Auth, authorization, validation, rate limits — every flow specified step-by-step,
-every permission rule scoped, every error case handled]
-
-## Compliance & Safety
-[If applicable — full depth on minors/payments/health/regulated domains.
-This section may be the largest in the document if compliance constraints
-are significant. Every account type, every consent flow, every content filter,
-every notification trigger, every audit requirement.]
-
-## API Design
-[Surface type, versioning, conventions — endpoint naming, request/response shapes,
-error format, pagination strategy. For multi-surface: shared API contract format.]
-
-## Integration Points
-[External services, failure modes, fallbacks, cost models — for each: what it
-provides, what happens when it's down, what the fallback is]
-
-## Development Methodology
-[Contract-first, TDD, vertical slices, spec layers, quality gates — the full
-process, not just labels]
-
-## Phasing
-[Phase breakdown with feature allocation, dependency order, and timeline estimates.
-Each phase has explicit entry/exit criteria. For multi-surface: per-surface or
-cross-surface phasing strategy.]
-
-## Directory Structure
-[The approved source directory tree from Step 9.5, with one-line descriptions per directory.
-Includes: contracts directory path, test layout, build output path, surface subtrees for multi-surface projects.]
-
-## Architecture Separation
-[The concern/location/runtime table from Step 9.5 — maps each architectural concern to its
-directory and the runtime where it executes.]
-
-## Installed Skills
-[List of skills installed during this workflow with versions]
-
-## Decisions Log
-[Every decision made during this workflow with rationale — not just what was
-decided, but what alternatives were considered and why they were rejected]
-
-## Open Questions
-[Anything needing resolution before decomposition — with owner and deadline]
-```
+> **Depth rule**: Each section must contain the full detail gathered during steps 3-9. If a section is under 200 words, it's almost certainly too shallow. Apply the two-implementer test.
 
 ## 11. Compile Engineering Standards
 
-Create `docs/plans/ENGINEERING-STANDARDS.md` — the non-negotiable quality bar for the project.
-
-This document codifies every quality decision from the architecture design into enforceable thresholds. It is referenced by `AGENTS.md`, `.agent/instructions/workflow.md`, and `.agent/instructions/structure.md` — agents will refuse to mark work complete if it violates these standards.
-
-```markdown
-# [Project Name] — Engineering Standards
-
-> **Architecture**: [link to architecture-design.md]
-> **Date**: YYYY-MM-DD
-> **Status**: Draft | Review | Approved
-
-## Test Coverage
-- Minimum unit test coverage: [e.g., 80%]
-- Integration test requirement: [e.g., every API endpoint]
-- E2E test requirement: [e.g., every critical user flow]
-- Coverage tool: [e.g., vitest coverage-v8]
-
-## Linting & Formatting
-- Linter: [e.g., ESLint with strict config]
-- Formatter: [e.g., Prettier]
-- Type checker: [e.g., TypeScript strict mode]
-- Pre-commit hooks: [yes/no, tool]
-
-## Performance Budgets
-
-### Web surfaces (if applicable)
-- LCP target: [e.g., < 2.5s]
-- FID target: [e.g., < 100ms]
-- CLS target: [e.g., < 0.1]
-- Bundle size limit: [e.g., < 200KB initial JS]
-
-### Desktop surfaces (if applicable)
-- Cold start target: [e.g., < 2s]
-- Memory ceiling: [e.g., < 200MB idle, < 500MB active]
-- Installer size: [e.g., < 100MB]
-
-### Mobile surfaces (if applicable)
-- App launch target: [e.g., < 1.5s cold, < 0.5s warm]
-- Battery impact: [e.g., < 5% per hour active use]
-- App download size: [e.g., < 50MB]
-
-### API / shared services
-- API response time: [e.g., p95 < 500ms]
-- Throughput target: [e.g., 1000 req/s]
-
-### CLI surfaces (if applicable)
-- Execution time: [e.g., < 500ms for common operations]
-- Binary size: [e.g., < 20MB]
-- Startup latency: [e.g., < 100ms]
-
-## Accessibility
-- WCAG level: [e.g., 2.1 AA] (web/mobile)
-- Screen reader testing: [required/optional]
-- Keyboard navigation: [all interactive elements]
-- Platform accessibility APIs: [e.g., UIAccessibility for iOS, AccessibilityNodeInfo for Android]
-
-## Security
-- Dependency audit: [e.g., npm audit on every CI run]
-- Secret scanning: [tool/approach]
-- CSP policy: [strict/relaxed + details] (web surfaces)
-- Code signing: [signing certificate strategy] (desktop/mobile surfaces)
-
-## Code Quality
-- Max file length: [e.g., 300 lines]
-- Max function length: [e.g., 50 lines]
-- Max cyclomatic complexity: [e.g., 10]
-- Required documentation: [public APIs / all exports / none]
-
-## CI/CD Gates
-- Tests must pass: [yes]
-- Lint must pass: [yes]
-- Type-check must pass: [yes]
-- Build must succeed: [yes]
-- Coverage threshold met: [yes]
-
-## Validation Command
-[The single command that enforces all of the above]
-```
-
-Fill in concrete values based on the tech stack decisions from step 3 and the methodology from step 8. **No TBDs allowed** — every threshold must be a specific number or explicit decision.
+Read `.agent/skills/prd-templates/references/engineering-standards-template.md` for the document structure. Create `docs/plans/ENGINEERING-STANDARDS.md` — the non-negotiable quality bar for the project. Fill in concrete values based on tech stack decisions from step 3 and methodology from step 8. **No TBDs allowed.**
 
 ## 12. Request review and propose next steps
+
+Run a pre-flight self-check before presenting. Read `.agent/skills/pipeline-rubrics/references/architecture-rubric.md` and apply each of the 9 dimensions as a self-check. For any dimension scoring ⚠️ or ❌, fix it now before presenting.
 
 Call `notify_user` presenting:
 - `docs/plans/YYYY-MM-DD-architecture-design.md` (use the actual dated filename)
 - `docs/plans/ENGINEERING-STANDARDS.md`
-- This is a pre-flight sanity check, not a gate. The mandatory gate is `/audit-ambiguity architecture`. Fix any gaps found here before presenting.
-
-For each dimension, apply the two-implementer test: *"Would two different developers, reading only this spec with no other context, make the same decision?"* If you cannot answer yes with a specific citation — score ⚠️ and fix it now.
-
-  1. **Tech Stack Decisiveness** — Every applicable axis has a named technology + rationale + what alternatives were rejected and why. No axis uses "TBD" or "standard".
-  2. **System Architecture** — Every component is named. Every communication path has a protocol. Every component has a defined failure mode and fallback. Data flow is traced end-to-end with every hop named.
-  3. **Data Strategy** — Every entity has a named canonical store. Every hot query path is identified. Migration strategy names the tool and approach. PII fields are enumerated by name.
-  4. **Security Model** — Auth flow is step-by-step. Every role has an explicit permission list. Rate limits are numbers (not "standard"). Input validation names the library and where it runs.
-  5. **Compliance Depth** — Every regulated domain has its own section with: account type hierarchy, consent flows, content filtering rules, audit requirements. No compliance domain is a sub-bullet.
-  6. **API Design** — Versioning strategy is named. Error format is defined (fields, types). Pagination strategy is named with parameters. Rate limit headers are specified.
-  7. **Integration Robustness** — Every external service has: what it provides + failure mode + fallback strategy + cost model. No external is listed without a fallback.
-  8. **Phasing Clarity** — Every phase has: entry criteria + exit criteria + dependency list. No phase uses "when ready" as a criterion.
-  9. **Engineering Standards** — Every threshold is a number (coverage %, response time ms, bundle size KB). No threshold uses "good", "acceptable", or "TBD".
-- The completeness checklist: every threshold in ENGINEERING-STANDARDS.md is a concrete value, every section in the architecture document has ≥200 words of depth, every decision has rationale
+- The self-check results (all 9 dimensions with scores)
 - Any gaps resolved during the self-check
 
 > **Both documents must be approved before proceeding. Do NOT proceed until the user sends a message explicitly approving this output.**
 
 ### Proposed next steps
 
-**Hard gate**: Run `/audit-ambiguity architecture`. This is unconditionally mandatory — the self-check above cannot replace it. The agent that wrote the architecture cannot certify it is clean.
-
+**Hard gate**: Run `/audit-ambiguity architecture`. This is unconditionally mandatory — the self-check above cannot replace it.

@@ -121,28 +121,5 @@ Call `notify_user` presenting:
 
 Once approved, run `/write-fe-spec-write`.
 
-> **Seed the spec file**: After classification is approved, create the spec file at `docs/plans/fe/[NN-feature-name].md` with the following stub before presenting next steps:
-
-```markdown
-# [Feature] — Frontend Specification
-
-> **BE Source**: [link to BE spec(s)]
-> **IA Source**: [link to IA shard]
-> **Status**: Classifying
-
-## Classification
-- **Type**: [feature spec | cross-cutting]
-- **BE Source(s)**: [list]
-- **IA Source**: [shard name]
-
-## Referenced Material Inventory
-[same format as BE classify stub]
-
-## Design Requirements (extracted from brand-guidelines)
-**Direction**: [confirmed direction]
-**Typography**: [extracted]
-**Colors**: [extracted]
-**Motion**: [extracted]
-**Anti-patterns**: [extracted]
-```
+> **Seed the spec file**: After classification is approved, read `.agent/skills/prd-templates/references/fe-spec-template.md` for the **FE Spec Seed Stub** (under the `## FE Spec Seed Stub` heading at the bottom of the file). Also read `.agent/skills/prd-templates/references/be-spec-template.md` for the Referenced Material Inventory format. Create the spec file at `docs/plans/fe/[NN-feature-name].md` using the stub, filling in classification details, Referenced Material Inventory, and Design Requirements from above.
 

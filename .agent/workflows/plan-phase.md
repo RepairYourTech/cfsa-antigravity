@@ -107,28 +107,7 @@ fully specified, and production-ready.
 
 ## 4. Write acceptance criteria
 
-For each slice, define testable acceptance criteria **and assign surface tags**:
-
-```markdown
-### Slice N: [Name]
-**Size**: S/M/L
-**Surfaces**: Contract, API, DB, UI
-
-#### Tasks
-- [ ] Contract: Zod schema for [entity] ← no tag (orchestrator handles sequentially)
-- [ ] `BE` API endpoints for [entity] ← backend agent
-- [ ] `FE` [entity] page and components ← frontend agent
-- [ ] `QA` Integration tests for [entity] ← QA agent (runs FIRST to write failing tests, AND after BE+FE to verify)
-
-#### Acceptance Criteria
-- [ ] Given [context], when [action], then [result]
-- [ ] Given [context], when [error condition], then [error response]
-- [ ] [Performance/security criteria if applicable]
-
-#### Dependencies
-- Requires: Slice M
-- Enables: Slice P
-```
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Slice Acceptance Criteria** template. For each slice, use the template to define testable acceptance criteria with surface tags:
 
 > **Write as you go**: After completing acceptance criteria for each slice, immediately append that slice's entry to `docs/plans/phases/phase-N-draft.md` (create the file if it doesn't exist). Do not accumulate all slices in context and write them all at once in Step 5.
 

@@ -1,0 +1,13 @@
+# Architecture Rubric (9 dimensions)
+
+| # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
+|---|---|---|---|---|
+| 1 | Tech Stack Decisiveness | Every applicable axis has a named technology + rationale + what alternatives were rejected and why. No axis uses "TBD" or "standard". | Some axes decided, some TBD or rationale missing | Major axes undecided |
+| 2 | System Architecture | Every component is named. Every communication path has a protocol. Every component has a defined failure mode and fallback. Data flow is traced end-to-end with every hop named. | Some components or flows missing, or failure modes absent | Diagram only, no flows or failure modes |
+| 3 | Data Strategy | Every entity has a named canonical store. Every hot query path is identified. Migration strategy names the tool and approach. PII fields are enumerated by name. | Some entities without canonical store, or PII not enumerated | Sketched only |
+| 4 | Security Model | Auth flow is step-by-step. Every role has an explicit permission list. Rate limits are numbers (not "standard"). Input validation names the library and where it runs. | Some flows vague or rate limits unspecified | Not addressed |
+| 5 | Compliance Depth | Every regulated domain (minors, payments, health) has its own section with: account type hierarchy, consent flows, content filtering rules, audit requirements. No compliance domain is a sub-bullet. | Mentioned but in a sub-bullet without full depth | Not addressed |
+| 6 | API Design | Versioning strategy is named. Error format is defined (fields, types). Pagination strategy is named with parameters. Rate limit headers are specified. | Some conventions missing | Not addressed |
+| 7 | Integration Robustness | Every external service has: what it provides + failure mode + fallback strategy + cost model. No external is listed without a fallback. | Some externals missing fallback or cost model | Externals unnamed |
+| 8 | Phasing Clarity | Every phase has: entry criteria + exit criteria + dependency list. No phase uses "when ready" as a criterion. | Phases listed without entry/exit criteria | No phasing |
+| 9 | Engineering Standards | Every threshold is a number (coverage %, response time ms, bundle size KB). No threshold uses "good", "acceptable", or "TBD". | Some thresholds concrete, some vague | Missing |

@@ -1,0 +1,14 @@
+# FE Rubric (10 dimensions)
+
+| # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
+|---|---|---|---|---|
+| 1 | Upstream Traceability | Every component cites its BE source spec + field. Every page cites its IA user flow. No component is "inferred" from context. | Some components or pages missing source citations | No mapping |
+| 2 | Component Inventory | Every component has: name + props interface (all props typed) + children + variants. No component uses "standard props" or "typical interface". | Some components missing props or variants | Vague component list |
+| 3 | State Management | Every piece of state is classified: server state (which query) + client state (which store) + URL state (which param). Loading, error, and empty states are defined for every async operation. | Some state unclassified or async states missing | Unspecified |
+| 4 | Interactions | Every interactive element has: trigger + action + feedback (visual + timing). Every form has: validation rules + error display + submission behavior + success behavior. | Some interactions implicit or missing feedback | Unspecified |
+| 5 | Routing | Every route has: URL pattern + auth guard (yes/no + redirect target) + page component + meta (title, description). No route uses "standard guard" without defining it. | Some routes missing guards or meta | Vague |
+| 6 | Responsive | Every component has behavior defined at: mobile (≤768px) + tablet (769–1024px) + desktop (≥1025px). No component uses "responsive" without defining the behavior at each breakpoint. | Mobile mentioned but tablet/desktop missing | Not addressed |
+| 7 | Accessibility | Every interactive element has: ARIA role + keyboard navigation + screen reader label. Every image has alt text policy. WCAG level is named. | Partial — some elements missing ARIA or keyboard nav | Not addressed |
+| 8 | Error/Loading States | Every data-fetching view has: loading skeleton/spinner + error message + retry action + empty state. No state uses "standard loading" without defining it. | Some states missing or using generic messages | None |
+| 9 | Performance | Every page has: bundle size budget + lazy loading strategy for heavy components + image optimization policy. No page uses "optimized" without a number. | Some pages missing budgets or lazy loading strategy | Not addressed |
+| 10 | Security Rules | Every form has: CSRF protection + input sanitization + output encoding. Every auth-gated view has: token validation + expiry handling + redirect on failure. | Some forms or views missing security rules | Not mentioned |

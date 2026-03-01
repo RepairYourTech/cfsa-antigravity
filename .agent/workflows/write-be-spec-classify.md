@@ -133,27 +133,7 @@ Call `notify_user` presenting:
 
 Once approved, run `/write-be-spec-write`.
 
-> **Seed the spec file**: After classification is approved, create the spec file at `docs/plans/be/[NN-feature-name].md` with the following stub before presenting next steps:
-
-```markdown
-# [Feature] — Backend Specification
-
-> **IA Source**: [link to IA shard]
-> **Status**: Classifying
-
-## Classification
-- **Type**: [feature domain | multi-domain | cross-cutting | structural reference | composite]
-- **BE Specs to produce**: [N]
-- **Split boundaries** (if multi-domain): [list]
-
-## Referenced Material Inventory
-Primary: [shard-file.md] (full shard)
-Cross-refs:
-  - [file.md] § [section] (lines N–M)
-  - ...
-Deep dives:
-  - [deep-dive.md] — [key decisions extracted]
-```
+> **Seed the spec file**: After classification is approved, read `.agent/skills/prd-templates/references/be-spec-template.md` for the **BE Spec Seed Stub** template. Create the spec file at `docs/plans/be/[NN-feature-name].md` using the stub, filling in the classification details and Referenced Material Inventory from above.
 
 For structural reference classification (0 BE specs): confirm no write shard is needed and propose moving to the next IA shard instead.
 

@@ -9,7 +9,7 @@ pipeline:
   stage: vision
   predecessors: [ideate-discover]
   successors: [create-prd]
-  skills: [idea-extraction, resolve-ambiguity]
+  skills: [idea-extraction, resolve-ambiguity, prd-templates, pipeline-rubrics]
   calls-bootstrap: false
 ---
 
@@ -19,7 +19,7 @@ pipeline:
 
 Explore constraints, success metrics, and competitive positioning. Run domain exhaustion and vision deepening passes. Compile the vision document.
 
-**Prerequisite**: If invoked standalone, verify that domain mapping and feature inventory have been completed (from `/ideate-discover` or equivalent context). The agent should have a domain coverage map and MoSCoW feature inventory available.
+**Prerequisite**: If invoked standalone, verify that domain mapping and feature inventory have been completed (from `/ideate-discover` or equivalent context).
 
 ---
 
@@ -35,184 +35,75 @@ Explore constraints through targeted questions:
 
 ### Project surface classification
 
-This is one of the most important architectural inputs. Classify the project:
+Classify the project surfaces. Ask explicitly:
 
-| Surface Type | Description | Examples |
-|-------------|-------------|---------|
-| **Web app** | Browser-based application | SaaS dashboard, marketing site, customer portal |
-| **Desktop app** | Native or hybrid desktop application | POS system, IDE, media editor, CAD tool |
-| **Mobile app** | Native or hybrid mobile application | iOS/Android app, field service tool |
-| **CLI tool** | Command-line interface | Build tool, dev utility, automation script |
-| **API service** | Backend-only, consumed by other systems | Payment gateway, data pipeline, integration layer |
-| **Multi-surface** | Multiple connected applications | Desktop POS + web portal, mobile app + web dashboard + API |
-
-Ask explicitly:
-
-1. **What surfaces does this project have?** — It may be more than one
+1. **What surfaces does this project have?** — Web app, desktop app, mobile app, CLI tool, API service, or multi-surface
 2. **For desktop/mobile: cross-platform?**
-   - Desktop: Windows + macOS + Linux? Or single OS?
-   - Mobile: iOS + Android? Or single platform?
-   - Desktop + Mobile shared: Same codebase across desktop AND mobile? (Flutter, Kotlin Multiplatform, .NET MAUI)
 3. **For multi-surface: how are they connected?**
-   - What data/functionality is shared between surfaces?
-   - Does any surface need to work offline?
-   - Are they one product or separate products that integrate?
 
 > **Why this matters**: The surface classification drives folder structure in
 > `/decompose-architecture`, tech stack decisions in `/create-prd`, and the
-> shape of every spec downstream. Getting it right here prevents rework later.
+> shape of every spec downstream.
 
-Record the classification in the Constraints section of vision.md with enough detail for `/create-prd` to act on it.
+Record the classification in the Constraints section of vision.md.
 
 ## 7. Success metrics
 
 Define measurable success criteria:
 
-1. **Launch criteria** — What must be true to ship? (Every item must be production-grade)
-2. **Growth metrics** — DAU, retention, conversion targets (even rough estimates)
-3. **Technical metrics** — Platform-appropriate performance targets:
-   - Web: Core Web Vitals (LCP, FID, CLS), bundle size, uptime SLA
-   - Desktop: Cold start time, memory footprint, installer size
-   - Mobile: App launch time, battery impact, app download size
-   - CLI: Execution time, binary size, startup latency
-   - API: Response time (p50/p95/p99), throughput, error budget
-   - Multi-surface: Per-surface targets + sync latency between surfaces
+1. **Launch criteria** — What must be true to ship?
+2. **Growth metrics** — DAU, retention, conversion targets
+3. **Technical metrics** — Platform-appropriate performance targets (web: Core Web Vitals; desktop: cold start, memory; mobile: launch time, battery; CLI: execution time; API: p50/p95/p99)
 
 ## 8. Competitive positioning
 
-Ask the user:
-
-1. **Who are the top 3 competitors?** — Or search the web to find them
-2. **What's the unique angle?** — Why would someone choose this over alternatives?
-3. **What's the moat?** — What's defensible long-term?
+1. **Who are the top 3 competitors?**
+2. **What's the unique angle?**
+3. **What's the moat?**
 
 ## 9. Domain exhaustion check
 
-Before compiling the vision document, check the domain coverage map:
+1. Display the coverage map to the user
+2. Flag under-explored domains (any domain with <3 explored sub-topics)
+3. For each, ask: "Should we explore it now, or is it intentionally minimal?"
+4. Continue until all domains reach ≥3 sub-topics OR user confirms intentionally minimal
 
-1. **Display the coverage map** to the user: "Here's where we are across all domains."
-2. **Flag under-explored domains** — any domain with <3 explored sub-topics
-3. **For each under-explored domain, ask:** "We haven't gone deep on [domain]. Should we explore it now, or is it intentionally minimal?"
-4. **Continue exploring** until all domains reach ≥3 sub-topics explored OR the user explicitly confirms the domain is intentionally minimal
-
-Only proceed to compilation when:
-- Overall coverage ≥80%
-- Every Must Have feature explored to ≥Level 2
-- User has confirmed the coverage map
+Only proceed when: overall coverage ≥80%, every Must Have explored to ≥Level 2, user has confirmed.
 
 ## 10. Vision deepening pass
 
-Before compiling, do one deepening pass across the entire captured material:
+One deepening pass across all captured material:
 
-1. **Persona gaps** — For each persona: "Is there a scenario where this persona's needs conflict with another's?" Add any conflicts found.
-2. **Feature completeness** — For each Must Have: "What implicit sub-features does this require?" (e.g., "user accounts" implies signup, login, password reset, profile management, account deletion). Surface the implicit features and confirm with the user.
-3. **Constraint interactions** — Do any constraints conflict? (e.g., "launch in 3 months" vs "COPPA compliance" may be in tension). Surface conflicts for the user to resolve.
-4. **Surface completeness** — For multi-surface projects: does every surface have clear ownership of its features? Are there features that span surfaces without a clear primary owner?
-5. **Missing "Won't Have"** — Are there obvious features the user hasn't explicitly excluded that might creep in? Add them to Won't Have for clarity.
+1. **Persona gaps** — scenarios where personas conflict
+2. **Feature completeness** — implicit sub-features (e.g., "user accounts" implies signup, login, reset, profile, deletion)
+3. **Constraint interactions** — conflicting constraints
+4. **Surface completeness** — does every surface have clear feature ownership?
+5. **Missing "Won't Have"** — obvious features to explicitly exclude
 
-Present findings to the user. Refine based on discussion.
+Present findings. Refine based on discussion.
 
 ## 11. Compile vision document
 
-Compile `docs/plans/vision.md` from the current state of `docs/plans/ideation.md`. The ideation document is the authoritative source — do not add material that isn't in it, and do not drop material that is.
+Read `.agent/skills/prd-templates/references/vision-template.md` for the document structure. Compile `docs/plans/vision.md` from `docs/plans/ideation.md`. The ideation document is the authoritative source — do not add or drop material.
 
-Create `docs/plans/vision.md` with this structure:
-
-```markdown
-# [Project Name] — Vision
-
-> One-sentence pitch: [from Step 4]
-
-## Problem Statement
-[From Step 4, refined]
-
-## User Personas
-[2-4 personas with name, role, pain point, success criteria, switching trigger]
-
-## Feature Inventory (MoSCoW)
-### Must Have (Phase 1)
-[Each feature with sub-features and key edge cases — Level 2 depth minimum]
-### Should Have (Phase 2)
-[Each feature with sub-features identified]
-### Could Have (Phase 3+)
-### Won't Have (explicitly excluded)
-
-## Feature Interactions
-[Confirmed cross-cutting interactions from ideation. Empty if no cross-cutting work was done.]
-
-### [Interaction Name]
-- **Domains involved**: [list]
-- **Trigger**: [what causes the interaction]
-- **Source of truth**: [which domain owns the state]
-- **Behavior per domain**: [what each domain does when triggered]
-- **Conflicts & resolution**: [if any]
-- **Cascading effects**: [second-order interactions, if any]
-
-## Constraints
-[Budget, timeline, team, compliance, performance]
-
-### Project Surfaces
-[Surface classification — which surfaces, cross-platform decisions,
-multi-surface connections. This section drives /create-prd tech stack decisions.]
-
-## Success Metrics
-[Launch criteria, growth targets, platform-appropriate technical targets]
-
-## Competitive Landscape
-[Competitors, unique angle, defensible moat]
-
-## Domain Coverage Summary
-[Summary of all explored domains with depth indicators.
-References to appendices for domain-rich topics.]
-
-## Open Questions
-[Anything unresolved that needs answers before architecture — with owners and deadlines]
-```
-
-### Domain appendices (for complex projects)
-
-If any domain has extensive material that doesn't fit the vision template
-(hero rosters, order system state machines, algorithm specifications, detailed interaction
-flows), create domain appendix files:
-
-- Path: `docs/plans/vision-appendix-{domain-slug}.md`
-- Reference from the main vision.md: `See [Domain Name Appendix](vision-appendix-{domain-slug}.md)`
-- Examples: `vision-appendix-hero-roster.md`, `vision-appendix-order-systems.md`, `vision-appendix-ai-orchestration.md`
-
-These appendices are consumed by downstream workflows (`/create-prd`, `/decompose-architecture`)
-as additional context alongside the main vision document.
-
-**When to create appendices:**
-- A domain section in vision.md would exceed ~100 lines of detail
-- The domain has specific technical artifacts (state machines, algorithms, formulas)
-- The domain has enumeration-heavy content (lists of items, types, categories)
+Create domain appendices for domains with extensive material (>100 lines, technical artifacts, enumeration-heavy content) at `docs/plans/vision-appendix-{domain-slug}.md`.
 
 ## 12. Request review and propose next steps
 
-Before presenting to the user, run a **pre-flight self-check** (not a gate — the mandatory gate is `/audit-ambiguity vision`). Fix any gaps found here before presenting — do not present a vision document with known gaps.
+Run a pre-flight self-check. Read `.agent/skills/pipeline-rubrics/references/vision-rubric.md` and apply each of the 7 dimensions. Also check:
 
-For each dimension, apply the two-implementer test: *"Would two different developers, reading only this spec with no other context, make the same decision?"* If you cannot answer yes with a specific citation — score ⚠️ and fix it now.
+- **Input-Output Fidelity** — Two-layer check: (1) every major section of the original source maps to `ideation.md`; (2) every section in `ideation.md` maps to `vision.md` — nothing dropped.
 
-1. **Problem Clarity** — Single sentence. Names a specific user. Names a specific pain. Is falsifiable. No vague multi-problem statement.
-2. **Persona Specificity** — Each persona has: name + role + specific pain point + current workaround + success criteria + switching trigger. No persona uses "users" or "customers" without a role.
-3. **Feature Completeness** — Every Must Have has ≥2 levels of sub-features. Every sub-feature has at least one edge case. MoSCoW categories are mutually exclusive.
-4. **Constraint Explicitness** — Every axis (budget, timeline, team size, compliance, performance) has a specific value or explicit "not applicable". No axis uses "standard" or "TBD".
-5. **Success Measurability** — Every metric is a number with a unit and a timeframe. No metric uses "fast", "good", or "acceptable".
-6. **Competitive Positioning** — ≥3 named competitors. Differentiation is a specific capability gap. Moat is a defensible mechanism.
-7. **Open Question Resolution** — Every open question has: owner + deadline + what decision it blocks. No question is listed without an owner.
-8. **Input-Output Fidelity** — Two-layer check: (1) Source → `ideation.md`: every major section of the original source maps to `ideation.md`; (2) `ideation.md` → `vision.md`: every section in `ideation.md` maps to `vision.md` — nothing dropped during compilation.
-
-For any dimension scoring ⚠️ or ❌, resolve it before presenting. Do not present a vision document with known gaps.
+For any dimension scoring ⚠️ or ❌, resolve it before presenting.
 
 Call `notify_user` presenting:
-- `docs/plans/vision.md` and any appendices (`docs/plans/vision-appendix-*.md`)
-- The self-check summary (all 8 dimensions with their ✅/⚠️/❌ scores)
-- Any gaps that were resolved during the self-check (what was found and how it was fixed)
+- `docs/plans/vision.md` and any appendices
+- The self-check summary (all dimensions with ✅/⚠️/❌ scores)
+- Any gaps resolved during the self-check
 - The final domain coverage map
 
-> **Do NOT proceed until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval.**
+> **Do NOT proceed until the user sends a message explicitly approving this output.**
 
 ### Proposed next steps
 
-**Hard gate**: Do NOT propose `/create-prd` until `/audit-ambiguity vision` has run as a fresh invocation and scored 0% ambiguity. The self-check above is a pre-flight sanity check — it cannot replace the audit.
-
+**Hard gate**: Do NOT propose `/create-prd` until `/audit-ambiguity vision` has run as a fresh invocation and scored 0% ambiguity.

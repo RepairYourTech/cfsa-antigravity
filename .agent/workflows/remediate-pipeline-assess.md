@@ -119,34 +119,6 @@ Use `notify_user` to present the following:
 
 ---
 
-## 5. Write remediation state
-
-Create or update `docs/audits/remediation-state.md`:
-
-```markdown
-# Remediation State
-
-> Generated: [ISO 8601 date]
-
-## Layer Status
-
-- vision: [confirmed-clean | unverified-clean | needs-audit | no-content]
-- architecture: [confirmed-clean | unverified-clean | needs-audit | no-content]
-- ia: [confirmed-clean | unverified-clean | needs-audit | no-content]
-- be: [confirmed-clean | unverified-clean | needs-audit | no-content]
-- fe: [confirmed-clean | unverified-clean | needs-audit | no-content]
-
-## Current Layer
-
-[layer — the layer to process next]
-
-## Layers Confirmed Clean This Session
-
-(none yet)
-
-## Notes
-
-[Any relevant context — e.g., "User requested starting from IA; vision and architecture were already confirmed clean"]
-```
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Remediation State** template. Create or update `docs/audits/remediation-state.md` using the template, filling in layer statuses from Step 2 and the current layer from Step 3.
 
 After writing `remediation-state.md`, proceed to run `.agent/workflows/remediate-pipeline-execute.md`.

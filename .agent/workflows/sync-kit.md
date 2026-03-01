@@ -77,23 +77,7 @@ Project-specific files (ones that only exist in the project, not the kit) were w
 
 ### 5a. Build the integration inventory
 
-List everything the kit added or changed in this sync:
-
-```markdown
-## New Kit Content Since Last Sync
-
-### New Rules
-- [list new rules, e.g. boundary-not-placeholder]
-
-### New Skills
-- [list new skills, e.g. parallel-agents, parallel-debugging, parallel-feature-development]
-
-### Changed Rules/Instructions
-- [list what changed, e.g. tdd-always now references BOUNDARY stubs]
-
-### New Concepts
-- [list new concepts, e.g. boundary stubs, file ownership, synthesis protocol]
-```
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Sync Integration Inventory** template. Use the template to build the inventory of everything the kit added or changed.
 
 ### 5b. Scan each project-specific file
 

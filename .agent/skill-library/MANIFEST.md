@@ -321,10 +321,8 @@ These skills are NOT auto-installed. Install via `/find-skills` or manually copy
 
 | Library Path | Description |
 |-------------|-------------|
-| `meta/skill-creator` | Guide for creating new skills |
 
 | `meta/mcp-builder` | Building MCP servers |
-| `meta/antigravity-workflow-authoring` | Antigravity workflow files |
 | `meta/systematic-debugging` | Four-phase root cause debugging methodology |
 | `meta/parallel-debugging` | Multi-agent parallel debugging dispatch |
 | `meta/minimalist-surgical-development` | Minimal, surgical codebase modifications |

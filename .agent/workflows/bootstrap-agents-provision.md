@@ -66,31 +66,7 @@ After provisioning, build a markdown list of all installed skills (both defaults
 
 Also update `{{INSTALLED_SKILLS}}` in `AGENTS.md` and `GEMINI.md` with the same installed skills list. These root agent config files must reflect the full skill inventory so agents reading them have complete context.
 
-```markdown
-### Default Skills
-- fix-bug — TDD bug fix workflow
-- refactor — Safe refactoring with test verification
-- add-feature — Add feature to existing architecture
-- deploy — Full deployment pipeline
-- pr-review — Structured PR review
-- security-audit — Security review across all layers
-- main-workflow — General development workflow
-- iterate-plan — Tech stack gap analysis
-- setup-session — Session initialization
-- using-git-worktrees — Isolated workspace management
-- github-workflow-automation — GitHub CI/CD patterns
-- audit-context-building — Deep code analysis
-- context7-auto-research — Auto documentation lookup
-- self-improving-agent — Learning from experiences
-
-### Stack Skills
-- [skill-name] — [description] (installed for [STACK_KEY]=[value])
-- ...
-
-### Surface Skills
-- [skill-name] — [description] (installed for [surface] surface)
-- ...
-```
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Installed Skills List** template. Use the template structure, filling in actual installed skill names and descriptions.
 
 ### 8.5. Compose and fill FRAMEWORK_PATTERNS
 
