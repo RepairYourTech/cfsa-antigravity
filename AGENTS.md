@@ -67,6 +67,12 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | | `/remediate-pipeline` | Existing pipeline output | Layer-by-layer audit + remediation + confirmation | Quality Gate |
 | ↳ | `/remediate-pipeline-assess` | Pipeline state | Remediation plan + layer status | Quality Gate |
 | ↳ | `/remediate-pipeline-execute` | Remediation plan | Clean layers + advancement | Quality Gate |
+| | `/propagate-decision` | Locked decision + downstream docs | Corrected specs + propagation record | Correction |
+| ↳ | `/propagate-decision-scan` | Decision type selection | Impact report (explicit + implicit) | Correction |
+| ↳ | `/propagate-decision-apply` | Impact report | Fixed specs + ambiguity flags | Correction |
+| | `/evolve-feature` | New feature/requirement description | Updated specs across all affected layers | Evolution |
+| ↳ | `/evolve-feature-classify` | Feature description | Classified change + new content at entry point | Evolution |
+| ↳ | `/evolve-feature-cascade` | Classified change + entry point | Layer-by-layer additions + implementation impact | Evolution |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
@@ -79,7 +85,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > of their parent command. The parent orchestrates them in sequence, but each shard
 > can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
 > sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
-> `/resolve-ambiguity` is a utility command callable from any stage — it is not a sequential pipeline step.
+> `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, and `/evolve-feature` are utility commands callable from any stage — they are not sequential pipeline steps.
 
 > [!WARNING]
 > If `docs/plans/vision.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.

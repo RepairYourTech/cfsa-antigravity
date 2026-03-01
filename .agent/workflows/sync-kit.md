@@ -13,10 +13,26 @@ Pull improvements from the upstream spec-pipeline-starter kit into this project'
 
 ---
 
+## 0. Read sync state
+
+Read `.agent/kit-sync.md` in the project root.
+
+- If the file exists: extract `last_synced_commit` and `upstream` values. Proceed to Step 1 with commit-scoped diff mode.
+- If the file does not exist: this is a **first sync**. Proceed to Step 1 with full diff mode (current behavior). The tracking file will be created in Step 9.
+
+The upstream kit is always: `https://github.com/RepairYourTech/Anti-MVP-Vibe-Pipeline` (default branch: `main`)
+
 ## 1. Identify what changed
 
 // turbo
-Compare the kit against the project's `.agent/` folder:
+
+**If `last_synced_commit` is known (subsequent sync):**
+
+Run `git log <last_synced_commit>..HEAD --name-only` on the upstream kit to get only the files that changed since the last sync. Work only with those files in Steps 2–7. Files not in this list are untouched — do not re-evaluate them.
+
+If the command returns no files: report "No changes since last sync (commit `<last_synced_commit>`)" and skip to Step 8.5.
+
+**If no commit is known (first sync):**
 
 Compare the kit directory against the project's `.agent/` folder using your file comparison tools. Identify:
 - **Files only in the kit** (net-new)
@@ -168,3 +184,18 @@ Scan these 7 files for any literal `{{` characters:
 | **Net-new from kit** | Copy directly | N/A |
 | **Both exist** | Semantic merge (step 3) | N/A |
 | **Project-only** | **DO NOT overwrite** | **DO audit for integration gaps** (step 5) |
+
+## 9. Update sync state
+
+Write or update `.agent/kit-sync.md` with the current HEAD commit hash of the upstream kit and the current timestamp:
+
+```markdown
+# Kit Sync State
+
+upstream: https://github.com/RepairYourTech/Anti-MVP-Vibe-Pipeline
+last_synced_commit: <current HEAD commit hash>
+last_synced_at: <ISO 8601 timestamp>
+kit_version: main
+```
+
+This file is committed to the project repo — it records which kit version the project is on and serves as the baseline for the next sync.

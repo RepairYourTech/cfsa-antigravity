@@ -47,7 +47,19 @@ Before assessing pipeline layers, scan all instruction files for any `{{` patter
 >
 > Once all instruction files are clean, re-run `/remediate-pipeline` to audit the spec layers.
 
-**If all instruction files are clean**: Confirm "Instruction files are fully configured." and proceed to Step 1.
+**If all instruction files are clean**: Confirm "Instruction files are fully configured." and proceed to the additional checks below.
+
+**Check for unapplied propagation scan:**
+Look for `docs/audits/propagation-scan-*.md`. If any exist, check whether a corresponding `docs/audits/propagation-[type]-*.md` exists with a newer timestamp. If a scan exists without a completed apply record:
+
+> **STOP** — A decision propagation scan was run but not applied. Run `/propagate-decision-apply` to apply the pending fixes before pipeline remediation. Auditing specs that are inconsistent with locked decisions produces meaningless results.
+
+**Check for unapplied feature evolution:**
+Look for `docs/audits/evolve-feature-*.md`. If any exist, check whether the affected layers have been re-audited since the evolution was applied (compare timestamps of the evolution record against the layer audit reports). If layers were updated but not re-audited:
+
+> **Note** — A feature evolution was applied to [layers]. Run `/audit-ambiguity [layer]` to verify the new content meets the quality bar before pipeline remediation proceeds.
+
+If all checks pass, proceed to Step 1.
 
 ---
 
