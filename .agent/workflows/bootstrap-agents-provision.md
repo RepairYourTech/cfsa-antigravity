@@ -96,15 +96,28 @@ This step is idempotent — it can be re-run on existing projects to fill `patte
 
 In the generic workflows, replace the following placeholders with the **directory name** of the installed skill (e.g., `surrealdb-expert`, `typescript-advanced-patterns`). The surrounding path `.agent/skills/.../SKILL.md` is hardcoded in each workflow. If no skill was installed for a given category, instruct the agent to skip it or provide a reasonable default.
 
+### DATABASE_SKILLS accumulation logic
+
+`{{DATABASE_SKILLS}}` is a comma-separated list of installed skill directory names (one per confirmed database store, e.g., `postgresql,qdrant,redis`). Bootstrap appends the new skill name to the existing list value rather than overwriting it. If the list is empty, set it to the single name. If the name is already present, skip (idempotent).
+
+The following sub-keys all trigger the `{{DATABASE_SKILLS}}` accumulation logic:
+- `DATABASE_PRIMARY` — Main relational/document/multi-model store
+- `DATABASE_VECTOR` — Semantic search, embeddings, similarity
+- `DATABASE_GRAPH` — Graph traversal, relationship queries
+- `DATABASE_CACHE` — Caching layer
+- `DATABASE_TIMESERIES` — Time-ordered data, metrics, IoT
+
+> **Backward compatibility**: If the incoming key is `DATABASE`, treat it as `DATABASE_PRIMARY` and proceed identically.
+
 In `.agent/workflows/create-prd.md`:
-- `{{DATABASE_SKILL}}` → `[installed-as]` (directory name, for `DATABASE` key)
+- `{{DATABASE_SKILLS}}` → comma-separated list of installed skill directory names (accumulated from `DATABASE_PRIMARY`, `DATABASE_VECTOR`, `DATABASE_GRAPH`, `DATABASE_CACHE`, `DATABASE_TIMESERIES` keys)
 - `{{AUTH_SKILL}}` → `[installed-as]` (directory name, for `AUTH_PROVIDER` key)
 
 In `.agent/workflows/write-architecture-spec.md`:
-- `{{DATABASE_SKILL}}` → `[installed-as]` (directory name, for `DATABASE` key)
+- `{{DATABASE_SKILLS}}` → comma-separated list of installed skill directory names (same accumulate-and-append semantics)
 
 In `.agent/workflows/write-be-spec-classify.md`:
-- `{{DATABASE_SKILL}}` → `[installed-as]` (directory name, for `DATABASE` key)
+- `{{DATABASE_SKILLS}}` → comma-separated list of installed skill directory names (same accumulate-and-append semantics)
 - `{{AUTH_SKILL}}` → `[installed-as]` (directory name, for `AUTH_PROVIDER` key)
 - `{{BACKEND_FRAMEWORK_SKILL}}` → `[installed-as]` (directory name, for `BACKEND_FRAMEWORK` or `API_LAYER` key)
 

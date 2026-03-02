@@ -74,7 +74,7 @@ Refine based on discussion before proceeding.
 
 ## 4. Design data models
 
-Using `{{DATABASE_SKILL}}`, and loading these community skills for guidance:
+Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding. Also load these community skills for guidance:
 - `.agent/skills/database-schema-design/SKILL.md` — Schema design principles
 - `.agent/skills/error-handling-patterns/SKILL.md` — Error categories for contracts
 - `.agent/skills/technical-writer/SKILL.md` — Specification clarity

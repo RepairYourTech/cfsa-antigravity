@@ -5,7 +5,7 @@
 | Axis | Decision Needed |
 |------|----------------|
 | **Primary language(s)** | TypeScript, Rust, Go, Python, Swift, Kotlin, C++, etc. |
-| **Database** | SQL vs NoSQL vs multi-model vs embedded (SQLite), hosted vs self-managed |
+| **Database** | ⚠️ **Handled by Persistence Map Interview** in `create-prd-stack.md` — do NOT process as a single axis. Covers primary, vector, graph, cache, and time-series sub-keys. |
 | **Auth provider** | Firebase vs Auth0 vs Clerk vs custom vs OS-level keychain |
 | **CI/CD** | GitHub Actions vs GitLab CI vs custom |
 | **Monitoring** | Sentry vs Datadog vs custom |

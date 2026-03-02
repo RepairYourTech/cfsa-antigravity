@@ -67,14 +67,14 @@ Not every IA shard produces the same output. Before writing anything, classify t
 
 Before loading the skill bundle, scan the skill bundle list in Step 3 for any values still containing literal `{{` characters.
 
-If `{{LANGUAGE_SKILL}}`, `{{DATABASE_SKILL}}`, `{{AUTH_SKILL}}`, `{{BACKEND_FRAMEWORK_SKILL}}`, `{{ORM_SKILL}}`, or `{{UNIT_TESTING_SKILL}}` are still unfilled → **stop** and tell the user: *"Tech stack skills haven't been provisioned yet. The skill bundle placeholders are still unfilled. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
+If `{{LANGUAGE_SKILL}}`, `{{DATABASE_SKILLS}}`, `{{AUTH_SKILL}}`, `{{BACKEND_FRAMEWORK_SKILL}}`, `{{ORM_SKILL}}`, or `{{UNIT_TESTING_SKILL}}` are still unfilled → **stop** and tell the user: *"Tech stack skills haven't been provisioned yet. The skill bundle placeholders are still unfilled. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
 
 Only proceed to Step 3 when all skill bundle placeholders are filled with actual skill directory names.
 
 ## 3. Load skill bundle
 
 Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
-Read .agent/skills/{{DATABASE_SKILL}}/SKILL.md
+Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
 Read .agent/skills/{{AUTH_SKILL}}/SKILL.md
 Read .agent/skills/{{BACKEND_FRAMEWORK_SKILL}}/SKILL.md
 Read .agent/skills/rest-api-design/SKILL.md

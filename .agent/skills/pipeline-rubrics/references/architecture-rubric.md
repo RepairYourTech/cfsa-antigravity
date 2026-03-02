@@ -1,4 +1,4 @@
-# Architecture Rubric (9 dimensions)
+# Architecture Rubric (10 dimensions)
 
 | # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
 |---|---|---|---|---|
@@ -11,3 +11,4 @@
 | 7 | Integration Robustness | Every external service has: what it provides + failure mode + fallback strategy + cost model. No external is listed without a fallback. | Some externals missing fallback or cost model | Externals unnamed |
 | 8 | Phasing Clarity | Every phase has: entry criteria + exit criteria + dependency list. No phase uses "when ready" as a criterion. | Phases listed without entry/exit criteria | No phasing |
 | 9 | Engineering Standards | Every threshold is a number (coverage %, response time ms, bundle size KB). No threshold uses "good", "acceptable", or "TBD". | Some thresholds concrete, some vague | Missing |
+| 10 | Persistence Architecture | Persistence map complete — all query types (find, store, relate, rank/search) mapped to a named store with rationale. Every entity spanning multiple stores has a documented cross-store consistency contract covering: canonical ID, creation sequence (with failure recovery), deletion cascade, and read join strategy. No store is chosen without a traced feature requirement. | Persistence map present but one or more cross-store entities missing their full consistency contract | No persistence map; single DATABASE decision with no query-type analysis |

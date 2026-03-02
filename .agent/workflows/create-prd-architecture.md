@@ -58,7 +58,7 @@ Write the completed `## System Architecture` section to `docs/plans/architecture
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its schema design methodology.
 
-Using `{{DATABASE_SKILL}}`. Each sub-item must be explored to field-level depth:
+Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding. Each sub-item must be explored to field-level depth:
 
 1. **Data placement** — What lives in the database vs cache vs object storage vs external service vs local device storage? For each entity: which service owns it and why
 2. **Schema approach** — Strict schema vs schemaless vs hybrid? Field types, constraints, indexes, relations with cardinality
@@ -78,6 +78,19 @@ For multi-surface projects, additionally define:
 Refine based on discussion before proceeding.
 
 Write the completed `## Data Strategy` section to `docs/plans/architecture-draft.md`.
+
+### 5.5. Cross-Store Entity Consistency
+
+After per-entity placement decisions are made, for every entity that spans more than one store, document all four of the following:
+
+1. **Canonical ID** — What single identifier ties this entity's representations together across all stores? (Must be the primary store's UUID stored as a property in every other store — never the graph store's or vector store's internal ID.)
+2. **Creation sequence** — Which store is written first? If a later write fails (e.g., Neo4j node creation fails after PostgreSQL row is committed), what is the recovery mechanism? (Saga pattern? Compensating transaction? Async retry queue?)
+3. **Deletion cascade** — What gets cleaned up when this entity is deleted, in what order, and by what mechanism? (Application-layer sequential deletes? DB-level triggers? Background job?)
+4. **Read strategy** — Does a read of this entity require data from multiple stores? Name the application-layer join pattern explicitly.
+
+Read all skills in `{{DATABASE_SKILLS}}` for advice on each store's transaction semantics and consistency guarantees before completing this sub-step.
+
+Write the completed cross-store consistency table to `docs/plans/architecture-draft.md` as part of the `## Data Strategy` section.
 
 ### Data placement strategy document
 

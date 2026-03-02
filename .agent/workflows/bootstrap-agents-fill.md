@@ -22,7 +22,7 @@ Receive template values from the calling workflow and fill `{{PLACEHOLDER}}` val
 **Prerequisite**: If invoked standalone, the caller must provide at least one template key-value pair. If no values are provided, there is nothing to fill — report and exit.
 
 > [!IMPORTANT]
-> This workflow fills template-level placeholders (project name, description, tech stack summary, architecture doc path). It does **NOT** fill workflow command placeholders (`{{VALIDATION_COMMAND}}`, `{{TEST_COMMAND}}`, `{{LINT_COMMAND}}`, etc.) or skill path placeholders (`{{DATABASE_SKILL}}`, `{{AUTH_SKILL}}`, etc.). Those are filled exclusively by `.agent/workflows/bootstrap-agents-provision.md` during the `/create-prd` stage. Running this workflow standalone will leave those placeholders unfilled with no indication — they require the provision step.
+> This workflow fills template-level placeholders (project name, description, tech stack summary, architecture doc path). It does **NOT** fill workflow command placeholders (`{{VALIDATION_COMMAND}}`, `{{TEST_COMMAND}}`, `{{LINT_COMMAND}}`, etc.) or skill path placeholders (`{{DATABASE_SKILLS}}`, `{{AUTH_SKILL}}`, etc.). Those are filled exclusively by `.agent/workflows/bootstrap-agents-provision.md` during the `/create-prd` stage. Running this workflow standalone will leave those placeholders unfilled with no indication — they require the provision step.
 
 ---
 
@@ -71,6 +71,11 @@ The calling workflow provides these values (all optional — fill only what's pr
 | Key | Example |
 |-----|---------|
 | `DATABASE` | SurrealDB (self-hosted) |
+| `DATABASE_PRIMARY` | PostgreSQL |
+| `DATABASE_VECTOR` | Qdrant |
+| `DATABASE_GRAPH` | Neo4j |
+| `DATABASE_CACHE` | Redis |
+| `DATABASE_TIMESERIES` | TimescaleDB |
 | `FRONTEND_FRAMEWORK` | Astro + React Islands |
 | `BACKEND_FRAMEWORK` | Hono |
 | `API_LAYER` | tRPC |
@@ -105,6 +110,8 @@ The calling workflow provides these values (all optional — fill only what's pr
 | `TEST_RUNNER` | Vitest |
 | `LINTER` | ESLint |
 | `TYPE_CHECKER` | TypeScript (tsc) |
+
+> **Note**: `DATABASE` is an alias for `DATABASE_PRIMARY` — it triggers the same MANIFEST match. When multiple `DATABASE_*` sub-keys are present, the `DATABASE` row in `tech-stack.md` should expand to show sub-rows (`DATABASE_PRIMARY`, `DATABASE_VECTOR`, etc.) rather than a single combined string. Bootstrap fills each sub-row individually as the user confirms each store.
 
 ### Infrastructure Values
 

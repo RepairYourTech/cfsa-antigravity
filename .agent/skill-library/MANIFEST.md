@@ -25,6 +25,21 @@ When a stack key matches a value pattern (case-insensitive), install the listed 
 | `DATABASE` | `*mongo*` | `stack/databases/mongodb` | `mongodb` |
 | `DATABASE` | `*redis*` | `stack/databases/redis` | `redis` |
 | `DATABASE` | `*sqlite*` OR `*libsql*` OR `*turso*` | `stack/databases/sqlite` | `sqlite` |
+| `DATABASE_PRIMARY` | `*surrealdb*` | `stack/databases/surrealdb-expert` | `surrealdb-expert` |
+| `DATABASE_PRIMARY` | `*postgres*` OR `*pg*` | `stack/databases/postgresql` | `postgresql` |
+| `DATABASE_PRIMARY` | `*supabase*` | `stack/databases/supabase` | `supabase` |
+| `DATABASE_PRIMARY` | `*mongo*` | `stack/databases/mongodb` | `mongodb` |
+| `DATABASE_PRIMARY` | `*sqlite*` OR `*libsql*` OR `*turso*` | `stack/databases/sqlite` | `sqlite` |
+| `DATABASE_VECTOR` | `*qdrant*` | `stack/databases/qdrant` | `qdrant` |
+| `DATABASE_VECTOR` | `*pgvector*` | `stack/databases/pgvector` | `pgvector` |
+| `DATABASE_VECTOR` | `*pinecone*` | `stack/databases/pinecone` | `pinecone` |
+| `DATABASE_VECTOR` | `*weaviate*` | `stack/databases/weaviate` | `weaviate` |
+| `DATABASE_GRAPH` | `*neo4j*` | `stack/databases/neo4j` | `neo4j` |
+| `DATABASE_CACHE` | `*redis*` | `stack/databases/redis` | `redis` |
+| `DATABASE_TIMESERIES` | `*timescale*` | `stack/databases/timescaledb` | `timescaledb` |
+| `DATABASE_TIMESERIES` | `*influx*` | `stack/databases/influxdb` | `influxdb` |
+
+> **Note on `DATABASE_CACHE` / Redis**: the existing `DATABASE` + `*redis*` row remains; the `DATABASE_CACHE` row adds a second matching path under the new sub-key. Both fire the same `redis` skill — the idempotency rule in step 7 of provision ensures it is only copied once.
 
 ### Frameworks
 
@@ -359,6 +374,11 @@ To add a new skill to the library:
 | Key | Description | Example Values |
 |-----|-------------|---------------|
 | `DATABASE` | Primary database | PostgreSQL, SurrealDB, Supabase, MongoDB, Redis, SQLite |
+| `DATABASE_PRIMARY` | Main relational/document/multi-model store | PostgreSQL, SurrealDB, Supabase, MongoDB, SQLite |
+| `DATABASE_VECTOR` | Semantic search, embeddings, similarity | Qdrant, pgvector, Pinecone, Weaviate |
+| `DATABASE_GRAPH` | Graph traversal, relationship queries | Neo4j |
+| `DATABASE_CACHE` | Caching layer | Redis |
+| `DATABASE_TIMESERIES` | Time-ordered data, metrics, IoT | TimescaleDB, InfluxDB |
 | `FRONTEND_FRAMEWORK` | Frontend framework | Next.js, Astro, SvelteKit, Nuxt, React |
 | `BACKEND_FRAMEWORK` | Backend framework | Hono, FastAPI, NestJS, Express |
 | `DESKTOP_FRAMEWORK` | Desktop app framework | Tauri, Electron |
