@@ -122,7 +122,7 @@ Refine based on discussion before proceeding.
 
 Read .agent/skills/resolve-ambiguity/SKILL.md and follow its methodology.
 
-Read .agent/skills/{{SECURITY_SKILL}}/SKILL.md and follow its security hardening conventions.
+Read each skill listed in `{{SECURITY_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
 
 - Rate limits and abuse scenarios
 - Concurrent access handling

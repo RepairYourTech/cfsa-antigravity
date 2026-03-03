@@ -98,7 +98,7 @@ Documents development methodology and phasing strategy. Compiles `docs/plans/YYY
 
 ### Self-check against Architecture rubric
 
-Before presenting to the user, self-check both documents against the **Architecture Rubric** (9 dimensions) from `/audit-ambiguity`:
+Before presenting to the user, self-check both documents against the **Architecture Rubric** (12 dimensions) from `/audit-ambiguity`:
 
 | # | Dimension | Check |
 |---|-----------|-------|
@@ -111,6 +111,9 @@ Before presenting to the user, self-check both documents against the **Architect
 | 7 | Integration Robustness | Do all externals have failure + fallback plans? |
 | 8 | Phasing Clarity | Are phases dependency-ordered with entry/exit criteria? |
 | 9 | Engineering Standards | Are all thresholds concrete? No TBDs in ENGINEERING-STANDARDS.md? |
+| 10 | Persistence Architecture | Is the persistence map complete? Do all cross-store entities have a consistency contract (canonical ID, creation sequence, deletion cascade, read join)? |
+| 11 | Error Architecture | Is the global error envelope defined with all four fields? Are all five error decisions confirmed (envelope, propagation chain, unhandled exceptions, client fallback, error boundaries)? |
+| 12 | Attack Surface Coverage | Is the attack surface review complete? Are OWASP Top 10 (web) and API Top 10 (API) addressed with named mechanisms? Are security headers configured? Is the observability architecture documented? |
 
 Also verify completeness:
 
@@ -148,7 +151,7 @@ If gaps are found, loop back to the relevant step and resolve with the user.
 
 Use `notify_user` to present to the user:
 - **Both** the architecture design document and the Engineering Standards document
-- Summary of the self-check results (all 9 dimensions + completeness checklist)
+- Summary of the self-check results (all 12 dimensions + completeness checklist)
 - Any areas where you resolved gaps during the self-check
 
 Both documents must be approved before proceeding. Do NOT proceed to the next step until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval. Wait for explicit approval before continuing.
@@ -158,4 +161,4 @@ Both documents must be approved before proceeding. Do NOT proceed to the next st
 Once approved, present the user with the appropriate next step:
 
 - **Default recommendation**: Run `/audit-ambiguity architecture` — recommended for all projects, especially those with compliance constraints
-- **Skip condition**: Only skip `/audit-ambiguity architecture` if all 9 dimensions scored ✅ AND the project has zero compliance constraints. In that case, recommend `/decompose-architecture` directly.
+- **Skip condition**: Only skip `/audit-ambiguity architecture` if all 12 dimensions scored ✅ AND the project has zero compliance constraints. In that case, recommend `/decompose-architecture` directly.
