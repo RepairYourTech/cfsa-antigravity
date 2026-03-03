@@ -25,6 +25,14 @@ include surface interconnection diagram and shared domain boundary.]
 and why, what the hot paths are, how schema evolves. For multi-surface: data
 ownership, sync protocol, conflict resolution.]
 
+## Error Architecture
+[Global error envelope with locked example JSON — all four fields defined with types. Error
+propagation chain per layer (DB → service → API handler → transport → client) — what is caught,
+logged, and exposed at each layer. Unhandled exception strategy — process-level catch, log fields,
+client response, alerting timeline. Client fallback contract per surface — offline mode decision,
+UI behaviour on network failure, retry strategy, timeout threshold. Error boundary strategy per
+applicable surface — boundary placement and fallback rendering.]
+
 ## Security Model
 [Auth, authorization, validation, rate limits — every flow specified step-by-step,
 every permission rule scoped, every error case handled]

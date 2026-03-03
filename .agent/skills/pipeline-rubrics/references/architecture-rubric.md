@@ -1,4 +1,4 @@
-# Architecture Rubric (10 dimensions)
+# Architecture Rubric (11 dimensions)
 
 | # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
 |---|---|---|---|---|
@@ -12,3 +12,4 @@
 | 8 | Phasing Clarity | Every phase has: entry criteria + exit criteria + dependency list. No phase uses "when ready" as a criterion. | Phases listed without entry/exit criteria | No phasing |
 | 9 | Engineering Standards | Every threshold is a number (coverage %, response time ms, bundle size KB). No threshold uses "good", "acceptable", or "TBD". | Some thresholds concrete, some vague | Missing |
 | 10 | Persistence Architecture | Persistence map complete — all query types (find, store, relate, rank/search) mapped to a named store with rationale. Every entity spanning multiple stores has a documented cross-store consistency contract covering: canonical ID, creation sequence (with failure recovery), deletion cascade, and read join strategy. No store is chosen without a traced feature requirement. | Persistence map present but one or more cross-store entities missing their full consistency contract | No persistence map; single DATABASE decision with no query-type analysis |
+| 11 | Error Architecture | Global error envelope defined with all four fields typed and a locked example JSON produced. Error propagation chain documents every layer (DB, service, API handler, transport, client) with explicit catch/log/expose rules. Unhandled exception strategy names the process-level mechanism, log fields, client response, and alerting timeline. Client fallback contract covers every surface with offline decision, UI behaviour, retry strategy, and timeout. Error boundary strategy names placement and fallback rendering for all applicable surfaces. | Envelope defined but propagation chain incomplete, or client fallback missing for one surface | No global error envelope; error handling left to individual spec writers |

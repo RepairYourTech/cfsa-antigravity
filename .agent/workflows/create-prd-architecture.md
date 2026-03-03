@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-stack]
   successors: [create-prd-security]
-  skills: [database-schema-design, technical-writer, prd-templates]
+  skills: [database-schema-design, technical-writer, prd-templates, error-handling-patterns]
   calls-bootstrap: false
 ---
 
@@ -53,6 +53,45 @@ For each component, also define:
 Refine based on discussion before proceeding.
 
 Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user.
+
+## 4.5. Error architecture
+
+> **Hard gate.** This step is mandatory for every project. All five decisions below must be confirmed by the user before `## 5. Data strategy` begins. Do not proceed to Data Strategy until every decision is explicitly approved.
+
+Read `.agent/skills/error-handling-patterns/SKILL.md` and follow its methodology.
+
+Design the global error handling contract for the entire system. This section locks decisions that every downstream spec must conform to:
+
+1. **Global error envelope** — Define a single error response shape that every API endpoint must return. The canonical envelope uses exactly four fields:
+   - `code` — Application-level error enum string (e.g., `"VALIDATION_FAILED"`, `"NOT_FOUND"`).
+   - `message` — User-safe, human-readable string. Never contains stack traces or internal details.
+   - `requestId` — Per-request UUID string for tracing and support correlation.
+   - `details` — `object | null`. Structured additional context (e.g., field-level validation errors) or `null` when no extra detail applies.
+
+   The locked canonical example is:
+   ```json
+   {
+     "code": "VALIDATION_FAILED",
+     "message": "Email address is not valid.",
+     "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+     "details": { "field": "email", "reason": "must contain @" }
+   }
+   ```
+   No other top-level fields (e.g., `status`, `error`, `timestamp`) may appear in the envelope. HTTP status codes are conveyed via the HTTP response status line, not inside the body.
+
+2. **Error propagation chain** — For each layer in the stack (database → service layer → API handler → transport → client), define: what errors are caught, what is logged (and at what level), and what is exposed to the next layer. No layer may expose raw upstream errors to the client.
+3. **Unhandled exception strategy** — Name the process-level catch mechanism (e.g., Express error middleware, global `uncaughtException` handler). Define: what fields are logged, what the client receives (must conform to the global envelope), and the alerting timeline (e.g., "PagerDuty within 5 minutes for >10 unhandled exceptions/minute").
+4. **Client fallback contract** — For each surface (web, mobile, CLI, etc.), define: whether offline mode is supported, what the UI shows on network failure, retry strategy (exponential backoff? user-initiated?), and timeout thresholds.
+5. **Error boundary strategy** — For each applicable surface (e.g., React error boundaries, mobile crash reporters), define: where boundaries are placed in the component tree, what the fallback UI renders, and whether errors are reported to a telemetry service.
+
+**Present to user**: Show the error architecture section. Ask:
+- "Does the global error envelope cover every field your clients need?"
+- "Are there surfaces where the fallback contract needs to differ?"
+- "Is the alerting timeline appropriate for your operational maturity?"
+
+Refine based on discussion. All five decisions must receive explicit user confirmation before proceeding.
+
+Write the completed decisions to `docs/plans/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`.
 
 ## 5. Data strategy
 

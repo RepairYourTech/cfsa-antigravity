@@ -1,4 +1,4 @@
-# BE Rubric (10 dimensions)
+# BE Rubric (11 dimensions)
 
 | # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
 |---|---|---|---|---|
@@ -12,3 +12,4 @@
 | 8 | Pagination & Limits | Every list endpoint has: pagination strategy (cursor/offset) + page size (default + max) + sort options + filter options. No endpoint uses "standard pagination" without defining it. | Some list endpoints missing pagination or limits | No strategy |
 | 9 | Integration Seams | Every external service call has: request format + response format + timeout (ms) + retry policy (count + backoff) + circuit breaker behavior. No integration uses "standard retry" without defining it. | Some integrations missing timeout or retry policy | Unnamed externals |
 | 10 | Security Rules | Every endpoint has explicit: authentication requirement + authorization check (which roles) + input sanitization + output filtering (what's excluded from response). No endpoint uses "standard security" without defining it. | Some endpoints missing auth or authz specification | Not mentioned |
+| 11 | Global Error Envelope Conformance | Every endpoint's error section explicitly cites the global error envelope from `architecture-design.md` `## Error Architecture` (e.g., `[error-architecture]` reference or direct quote of the envelope shape). No endpoint defines its own error shape that differs from the global envelope. The `code` field in every error response uses the application-specific enum, not a raw HTTP status string. | Envelope referenced on most endpoints but one or more endpoints define a local error shape without justification | No reference to the global error envelope anywhere in the spec; each endpoint invents its own error shape |
