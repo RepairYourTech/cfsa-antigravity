@@ -7,7 +7,7 @@ pipeline:
   successors: [decompose-architecture]
   skills: [brainstorming, resolve-ambiguity, technical-writer, database-schema-design]
   calls-bootstrap: true # tech stack decisions trigger skill provisioning
-shards: [create-prd-stack, create-prd-architecture, create-prd-security, create-prd-compile]
+shards: [create-prd-stack, create-prd-design-system, create-prd-architecture, create-prd-security, create-prd-compile]
 ---
 
 // turbo-all
@@ -61,6 +61,7 @@ Check `.agent/skills/` for relevant skills. Read `.agent/skills/find-skills/SKIL
 | # | Shard | What It Does |
 |---|-------|-------------|
 | 1 | [`create-prd-stack`](.agent/workflows/create-prd-stack.md) | Constraint-first discovery, tech stack decisions with bootstrap firing |
+| 1.5 | [`create-prd-design-system`](.agent/workflows/create-prd-design-system.md) | Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, state design language → `docs/plans/design-system.md` |
 | 2 | [`create-prd-architecture`](.agent/workflows/create-prd-architecture.md) | System architecture, data strategy, data placement strategy document |
 | 3 | [`create-prd-security`](.agent/workflows/create-prd-security.md) | Security model, compliance escalation, integration points |
 | 4 | [`create-prd-compile`](.agent/workflows/create-prd-compile.md) | Development methodology, phasing, compile architecture-design.md + ENGINEERING-STANDARDS.md |
@@ -74,6 +75,10 @@ Check `.agent/skills/` for relevant skills. Read `.agent/skills/find-skills/SKIL
 ### Step A — Run `.agent/workflows/create-prd-stack.md`
 
 Builds the constraints map from vision.md, presents tech stack options per axis, gets user decisions, fires bootstrap after each confirmation.
+
+### Step A.5 — Run `.agent/workflows/create-prd-design-system.md`
+
+Establishes the structural UI architecture — navigation paradigm, layout grid, page archetypes, global component inventory, motion language, data density philosophy, and global state design language. Produces `docs/plans/design-system.md` which all FE specs must consume.
 
 ### Step B — Run `.agent/workflows/create-prd-architecture.md`
 
@@ -116,6 +121,7 @@ Also verify completeness:
 - [ ] Validation command in Engineering Standards matches `AGENTS.md` validation command
 - [ ] For multi-surface: sync strategy defined, data ownership clear, conflict resolution specified
 - [ ] For cross-platform: platform-specific considerations documented for each target OS
+- [ ] Design system document exists at docs/plans/design-system.md and all seven decision areas are filled (no placeholders)
 
 For any dimension that scores ⚠️ or ❌, resolve it NOW. Loop back to the relevant step and resolve with the user.
 

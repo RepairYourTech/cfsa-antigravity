@@ -1,4 +1,4 @@
-# FE Rubric (10 dimensions)
+# FE Rubric (11 dimensions)
 
 | # | Dimension | ✅ (must meet ALL criteria) | ⚠️ | ❌ |
 |---|---|---|---|---|
@@ -12,3 +12,4 @@
 | 8 | Error/Loading States | Every data-fetching view has: loading skeleton/spinner + error message + retry action + empty state. No state uses "standard loading" without defining it. | Some states missing or using generic messages | None |
 | 9 | Performance | Every page has: bundle size budget + lazy loading strategy for heavy components + image optimization policy. No page uses "optimized" without a number. | Some pages missing budgets or lazy loading strategy | Not addressed |
 | 10 | Security Rules | Every form has: CSRF protection + input sanitization + output encoding. Every auth-gated view has: token validation + expiry handling + redirect on failure. | Some forms or views missing security rules | Not mentioned |
+| 11 | Design System Consistency | Every page component names its page archetype from design-system.md. Every loading/error/empty state uses the confirmed design language (skeleton vs. spinner, toast vs. inline error — no invention). Every navigation element is drawn from the global component inventory (not re-implemented). Motion durations and easing match the confirmed motion language. | Some components naming archetype but others missing; or some states using non-standard patterns | No reference to design-system.md; components invent their own layout conventions |

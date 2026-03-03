@@ -27,6 +27,13 @@ Use this template when writing FE specs to `docs/plans/fe/[NN-feature-name].md`.
 **Motion**: [animation/transition behavior, or "none"]
 **Anti-patterns**: [what AI slop looks like for this component and how to avoid it]
 
+## Design System Compliance
+**Page archetype(s)**: [name the archetype(s) from design-system.md]
+**Navigation**: [confirm which nav elements this spec uses from the global component inventory]
+**Loading states**: [confirm skeleton vs. spinner — cite design-system.md rule]
+**Error states**: [confirm inline/toast/full-page/boundary — cite design-system.md rule for each context]
+**Empty states**: [confirm illustration style and copy tone from design-system.md]
+
 ## Component Inventory
 [Tree with props interfaces]
 
@@ -66,3 +73,6 @@ Apply after writing every FE spec:
 - [ ] Account-tier conditional rendering rules from IA access model included
 - [ ] Source Map is complete — no FE spec section lacks a traceable source
 - [ ] Design Requirements section filled from brand-guidelines (not placeholders)
+- [ ] Page archetype named and matches design-system.md
+- [ ] All loading/error/empty states use the confirmed design language from design-system.md
+- [ ] No global component re-invented (consuming from global inventory, not re-implementing)
