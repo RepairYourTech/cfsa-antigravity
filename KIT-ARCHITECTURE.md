@@ -53,6 +53,25 @@ This directory acts as the agent's long-term and working memory.
 3.  **Persist:** At defined checkpoints (or via the `/sync-progress` protocol), the agent distills learnings into `patterns.md`, `decisions.md`, and `blockers.md`.
 4.  **Resume:** When a new chat starts, the `/resume-session` step in workflows points the agent back to the recent session files to pick up where it left off.
 
+### Dated File Convention
+
+A document is dated (prefixed with `YYYY-MM-DD-`) if and only if it is a **compiled artifact** — one that can be superseded by a newer version and both versions might need to coexist temporarily. Living documents that are updated in place are never dated.
+
+| Document | Dated? | Rationale |
+|---|---|---|
+| `architecture-design.md` | ✅ Yes | Can be re-run with new stack; old version referenced during migration |
+| `vision.md` | ✅ Yes | Evolution creates a new version; audit trail needed |
+| `data-placement-strategy.md` | ✅ Yes | Same pattern |
+| `ENGINEERING-STANDARDS.md` | ✅ Yes | Standards are versioned |
+| Audit reports (`docs/audits/`) | ✅ Yes | Versioned snapshots by definition |
+| Propagation scan reports | ✅ Yes | Same |
+| IA shards (`docs/plans/ia/`) | ❌ No | Living documents; updated in place by `/evolve-feature` |
+| BE specs (`docs/plans/be/`) | ❌ No | Living documents |
+| FE specs (`docs/plans/fe/`) | ❌ No | Living documents |
+| Phase plans (`docs/plans/phases/`) | ❌ No | Operational; history lives in progress tracking files |
+
+Any workflow that reads a compiled artifact must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`), never a hardcoded non-dated path. The agent does not know the date the file was created, so the glob is the only reliable way to locate it.
+
 ---
 
 ## 3. Module Relationships
@@ -141,3 +160,22 @@ The defining architectural pattern of the code produced by this kit.
 ### Explicit Handoffs
 
 Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess what happens after `/ideate`; the workflow tells it to propose `/create-prd`. This ensures continuous, unbroken pipeline progression.
+
+---
+
+## 5. Kit Maintenance Checklist
+
+**When a new workflow or shard is added to `.agent/workflows/`:**
+
+- [ ] Add a row to the `AGENTS.md` Pipeline Workflow Table
+- [ ] Add a matching row to the `GEMINI.md` Pipeline Workflow Table (must stay in sync with `AGENTS.md`)
+- [ ] If the workflow introduces a new system component or new convention, update the relevant section of `KIT-ARCHITECTURE.md`
+- [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
+- [ ] If the workflow introduces a new skill, add it to `.agent/skill-library/MANIFEST.md`
+
+**When `bootstrap-agents-fill.md` fills a placeholder in `AGENTS.md` or `GEMINI.md`:**
+
+- Bootstrap handles project-specific value substitution automatically
+- Kit-level structural changes (new rows, new sections) require manual update per this checklist
+
+**Note**: Both `AGENTS.md` and `GEMINI.md` are co-maintained: project-specific sections by `bootstrap-agents-fill.md` Step 4, and structural/workflow sections by this checklist.

@@ -42,6 +42,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > **Persistent intermediary**: `docs/plans/ideation.md` — kept permanently as audit trail for the vision.
 
 | ↳ | `/create-prd-stack` | `vision.md` constraints | Tech stack decisions | Design |
+| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
 | ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |

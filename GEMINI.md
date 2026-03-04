@@ -34,14 +34,21 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | # | Command | Input | Output | Stage |
 |---|---------|-------|--------|-------|
 | 1 | `/ideate` | Raw idea or `@file` | `docs/plans/vision.md` | Discovery |
-| ↳ | `/ideate-extract` | User input | Classified input + loaded skills | Discovery |
+| ↳ | `/ideate-extract` | User input | Classified input + `docs/plans/ideation.md` + loaded skills | Discovery |
 | ↳ | `/ideate-discover` | Classified input | Domain map + feature inventory | Discovery |
-| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` | Discovery |
+| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (compiled from `ideation.md`) | Discovery |
 | 2 | `/create-prd` | `vision.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
+
+> **Persistent intermediary**: `docs/plans/ideation.md` — kept permanently as audit trail for the vision.
+
 | ↳ | `/create-prd-stack` | `vision.md` constraints | Tech stack decisions | Design |
+| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
 | ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |
+
+> **Progressive working artifact**: `docs/plans/architecture-draft.md` — written incrementally by shards 1–3, read by shard 4 to compile the final `architecture-design.md`.
+
 | 3 | `/decompose-architecture` | `architecture-design.md` | IA shards + layer indexes | Design |
 | ↳ | `/decompose-architecture-structure` | Approved domains | Directory structure + shard skeletons + indexes | Design |
 | ↳ | `/decompose-architecture-validate` | Skeletons | Deep dives + type annotations + validation | Design |

@@ -17,6 +17,10 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 - When writing specs (BE, FE), indexes, reports, or strategy documents
 - During classification steps that seed spec file stubs
 
+## Conventions
+
+**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `vision.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `KIT-ARCHITECTURE.md` Section 2 — Dated File Convention for the full rule and table.
+
 ## How to Use
 
 1. Read the appropriate template from `references/`
@@ -33,6 +37,7 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 | BE Spec + Seed Stub | `references/be-spec-template.md` | `/write-be-spec-write` Step 7, `/write-be-spec-classify` |
 | FE Spec + Seed Stub | `references/fe-spec-template.md` | `/write-fe-spec-write` Step 6, `/write-fe-spec-classify` |
 | Data Placement Strategy | `references/data-placement-template.md` | `/create-prd-architecture` Step 5 |
+| Design System Decision Options | `references/design-system-decisions.md` | `/create-prd-design-system` Step 1 (option menus + output template); downstream: `write-fe-spec-classify` Step 0.75 prerequisite check |
 | Infrastructure Report | `references/infrastructure-report-template.md` | `/verify-infrastructure` Steps 0.6, 8 |
 | Decomposition (shards + indexes) | `references/decomposition-templates.md` | `/decompose-architecture-structure` Steps 5-9 |
 | Operational (slices, remediation, skills, sync) | `references/operational-templates.md` | `/plan-phase`, `/remediate-pipeline-assess`, `/bootstrap-agents-provision`, `/sync-kit` |

@@ -154,7 +154,7 @@ If auth IS implemented:
 
 ## 6.5. Logging gate
 
-Read `docs/plans/architecture-design.md` section `## Observability Architecture` to load the confirmed logging decisions.
+Read `docs/plans/*-architecture-design.md` section `## Observability Architecture` to load the confirmed logging decisions.
 
 1. Verify structured startup log is emitted on application boot with the following 5 required fields:
    - `timestamp` (ISO 8601)
