@@ -22,8 +22,8 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 ### Core Components
 
 *   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, etc.) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
-*   **Rules:** Preemptively loaded constraints that apply to *every* task. Includes security best practices, TDD mandates (`tdd-contract-first.md`), and platform-specific laws (e.g., `child-safety.md`).
-*   **Skills:** Modular capabilities (e.g., `technical-writer`, `surrealdb-expert`). Agents load these explicitly when a task requires them, preventing context bloat.
+*   **Rules:** Preemptively loaded constraints that apply to *every* task. Includes security best practices (`security-first.md`), TDD mandates (`tdd-contract-first.md`), and vertical-slice enforcement (`vertical-slices.md`).
+*   **Skills:** Modular capabilities (e.g., `technical-writer`, `brainstorming`). Agents load these explicitly when a task requires them, preventing context bloat.
 *   **Workflows:** Step-by-step markdown checklists invoked via `/slash-commands` (e.g., `/create-prd`, `/implement-slice`). They chain skills together to achieve complex, multi-stage goals.
 
 ---
@@ -38,20 +38,37 @@ This directory acts as the agent's long-term and working memory.
 
 ```text
 .agent/progress/
-├── active-phase.md     # Current phase/sprint tracking
-├── memory/
-│   ├── blockers.md     # Resolved issues to prevent regression
-│   ├── decisions.md    # Architectural choices and their rationale
-│   └── patterns.md     # Recurring semantic patterns/idioms
-└── sessions/           # State checkpoints for resuming work across chats
+├── index.md                      # Master checklist — phases + overall %
+├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
+├── phases/
+│   └── phase-NN.md               # Per-phase slice checklist
+├── slices/
+│   └── phase-NN-slice-NN.md      # Per-slice log (only if ≥3 acceptance criteria)
+├── sessions/
+│   └── YYYY-MM-DD.md             # Session log for resumption
+└── memory/
+    ├── patterns.md
+    ├── blockers.md
+    └── decisions.md
 ```
+
+> **Adaptive Granularity Rule**: A slice gets its own file in `slices/` only when it has ≥3 acceptance criteria. Slices with 1–2 criteria are tracked inline in the phase file. This prevents file explosion for simple specs while giving granular tracking for complex ones.
+
+> **Runtime vs. pre-shipped files**: The `phases/`, `slices/`, and `sessions/` directories and their contents are created at runtime by `/plan-phase` (Protocol 2: Progress Generation) and `/implement-slice` (Protocol 3: Progress Update). They do not ship pre-created. The only files that ship as part of the kit in `memory/` are the three empty seed files (`patterns.md`, `blockers.md`, `decisions.md`).
 
 ### Flow
 
-1.  **Read:** Upon initialization, workflows frequently instruct agents to read `.agent/progress/active-phase.md` to understand current goals.
-2.  **Act:** The agent executes the workflow.
-3.  **Persist:** At defined checkpoints (or via the `/sync-progress` protocol), the agent distills learnings into `patterns.md`, `decisions.md`, and `blockers.md`.
-4.  **Resume:** When a new chat starts, the `/resume-session` step in workflows points the agent back to the recent session files to pick up where it left off.
+1.  **Resume**: On session start, workflows invoke Session Resumption (Protocol 1) — read `index.md` for overall status, find the latest `sessions/YYYY-MM-DD.md` log, check `memory/blockers.md` for unresolved blockers.
+2.  **Act**: The agent executes the workflow against the phase plan in `phases/phase-NN.md`.
+3.  **Persist**: At implementation checkpoints (Protocol 3: Progress Update via `/implement-slice`), the agent marks criteria `[x]`, updates phase progress, and logs findings into `memory/patterns.md`, `decisions.md`, and `blockers.md`.
+4.  **Close**: At session end, the agent writes `sessions/YYYY-MM-DD.md` (Protocol 5: Session Close) to enable clean resumption next session.
+
+### Cross-references
+
+- **Dated File Convention** — See below in this section (Section 2) — governs which artifact paths use glob patterns vs. hardcoded names.
+- **Placeholder Verification Gate Protocol** — See Section 3.5 — governs the Step 0 guard that prevents workflows from reading `{{PLACEHOLDER}}`-dependent skills before bootstrap has run.
+- **Kit Maintenance Checklist** — See Section 5 — governs what must be updated when new workflows or skills are added.
+- **Surface Model** — The authoritative surface type reference (`surface-model.md`) documents the distinction between surface types (web/mobile/cli/etc.) and implementation layers. <!-- TODO: cross-reference to be added when T15 (surface-model.md creation) completes -->
 
 ### Dated File Convention
 
@@ -97,7 +114,7 @@ The bootstrap system transforms the kit from a generic template into a project-s
 
 Bootstrap fires **progressively** — once per confirmed tech decision during `/create-prd-stack`, not in a batch at the end:
 
-1. **Database confirmed** → fills DB placeholders (`DATABASE`, `ORM`, etc.) + provisions database skill (e.g., `surrealdb-expert`, `postgresql-patterns`)
+1. **Database confirmed** → fills DB placeholders (`DATABASE`, `ORM`, etc.) + provisions database skill from `.agent/skill-library/` (e.g., `stack/databases/surrealdb-expert`, `stack/databases/postgresql-patterns`)
 2. **Frontend framework confirmed** → fills framework placeholders + provisions framework skill + composes `FRAMEWORK_PATTERNS` for `patterns.md`
 3. **Step 9.5 of `/create-prd-compile`** → fills `PROJECT_STRUCTURE` and `ARCHITECTURE_TABLE` in `structure.md`
 
