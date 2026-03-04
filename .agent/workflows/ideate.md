@@ -74,6 +74,8 @@ Explores constraints, success metrics, and competitive positioning. Runs domain 
 
 Before presenting to the user, self-check the vision document:
 
+Read .agent/skills/pipeline-rubrics/references/vision-rubric.md before applying the self-check dimensions.
+
 | # | Dimension | Check |
 |---|-----------|-------|
 | 1 | Problem Clarity | Is the problem one sentence, specific, and testable? |

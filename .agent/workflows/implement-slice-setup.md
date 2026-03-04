@@ -96,7 +96,7 @@ Read `.agent/skills/parallel-agents/SKILL.md` and `.agent/skills/parallel-featur
 3. **BE + FE parallel (GREEN)** — Code against tests and contracts. Annotate spec-gap decisions with `// DECISION: [what and why]`.
 4. **QA-GREEN** — Re-verify, anti-cheat check, add integration tests.
 5. **Correction loop** — If QA-GREEN fails, re-dispatch BE/FE → QA-GREEN until pass.
-6. **All pass** → proceed to step 6.5 (Synthesis) in the tdd shard.
+6. **All pass** → proceed to step 6.5 (Synthesis) in the tdd shard. Use the parallel-agents skill's workstream decomposition to confirm file isolation across agents.
 
 Log each dispatch phase to `.agent/progress/slices/phase-NN-slice-NN.md` `## Dispatch Log`.
 

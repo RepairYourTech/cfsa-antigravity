@@ -130,3 +130,36 @@ These are suggested ways to slice concurrent workstreams:
 | Concurrent edits to same file | Overwrites, hash mismatches | One stream per file strictly |
 | No synthesis step | Contradictory logic | Always synthesize before committing changes |
 | Shared dependencies not frozen | Build breaks unexpectedly | Use interface contracts first |
+
+## TDD-Order Dispatch (Slice Implementation)
+
+### Triggering Condition
+
+Enter parallel mode when the slice's tasks contain surface tags (`BE`, `FE`, `QA`). Proceed sequentially when no tags are found.
+
+### Core Principle
+
+> **Tests are the rock. Code is malleable.** Tests encode the acceptance criteria and must be comprehensive. Code adapts to pass tests, never the reverse.
+
+### 5-Phase Dispatch Table
+
+| Phase | Agent | Responsibility | Depends On |
+|-------|-------|----------------|------------|
+| 0 | Orchestrator | Contracts/schemas (untagged tasks) | — |
+| 1 | QA (RED) | Write comprehensive failing tests | Phase 0 |
+| 2 | BE + FE (parallel) | Write code to make tests pass | Phase 1 |
+| 3 | QA (GREEN) | Verify all tests pass, anti-cheat audit | Phase 2 |
+| 4 | Orchestrator | Iterative correction loop if needed | Phase 3 |
+
+### Dispatch Instructions
+
+1. **Untagged tasks first** — Contract/schema work runs sequentially by orchestrator (Phase 0) before any tagged dispatch.
+2. **QA-RED** — QA agent writes comprehensive failing tests for ALL acceptance criteria. Tests MUST fail. Read `.agent/skills/session-continuity/protocols/09-parallel-claim.md`. Every contract field and error type covered.
+3. **BE + FE parallel** — Code against tests and contracts simultaneously. Annotate spec-gap decisions with `// DECISION: [what and why]`.
+4. **QA-GREEN** — Re-verify all tests pass, anti-cheat check, add integration tests.
+5. **Iterative loop rule** — If QA-GREEN fails → re-dispatch BE/FE → QA-GREEN again → repeat until all pass.
+6. **File independence check** — Verify no two tagged tasks touch the same files before dispatching (prevents tool call hash mismatches).
+
+### Progress Logging
+
+Log each dispatch phase to `.agent/progress/slices/phase-NN-slice-NN.md` under `## Dispatch Log`.

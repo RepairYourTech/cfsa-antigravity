@@ -639,3 +639,83 @@ def process_order(order_id: str) -> Order:
 - **assets/error-handling-checklist.md**: Review checklist for error handling
 - **assets/error-message-guide.md**: Writing helpful error messages
 - **scripts/error-analyzer.py**: Analyze error patterns in logs
+
+## Error Architecture Interview
+
+This interview is mandatory for every project. All 5 decisions below must be confirmed before proceeding to Data Strategy. Do not skip or defer any decision — this is a hard gate.
+
+### Decision 1 — Global Error Envelope
+
+Every error response from any surface must conform to this canonical 4-field structure:
+
+| Field | Description |
+|-------|-------------|
+| `code` | Machine-readable error code (e.g., `VALIDATION_FAILED`, `NOT_FOUND`). Clients switch on this field. |
+| `message` | Human-readable explanation of what went wrong. Safe to display to end users. |
+| `requestId` | Unique identifier for the request that caused the error. Used for support and debugging. |
+| `details` | `object \| null`. Structured additional context (e.g., field-level validation errors) or `null` when no extra detail applies. |
+
+**Locked JSON example:**
+
+```json
+{
+  "code": "VALIDATION_FAILED",
+  "message": "Email address is not valid.",
+  "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "details": { "field": "email", "reason": "must contain @" }
+}
+```
+
+All four top-level fields are always present in every error response.
+
+**Rule:** No other top-level fields (`status`, `error`, `timestamp`) may appear in the error envelope. HTTP status codes are conveyed via the HTTP response status line, not inside the body.
+
+### Decision 2 — Error Propagation Chain
+
+For each layer in the stack (database → service layer → API handler → transport → client), define: what errors are caught, what is logged (and at what level), and what is exposed to the next layer.
+
+**Rule:** No layer may expose raw upstream errors to the client. Every layer must catch, wrap, and translate errors before passing them upward.
+
+### Decision 3 — Unhandled Exception Strategy
+
+Define the process-level catch mechanism:
+
+- **Mechanism name** — the specific runtime feature or library used to catch unhandled exceptions (e.g., `process.on('uncaughtException')`, global error middleware, panic recovery).
+- **Logged fields** — what information is captured when an unhandled exception occurs (stack trace, request context, environment, timestamp).
+- **Client response** — must conform to the global error envelope defined in Decision 1.
+- **Alerting timeline** — how quickly the team is notified after an unhandled exception (e.g., "PagerDuty within 5 minutes for >10 unhandled exceptions/minute").
+
+### Decision 4 — Client Fallback Contract
+
+Define per-surface behavior when the backend is unreachable or returns an error:
+
+- **Offline mode support** — does the surface support offline operation? If yes, what subset of features remains available?
+- **UI on network failure** — what does the user see when the network is down or the API is unreachable (toast, full-page error, inline message)?
+- **Retry strategy** — automatic retry with backoff, manual retry button, or no retry?
+- **Timeout thresholds** — how long the surface waits before declaring a request failed (e.g., 10s for API calls, 30s for file uploads).
+
+### Decision 5 — Error Boundary Strategy
+
+Define per-surface error boundary placement and behavior:
+
+- **Boundary placement** — where error boundaries are placed in the component tree (page-level, section-level, component-level).
+- **Fallback UI** — what the user sees when a boundary catches an error (generic error message, contextual fallback, partial degradation).
+- **Telemetry reporting** — how caught errors are reported to the observability stack (error tracking service name, severity classification, PII scrubbing before reporting).
+
+### User Presentation Prompts
+
+Present these three questions to the user for confirmation:
+
+1. "Does the global error envelope cover every field your clients need?"
+2. "Are there surfaces where the fallback contract needs to differ?"
+3. "Is the alerting timeline appropriate for your operational maturity?"
+
+### Output
+
+Write completed decisions to `architecture-draft.md` under `## Error Architecture` with five sub-sections matching the five decisions above:
+
+1. `### Global Error Envelope`
+2. `### Error Propagation Chain`
+3. `### Unhandled Exception Strategy`
+4. `### Client Fallback Contract`
+5. `### Error Boundary Strategy`

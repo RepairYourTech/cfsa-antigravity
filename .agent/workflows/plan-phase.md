@@ -172,7 +172,7 @@ For each slice, determine the execution order following TDD:
 3. **BE + FE parallel third**: Both implement simultaneously to make tests pass
 4. **QA-GREEN fourth**: `QA` agent re-verifies all tests pass, checks for cheating, adds integration tests
 5. **Iterative loop**: If QA-GREEN fails → re-dispatch BE/FE → QA-GREEN again → repeat until pass
-6. **File independence**: Verify no two tagged tasks touch the same files
+6. **File independence**: Verify no two tagged tasks touch the same files — use the parallel-agents skill's workstream decomposition to confirm isolation
 
 Flag any tasks that can't be parallelized (shared file dependencies) in the plan.
 
@@ -215,7 +215,7 @@ Read `.agent/workflows/bootstrap-agents.md` and execute its utility instructions
 
 ### 6.5c. Confirm all filled
 
-Re-scan the four files above. Only proceed to Step 7 when zero `{{` patterns remain for any of the six placeholder names. If any remain unfilled after bootstrap, **hard stop** and tell the user which placeholders could not be provisioned.
+> ❌ STOP — Re-scan the four files above. Only proceed to Step 7 when zero `{{` patterns remain for any of the six placeholder names. If any remain unfilled after bootstrap, tell the user which placeholders could not be provisioned.
 
 ## 7. Request review and next steps
 

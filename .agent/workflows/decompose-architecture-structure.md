@@ -53,21 +53,9 @@ The `00-infrastructure` skeleton must contain these five items:
 
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **Shard Skeleton** template. For each shard, create a skeleton file at `docs/plans/ia/[NN-domain-name].md` using the template.
 
-**Level-1 sub-feature seeding**: When filling the `## Features` section of each skeleton, read `docs/plans/ideation.md` and locate the section corresponding to this shard's domain. Extract every Level-1 sub-feature — these are concrete capabilities a user would recognise, written in actor + goal format (e.g., "Creator can upload a video → primary data: media asset"). Do NOT use architecture-level headlines or implementation details. List them as bullet points in the `## Features` section, grouped by functional area if the ideation content suggests natural groupings.
+Read .agent/skills/prd-templates/SKILL.md and follow its Shard Seeding Procedure for Level-1 sub-feature extraction from ideation.md into shard ## Features sections.
 
-**Directory example:**
-```
-docs/plans/ia/
-├── 00-infrastructure.md
-├── 01-user-accounts.md      ← ## Features seeded from ideation.md § User Accounts
-├── 02-content-library.md     ← ## Features seeded from ideation.md § Content Library
-├── ...
-├── index.md
-├── decomposition-plan.md
-└── deep-dives/
-```
-
-**`[THIN — review with user]` fallback**: If a shard's domain has **no corresponding section in `ideation.md`** (the domain was introduced during architecture design, not ideation), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead. At the validation step, the user must confirm whether to keep the shard separate, merge it into an adjacent shard, or add missing sub-features from ideation.
+Fallback for domains not in ideation.md is defined in the skill's Shard Seeding Procedure.
 
 ## 6. Create IA index
 

@@ -40,3 +40,44 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 ## Depth Standards
 
 > **Template depth rule**: Section headings in templates are MINIMUM headings, not maximum content. Each section must contain the full detail gathered during prior steps. If a section is under 200 words, it's almost certainly too shallow. Apply the two-implementer test: could a developer interpret this two different ways? If yes, add more detail.
+
+## Shard Seeding Procedure
+
+Run this procedure when filling the `## Features` section of each shard skeleton during `/decompose-architecture-structure`.
+
+### Source
+
+Read `docs/plans/ideation.md` and locate the section corresponding to the shard's domain.
+
+### Actor + Goal Format Rule
+
+Extract every Level-1 sub-feature as a concrete capability a user would recognise, written in actor + goal format with primary data noted.
+
+**Example:** `"Creator can upload a video → primary data: media asset"`
+
+Do NOT use architecture-level headlines or implementation details.
+
+### Grouping Rule
+
+List sub-features as bullet points in the `## Features` section. Group by functional area if the ideation content suggests natural groupings.
+
+### `[THIN — review with user]` Fallback Rule
+
+If a shard's domain has no corresponding section in `ideation.md` (the domain was introduced during architecture design, not ideation), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead.
+
+At the validation step, the user must confirm whether to:
+- Keep the shard separate
+- Merge it into an adjacent shard
+- Add missing sub-features from ideation
+
+### Directory Example
+
+Seeded skeletons live in the `docs/plans/ia/` directory:
+
+```
+docs/plans/ia/
+├── 00-infrastructure.md
+├── 01-user-accounts.md      ← ## Features seeded from ideation.md § User Accounts
+├── 02-content-library.md    ← ## Features seeded from ideation.md § Content Library
+├── ...
+```

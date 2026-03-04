@@ -40,6 +40,7 @@ Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for t
 Read the **Project Surfaces** section from `vision.md` to determine which decision axes apply.
 
 Read `.agent/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.agent/skills/tech-stack-catalog/SKILL.md`.
+Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.
 
 > ⚠️ **Skip the `Database` axis** from the surface decision tables during this generic per-axis loop. All persistence decisions (primary, vector, graph, cache, time-series) are handled exclusively by the **Database: Persistence Map Interview** section below. Do not present a single DATABASE option here — this avoids duplicate/conflicting bootstrap calls.
 
@@ -59,31 +60,7 @@ Get explicit user decisions — no "TBD" allowed. Use the brainstorming skill's 
 
 Instead of a single DATABASE decision pass, use the following structured persistence map interview to identify all required stores.
 
-#### Sub-step A — Feature-to-query table
-
-Walk through every major feature listed in `vision.md`. For each feature, ask: "What does this feature need to *find*, *store*, *relate*, and *rank/search*?" Build a table before naming any technology:
-
-| Feature | Find | Store | Relate | Rank/Search |
-|---------|------|-------|--------|-------------|
-| (from vision.md) | … | … | … | … |
-
-Present the completed table to the user and confirm before proceeding.
-
-#### Sub-step B — Registry-first skill search
-
-Before presenting any store options, read `.agent/skills/find-skills/SKILL.md` and, for each query type that appeared in the table above, run `npx skills find [query type or store name]` via the find-skills skill. If the registry returns a skill for a store type, install it from the registry first. The bundled skill library is a fallback only.
-
-#### Sub-step C — Store selection per query type (constraint-first)
-
-Present store options **only** for query types that appeared in the table. If no feature had a "Rank/Search" requirement, skip `DATABASE_VECTOR` entirely. If no feature had a "Relate" requirement, skip `DATABASE_GRAPH` entirely. Use the per-axis flow from step 3 (constraint questions → filter → present → confirm).
-
-#### Sub-step D — Bootstrap per confirmed store
-
-For each confirmed store, fire bootstrap with its specific sub-key (e.g., `DATABASE_PRIMARY=PostgreSQL`, `DATABASE_VECTOR=Qdrant`). One bootstrap call per sub-key, following the same pattern as all other stack axes. Each confirmation appends to `{{DATABASE_SKILLS}}`.
-
-#### Sub-step E — Write persistence map to `architecture-draft.md`
-
-After all stores are confirmed, write the output to `docs/plans/architecture-draft.md` as a locked section titled `## Persistence Map`. The section must include the feature-to-query table and a mapping of each query type to its canonical store with rationale.
+Read .agent/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store.
 
 ### Design Direction
 

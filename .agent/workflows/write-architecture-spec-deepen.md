@@ -58,6 +58,9 @@ Add any new edge cases, error codes, or access rules discovered. Present finding
 ### Pass 3: Adversarial thinking
 
 Put on the attacker hat:
+
+Read .agent/skills/code-review-pro/SKILL.md and follow its adversarial review methodology for this pass.
+
 - How could someone abuse this feature? (Rate limiting, data scraping, privilege escalation)
 - How could someone bypass the access control? (Direct API calls, parameter tampering, timing attacks)
 - How could someone use this to access another user's data?

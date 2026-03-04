@@ -799,3 +799,53 @@ class UserService {
 - **Datadog**: Cloud monitoring and logging
 - **CloudWatch**: AWS log management
 - **Jaeger**: Distributed tracing
+
+## Observability Architecture Interview
+
+This interview runs during `/create-prd-security` §7.5. All 5 decisions must be confirmed before the security section is complete.
+
+### Decision 1 — Logging Strategy
+
+- **Logging library name** — the specific library (e.g., Pino, Winston, structlog, zap).
+- **Structured JSON in production** — yes or no.
+- **Log levels per environment** — dev: debug, staging: info, prod: warn.
+- **PII field names that are never logged** — enumerate explicitly (e.g., `password`, `ssn`, `creditCard`, `token`).
+- **Log destination** — stdout, file, cloud service — name it.
+
+**Bootstrap fire:** When logging is confirmed, always fire `/bootstrap-agents OBSERVABILITY=structured-logging` first to provision baseline logging guidance. If the confirmed library or stack maps to an additional observability tool (e.g., Datadog, OpenTelemetry, Pino), also fire `/bootstrap-agents OBSERVABILITY=[tool-specific value]`.
+
+### Decision 2 — Tracing Strategy
+
+- **Which service boundaries are traced** — name the services or layers where trace spans are created.
+- **Sampling rate per environment** — e.g., dev: 100%, staging: 50%, prod: 10%.
+- **Trace ID propagation to API clients** — header name used to propagate trace IDs (e.g., `X-Trace-Id`, `traceparent`).
+
+**Bootstrap fire:** If a specific tracing tool is confirmed, invoke `/bootstrap-agents OBSERVABILITY=[confirmed value]`.
+
+### Decision 3 — Alerting Thresholds
+
+- **Error rate percentage that triggers alert** — e.g., 5% of requests returning 5xx in a 5-minute window.
+- **Latency threshold (ms) + duration before alert** — e.g., p95 > 500ms for 3 consecutive minutes.
+- **Queue depth warning level** — e.g., background job queue exceeds 1000 items.
+- **Delivery mechanism** — PagerDuty, Slack, email — name it.
+
+**Bootstrap fire:** If a specific monitoring tool is confirmed, invoke `/bootstrap-agents MONITORING=[confirmed value]`.
+
+### Decision 4 — Launch Dashboards
+
+- **Minimum required panels** — name each panel (e.g., request rate, error rate, p50/p95/p99 latency, active connections, queue depth, CPU/memory utilization).
+- **Tool** — Grafana, Datadog, CloudWatch — name it.
+- **Dashboard owner** — role, not person (e.g., "on-call engineer", "platform team lead").
+
+### Decision 5 — Retention
+
+- **Log retention duration** — e.g., 30 days hot, 90 days cold.
+- **Trace retention duration** — e.g., 7 days.
+- **Compliance alignment** — if applicable (e.g., SOC2 requires 1 year of audit logs).
+
+### User Presentation Prompts
+
+Present these two questions to the user for confirmation:
+
+1. "Are these logging levels and PII exclusions correct for your compliance requirements?"
+2. "Are the alerting thresholds appropriate for your expected traffic?"

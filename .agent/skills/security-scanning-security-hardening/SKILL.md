@@ -145,3 +145,87 @@ Implement comprehensive security hardening with defense-in-depth strategy throug
 - Regular security reviews scheduled post-implementation
 
 Security hardening target: $ARGUMENTS
+
+## Attack Surface Review Protocol
+
+This protocol runs during `/create-prd-security`. Universal checks apply to all projects. Surface-specific checks are conditional — they run only if the corresponding surface has been confirmed during `/create-prd-stack`.
+
+### Universal Checks (All Projects)
+
+#### 1. Secret Management
+
+Where secrets are stored (env vars, vault, cloud secret manager), access policy, rotation cadence, CI injection method (environment variables, OIDC, sealed secrets).
+
+Document under `## Security — Attack Surface > Secret Management`.
+
+#### 2. Dependency Audit Cadence
+
+Scan frequency; CI gate behavior on critical CVE (block merge, warn, ignore); triage policy for high-severity CVEs (patch within N days) and medium-severity CVEs (patch within N days or accept-with-justification).
+
+Document under `## Security — Attack Surface > Dependency Auditing`.
+
+### Web Surface Checks (If Web Surface Confirmed)
+
+#### 1. OWASP Top 10 Review
+
+For each of the 10 categories, name the specific mechanism that mitigates it.
+
+**Rule:** "Handled by framework" is not acceptable — name the framework feature, the configuration, and the fallback if the framework is bypassed.
+
+Document under `## Security — Attack Surface > Web > OWASP Top 10`.
+
+#### 2. Security Headers
+
+Configured values for each of the following headers:
+
+- `Content-Security-Policy`
+- `Strict-Transport-Security`
+- `X-Content-Type-Options`
+- `X-Frame-Options`
+- `Referrer-Policy`
+- `Permissions-Policy`
+
+**Rule:** Each header must have a specific value, not just "enabled".
+
+Document under `## Security — Attack Surface > Web > Security Headers`.
+
+### API Surface Checks (If API Surface Confirmed)
+
+#### 1. OWASP API Security Top 10
+
+For each category, name the mechanism that mitigates it.
+
+**Special emphasis:** BOLA/IDOR requires a per-endpoint ownership check strategy — name how each endpoint verifies the requesting user owns the requested resource.
+
+Document under `## Security — Attack Surface > API > OWASP API Top 10`.
+
+### Desktop Surface Checks (If Desktop Surface Confirmed)
+
+#### 1. Sandboxing Model
+
+Sandboxing strategy, IPC security boundaries, auto-update verification, code signing chain.
+
+#### 2. Notarization
+
+Notarization workflow (macOS notarization, Windows SmartScreen signing), signing certificate source, CI step that performs notarization.
+
+#### 3. Local Data Encryption
+
+Strategy for encrypting sensitive data at rest (encryption library, key storage mechanism, what data is encrypted).
+
+Document all three under `## Security — Attack Surface > Desktop`.
+
+### Mobile Surface Checks (If Mobile Surface Confirmed)
+
+#### 1. Mobile-Specific Threats
+
+Certificate pinning strategy, secure storage approach, jailbreak/root detection policy, deep link validation.
+
+Document under `## Security — Attack Surface > Mobile`.
+
+### User Presentation Prompts
+
+Present these two questions to the user for confirmation:
+
+1. "Are there any attack vectors I've missed for your specific domain?"
+2. "Do the OWASP mechanisms look correct, or are any of them actually handled differently?"

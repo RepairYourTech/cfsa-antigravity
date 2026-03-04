@@ -63,6 +63,9 @@ Writes the BE spec(s) to `docs/plans/be/`, updates the BE index, runs cross-refe
 ## Quality Gate
 
 Before presenting to the user, verify:
+
+Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
+
 - [ ] Every endpoint has a Zod request AND response schema
 - [ ] Every database table has defined fields, indexes, and permissions
 - [ ] Security constraints from IA shard reflected in middleware section

@@ -27,6 +27,8 @@ Read the skill before proceeding:
 
 ## 1. File Reconnaissance & Deep Reading
 
+Read .agent/skills/architecture-mapping/SKILL.md and follow its file reconnaissance methodology.
+
 Analyze the project structure using file exploration tools. Do not just stop at finding directories; you must read the source code.
 1. Identify core directories (`src/`, `lib/`, `api/`, etc.)
 2. Use `view_file` to read the exact contents of entry points (e.g., `src/api/worker.ts`, `src/pages/index.astro`).
@@ -34,17 +36,23 @@ Analyze the project structure using file exploration tools. Do not just stop at 
 
 ## 2. Component & Schema Analysis
 
+Read .agent/skills/architecture-mapping/SKILL.md and follow its component analysis methodology.
+
 Group files logically into components, but extract their exact contracts:
 - Use `grep_search` to find `z.object` or `interface` definitions.
 - Document exact schema names, required environment variables, and binding names (e.g., KV namespaces, R2 buckets).
 
 ## 3. Map Explicit Data Flow and Relationships
 
+Read .agent/skills/architecture-mapping/SKILL.md and follow its data flow mapping methodology.
+
 Trace exactly how data moves through the system.
 - Read database clients or query files to see exactly how state is managed (e.g., SurrealDB queries, Firebase Auth hooks).
 - Document exact API routes, rate limiting logic, and CORS constraints present in the code.
 
 ## 4. Extract Key Patterns with Evidence
+
+Read .agent/skills/architecture-mapping/SKILL.md and follow its pattern extraction methodology.
 
 Identify recurring architectural patterns used in the codebase (e.g., CFPA, React Islands, utility-first CSS). 
 - Provide exact file paths that prove these patterns are in use (e.g., "React Islands are used in `src/components/Header.tsx` via the `client:load` directive").

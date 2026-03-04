@@ -72,7 +72,7 @@ Not every FE spec maps 1:1 to a BE feature spec. Before writing anything, classi
 
 Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
 Read .agent/skills/{{FRONTEND_FRAMEWORK_SKILL}}/SKILL.md
-Read .agent/skills/{{FRONTEND_DESIGN_SKILL}}/SKILL.md
+Read .agent/skills/{{FRONTEND_DESIGN_SKILL}}/SKILL.md and follow its design methodology.
 Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md
 Read .agent/skills/{{STATE_MANAGEMENT_SKILL}}/SKILL.md and follow its state management conventions.
 Read .agent/skills/error-handling-patterns/SKILL.md

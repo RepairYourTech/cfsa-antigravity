@@ -52,6 +52,9 @@ Runs multiple deepening passes (cross-section consistency, "what if" scenarios, 
 ## Quality Gate
 
 Before presenting to the user, verify:
+
+Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline.
+
 - [ ] Every interaction has a complete flow (action → call → mutation → response)
 - [ ] Every contract has typed request, response, and error shapes
 - [ ] Data model has all fields, relationships, indexes, and constraints

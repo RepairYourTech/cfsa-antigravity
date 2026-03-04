@@ -23,7 +23,7 @@ Safely modify a Zod schema without breaking existing consumers.
 Read these skills for safe schema migration:
 1. `.agent/skills/migration-management/SKILL.md` — Migration strategy and versioning
 2. `.agent/skills/testing-strategist/SKILL.md` — Migration test coverage
-3. `.agent/skills/error-handling-patterns/SKILL.md` — Error handling for schema changes
+3. `.agent/skills/error-handling-patterns/SKILL.md` — follow its methodology for schema change error handling
 
 ---
 

@@ -354,3 +354,76 @@ FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
 - [MySQL Data Types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html)
 - [Database Normalization Guide](https://en.wikipedia.org/wiki/Database_normalization)
 - [Draw.io](https://draw.io/) - Schema diagram tool
+
+## Persistence Map Interview
+
+This interview runs during `/create-prd-stack` Sub-steps A–E. It maps every feature to its query types, then selects the right store for each query type.
+
+### Sub-step A — Feature-to-Query Table
+
+Walk through every major feature in `vision.md` and ask: "What does this feature need to find, store, relate, and rank/search?"
+
+Build the following table:
+
+| Feature | Find | Store | Relate | Rank/Search |
+|---------|------|-------|--------|-------------|
+| (from vision.md) | … | … | … | … |
+
+Present and confirm the table with the user before proceeding to Sub-step B.
+
+### Sub-step B — Registry-First Skill Search
+
+Before presenting any store options, read `.agent/skills/find-skills/SKILL.md` and run `npx skills find [query type or store name]` for each query type that appeared in the table.
+
+If the registry returns a skill, install it first. The bundled skill library is a fallback only.
+
+### Sub-step C — Store Selection Per Query Type
+
+Present store options only for query types that appeared in the table:
+
+- Skip `DATABASE_VECTOR` if no Rank/Search requirement appeared.
+- Skip `DATABASE_GRAPH` if no Relate requirement appeared.
+
+Use constraint-first per-axis flow: constraint questions → filter → present → confirm.
+
+### Sub-step D — Bootstrap Per Confirmed Store
+
+For each confirmed store, fire bootstrap with its specific sub-key:
+
+- e.g., `DATABASE_PRIMARY=PostgreSQL`, `DATABASE_VECTOR=Qdrant`
+- One bootstrap call per sub-key.
+- Each confirmation appends to `{{DATABASE_SKILLS}}`.
+
+### Sub-step E — Write Persistence Map
+
+After all stores are confirmed, write to `docs/plans/architecture-draft.md` as a locked section titled `## Persistence Map`.
+
+Must include:
+- The feature-to-query table from Sub-step A
+- A mapping of each query type to its canonical store with rationale
+
+## Cross-Store Entity Consistency Protocol
+
+### Triggering Rule
+
+This protocol runs for every entity that spans more than one store.
+
+### The 4 Questions
+
+For each cross-store entity, answer the following in order:
+
+1. **Canonical ID** — Single identifier tying representations together. Must be the primary store's UUID stored as a property in every other store — never the graph store's or vector store's internal ID.
+
+2. **Creation sequence** — Which store is written first. Recovery mechanism for partial write failures (Saga pattern, compensating transaction, or async retry queue — name which).
+
+3. **Deletion cascade** — Cleanup order, mechanism (application-layer sequential deletes, DB-level triggers, or background job — name which).
+
+4. **Read strategy** — Whether a read requires data from multiple stores. Name the application-layer join pattern explicitly.
+
+### Skill Instruction
+
+Read all skills in `{{DATABASE_SKILLS}}` for advice on each store's transaction semantics and consistency guarantees before completing this step.
+
+### Output
+
+Write the completed cross-store consistency table to `architecture-draft.md` as part of the `## Data Strategy` section.

@@ -58,38 +58,7 @@ Write the completed `## System Architecture` section to `docs/plans/architecture
 
 > **Hard gate.** This step is mandatory for every project. All five decisions below must be confirmed by the user before `## 5. Data strategy` begins. Do not proceed to Data Strategy until every decision is explicitly approved.
 
-Read `.agent/skills/error-handling-patterns/SKILL.md` and follow its methodology.
-
-Design the global error handling contract for the entire system. This section locks decisions that every downstream spec must conform to:
-
-1. **Global error envelope** — Define a single error response shape that every API endpoint must return. The canonical envelope uses exactly four fields:
-   - `code` — Application-level error enum string (e.g., `"VALIDATION_FAILED"`, `"NOT_FOUND"`).
-   - `message` — User-safe, human-readable string. Never contains stack traces or internal details.
-   - `requestId` — Per-request UUID string for tracing and support correlation.
-   - `details` — `object | null`. Structured additional context (e.g., field-level validation errors) or `null` when no extra detail applies.
-
-   The locked canonical example is:
-   ```json
-   {
-     "code": "VALIDATION_FAILED",
-     "message": "Email address is not valid.",
-     "requestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-     "details": { "field": "email", "reason": "must contain @" }
-   }
-   ```
-   No other top-level fields (e.g., `status`, `error`, `timestamp`) may appear in the envelope. HTTP status codes are conveyed via the HTTP response status line, not inside the body.
-
-2. **Error propagation chain** — For each layer in the stack (database → service layer → API handler → transport → client), define: what errors are caught, what is logged (and at what level), and what is exposed to the next layer. No layer may expose raw upstream errors to the client.
-3. **Unhandled exception strategy** — Name the process-level catch mechanism (e.g., Express error middleware, global `uncaughtException` handler). Define: what fields are logged, what the client receives (must conform to the global envelope), and the alerting timeline (e.g., "PagerDuty within 5 minutes for >10 unhandled exceptions/minute").
-4. **Client fallback contract** — For each surface (web, mobile, CLI, etc.), define: whether offline mode is supported, what the UI shows on network failure, retry strategy (exponential backoff? user-initiated?), and timeout thresholds.
-5. **Error boundary strategy** — For each applicable surface (e.g., React error boundaries, mobile crash reporters), define: where boundaries are placed in the component tree, what the fallback UI renders, and whether errors are reported to a telemetry service.
-
-**Present to user**: Show the error architecture section. Ask:
-- "Does the global error envelope cover every field your clients need?"
-- "Are there surfaces where the fallback contract needs to differ?"
-- "Is the alerting timeline appropriate for your operational maturity?"
-
-Refine based on discussion. All five decisions must receive explicit user confirmation before proceeding.
+Read `.agent/skills/error-handling-patterns/SKILL.md` and follow its Error Architecture Interview methodology. All 5 decisions must receive explicit user confirmation before proceeding to Data Strategy. This step is a hard gate — do not proceed until all five decisions are confirmed.
 
 Write the completed decisions to `docs/plans/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`.
 
@@ -120,14 +89,7 @@ Write the completed `## Data Strategy` section to `docs/plans/architecture-draft
 
 ### 5.5. Cross-Store Entity Consistency
 
-After per-entity placement decisions are made, for every entity that spans more than one store, document all four of the following:
-
-1. **Canonical ID** — What single identifier ties this entity's representations together across all stores? (Must be the primary store's UUID stored as a property in every other store — never the graph store's or vector store's internal ID.)
-2. **Creation sequence** — Which store is written first? If a later write fails (e.g., Neo4j node creation fails after PostgreSQL row is committed), what is the recovery mechanism? (Saga pattern? Compensating transaction? Async retry queue?)
-3. **Deletion cascade** — What gets cleaned up when this entity is deleted, in what order, and by what mechanism? (Application-layer sequential deletes? DB-level triggers? Background job?)
-4. **Read strategy** — Does a read of this entity require data from multiple stores? Name the application-layer join pattern explicitly.
-
-Read all skills in `{{DATABASE_SKILLS}}` for advice on each store's transaction semantics and consistency guarantees before completing this sub-step.
+Read .agent/skills/database-schema-design/SKILL.md and follow its Cross-Store Entity Consistency Protocol for every entity that spans more than one store.
 
 Write the completed cross-store consistency table to `docs/plans/architecture-draft.md` as part of the `## Data Strategy` section.
 

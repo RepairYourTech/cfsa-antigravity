@@ -64,33 +64,7 @@ If the security model confirmed a specific security framework or compliance appr
 
 ## 6.5. Attack Surface Review
 
-Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its attack surface analysis methodology.
-
-Using the security model from Step 6 and the confirmed surfaces from `/create-prd-stack`, review each applicable attack surface:
-
-### Universal checks (all projects)
-
-1. **Secret management** — Where are secrets stored? (env vars, vault, cloud secret manager). What is the access policy? What is the rotation cadence? How are secrets injected in CI (environment variables, OIDC, sealed secrets)? Document under `## Security — Attack Surface > Secret Management`.
-2. **Dependency audit cadence** — How often are dependencies scanned? What CI gate behaviour on critical CVE? (block merge, warn, ignore). What is the triage policy for high-severity CVEs (patch within N days) and medium-severity CVEs (patch within N days or accept-with-justification)? Document under `## Security — Attack Surface > Dependency Auditing`.
-
-### Web surface checks (if web surface confirmed)
-
-1. **OWASP Top 10 review** — For each of the 10 categories, name the specific mechanism that addresses it. "Handled by framework" is not acceptable — name the framework feature, the configuration, and the fallback if the framework is bypassed. Document under `## Security — Attack Surface > Web > OWASP Top 10`.
-2. **Security headers** — Document configured values for: `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`. Each header must have a specific value, not just "enabled". Document under `## Security — Attack Surface > Web > Security Headers`.
-
-### API surface checks (if API surface confirmed)
-
-1. **OWASP API Security Top 10** — For each category, name the mechanism. Pay special attention to BOLA/IDOR — document the per-endpoint ownership check strategy (how does each endpoint verify the requesting user owns the requested resource?). Document under `## Security — Attack Surface > API > OWASP API Top 10`.
-
-### Desktop surface checks (if desktop surface confirmed)
-
-1. **Sandboxing model** — Document the sandboxing strategy, IPC security boundaries, auto-update verification, and code signing chain.
-2. **Notarization** — Document the notarization workflow (macOS notarization, Windows SmartScreen signing). Name the signing certificate source and CI step that performs notarization.
-3. **Local data encryption** — Document the strategy for encrypting sensitive data at rest on the user's machine (encryption library, key storage mechanism, what data is encrypted). Document under `## Security — Attack Surface > Desktop`.
-
-### Mobile surface checks (if mobile surface confirmed)
-
-1. **Mobile-specific threats** — Document certificate pinning strategy, secure storage approach, jailbreak/root detection policy, and deep link validation. Document under `## Security — Attack Surface > Mobile`.
+Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its Attack Surface Review Protocol for each surface confirmed in /create-prd-stack. Apply Universal checks to all projects, then surface-specific checks conditionally.
 
 **Present to user**: Show the attack surface review findings. Ask:
 - "Are there any attack vectors I've missed for your specific domain?"
@@ -107,19 +81,7 @@ For each external service:
 
 ## 7.5. Observability Architecture
 
-Read .agent/skills/logging-best-practices/SKILL.md and follow its structured logging methodology.
-
-Design the observability architecture for the project. Each decision must be confirmed before proceeding:
-
-1. **Logging strategy** — Name the logging library. Structured JSON in production (yes/no)? Log levels per environment (dev: debug, staging: info, prod: warn). PII field names that are never logged (enumerate explicitly). Log destination (stdout, file, cloud service — name it). When logging is confirmed, always fire `/bootstrap-agents OBSERVABILITY=structured-logging` first to provision baseline logging guidance. If the confirmed library or stack maps to an additional observability tool (e.g., Datadog, OpenTelemetry, Pino), also fire `/bootstrap-agents OBSERVABILITY=[tool-specific value]`.
-
-2. **Tracing strategy** — Which service boundaries are traced? Sampling rate per environment. Trace ID propagation to API clients (header name). If a specific tracing tool is confirmed, invoke `/bootstrap-agents OBSERVABILITY=[confirmed value]`.
-
-3. **Alerting thresholds** — Error rate percentage that triggers alert. Latency threshold (ms) + duration before alert. Queue depth warning level. Delivery mechanism (PagerDuty, Slack, email — name it). If a specific monitoring tool is confirmed, invoke `/bootstrap-agents MONITORING=[confirmed value]`.
-
-4. **Launch dashboards** — Minimum required panels (name each). Tool (Grafana, Datadog, CloudWatch — name it). Dashboard owner (role, not person).
-
-5. **Retention** — Log retention duration. Trace retention duration. Compliance alignment (if applicable).
+Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability Architecture Interview — all 5 decisions (logging, tracing, alerting, dashboards, retention) must be confirmed. Fire bootstrap per the skill's instructions for each confirmed tool.
 
 **Present to user**: Show the observability architecture decisions. Ask:
 - "Are these logging levels and PII exclusions correct for your compliance requirements?"

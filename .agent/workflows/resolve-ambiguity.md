@@ -45,6 +45,8 @@ Read the target document(s) in full based on the layer or file path determined i
 
 ## 4. Classify and resolve
 
+Apply the two-path classification model from the resolve-ambiguity skill:
+
 For each gap or ambiguity found, follow the skill's two-path classification:
 
 - **Technical/Factual gaps** → tiered lookup (Tiers 1–5): project docs, architecture files, upstream specs, official documentation, web search

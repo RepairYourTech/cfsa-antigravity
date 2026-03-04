@@ -40,18 +40,7 @@ Read the following files and build a **reconciliation table** comparing what eac
 2. The shard's `## Features` section (seeded during `/decompose-architecture-structure`)
 3. `docs/plans/vision.md` — Must Have features relevant to this domain
 
-**Reconciliation table format:**
-
-| Sub-feature | ideation.md | Shard ## Features | Must Have? | Decision |
-|-------------|-------------|-------------------|------------|----------|
-| [name] | ✅ Listed | ✅ Listed | Yes/No | Keep |
-| [name] | ✅ Listed | ❌ Missing | Yes | **Add to shard immediately** |
-| [name] | ✅ Listed | ❌ Missing | No | Add to shard — ideation is authoritative |
-| [name] | ❌ Not listed | ✅ Listed | — | `[Architecture-only — not in ideation.md]` — keep but audit |
-
-**Sub-feature mismatch handling rules:**
-- If a sub-feature appears in `ideation.md` but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding to 1b. Do not wait for user confirmation to add ideation-sourced sub-features.
-- If a sub-feature appears in the shard's `## Features` but not in `ideation.md` → **keep it** but mark it with `[Architecture-only — not in ideation.md]` as an audit trail. These items were added during decomposition and need explicit user confirmation in 1b.
+Read .agent/skills/architecture-mapping/SKILL.md and follow its Sub-Feature Reconciliation Protocol. Build the reconciliation table comparing ideation.md against the shard skeleton and apply mismatch handling rules before proceeding to Step 1b.
 
 ### 1b. Scope confirmation
 
@@ -158,6 +147,7 @@ Refine based on discussion before proceeding.
 Read .agent/skills/resolve-ambiguity/SKILL.md and follow its methodology.
 
 Read each skill listed in `{{SECURITY_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
+For each skill in {{SECURITY_SKILLS}}, follow its attack surface methodology for edge case identification.
 
 - Rate limits and abuse scenarios
 - Concurrent access handling

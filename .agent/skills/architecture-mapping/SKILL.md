@@ -81,3 +81,100 @@ Create or update `docs/ARCHITECTURE.md` using the following structure:
 *   **Trace the Code:** Never guess architectural boundaries. Use `grep_search` and `view_file` to trace imports and confirm how modules interact before documenting them.
 *   **Be Explicit:** Avoid boilerplate. If an API has 3 endpoints, list the 3 endpoints and their exact Zod validation schemas.
 *   **Living Document:** If updating an *existing* `ARCHITECTURE.md`, do not simply append. Integrate new, granular findings holistically into the existing structure. Update the "Last Updated" date.
+
+## Domain Boundary Protocol
+
+### Purpose
+
+Run this protocol before proposing domain boundaries. Uses a domain inventory record to evaluate every candidate domain.
+
+### Domain Inventory Record Format
+
+For each candidate domain, build a record in the following format:
+
+```
+Domain: [name]
+Architecture description: [one-line summary from architecture design]
+Ideation sub-features:
+  1. [Actor] can [goal] → primary data: [entity/table]
+  2. [Actor] can [goal] → primary data: [entity/table]
+  ...
+Split trigger: [none | review | mandatory-split]
+```
+
+Read `docs/plans/ideation.md` and the architecture design to build each record.
+
+### Split Trigger Rules
+
+Apply all three rules to every domain:
+
+1. **80-line proxy** — If the `ideation.md` section for this domain exceeds ~80 lines of content (features, user stories, acceptance criteria combined), flag as `mandatory-split`.
+
+2. **3-table rule** — If the domain's sub-features touch ≥3 independent database tables with no shared queries, flag as `mandatory-split`.
+
+3. **No-shared-query test** — If two sub-feature groups within a domain could each be assigned to a different developer without coordination (no shared API endpoints, no shared data mutations), flag as `review`.
+
+### Domain Boundary Table Template
+
+| # | Domain | Features Included | Sub-feature Count | Complexity | Split Candidate? | Needs Deep Dive? |
+|---|--------|-------------------|-------------------|------------|-----------------|------------------|
+| 00 | Cross-cutting | Auth, API conventions, error handling | — | Medium | — | No |
+| 01 | [Domain] | [Features] | [N] | [Low/Med/High] | [Yes/No — reason] | [Yes/No] |
+
+### User Approval Protocol
+
+Present split candidates to the user before finalising the domain boundary table. For each candidate show:
+
+- Domain name
+- Sub-feature list
+- Proposed split boundary
+- Rationale
+
+User must approve or reject each split before the table is locked.
+
+### Shard Numbering Convention
+
+- `00-*` for cross-cutting concerns (may be multiple)
+- `01-*` through `NN-*` for feature domains ordered by dependency (dependencies first)
+
+## Sub-Feature Reconciliation Protocol
+
+### Purpose
+
+Run this protocol when beginning any architecture spec shard. `ideation.md` is the primary source of truth for sub-features — the architecture design is secondary context.
+
+### Sources to Read
+
+1. `docs/plans/ideation.md` — the section corresponding to this shard's domain
+2. The shard's `## Features` section
+3. `docs/plans/vision.md` Must Have features for this domain
+
+### Reconciliation Table
+
+| Sub-feature | ideation.md | Shard ## Features | Must Have? | Decision |
+|-------------|-------------|-------------------|------------|----------|
+| [name] | ✅ Listed | ✅ Listed | Yes/No | Keep |
+| [name] | ✅ Listed | ❌ Missing | Yes | **Add to shard immediately** |
+| [name] | ✅ Listed | ❌ Missing | No | Add to shard — ideation is authoritative |
+| [name] | ❌ Not listed | ✅ Listed | — | `[Architecture-only — not in ideation.md]` — keep but audit |
+
+### Mismatch Handling Rules
+
+1. If a sub-feature appears in `ideation.md` but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding. Do not wait for user confirmation to add ideation-sourced sub-features.
+
+2. If a sub-feature appears in the shard's `## Features` but not in `ideation.md` → **keep it** but mark it with `[Architecture-only — not in ideation.md]` as an audit trail. These items need explicit user confirmation.
+
+### Scope Confirmation Presentation Format
+
+Present the reconciled scope to the user in the following format:
+
+> **Reconciled features for [Shard NN — Domain Name]:**
+>
+> [bullet list of all sub-features, with `[Architecture-only]` markers where applicable]
+>
+> **[N] sub-features added from ideation.md** that were missing from the shard skeleton.
+> **[M] sub-features marked `[Architecture-only]`** — not found in ideation.md, added during decomposition.
+>
+> "Does this feature list match your intent for this domain? Any sub-features to add, remove, or re-scope?"
+
+Wait for explicit user confirmation before proceeding. If the user modifies the list, update the shard file immediately.

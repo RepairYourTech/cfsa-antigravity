@@ -98,6 +98,8 @@ Documents development methodology and phasing strategy. Compiles `docs/plans/YYY
 
 ### Self-check against Architecture rubric
 
+Read .agent/skills/pipeline-rubrics/SKILL.md and apply its Architecture rubric for the self-check.
+
 Before presenting to the user, self-check both documents against the **Architecture Rubric** (12 dimensions) from `/audit-ambiguity`:
 
 | # | Dimension | Check |
@@ -127,6 +129,8 @@ Also verify completeness:
 - [ ] Design system document exists at docs/plans/design-system.md and all seven decision areas are filled (no placeholders)
 
 For any dimension that scores ⚠️ or ❌, resolve it NOW. Loop back to the relevant step and resolve with the user.
+
+> ❌ STOP — do not call notify_user until all dimensions score ✅.
 
 ### Depth audit
 

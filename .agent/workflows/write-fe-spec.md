@@ -58,6 +58,9 @@ Writes the FE spec to `docs/plans/fe/`, updates the FE index, runs cross-referen
 ## Quality Gate
 
 Before presenting to the user, verify:
+
+Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
+
 - [ ] Every component has a props interface
 - [ ] Every interactive element has defined behavior
 - [ ] Every data field maps to a BE response field (if applicable)

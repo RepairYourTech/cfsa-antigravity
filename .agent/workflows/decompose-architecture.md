@@ -51,34 +51,7 @@ Analyze the architecture design and identify natural domain boundaries. Each bou
 - Features that share the same access control model may belong together
 - Cross-cutting concerns (auth, API conventions, error handling) become `00-*` shards
 
-> **Pre-step — Sub-feature inventory**
->
-> Before proposing domain boundaries, build a **domain inventory record** by reading `docs/plans/ideation.md` and the architecture design. For each candidate domain, list every Level-1 sub-feature using the actor + goal + primary data format:
->
-> **Domain inventory record format:**
-> ```
-> Domain: [name]
-> Architecture description: [one-line summary from architecture design]
-> Ideation sub-features:
->   1. [Actor] can [goal] → primary data: [entity/table]
->   2. [Actor] can [goal] → primary data: [entity/table]
->   ...
-> Split trigger: [none | review | mandatory-split]
-> ```
->
-> **Split trigger rules:**
-> - **80-line proxy**: If the `ideation.md` section for this domain exceeds ~80 lines of content (features, user stories, acceptance criteria combined), flag as `mandatory-split`
-> - **3-table rule**: If the domain's sub-features touch **≥3 independent database tables with no shared queries**, flag as `mandatory-split`
-> - **No-shared-query test**: If two sub-feature groups within a domain could each be assigned to a different developer without coordination (no shared API endpoints, no shared data mutations), flag as `review`
->
-> **Present split candidates to the user** before finalising the domain boundary table. For each candidate, show: the domain name, the sub-feature list, the proposed split boundary, and the rationale. The user must approve or reject each split before the table is locked.
-
-**Domain boundary template:**
-| # | Domain | Features Included | Sub-feature Count | Complexity | Split Candidate? | Needs Deep Dive? |
-|---|--------|-------------------|-------------------|------------|-----------------|------------------|
-| 00 | Cross-cutting | Auth, API conventions, error handling | — | Medium | — | No |
-| 01 | [Domain] | [Features] | [N] | [Low/Med/High] | [Yes/No — reason] | [Yes/No] |
-| ... | ... | ... | ... | ... | ... | ... |
+Read .agent/skills/architecture-mapping/SKILL.md and follow its Domain Boundary Protocol. Build the domain inventory record, apply all three split trigger rules, and produce the domain boundary table. Present split candidates to the user before locking any boundary.
 
 Present the proposed domain decomposition to the user for validation.
 
