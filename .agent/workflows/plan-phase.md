@@ -30,6 +30,26 @@ Read `.agent/progress/index.md` to identify the current phase number N.
 - **If N = 1** → this is the first phase. Skip this gate.
 - **If N > 1** → read `.agent/progress/phases/phase-[N-1].md` and verify its status is `complete` with a passing `/validate-phase`. **Hard stop** if the previous phase is not complete: "Phase [N-1] must be complete with a passing `/validate-phase` before planning Phase [N]. Run `/validate-phase` for Phase [N-1] first."
 
+  **Architecture map freshness check (N > 1 only)** (warning — not a hard stop):
+
+  This check applies only when N > 1, after the previous-phase completion verification above has passed. It is skipped entirely for Phase 1.
+
+  1. Check whether `docs/ARCHITECTURE.md` exists. If the file does not exist, skip this check silently — a missing architecture map is normal for early phases.
+
+  2. When the file exists: read `docs/ARCHITECTURE.md` and extract the "Last updated" date from its header. Read `.agent/progress/phases/phase-[N-1].md` and extract the completion date of Phase N-1.
+
+  3. **Date comparison**: If the architecture map's last-updated date is **before** the Phase N-1 completion date, surface the following warning:
+
+     > ⚠️ `docs/ARCHITECTURE.md` was last updated before Phase [N-1] completed. The architecture map may not reflect the current implementation state.
+     >
+     > Resolution paths:
+     > 1. Run `/update-architecture-map` to bring the map current.
+     > 2. Reply `"confirmed"` if you have verified the map is intentionally up to date.
+
+     **Wait** for the user to do one of these two things before proceeding to Step 0.1.
+
+  4. When dates are equal or the map is newer: no warning, proceed silently to Step 0.1.
+
 ---
 
 ## 0.1. Load planning skills
@@ -42,19 +62,26 @@ Read these skills for slice planning guidance:
 
 ## 0.5. Application Completeness Audit
 
-Read all FE specs in `docs/plans/fe/` and check the following table. **If ANY check fails → stop and tell the user exactly which FE specs need to be updated. Do NOT proceed to create a phase plan.**
+Before running checks: read `{{SURFACES}}` from `.agent/instructions/tech-stack.md`. For each row in the table below, only run the check if the "Applies To" column matches the project's confirmed surfaces. Skip rows that don't apply — a missing check for an inapplicable surface is not a failure.
 
-| Check | What It Verifies |
-|---|---|
-| **Route coverage** | Every route in the app is specced in at least one FE spec |
-| **Navigation coverage** | Every route is reachable from at least one navigation element |
-| **Auth state coverage** | Every auth state (logged out, logged in, insufficient permissions) has a UI |
-| **Empty state coverage** | Every data-fetching view has an empty state spec |
-| **Error state coverage** | Every data-fetching view has an error state spec |
-| **Onboarding coverage** | If the app has accounts, an onboarding/first-run flow is specced |
-| **404/error pages** | Global error pages (404, 500, offline) are specced |
+Read all FE specs in `docs/plans/fe/` and check the following table.
 
-Only when all checks pass does the workflow continue to the next step.
+| Check | Applies To | What It Verifies |
+|---|---|---|
+| **Route coverage** | web, mobile, desktop | Every route in the app is specced in at least one FE spec |
+| **Navigation coverage** | web, mobile, desktop | Every route is reachable from at least one navigation element |
+| **Auth state coverage** | all surfaces (if auth exists) | Every auth state (logged out, logged in, insufficient permissions) has a defined UI or response |
+| **Empty state coverage** | web, mobile, desktop | Every data-fetching view has an empty state spec |
+| **Error state coverage** | all surfaces | Every data-fetching operation has an error response or error state spec |
+| **Onboarding coverage** | all surfaces (if accounts exist) | First-run or onboarding flow is specced |
+| **404/error pages** | web, desktop | Global error pages (404, 500, offline) are specced |
+| **Help/usage output** | cli | `--help` flag output is specced and documents all commands |
+| **Exit codes** | cli | All error exit codes and their meanings are documented in a spec |
+| **Command discovery** | cli | Command listing or autocomplete behavior is specced |
+
+**If ANY applicable check fails → stop and tell the user exactly which FE specs need to be updated. Do NOT proceed to create a phase plan.**
+
+Only when all **applicable** checks pass does the workflow continue to the next step.
 
 ---
 
