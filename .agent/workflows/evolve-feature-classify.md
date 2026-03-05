@@ -87,6 +87,8 @@ This is a real spec-writing step — not a placeholder. Write the new content at
 - Data models (new entities, fields, or relationships)
 - Access control (RBAC implications)
 
+**Inline ambiguity check**: Before presenting this content to the user for approval, apply the Micro Ambiguity Check from `.agent/skills/session-continuity/SKILL.md` (Ambiguity Gates section). Walk each individual element of the new content and ask: "Would an implementer need to guess about this?" For every element where the answer is yes — fix it now. Add the missing detail, type, behavior, or constraint. Only present the content to the user once it passes the micro check.
+
 Present the written content to the user.
 
 **STOP — do not proceed until the user approves the new content.**

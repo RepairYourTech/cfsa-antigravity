@@ -146,6 +146,8 @@ Use `notify_user` to present the audit report.
 ### If gaps were found:
 After completing remediation in Step 5, propose: "Next: Re-run `/audit-ambiguity [layer]` as a fresh invocation. The session that fixed gaps cannot grade its own homework."
 
+> **If the audit reveals a missing feature** (not just an underspecified one): Use `/evolve-feature` rather than `/resolve-ambiguity`. `/resolve-ambiguity` resolves ambiguity in existing content; `/evolve-feature` is for genuinely new capabilities that were never captured in the specs.
+
 ### If ambiguity is 0%:
 
 > **Passing criteria**: A layer passes the ambiguity gate ONLY when ALL THREE conditions are met:

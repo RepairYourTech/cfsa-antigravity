@@ -216,3 +216,4 @@ Use `notify_user` to present the validation report.
 
 - **If all checks pass**: "Phase N validation complete. Next: Run `/update-architecture-map` to ensure the project's living architecture document is up-to-date."
 - **If any checks fail**: "Fix the failures listed in the validation report and re-run `/validate-phase` for Phase N."
+- **If new requirements were discovered during validation** (scope gaps, missing features, behavioral corrections): Use `/evolve-feature` to add them at the correct entry point layer. Do not attempt to add them directly to specs — evolution must go through the classify → cascade flow to maintain layer consistency.

@@ -130,9 +130,9 @@ New content:       [summary]
 Implementation:    [impact summary]
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Recommended next steps:
-1. Run `/audit-ambiguity [lowest updated layer]` to verify the new content meets the quality bar
-2. If phase plan updated: Run `/implement-slice [new slice]`
-3. Run `/remediate-pipeline` if multiple layers were updated
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+❗ **Mandatory next step — do not skip**: The evolution just added or modified content across [N] layers. Evolution bypasses the normal deepening phase — the audit is the quality gate that replaces it.
+
+Run `/audit-ambiguity` on the affected layers before any implementation work touches these documents. The affected layers are: [list the layers that were updated during the cascade — populated from Step 1's output].
+
+This is not optional. Under-specified evolution content is the single most common source of spec drift. The audit catches what the inline micro check may have missed at a cross-document level.
 ```

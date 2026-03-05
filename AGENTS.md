@@ -11,7 +11,7 @@ Start the pipeline with:
 /ideate @path/to/your-idea.md        # From existing document
 ```
 
-The `@file` pattern works with any pipeline command. The workflow reads the referenced file and detects the input type automatically.
+The `@file` pattern is natively supported by `/ideate` (with full multi-mode input classification) and as a simple document-read input by `/evolve-feature`, `/resolve-ambiguity`, and `/propagate-decision`. Other pipeline commands accept direct invocation; `@file` can be passed to them but no automatic input classification is applied — the workflow reads the file and treats it as inline context.
 
 ### Progressive Decision Lock
 
