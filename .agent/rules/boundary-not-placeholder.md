@@ -1,6 +1,6 @@
 ---
 description: TODOs and placeholders are banned — boundary stubs are allowed ONLY when required information doesn't exist yet
-alwaysApply: true
+trigger: always_on
 ---
 
 # Boundary Not Placeholder
@@ -88,20 +88,14 @@ Every boundary stub MUST have a linked GitHub issue that includes:
 - What it should do when the spec is written
 
 ### 3. Sentinel Test
-```typescript
-// ✅ Sentinel test — will fail when the auth spec becomes available
-describe('BOUNDARY: auth middleware', () => {
-  it('should be replaced when IA shard 04 is specified', () => {
-    // This test exists to remind us this is a stub.
-    // When the real auth is implemented, this test should be
-    // replaced with actual auth middleware tests.
-    expect(authMiddleware.validateToken('any')).resolves.toEqual({
-      valid: false,
-      reason: 'auth-not-implemented',
-    });
-  });
-});
-```
+
+The sentinel test must verify that calling the function returns a structured boundary response — not `undefined` or an error. Specific assertion syntax depends on your test framework:
+
+- **Jest / Vitest**: `expect(fn()).resolves.toEqual({ ... })`
+- **pytest**: `assert fn() == { ... }`
+- **Rust**: `assert_eq!(fn(), BoundaryResponse { ... })`
+
+The test exists to remind the team the stub is still active. When the real implementation replaces the stub, this test is replaced with full behavioral tests.
 
 ### 4. BOUNDARY Comment Prefix
 All boundary stubs use the `BOUNDARY:` prefix (not `TODO:`):

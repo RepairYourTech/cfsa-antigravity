@@ -1,6 +1,6 @@
 ---
 description: Questions trigger discussion, commands trigger action — never act on a question
-alwaysApply: true
+trigger: always_on
 ---
 
 # Question vs Command Discrimination

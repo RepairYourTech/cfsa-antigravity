@@ -1,6 +1,6 @@
 ---
 description: "{{CONTRACT_LIBRARY}} schema before implementation, failing test before code — Red Green Refactor every slice"
-alwaysApply: true
+trigger: always_on
 ---
 
 # TDD & Contract-First Development

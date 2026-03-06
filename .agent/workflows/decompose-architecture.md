@@ -87,7 +87,7 @@ Ask:
 
 **Do not proceed** to shard skeleton creation until the user explicitly approves the domain boundaries. If the user requests changes, revise Steps 3-4 and re-present.
 
-**Immediately after the user approves the domain boundaries**, write the approved plan to `docs/plans/ia/decomposition-plan.md` before proceeding to any skeleton creation. This file is the persistent record of the approved plan. Format: the full domain boundary table from Step 3, the shard numbering from Step 4, and the dependency ordering rationale. Do not proceed to the Shard Overview until this file is written.
+**Write `docs/plans/ia/decomposition-plan.md` immediately after user approval of the domain list, before proceeding to skeleton creation. This is a single gate — write the plan once, then proceed to the Shard Overview.**
 
 ---
 

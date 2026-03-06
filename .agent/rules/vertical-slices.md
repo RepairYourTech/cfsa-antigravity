@@ -1,6 +1,6 @@
 ---
 description: Features ship across all four surfaces or they don't ship — no half-built slices
-alwaysApply: true
+trigger: always_on
 ---
 
 # Vertical Slices

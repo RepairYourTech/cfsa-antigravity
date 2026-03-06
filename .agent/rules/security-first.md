@@ -1,6 +1,6 @@
 ---
 description: Security-first — PII isolation, input validation, secret handling, no secrets in client
-alwaysApply: true
+trigger: always_on
 ---
 
 # Security First

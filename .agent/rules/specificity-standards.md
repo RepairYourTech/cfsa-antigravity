@@ -1,6 +1,6 @@
 ---
 description: Every spec item must have testable acceptance criteria — no ambiguity, no adjectives, only numbers and types
-alwaysApply: true
+trigger: always_on
 ---
 
 # Specificity & Depth Standards
@@ -39,16 +39,16 @@ Specs must go **deep enough** that an implementer needs zero clarification.
 
 ### Architecture Spec Depth
 
-- [ ] Every entity has all fields typed with constraints
-- [ ] Every relationship has cardinality and cascade behavior
-- [ ] Every endpoint has request/response schema, error codes, auth rules
-- [ ] Every state machine has all transitions and guard conditions
-- [ ] Every integration has retry policy, timeout, fallback behavior
+1. Every entity has all fields typed with constraints
+2. Every relationship has cardinality and cascade behavior
+3. Every endpoint has request/response schema, error codes, auth rules
+4. Every state machine has all transitions and guard conditions
+5. Every integration has retry policy, timeout, fallback behavior
 
 ### Feature Spec Depth
 
-- [ ] Every UI component has props typed, states enumerated, events listed
-- [ ] Every form has validation rules per field with error messages
-- [ ] Every API call has loading, success, and error UI states
-- [ ] Every responsive breakpoint has layout behavior specified
-- [ ] Every interaction has keyboard, mouse, and touch behavior defined
+1. Every UI component has props typed, states enumerated, events listed
+2. Every form has validation rules per field with error messages
+3. Every API call has loading, success, and error UI states
+4. Every responsive breakpoint has layout behavior specified
+5. Every interaction has keyboard, mouse, and touch behavior defined
