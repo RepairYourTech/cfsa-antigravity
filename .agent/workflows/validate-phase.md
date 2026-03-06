@@ -193,7 +193,7 @@ Report any additional findings from supplemental audits with the same severity c
 
 ## 9. Document results
 
-**Note**: `docs/audits/phase-N-validation.md` was created and partially populated by Step 5.8 (Spec Coverage section). Append the following sections to the existing file — do not recreate or overwrite it.
+**Note on report file**: `docs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
 
 - Test results and coverage
 - Lint and type-check status

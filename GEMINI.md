@@ -29,6 +29,7 @@ Decisions in this pipeline are **progressively locked**. Each pipeline stage bui
 
 Once a stage is locked, downstream stages may not contradict it. To change a locked decision, re-run the originating stage and cascade changes downstream.
 
+<!-- Pipeline table maintained by: (1) bootstrap-agents-fill.md Step 4 for project-config sections, (2) kit maintainer checklist for workflow rows — see KIT-ARCHITECTURE.md Kit Maintenance Checklist -->
 ### Pipeline Workflow Table
 
 | # | Command | Input | Output | Stage |
