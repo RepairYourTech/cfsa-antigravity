@@ -1,0 +1,64 @@
+name: NPM Token Expiry Reminder
+
+on:
+  schedule:
+    # Runs on the 1st and 15th of every month at 9am UTC
+    - cron: '0 9 1,15 * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-token-expiry:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check if reminder issue already exists
+        id: check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: 'token-rotation',
+              state: 'open'
+            });
+            return issues.data.length > 0;
+
+      - name: Create reminder issue
+        if: steps.check.outputs.result == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Token was created ~March 14, 2026 with 90-day expiry
+            // This workflow runs twice monthly to check
+            const TOKEN_CREATED = new Date('2026-03-14');
+            const EXPIRY_DAYS = 90;
+            const WARN_DAYS_BEFORE = 14;
+
+            const now = new Date();
+            const expiryDate = new Date(TOKEN_CREATED);
+            expiryDate.setDate(expiryDate.getDate() + EXPIRY_DAYS);
+            const daysUntilExpiry = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+
+            if (daysUntilExpiry <= WARN_DAYS_BEFORE && daysUntilExpiry > 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🔑 NPM_TOKEN expires in ${daysUntilExpiry} days — rotate now`,
+                body: `## NPM Token Rotation Required\n\nThe \`NPM_TOKEN\` secret expires on **${expiryDate.toISOString().split('T')[0]}** (${daysUntilExpiry} days from now).\n\n### Steps to rotate:\n1. Go to [npmjs.com](https://www.npmjs.com) → Access Tokens\n2. Generate a new token (Granular, Read+Write, 90 days)\n3. Go to [repo secrets](https://github.com/${context.repo.owner}/${context.repo.repo}/settings/secrets/actions)\n4. Update \`NPM_TOKEN\` with the new token value\n5. Close this issue\n\n### After rotating:\nUpdate the \`TOKEN_CREATED\` date in \`.github/workflows/token-reminder.yml\` to today's date.`,
+                labels: ['token-rotation']
+              });
+              core.info(`Created reminder issue — token expires in ${daysUntilExpiry} days`);
+            } else if (daysUntilExpiry <= 0) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🚨 NPM_TOKEN has EXPIRED — publishing is broken',
+                body: `## NPM Token Expired\n\nThe \`NPM_TOKEN\` secret expired on **${expiryDate.toISOString().split('T')[0]}**. Auto-publishing is currently broken.\n\n### Steps to fix:\n1. Go to [npmjs.com](https://www.npmjs.com) → Access Tokens\n2. Generate a new token (Granular, Read+Write, 90 days)\n3. Go to [repo secrets](https://github.com/${context.repo.owner}/${context.repo.repo}/settings/secrets/actions)\n4. Update \`NPM_TOKEN\` with the new token value\n5. Close this issue\n\n### After rotating:\nUpdate the \`TOKEN_CREATED\` date in \`.github/workflows/token-reminder.yml\` to today's date.`,
+                labels: ['token-rotation']
+              });
+              core.warning('Token has expired!');
+            } else {
+              core.info(`Token OK — ${daysUntilExpiry} days until expiry`);
+            }
