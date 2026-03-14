@@ -1,0 +1,34 @@
+{
+    "name": "cfsa-antigravity",
+    "version": "1.0.0",
+    "description": "CFSA Pipeline — Constraint-First Specification Architecture for AI agents. Production-grade from line one.",
+    "bin": {
+        "cfsa-antigravity": "./bin/cli.mjs"
+    },
+    "files": [
+        "bin/",
+        "template/"
+    ],
+    "keywords": [
+        "ai",
+        "agent",
+        "cfsa",
+        "specification",
+        "pipeline",
+        "tdd",
+        "antigravity",
+        "production",
+        "workflows",
+        "skills"
+    ],
+    "author": "RepairYourTech",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/RepairYourTech/cfsa-antigravity"
+    },
+    "homepage": "https://github.com/RepairYourTech/cfsa-antigravity#readme",
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

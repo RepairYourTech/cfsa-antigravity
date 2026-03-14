@@ -1,7 +1,32 @@
-# Vibe to Production
-### the anti-MVP spec pipeline
+# CFSA Antigravity
+### Constraint-First Specification Architecture — production-grade from line one
 
 > Designed for Antigravity — adaptable to other agents
+
+## Quick Install
+
+```bash
+npx cfsa-antigravity init
+```
+
+Or install globally:
+
+```bash
+npm install -g cfsa-antigravity
+cfsa-antigravity init
+```
+
+This installs the `.agent/` folder, `docs/` structure, and agent config files into your project.
+
+### CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `cfsa-antigravity init` | Install the pipeline into your project |
+| `cfsa-antigravity status` | Check installation status + unfilled placeholders |
+| `cfsa-antigravity init --force` | Overwrite existing installation |
+| `cfsa-antigravity init --dry-run` | Preview what would be installed |
+| `cfsa-antigravity init --path ./dir` | Install into specific directory |
 
 ---
 
@@ -140,22 +165,26 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
 ### Prerequisites
 
+- Node.js 18+ (for the installer)
 - Antigravity IDE (or any compatible agent that can read files, write files, and execute commands)
 
 ### Installation
 
-Copy the `.agent/` and `docs/` directories into your target project:
-
-**Windows:**
-```cmd
-xcopy /E /I spec-pipeline-starter\.agent your-project\.agent
-xcopy /E /I spec-pipeline-starter\docs your-project\docs
+**Recommended:**
+```bash
+npx cfsa-antigravity init
 ```
 
-**macOS / Linux:**
+**Manual (without npm):**
+
+Clone and copy the kit files into your project:
+
 ```bash
-cp -r spec-pipeline-starter/.agent /path/to/your-project/
-cp -r spec-pipeline-starter/docs /path/to/your-project/
+git clone https://github.com/RepairYourTech/cfsa-antigravity.git
+cp -r cfsa-antigravity/.agent /path/to/your-project/
+cp -r cfsa-antigravity/docs /path/to/your-project/
+cp cfsa-antigravity/GEMINI.md /path/to/your-project/
+cp cfsa-antigravity/AGENTS.md /path/to/your-project/
 ```
 
 ### Agent Setup

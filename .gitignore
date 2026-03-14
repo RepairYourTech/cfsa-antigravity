@@ -1,0 +1,10 @@
+# Build artifacts
+template/
+node_modules/
+
+# Audit / comparison files (dev only)
+_audit/
+
+# OS
+.DS_Store
+Thumbs.db
