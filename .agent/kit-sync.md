@@ -9,7 +9,7 @@
 
 # Kit Sync State
 
-upstream: https://github.com/RepairYourTech/Anti-MVP-Vibe-Pipeline
+upstream: https://github.com/RepairYourTech/cfsa-antigravity
 last_synced_commit: FIRST_SYNC_PENDING
 last_synced_at: FIRST_SYNC_PENDING
 kit_version: main
