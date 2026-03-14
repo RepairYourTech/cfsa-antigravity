@@ -1,69 +1,135 @@
 ---
 name: minimalist-surgical-development
-description: Use when editing an existing codebase and the goal is minimal, standard, and non-invasive changes - prioritizes simplest solution, standard libraries first, and surgical modification without unsolicited refactors
+description: "Use when editing an existing codebase and the goal is minimal, standard, and non-invasive changes — prioritizes simplest solution, standard libraries first, and surgical modification without unsolicited refactors"
+version: 2.0.0
+source: self
+date_added: "2026-02-27"
+date_rewritten: "2026-03-14"
 ---
 
 # Minimalist & Surgical Development
 
-## Overview
+**Code like Kent Beck.** Solve the stated problem with the least code and the least disruption to the existing structure.
 
-**Code like Kent Beck.** This skill keeps changes small and conventional: solve the stated problem with the least code and the least disruption to existing structure.
+## When to Use
 
-## Use when...
+- Task emphasizes "minimal changes", "surgical fix", "preserve structure", "don't refactor"
+- Modifying existing code rather than building from scratch
+- Temptation exists to introduce new abstractions, frameworks, or large rewrites
+- Bug fixes where scope creep is the real risk
 
-- The request emphasizes “minimal changes”, “surgical fix”, “preserve structure”, “don’t refactor”
-- The task is to modify existing code rather than build from scratch
-- There is temptation to introduce new abstractions, frameworks, or large rewrites
+## When NOT to Use
 
-## Symptoms / keywords
+- Greenfield development (building from scratch)
+- Explicit refactoring requests ("restructure this module")
+- Performance work that requires architectural change
 
-- “minimal”, “surgical”, “small diff”, “don’t touch unrelated”, “keep style”, “no refactor”, “standard library first”, “YAGNI”, “KISS”
+---
 
-## Minimalist & Standard Code Generation
+## Minimalist Code Generation
 
-- **Principle of Simplicity**: Always provide the most straightforward and minimalist solution possible. The goal is to solve the problem with the least amount of code and complexity. Avoid premature optimization or over-engineering.
-- **Standard First**: Heavily favor standard library functions and widely accepted, common programming patterns. Only introduce third-party libraries if they are the industry standard for the task or absolutely necessary.
-- **Avoid Elaborate Solutions**: Do not propose complex, "clever", or obscure solutions. Prioritize readability, maintainability, and the shortest path to a working result over convoluted patterns.
-- **Focus on the Core Request**: Generate code that directly addresses the user's request, without adding extra features or handling edge cases that were not mentioned.
+### Simplicity First
+
+Always provide the most straightforward solution possible. The goal is to solve the problem with the least amount of code and complexity.
+
+```typescript
+// ❌ Over-engineered
+class ConfigurableRetryStrategy {
+  constructor(private config: RetryConfig) {}
+  async execute<T>(fn: () => Promise<T>): Promise<T> {
+    // 40 lines of retry logic with exponential backoff...
+  }
+}
+
+// ✅ Minimalist (if you only retry once)
+try {
+  result = await fetchData();
+} catch {
+  result = await fetchData(); // One retry
+}
+```
+
+### Standard Library First
+
+Heavily favor standard library functions and widely accepted common patterns. Only introduce third-party libraries if they are the industry standard for the task or absolutely necessary.
+
+```typescript
+// ❌ Adding lodash for one function
+import { groupBy } from "lodash";
+const grouped = groupBy(items, "category");
+
+// ✅ Standard library
+const grouped = Object.groupBy(items, (item) => item.category);
+// Or if targeting older runtimes:
+const grouped = items.reduce((acc, item) => {
+  (acc[item.category] ??= []).push(item);
+  return acc;
+}, {} as Record<string, typeof items>);
+```
+
+### Focus on the Core Request
+
+Generate code that directly addresses the user's request. Do not add extra features or handle edge cases that were not mentioned.
 
 ## Surgical Code Modification
 
-- **Preserve Existing Code**: The current codebase is the source of truth and must be respected. Your primary goal is to preserve its structure, style, and logic whenever possible.
-- **Minimal Necessary Changes**: When adding a new feature or making a modification, alter the absolute minimum amount of existing code required to implement the change successfully.
-- **Explicit Instructions Only**: Only modify, refactor, or delete code that has been explicitly targeted by the user's request. Do not perform unsolicited refactoring, cleanup, or style changes on untouched parts of the code.
-- **Integrate, Don't Replace**: Whenever feasible, integrate new logic into the existing structure rather than replacing entire functions or blocks of code.
+### Preserve Existing Code
 
-## Symbol-First Navigation (Serena MCP)
+The current codebase is the source of truth. Respect its structure, style, and logic.
 
-When exploring code structure before making changes, prefer Serena MCP symbol tools over full-file reads:
+### Minimal Necessary Changes
 
-- **`get_symbols_overview`** - Fast summary of a file's structure (classes, functions, methods)
-- **`find_symbol`** - Locate specific code by name without reading entire files
-- **`find_referencing_symbols`** - Understand impact of changes by finding all call sites
+When adding a feature or fixing a bug, alter the absolute minimum amount of existing code required.
 
-**Why symbol-first is minimalist:**
-- Reduces context pollution: see only the code you need
-- Identifies exact targets before editing: no guessing what to modify
-- Discovers existing patterns: find similar code to maintain consistency
-- Fast refactoring checks: verify changes won't break usages
+```diff
+ // The user asked: "add a createdAt timestamp to new users"
+ function createUser(data: UserInput): User {
+   return db.users.insert({
+     ...data,
++    createdAt: new Date(),
+     status: "active",
+   });
+ }
+ // That's it. Don't refactor the function, rename variables,
+ // add types, or "improve" unrelated code.
+```
 
-**When making edits, prefer symbol editing tools over file-based replacement:**
-- Use `insert_before_symbol` / `insert_after_symbol` for adding code
-- Use `replace_symbol_body` for rewriting function implementations
-- Use `replace_content` (file-based) only when editing small sections within a function
+### Explicit Instructions Only
 
-See `serena-mcp-integration-guide.md` for detailed scenarios and examples.
+Only modify, refactor, or delete code that has been explicitly targeted by the user's request. Do not perform unsolicited refactoring, cleanup, or style changes on untouched code.
 
-## Intelligent Tool Usage
+### Integrate, Don't Replace
 
-- **Use Tools When Necessary (via subagents)**: When a request requires external information or direct interaction with the environment, dispatch an appropriate subagent to use the necessary tools and return a cited Context Package. The orchestrator must not perform investigation/data-fetching I/O directly.
-- **Directly Edit Code When Requested (via subagents)**: If explicitly asked to modify/refactor/add code, dispatch an implementation subagent to apply the changes directly in the codebase. Avoid copy/paste snippets unless requested; default to a small, surgical diff implemented by the subagent.
-- **Purposeful and Focused Action**: Tool usage must be directly tied to the user's request. Do not perform unrelated searches or modifications. Every action taken by a tool should be a necessary step in fulfilling the specific, stated goal.
-- **Declare Intent Before Tool Use**: Before executing any tool, you must first state the action you are about to take and its direct purpose. This statement must be concise and immediately precede the tool call.
+Whenever feasible, integrate new logic into the existing structure rather than replacing entire functions or blocks.
 
-## Quick checklist
+## Navigation Before Modification
 
-- Ensure a research subagent has read the relevant files (with citations) before any changes
-- Make the smallest diff that satisfies the requirement
-- Prefer existing utilities/abstractions over adding new ones
-- Avoid new dependencies unless clearly justified
+Before making any change, understand what you're modifying:
+
+1. **Read the target** — view the specific function/class being changed
+2. **Check call sites** — grep for usages to understand impact
+3. **Respect patterns** — if the codebase does X one way, continue that way
+4. **Verify after** — run the relevant tests, not the whole suite unless needed
+
+## Quick Checklist
+
+Before submitting a change:
+
+- [ ] Is this the smallest diff that satisfies the requirement?
+- [ ] Did I avoid modifying unrelated code?
+- [ ] Did I use existing utilities/abstractions instead of adding new ones?
+- [ ] Did I avoid adding new dependencies?
+- [ ] Does the change follow existing code style and patterns?
+- [ ] If I added an abstraction — was it explicitly requested?
+
+## Anti-Patterns
+
+| Don't | Do |
+|-------|-----|
+| "While I'm here, let me also..." | Only change what was requested |
+| Introduce new abstractions unprompted | Use existing patterns |
+| Add a library for one utility function | Use standard library |
+| Replace an entire function for a one-line fix | Surgical single-line edit |
+| "Improve" naming in unrelated code | Respect existing conventions |
+| Handle edge cases not mentioned | Solve the stated problem |
+| Add types/docs to untouched functions | Leave existing code alone |
