@@ -164,7 +164,7 @@ Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills pla
 |-----------|--------------|-------------|-------------|
 | `OBSERVABILITY` | `*opentelemetry*` OR `*otel*` | `stack/observability/opentelemetry` | `opentelemetry` |
 | `OBSERVABILITY` | `*distributed-tracing*` OR `*jaeger*` OR `*zipkin*` | `stack/observability/distributed-tracing` | `distributed-tracing` |
-| `OBSERVABILITY` | `*structured-logging*` OR `*pino*` OR `*winston*` | `stack/observability/logging-best-practices` | `logging-best-practices` |
+| `OBSERVABILITY` | `*structured-logging*` OR `*pino*` OR `*winston*` | Pre-installed: `.agent/skills/logging-best-practices` | `logging-best-practices` (pre-installed) |
 | `OBSERVABILITY` | `*python*` | `stack/observability/python-observability` | `python-observability` |
 | `OBSERVABILITY` | `*datadog*` | `stack/observability/datadog` | `datadog` |
 | `OBSERVABILITY` | `*prometheus*` OR `*grafana*` | `stack/observability/prometheus-grafana` | `prometheus-grafana` |
@@ -261,10 +261,8 @@ Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills pla
 
 | Stack Key | Value Pattern | Library Path | Installed As |
 |-----------|--------------|-------------|-------------|
-| `GAME_ENGINE` | `*godot*` | `stack/engines/godot` | `godot` |
-| `GAME_ENGINE` | `*unity*` | `stack/engines/unity` | `unity` |
-| `GAME_ENGINE` | `*unreal*` OR `*ue5*` | `stack/engines/unreal` | `unreal` |
-| `GAME_ENGINE` | `*bevy*` | `stack/engines/bevy` | `bevy` |
+| `GAME_ENGINE` | `*godot*` | `stack/gamedev/godot` | `godot` |
+| `GAME_ENGINE` | `*unity*` | `stack/gamedev/unity` | `unity` |
 
 ### Security
 
@@ -353,7 +351,7 @@ When the project includes a surface type, install the listed skills.
 | `api` | `surface/api/api-caching` | `api-caching` |
 | `api` | `surface/api/api-documentation-openapi` | `api-documentation-openapi` |
 | `api` | `surface/api/webhook-design` | `webhook-design` |
-| `api` | `surface/api/rest-api-design` | `rest-api-design` |
+| `api` | Pre-installed: `.agent/skills/api-design-principles` | `api-design-principles` (pre-installed) |
 | `api` | `surface/api/api-security-checklist` | `api-security-checklist` |
 | `api` | `stack/security/input-sanitization` | `input-sanitization` |
 
@@ -411,7 +409,7 @@ These skills are NOT auto-installed. Install via `/find-skills` or manually copy
 | `meta/mcp-builder` | Building MCP servers |
 | `meta/tmux-processes` | Long-lived process management via tmux |
 | `meta/using-tmux-for-interactive-commands` | Interactive CLI tools via tmux |
-| `meta/brand-guidelines` | Brand color and typography application |
+| Pre-installed: `.agent/skills/brand-guidelines` | Brand color and typography application (pre-installed) |
 | `meta/product-marketing-context` | Marketing context document generator — run first before any SEO or CRO skill |
 
 ---
