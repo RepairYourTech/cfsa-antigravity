@@ -1,5 +1,5 @@
-# Vibe to Production
-### the anti-MVP spec pipeline
+# CFSA Antigravity
+### Constraint-First Specification Architecture — production-grade from line one
 
 > Designed for Antigravity — adaptable to other agents
 
@@ -140,29 +140,31 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
 ### Prerequisites
 
+- Node.js 18+ (for the installer)
 - Antigravity IDE (or any compatible agent that can read files, write files, and execute commands)
 
 ### Installation
 
-Copy the `.agent/` and `docs/` directories into your target project:
-
-**Windows:**
-```cmd
-xcopy /E /I spec-pipeline-starter\.agent your-project\.agent
-xcopy /E /I spec-pipeline-starter\docs your-project\docs
+**Recommended:**
+```bash
+npx cfsa-antigravity init
 ```
 
-**macOS / Linux:**
+**Manual (without npm):**
 ```bash
-cp -r spec-pipeline-starter/.agent /path/to/your-project/
-cp -r spec-pipeline-starter/docs /path/to/your-project/
+git clone https://github.com/RepairYourTech/cfsa-antigravity.git
+cp -r cfsa-antigravity/.agent /path/to/your-project/
+cp -r cfsa-antigravity/docs /path/to/your-project/
+cp cfsa-antigravity/GEMINI.md /path/to/your-project/
+cp cfsa-antigravity/AGENTS.md /path/to/your-project/
 ```
 
 ### Agent Setup
 
 | Agent | What to Do |
 |-------|------------|
-| **Antigravity** | Copy `GEMINI.md` to your project root — it's the system prompt |
+| **Antigravity** | Both `AGENTS.md` and `GEMINI.md` are present — bootstrap fills both during `/create-prd`. |
+| **Gemini CLI** | `GEMINI.md` is your agent config. Bootstrap fills it during `/create-prd`. |
 | **Claude Code** | Copy rules/instructions into `.claude/` using Claude's format |
 | **Cursor** | Reference from `.cursorrules` or your Cursor config |
 | **Windsurf** | Reference from `.windsurfrules` or equivalent |
@@ -185,3 +187,23 @@ The pipeline tells you what to run next at every step. You never have to guess.
 **Skill library** lives in `.agent/skill-library/`. These are stack-specific and surface-specific skills that get provisioned by bootstrap as tech decisions are confirmed during `/create-prd`. They're never loaded directly — bootstrap copies the relevant ones into `.agent/skills/` and fills any placeholders with your project's confirmed values.
 
 Bootstrap fires once per confirmed decision — it fills only what was just decided and leaves everything else untouched.
+
+### Bootstrap & Template System
+
+Instruction files in `.agent/instructions/` are **templates**, not static files — they ship with `{{PLACEHOLDER}}` markers that bootstrap fills as tech decisions are confirmed during `/create-prd`.
+
+| File | Filled by | When |
+|------|-----------|------|
+| `AGENTS.md` + `GEMINI.md` | `bootstrap-agents-fill` | After each confirmed tech decision |
+| `commands.md` | `bootstrap-agents-fill` | After dev tooling decisions |
+| `workflow.md` | `bootstrap-agents-fill` | After dev tooling decisions |
+| `tech-stack.md` | `bootstrap-agents-fill` + `bootstrap-agents-provision` | After each decision + after skill provisioning |
+| `structure.md` | `bootstrap-agents-fill` | After Step 9.5 of `/create-prd-compile` |
+| `patterns.md` | `bootstrap-agents-provision` | After a frontend-capable framework skill is provisioned (`FRONTEND_FRAMEWORK`, `MOBILE_FRAMEWORK`, etc.) |
+
+**The placeholder verification gate**: Before any implementation begins, `/implement-slice` scans all seven instruction files for unfilled `{{` patterns. If any are found, it stops and tells you exactly which file, which placeholder, and which command to run. This gate prevents implementation from proceeding with broken agent context.
+
+**Diagnosing unfilled placeholders**: For existing projects with unfilled placeholders, run:
+- `/create-prd-compile` — fills `structure.md` (Step 9.5 generates and locks the directory structure)
+- `/bootstrap-agents-provision` — fills `patterns.md` (composes framework patterns from the provisioned frontend-capable skill — `FRONTEND_FRAMEWORK`, `MOBILE_FRAMEWORK`, etc.)
+- `/bootstrap-agents-fill` with confirmed stack values — fills `AGENTS.md` and `GEMINI.md`

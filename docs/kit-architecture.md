@@ -1,6 +1,6 @@
-# Spec Pipeline Starter Kit - Architecture
+# CFSA Antigravity - Architecture
 
-**Purpose:** Provide a high-level map of the agentic machinery that powers the Spec Pipeline Starter Kit.
+**Purpose:** Provide a high-level map of the agentic machinery that powers CFSA Antigravity.
 
 This document serves as a guide to understanding how the various components within the `.agent/` directory interlock to provide a robust, agent-agnostic development environment.
 
@@ -186,7 +186,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 - [ ] Add a row to the `AGENTS.md` Pipeline Workflow Table
 - [ ] Add a matching row to the `GEMINI.md` Pipeline Workflow Table (must stay in sync with `AGENTS.md`)
-- [ ] If the workflow introduces a new system component or new convention, update the relevant section of `KIT-ARCHITECTURE.md`
+- [ ] If the workflow introduces a new system component or new convention, update the relevant section of `docs/kit-architecture.md`
 - [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
 - [ ] If the workflow introduces a new skill, add it to `.agent/skill-library/MANIFEST.md`
 

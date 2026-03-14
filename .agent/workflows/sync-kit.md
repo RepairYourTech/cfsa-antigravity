@@ -4,11 +4,11 @@ description: Sync improvements from the upstream starter kit into this project's
 
 # Sync Kit
 
-Pull improvements from the upstream [Anti-MVP-Vibe-Pipeline](https://github.com/RepairYourTech/Anti-MVP-Vibe-Pipeline) kit into this project. The sync covers the **entire upstream repo** — `.agent/` directory, root-level files (`AGENTS.md`, `GEMINI.md`, `KIT-*.md`), and `docs/` scaffolding.
+Pull improvements from the upstream [cfsa-antigravity](https://github.com/RepairYourTech/cfsa-antigravity) kit into this project. The sync covers the **entire upstream repo** — `.agent/` directory, root-level files (`AGENTS.md`, `GEMINI.md`), and `docs/` (including `kit-architecture.md` and pipeline guide).
 
 **The problem:** The kit was born from this project, but has since evolved past it. The kit uses `{{PLACEHOLDER}}` markers; this project has real values. A blind copy would destroy project-specific content. This workflow does a semantic merge — apply the kit's *intent* while preserving project values.
 
-**Input:** Upstream kit repo (default: `RepairYourTech/Anti-MVP-Vibe-Pipeline`, branch `main`)
+**Input:** Upstream kit repo (default: `RepairYourTech/cfsa-antigravity`, branch `main`)
 **Output:** Updated project with kit improvements merged, sync state recorded
 
 ---
@@ -38,14 +38,14 @@ Compare the **entire upstream repo** against the project. Scan at minimum:
 
 | Upstream Path | What to Compare |
 |--------------|-----------------|
-| Root files | `AGENTS.md`, `GEMINI.md`, `KIT-ARCHITECTURE.md`, `KIT-README.md` |
+| Root files | `AGENTS.md`, `GEMINI.md` |
 | `.agent/instructions/` | All 5 markdown files |
 | `.agent/rules/` | All 9 markdown files |
 | `.agent/workflows/` | All workflow files |
 | `.agent/skills/` | All skill directories (SKILL.md + sub-files) |
 | `.agent/skill-library/` | MANIFEST.md, README.md, subdirectories |
 | `.agent/progress/` | Directory structure |
-| `docs/` | README.md, audits/, plans/ scaffolding |
+| `docs/` | README.md, kit-architecture.md, audits/, plans/ scaffolding |
 
 Compare using SHA hashes or byte-level diff. Classify each file per Step 2.
 
@@ -189,7 +189,7 @@ Write or update `.agent/kit-sync.md`:
 ```markdown
 # Kit Sync State
 
-upstream: https://github.com/RepairYourTech/Anti-MVP-Vibe-Pipeline
+upstream: https://github.com/RepairYourTech/cfsa-antigravity
 last_synced_commit: <current HEAD commit hash>
 last_synced_at: <ISO 8601 timestamp>
 kit_version: main

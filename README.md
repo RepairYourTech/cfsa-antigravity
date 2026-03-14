@@ -1,0 +1,57 @@
+# CFSA Antigravity
+
+> Constraint-First Specification Architecture — production-grade from line one
+
+A pipeline that turns a raw idea into exhaustively specified, test-driven, production-quality code through progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Every line of code is production-grade from the moment it's written.
+
+## Quick Install
+
+```bash
+npx cfsa-antigravity init
+```
+
+Or install globally:
+
+```bash
+npm install -g cfsa-antigravity
+cfsa-antigravity init
+```
+
+This installs the `.agent/` folder, `docs/` structure, and agent config files into your project.
+
+## CLI
+
+| Command | Description |
+|---------|-------------|
+| `cfsa-antigravity init` | Install the pipeline into your project |
+| `cfsa-antigravity status` | Check installation + unfilled placeholders |
+| `cfsa-antigravity init --force` | Overwrite existing installation |
+| `cfsa-antigravity init --dry-run` | Preview what would be installed |
+| `cfsa-antigravity init --path ./dir` | Install into specific directory |
+
+## Get Started
+
+```
+/ideate
+```
+
+The pipeline tells you what to run next at every step. You never have to guess.
+
+## Documentation
+
+| Document | Contents |
+|----------|----------|
+| [Pipeline Guide](docs/README.md) | Full walkthrough — every command, every stage |
+| [Kit Architecture](docs/kit-architecture.md) | How the kit's internals work |
+
+## Five Principles
+
+1. **Constraints before decisions** — map what's decided before presenting options
+2. **Exhaustive iteration over shallow speed** — no ambiguity moves forward
+3. **Work shifted left** — design decisions made in spec, not in code
+4. **Progressive decision locking** — each stage locks decisions for downstream
+5. **TDD as the implementation contract** — Red → Green → Refactor, every slice
+
+## License
+
+MIT

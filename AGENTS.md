@@ -1,4 +1,4 @@
-# Vibe to Production — the anti-MVP spec pipeline
+# CFSA Antigravity — Constraint-First Specification Architecture
 
 This is a **Constraint-First Specification Architecture (CFSA)** pipeline. It turns a raw idea into exhaustively specified, test-driven, production-quality code through a series of progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Every line of code, every spec, every test is production-grade from the moment it's written. Phases control scope, never quality. There is no "fix it later."
 
@@ -29,7 +29,7 @@ Decisions in this pipeline are **progressively locked**. Each pipeline stage bui
 
 Once a stage is locked, downstream stages may not contradict it. To change a locked decision, re-run the originating stage and cascade changes downstream.
 
-<!-- Pipeline table maintained by: (1) bootstrap-agents-fill.md Step 4 for project-config sections, (2) kit maintainer checklist for workflow rows — see KIT-ARCHITECTURE.md Kit Maintenance Checklist -->
+<!-- Pipeline table maintained by: (1) bootstrap-agents-fill.md Step 4 for project-config sections, (2) kit maintainer checklist for workflow rows — see docs/kit-architecture.md Kit Maintenance Checklist -->
 ### Pipeline Workflow Table
 
 | # | Command | Input | Output | Stage |

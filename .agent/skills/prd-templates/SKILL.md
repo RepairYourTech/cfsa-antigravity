@@ -19,7 +19,7 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 
 ## Conventions
 
-**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `vision.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `KIT-ARCHITECTURE.md` Section 2 — Dated File Convention for the full rule and table.
+**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `vision.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `docs/kit-architecture.md` Section 2 — Dated File Convention for the full rule and table.
 
 ## How to Use
 
