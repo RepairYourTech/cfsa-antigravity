@@ -156,6 +156,7 @@ Derive `CONTRACT_LIBRARY` using the following mapping table:
 | Java | Jakarta Bean Validation |
 | Kotlin | kotlinx.serialization |
 | C / C++ | (prompt user — no dominant standard) |
+| Bash / Shell | (none — validate inline with functions) |
 
 For any language **not in this table**: prompt the user — "What is your preferred schema validation / contract library for [LANGUAGE]?" — and use their confirmed answer as the `CONTRACT_LIBRARY` value.
 

@@ -201,3 +201,23 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 - Kit-level structural changes (new rows, new sections) require manual update per this checklist
 
 **Note**: Both `AGENTS.md` and `GEMINI.md` are co-maintained: project-specific sections by `bootstrap-agents-fill.md` Step 4, and structural/workflow sections by this checklist.
+
+---
+
+## 6. Git Integration
+
+### Excluding `.agent/` from Git Without `.gitignore`
+
+The `.agent/` directory should be indexed by the IDE (for agent context loading) but excluded from version control. Instead of adding it to `.gitignore` (which affects all contributors and may conflict with other entries), use the repository-local exclude file:
+
+```bash
+echo '.agent/' >> .git/info/exclude
+```
+
+**Why this matters:**
+- `.git/info/exclude` is local to your clone — it won't appear in diffs or affect collaborators
+- The IDE still sees and indexes `.agent/` for full agent functionality
+- No `.gitignore` pollution or merge conflicts from differing agent setups
+- Each developer can manage their own agent directory independently
+
+> **Note:** If the project *ships* with `.agent/` as part of the kit (like this starter), you may want `.agent/` tracked in Git. In that case, use `.git/info/exclude` only for runtime-generated files like `.agent/progress/sessions/` and `.agent/progress/slices/`.

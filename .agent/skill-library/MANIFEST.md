@@ -249,6 +249,7 @@ Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills pla
 | `LANGUAGE` | `*kotlin*` | `stack/languages/kotlin` | `kotlin` |
 | `LANGUAGE` | `*javascript*` OR `*vanilla js*` | `stack/languages/vanilla-javascript` | `vanilla-javascript` |
 | `LANGUAGE` | `*gdscript*` OR `*godot*` | `stack/languages/gdscript` | `gdscript` |
+| `LANGUAGE` | `*bash*` OR `*shell*` | `stack/languages/bash-scripting` | `bash-scripting` |
 
 ### 3D
 
@@ -337,6 +338,8 @@ When the project includes a surface type, install the listed skills.
 | `web` | `stack/security/owasp-web-security` | `owasp-web-security` |
 | `web` | `stack/security/csp-cors-headers` | `csp-cors-headers` |
 | `web` | `stack/security/input-sanitization` | `input-sanitization` |
+| `web` | `surface/web/design-reference-data` | `design-reference-data` |
+| `web` | `surface/web/frontend-verification` | `frontend-verification` |
 
 > **Note**: The `frontend-design` skill includes a **Premium Cinematic Tier** with WebGL, custom shaders, and Awwwards-level animation patterns. When `DESIGN_DIRECTION` is `Cinematic/Immersive`, `threejs-pro` is also auto-installed (see CSS/UI triggers above).
 
@@ -469,7 +472,7 @@ To add a new skill to the library:
 | `STORAGE` | File/object storage | AWS S3 |
 | `CI_CD` | CI/CD pipeline | GitHub Actions, Terraform |
 | `MOBILE_FRAMEWORK` | Mobile framework | Expo, React Native |
-| `LANGUAGE` | Programming language | TypeScript, Python, Rust, Go, C/C++, Java, Kotlin, JavaScript, GDScript |
+| `LANGUAGE` | Programming language | TypeScript, Python, Rust, Go, C/C++, Java, Kotlin, JavaScript, GDScript, Bash |
 | `3D_FRAMEWORK` | 3D rendering | Three.js, React Three Fiber |
 | `GAME_ENGINE` | Game engine | Godot, Unity |
 | `SECURITY` | Security focus area | OWASP, Crypto, CSP/CORS, Dependency Auditing, Input Sanitization |
