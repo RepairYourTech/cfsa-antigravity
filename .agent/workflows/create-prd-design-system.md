@@ -33,7 +33,7 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 
 ## 1. Read source documents
 
-1. Read `docs/plans/vision.md` — extract the **Project Surfaces** section and the feature inventory.
+1. Read `docs/plans/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `docs/plans/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
 2. Read `.agent/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
 3. Read `.agent/skills/design-direction/SKILL.md` — for direction characteristics and anti-patterns.
 4. Read `.agent/skills/technical-writer/SKILL.md` — for document writing conventions.
@@ -71,7 +71,7 @@ On confirmation, write the `## Layout Grid` table to `docs/plans/design-system.m
 
 ## 4. Decision 3 — Page archetypes
 
-Based on the feature inventory from `vision.md`, propose a named archetype set using the **Page Archetype Options** from `design-system-decisions.md` as a starting point. Each archetype defines named layout zones. For each proposed archetype, produce a layout zones line (pipe-separated) and optionally an ASCII wireframe.
+Based on the feature inventory from `ideation-index.md`, propose a named archetype set using the **Page Archetype Options** from `design-system-decisions.md` as a starting point. Each archetype defines named layout zones. For each proposed archetype, produce a layout zones line (pipe-separated) and optionally an ASCII wireframe.
 
 Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
 

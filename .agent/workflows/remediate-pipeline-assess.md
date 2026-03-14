@@ -17,7 +17,7 @@ pipeline:
 
 Scan all five pipeline layers, check for existing audit reports, determine the starting layer, and present a remediation plan for user approval.
 
-> **Prerequisite**: At least one pipeline layer must have completed documents. If `docs/plans/vision.md` does not exist, tell the user to run `/ideate` first.
+> **Prerequisite**: At least one pipeline layer must have completed documents. If `docs/plans/ideation/ideation-index.md` does not exist, tell the user to run `/ideate` first.
 
 ---
 
@@ -71,7 +71,7 @@ Check which layers have content by verifying the presence of key files:
 
 | Layer | Key Files to Check | Has Content If… |
 |-------|-------------------|-------------------|
-| Vision | `docs/plans/vision.md` | File exists and is non-empty |
+| Ideation | `docs/plans/ideation/ideation-index.md` | File exists and domains at `[DEEP]`+ |
 | Architecture | `docs/plans/*-architecture-design.md` | At least one dated file exists |
 | IA | `docs/plans/ia/index.md` | File exists with ≥1 shard listed |
 | BE | `docs/plans/be/index.md` | File exists with ≥1 spec listed |

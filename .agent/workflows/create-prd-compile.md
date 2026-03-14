@@ -58,7 +58,7 @@ Document the agreed approach:
 
 Read .agent/skills/{{CI_CD_SKILL}}/SKILL.md and follow its pipeline configuration conventions.
 
-Break the feature inventory from `vision.md` into dependency-ordered phases.
+Break the feature inventory from `docs/plans/ideation/ideation-index.md` (MoSCoW Summary) into dependency-ordered phases.
 
 > **This kit does not build MVPs.** Every phase ships production-grade code —
 > fully tested, fully specified, fully accessible. Phases exist to manage

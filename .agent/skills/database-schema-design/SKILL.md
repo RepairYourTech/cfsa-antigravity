@@ -361,13 +361,13 @@ This interview runs during `/create-prd-stack` Sub-steps A–E. It maps every fe
 
 ### Sub-step A — Feature-to-Query Table
 
-Walk through every major feature in `vision.md` and ask: "What does this feature need to find, store, relate, and rank/search?"
+Walk through every major feature in `ideation-index.md` and ask: "What does this feature need to find, store, relate, and rank/search?"
 
 Build the following table:
 
 | Feature | Find | Store | Relate | Rank/Search |
 |---------|------|-------|--------|-------------|
-| (from vision.md) | … | … | … | … |
+| (from ideation-index.md) | … | … | … | … |
 
 Present and confirm the table with the user before proceeding to Sub-step B.
 

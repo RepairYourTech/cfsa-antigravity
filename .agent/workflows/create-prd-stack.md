@@ -17,15 +17,15 @@ pipeline:
 
 # Create PRD — Stack Decisions
 
-Build the decision constraints map from vision.md, then walk through each tech stack axis with the user.
+Build the decision constraints map from the ideation output, then walk through each tech stack axis with the user.
 
-**Prerequisite**: `docs/plans/vision.md` must exist. If it does not, tell the user to run `/ideate` first.
+**Prerequisite**: `docs/plans/ideation/ideation-index.md` must exist. If it does not, tell the user to run `/ideate` first.
 
 ---
 
 ## 2.5. Constraint-first discovery
 
-Before any tech stack decision, read `vision.md` constraints and surface classification to build the **decision constraints map**:
+Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**:
 
 1. **Hard constraints** — decisions already locked by compliance, team, or budget
 2. **Surface constraints** — the project surfaces constrain framework choices
@@ -37,7 +37,7 @@ Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for t
 
 ## 3. Tech stack decisions
 
-Read the **Project Surfaces** section from `vision.md` to determine which decision axes apply.
+Read the **Project Surfaces** section from `docs/plans/ideation/meta/constraints.md` to determine which decision axes apply.
 
 Read `.agent/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.agent/skills/tech-stack-catalog/SKILL.md`.
 Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.

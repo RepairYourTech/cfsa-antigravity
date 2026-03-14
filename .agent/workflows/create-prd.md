@@ -14,9 +14,9 @@ shards: [create-prd-stack, create-prd-design-system, create-prd-architecture, cr
 
 # Create PRD / Architecture Design
 
-Transform `vision.md` into a production-grade architecture design document with explicit decisions on every axis.
+Transform the ideation output into a production-grade architecture design document with explicit decisions on every axis.
 
-**Input**: `docs/plans/vision.md` (must exist and be approved)
+**Input**: `docs/plans/ideation/ideation-index.md` (must exist and be approved)
 **Output**: `docs/plans/YYYY-MM-DD-architecture-design.md` + `docs/plans/ENGINEERING-STANDARDS.md` + `docs/plans/data-placement-strategy.md`
 
 > **Depth standard**: Every section of the architecture document must be specified
@@ -29,13 +29,19 @@ Transform `vision.md` into a production-grade architecture design document with 
 
 ---
 
-## 1. Read vision document
+## 1. Read ideation output
 
-Read `docs/plans/vision.md`.
+Read `docs/plans/ideation/ideation-index.md`.
 
-If the file doesn't exist, tell the user to run `/ideate` first. Do not proceed without an approved vision.
+If the file doesn't exist, tell the user to run `/ideate` first. Do not proceed without approved ideation output.
 
-Pay special attention to the **Project Surfaces** section — it determines which tech stack axes apply and whether this is a single-surface or multi-surface project.
+Use the **Document Map** in `ideation-index.md` to locate specific files:
+- Constraints + surface classification → `meta/constraints.md`
+- Personas → `meta/personas.md`
+- Domain details → individual domain files in `domains/`
+- Cross-cutting concerns → `cross-cuts/cross-cut-ledger.md`
+
+Pay special attention to the **Project Surfaces** section in `meta/constraints.md` — it determines which tech stack axes apply.
 
 ---
 
@@ -74,7 +80,7 @@ Check `.agent/skills/` for relevant skills. Read `.agent/skills/find-skills/SKIL
 
 ### Step A — Run `.agent/workflows/create-prd-stack.md`
 
-Builds the constraints map from vision.md, presents tech stack options per axis, gets user decisions, fires bootstrap after each confirmation.
+Builds the constraints map from `ideation/meta/constraints.md`, presents tech stack options per axis, gets user decisions, fires bootstrap after each confirmation.
 
 ### Step A.5 — Run `.agent/workflows/create-prd-design-system.md`
 
@@ -119,8 +125,8 @@ Before presenting to the user, self-check both documents against the **Architect
 
 Also verify completeness:
 
-- [ ] Every "Must Have" feature from vision.md has a home in the architecture
-- [ ] Security model addresses all compliance constraints from vision.md
+- [ ] Every "Must Have" feature from `ideation-index.md` MoSCoW list has a home in the architecture
+- [ ] Security model addresses all compliance constraints from `ideation/meta/constraints.md`
 - [ ] Compliance-heavy domains have their own top-level sections (not buried as sub-bullets)
 - [ ] All relevant skills installed for chosen stack
 - [ ] Validation command in Engineering Standards matches `AGENTS.md` validation command

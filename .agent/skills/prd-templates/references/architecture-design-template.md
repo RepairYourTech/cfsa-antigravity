@@ -5,7 +5,7 @@ Use this template when compiling `docs/plans/YYYY-MM-DD-architecture-design.md`.
 ```markdown
 # [Project Name] — Architecture Design
 
-> **Vision**: [link to vision.md]
+> **Ideation**: [link to ideation-index.md]
 > **Date**: YYYY-MM-DD
 > **Status**: Draft | Review | Approved
 > **Project Type**: [Single-surface: web/desktop/mobile/CLI/API | Multi-surface: list surfaces]

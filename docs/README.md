@@ -33,14 +33,27 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
     Step 1: /ideate
       You describe your idea (or point to a document with @file).
-      The pipeline interviews you until every domain is explored.
-      Output: docs/plans/vision.md
+      The pipeline explores your idea using recursive breadth-before-depth:
+        - Level 0: Maps all domains in your product
+        - Level 1: Sweeps sub-areas within each domain
+        - Level 2+: Drills vertically until each domain is exhausted
+      At every level, a Deep Think protocol generates hypotheses based on
+      domain knowledge — "Based on this industry, I'd expect X. Is that relevant?"
+      Cross-cutting concerns are tracked continuously in a dedicated ledger.
+      Each domain gets its own file the moment it's discovered (shard-as-you-go).
 
-    Step 2: /audit-ambiguity vision    ── MANDATORY ──
-      Scores the vision document against a rubric.
+      Output: docs/plans/ideation/ folder:
+                ideation-index.md   ← pipeline key file (domain map, MoSCoW, coverage)
+                domains/*.md        ← one file per domain
+                meta/*.md           ← problem, personas, constraints, competitive landscape
+                cross-cuts/         ← cross-cut ledger
+              docs/plans/vision.md  ← human-readable executive summary (not a pipeline input)
+
+    Step 2: /audit-ambiguity ideation  ── MANDATORY ──
+      Scores the ideation folder against a 12-dimension rubric.
       Agent auto-remediates any gaps found, then requires a fresh re-run.
       Not optional — /ideate will not propose /create-prd until this passes.
-      Output: docs/audits/vision-audit.md
+      Output: docs/audits/ideation-audit.md
 
 > [!IMPORTANT]
 > **Fresh-run rule:** The session that fixed gaps cannot be the session that passes.
@@ -58,7 +71,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
           /resolve-ambiguity @docs/plans/ia/auth.md
 
     Step 3: /create-prd
-      Reads vision.md. Walks you through tech stack decisions one at a time.
+      Reads ideation-index.md. Walks you through tech stack decisions one at a time.
       Each confirmed decision fires bootstrap to fill templates and install skills.
       Output: docs/plans/architecture-design.md
               docs/plans/ENGINEERING-STANDARDS.md

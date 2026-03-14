@@ -75,7 +75,7 @@ SPEC GAP: [layer] § [section] — [what is underspecified] — [attack scenario
 
 - The **layer** field is one of: `IA`, `BE`, `FE`.
 - The **section** field quotes the heading of the spec section under review.
-- The **proposed resolution** is either a concrete suggestion (if the answer is determinable from `vision.md` or `architecture-design.md`) or a question for the user (if it is a product decision).
+- The **proposed resolution** is either a concrete suggestion (if the answer is determinable from `ideation-index.md` or `architecture-design.md`) or a question for the user (if it is a product decision).
 
 **Never** write the finding as a code change, a PR comment, or an implementation task.
 

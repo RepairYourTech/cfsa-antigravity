@@ -19,7 +19,7 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 
 ## Conventions
 
-**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `vision.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `docs/kit-architecture.md` Section 2 — Dated File Convention for the full rule and table.
+**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `docs/kit-architecture.md` Section 2 — Dated File Convention for the full rule and table. Note: `ideation-index.md` and `vision.md` are NOT dated — they are living documents updated throughout ideation.
 
 ## How to Use
 
@@ -52,7 +52,7 @@ Run this procedure when filling the `## Features` section of each shard skeleton
 
 ### Source
 
-Read `docs/plans/ideation.md` and locate the section corresponding to the shard's domain.
+Read `docs/plans/ideation/ideation-index.md` and locate the relevant domain file in `docs/plans/ideation/domains/` for each shard's domain.
 
 ### Actor + Goal Format Rule
 
@@ -68,7 +68,7 @@ List sub-features as bullet points in the `## Features` section. Group by functi
 
 ### `[THIN — review with user]` Fallback Rule
 
-If a shard's domain has no corresponding section in `ideation.md` (the domain was introduced during architecture design, not ideation), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead.
+If a shard's domain has no corresponding file in `docs/plans/ideation/domains/` (the domain was introduced during architecture design, not ideation), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead.
 
 At the validation step, the user must confirm whether to:
 - Keep the shard separate
@@ -82,7 +82,7 @@ Seeded skeletons live in the `docs/plans/ia/` directory:
 ```
 docs/plans/ia/
 ├── 00-infrastructure.md
-├── 01-user-accounts.md      ← ## Features seeded from ideation.md § User Accounts
-├── 02-content-library.md    ← ## Features seeded from ideation.md § Content Library
+├── 01-user-accounts.md      ← ## Features seeded from ideation/domains/user-accounts.md
+├── 02-content-library.md    ← ## Features seeded from ideation/domains/content-library.md
 ├── ...
 ```

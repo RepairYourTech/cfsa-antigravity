@@ -21,7 +21,7 @@ Write all cross-layer findings to a `## Cross-Layer Consistency` section in the 
 
 | Layer | Documents to load |
 |-------|-------------------|
-| Vision | `docs/plans/vision.md` |
+| Ideation | `docs/plans/ideation/ideation-index.md` + domain files |
 | Architecture | `docs/plans/*-architecture-design.md`, `docs/plans/ENGINEERING-STANDARDS.md` |
 | IA | `docs/plans/ia/index.md` + each shard listed + `docs/plans/ia/deep-dives/*.md` (list directory; include all files present) |
 | BE | `docs/plans/be/index.md` + each spec listed |

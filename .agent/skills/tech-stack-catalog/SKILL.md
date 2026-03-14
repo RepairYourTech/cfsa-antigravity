@@ -19,7 +19,7 @@ Reference tables for tech stack decisions organized by project surface type. Use
 
 ## How to Use
 
-1. Read the project's surface classification from `vision.md`
+1. Read the project's surface classification from `docs/plans/ideation/meta/constraints.md`
 2. Load `references/surface-decision-tables.md` for the applicable surface sections
 3. Filter options using constraint questions before presenting
 4. Load `references/dev-tooling-decisions.md` for development tooling

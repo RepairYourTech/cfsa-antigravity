@@ -1,66 +1,57 @@
 # Vision Document Template
 
-Use this template when compiling `docs/plans/vision.md` from ideation material.
+Use this template when compiling `docs/plans/vision.md` as the human-readable executive summary.
+
+> **Important**: `vision.md` is a summary document for human consumption. The pipeline reads
+> `docs/plans/ideation/ideation-index.md` directly — not this file. All the depth, domain
+> files, cross-cut ledger, and structured data live in the `ideation/` folder.
 
 ```markdown
 # [Project Name] — Vision
 
 > One-sentence pitch: [from Step 4]
 
-## Problem Statement
-[From Step 4, refined]
+> **This is a human-readable project summary.** For pipeline-grade detail, see
+> [ideation-index.md](ideation/ideation-index.md) and the domain files it references.
 
-## User Personas
-[2-4 personas with name, role, pain point, success criteria, switching trigger]
+## Problem Statement
+[Condensed from `meta/problem-statement.md`]
+
+## Target Users
+[Condensed persona summaries from `meta/personas.md` — name + role + pain point + success criteria.
+Not the full 6-field exploration — that detail stays in the personas file.]
+
+## Solution Overview
+[2-3 paragraphs describing what the product does and why it matters.]
+
+## Domain Map
+[One paragraph per domain, condensed from the domain files in `ideation/domains/`.
+Each domain links to its full file.]
 
 ## Feature Inventory (MoSCoW)
 ### Must Have (Phase 1)
-[Each feature with sub-features and key edge cases — Level 2 depth minimum]
+[Feature names + one-line description. Links to domain files for drill-down detail.]
 ### Should Have (Phase 2)
-[Each feature with sub-features identified]
+[Feature names + one-line description.]
 ### Could Have (Phase 3+)
 ### Won't Have (explicitly excluded)
 
-## Feature Interactions
-[Confirmed cross-cutting interactions from ideation. Empty if no cross-cutting work was done.]
+## Key Cross-Cutting Interactions
+[Top confirmed interactions from `cross-cuts/cross-cut-ledger.md`.
+Full synthesis detail stays in the ledger.]
 
-### [Interaction Name]
-- **Domains involved**: [list]
-- **Trigger**: [what causes the interaction]
-- **Source of truth**: [which domain owns the state]
-- **Behavior per domain**: [what each domain does when triggered]
-- **Conflicts & resolution**: [if any]
-- **Cascading effects**: [second-order interactions, if any]
-
-## Constraints
-[Budget, timeline, team, compliance, performance]
-
-### Project Surfaces
-[Surface classification — which surfaces, cross-platform decisions,
-multi-surface connections. This section drives /create-prd tech stack decisions.]
+## Constraints Summary
+[Condensed from `meta/constraints.md` — budget, timeline, team, compliance, performance, surfaces.]
 
 ## Success Metrics
-[Launch criteria, growth targets, platform-appropriate technical targets]
+[Key metrics with concrete targets. Full details in relevant domain files.]
 
 ## Competitive Landscape
-[Competitors, unique angle, defensible moat]
+[Condensed from `meta/competitive-landscape.md` — competitors, differentiation, moat.]
 
-## Domain Coverage Summary
-[Summary of all explored domains with depth indicators.
-References to appendices for domain-rich topics.]
+## Key Decisions
+[Numbered list of major product decisions made during ideation.]
 
 ## Open Questions
-[Anything unresolved that needs answers before architecture — with owners and deadlines]
+[Anything unresolved that needs answers before architecture — with owners and target stages.]
 ```
-
-## Domain Appendices
-
-If any domain has extensive material that doesn't fit the vision template (hero rosters, order system state machines, algorithm specifications, detailed interaction flows), create domain appendix files:
-
-- Path: `docs/plans/vision-appendix-{domain-slug}.md`
-- Reference from the main vision.md: `See [Domain Name Appendix](vision-appendix-{domain-slug}.md)`
-
-**When to create appendices:**
-- A domain section in vision.md would exceed ~100 lines of detail
-- The domain has specific technical artifacts (state machines, algorithms, formulas)
-- The domain has enumeration-heavy content (lists of items, types, categories)

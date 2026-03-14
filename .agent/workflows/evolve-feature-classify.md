@@ -17,7 +17,7 @@ pipeline:
 
 Capture the user's new feature, requirement, or constraint. Classify it, identify the correct entry point document, write the new content at proper spec depth, and determine which downstream layers need updating.
 
-> **Prerequisite**: At least `docs/plans/vision.md` must exist. If the pipeline hasn't started, run `/ideate` first — there's nothing to evolve yet.
+> **Prerequisite**: At least `docs/plans/ideation/ideation-index.md` must exist. If the pipeline hasn't started, run `/ideate` first — there's nothing to evolve yet.
 
 ---
 
@@ -54,7 +54,7 @@ Based on the classification, determine where the new content enters the pipeline
 
 | Classification | Entry Point Document | Rationale |
 |---------------|---------------------|-----------|
-| **[1] New feature** | `docs/plans/vision.md` | New features start at the vision layer — they affect everything downstream |
+| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + relevant domain file | New features start at the ideation layer — they affect everything downstream |
 | **[2] New requirement** | The IA shard that owns the affected domain | Requirements on existing features enter at the domain interaction level |
 | **[3] New technical constraint** | `docs/plans/[dated]-architecture-design.md` | Technical constraints affect the architecture and everything below it |
 | **[4] Scope correction** | Ask the user which document contains the misunderstanding | Corrections enter wherever the original misunderstanding lives |
@@ -69,7 +69,7 @@ Read .agent/skills/technical-writer/SKILL.md and follow its clarity standards fo
 
 This is a real spec-writing step — not a placeholder. Write the new content at the appropriate depth for the entry point layer:
 
-**If entry point is vision layer** (`docs/plans/vision.md`):
+**If entry point is ideation layer** (`docs/plans/ideation/ideation-index.md`):
 - Feature description (what it does, why it matters)
 - Affected personas (who uses this)
 - Success criteria (how we know it works)

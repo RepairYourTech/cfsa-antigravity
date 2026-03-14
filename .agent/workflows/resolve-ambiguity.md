@@ -18,7 +18,7 @@ Targeted ambiguity resolution for any pipeline document or layer. Uses the `reso
 | Invocation | Behavior |
 |---|---|
 | `/resolve-ambiguity` | Interactive — asks which document or layer to resolve |
-| `/resolve-ambiguity vision` | Targets `docs/plans/vision.md` |
+| `/resolve-ambiguity ideation` | Targets `docs/plans/ideation/ideation-index.md` + domain files |
 | `/resolve-ambiguity architecture` | Targets the architecture design documents |
 | `/resolve-ambiguity @path/to/spec.md` | Targets a specific file |
 
@@ -29,7 +29,7 @@ Targeted ambiguity resolution for any pipeline document or layer. Uses the `reso
 If no argument was provided, ask the user which document or layer to resolve. Accept a layer name (`vision`, `architecture`, `ia`, `be`, `fe`) or a direct `@file` path.
 
 For layer names, resolve to the canonical document(s):
-- `vision` → `docs/plans/vision.md` + any `docs/plans/vision-appendix-*.md`
+- `ideation` → `docs/plans/ideation/ideation-index.md` + all domain files in `docs/plans/ideation/domains/`
 - `architecture` → `docs/plans/YYYY-MM-DD-architecture-design.md` + `docs/plans/ENGINEERING-STANDARDS.md` + `docs/plans/data-placement-strategy.md`
 - `ia` → all files in `docs/plans/ia/` (excluding `index.md`)
 - `be` → all files in `docs/plans/be/` (excluding `index.md`)

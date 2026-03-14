@@ -77,7 +77,7 @@ A document is dated (prefixed with `YYYY-MM-DD-`) if and only if it is a **compi
 | Document | Dated? | Rationale |
 |---|---|---|
 | `architecture-design.md` | ✅ Yes | Can be re-run with new stack; old version referenced during migration |
-| `vision.md` | ✅ Yes | Evolution creates a new version; audit trail needed |
+| `ideation-index.md` | ❌ No | Living document — updated throughout ideation, not a dated compilation |
 | `data-placement-strategy.md` | ✅ Yes | Same pattern |
 | `ENGINEERING-STANDARDS.md` | ✅ Yes | Standards are versioned |
 | Audit reports (`docs/audits/`) | ✅ Yes | Versioned snapshots by definition |

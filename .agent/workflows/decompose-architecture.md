@@ -29,7 +29,7 @@ If no architecture design exists, tell the user to run `/create-prd` first. Do n
 
 Also check the document's `**Status**:` field. If the status is `Draft` or `Review` → **STOP**: "The architecture design is not yet approved (current status: [status]). Get explicit approval from the user and update the status to `Approved` before decomposing."
 
-Also read the file at `docs/plans/vision.md`.
+Also read `docs/plans/ideation/ideation-index.md` for the domain map, and load specific domain files as needed for context.
 
 > **Design system prerequisite (web/mobile/desktop projects)**: Read `.agent/instructions/tech-stack.md` and locate the `SURFACES` value. If surfaces include `web`, `mobile`, or `desktop`, verify that `docs/plans/design-system.md` exists and is not empty.
 >

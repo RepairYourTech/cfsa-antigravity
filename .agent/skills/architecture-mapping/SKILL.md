@@ -145,9 +145,9 @@ Run this protocol when beginning any architecture spec shard. `ideation.md` is t
 
 ### Sources to Read
 
-1. `docs/plans/ideation.md` — the section corresponding to this shard's domain
+1. The relevant domain file in `docs/plans/ideation/domains/` for this shard's domain
 2. The shard's `## Features` section
-3. `docs/plans/vision.md` Must Have features for this domain
+3. `docs/plans/ideation/ideation-index.md` Must Have features for this domain
 
 ### Reconciliation Table
 

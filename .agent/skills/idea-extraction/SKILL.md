@@ -1,6 +1,6 @@
 ---
 name: idea-extraction
-description: "Exhaustive idea extraction through input-adaptive interviewing. Use during /ideate to transform raw ideas — whether richly documented, lightly sketched, or entirely in the user's head — into comprehensive vision material. This is NOT a quick Q&A — it's a deep, collaborative exploration that refuses to stop until every domain is explored."
+description: "Exhaustive idea extraction through recursive breadth-before-depth exploration with Deep Think protocol. Use during /ideate to transform raw ideas — whether richly documented, lightly sketched, or entirely in the user's head — into comprehensive, structured ideation output. Writes directly to the ideation/ folder structure — one domain file per domain, no monolithic intermediary."
 ---
 
 # Idea Extraction — Exhaustion Engine
@@ -9,18 +9,41 @@ description: "Exhaustive idea extraction through input-adaptive interviewing. Us
 
 > This pipeline does not build MVPs. It does not produce shallow specs. It does not
 > create technical debt by rushing past the ideation phase. The ideation phase is where
-> the entire downstream pipeline gets its DNA — if the vision is shallow, every spec,
+> the entire downstream pipeline gets its DNA — if the ideation is shallow, every spec,
 > every architecture decision, every line of code downstream will be shallow too.
 
-This skill exists because the ideation phase is the **front door** of a production-grade
-pipeline. The brainstorming skill is deliberately lightweight — it's a modifier skill for
-quick collaborative decisions. This skill is the opposite: it's an **exhaustion engine**
-designed to extract every ounce of product vision from the user, whether that vision is
-already documented, partially formed, or entirely in their head.
+This skill is an **exhaustion engine** designed to extract every ounce of product vision
+from the user. Your job is not to collect answers. Your job is to **generate new thinking**
+in the user by asking questions they haven't considered, exploring edges they haven't
+mapped, and helping them make decisions they haven't faced yet.
 
-Your job is not to collect answers. Your job is to **generate new thinking** in the user
-by asking questions they haven't considered, exploring edges they haven't mapped, and
-helping them make decisions they haven't faced yet.
+The **Deep Think Protocol** is the core mechanism: at every step, you actively reason
+about what *should* exist based on domain knowledge, industry patterns, and cross-domain
+interactions — then present hypotheses to the user for confirmation or rejection.
+
+---
+
+## Output Structure
+
+This skill writes directly to the `docs/plans/ideation/` folder. No monolithic
+intermediary file.
+
+```
+docs/plans/ideation/
+├── ideation-index.md              ← Pipeline key file — domain map + document map
+├── meta/
+│   ├── problem-statement.md
+│   ├── personas.md
+│   ├── competitive-landscape.md
+│   └── constraints.md
+├── domains/
+│   ├── 01-domain-slug.md          ← One file per domain
+│   └── ...
+└── cross-cuts/
+    └── cross-cut-ledger.md        ← Running ledger accumulated at every level
+```
+
+Templates for each file type are in `.agent/skills/prd-templates/references/ideation-*.md`.
 
 ---
 
@@ -31,24 +54,28 @@ Before starting, classify what the user has provided and select the right mode.
 ### Extraction Mode — Rich Input
 
 **Trigger:** User provides substantial existing material (>5KB, detailed docs, chat logs,
-design conversations, competitor analysis, previous specs).
+design conversations, competitor analysis, previous specs, old ideation.md files).
 
 **The job:** Don't lose information. The user has already done deep thinking — your job is
 to organize it, validate it, and fill gaps.
 
 **Process:**
 1. Read/ingest every document provided
-2. Enumerate what you found, organized by domain (not by source document)
-3. Present the organized inventory back to the user: "Here's what I extracted, organized by domain. Is anything missing or wrong?"
-4. Identify gaps — domains or sub-topics not covered by the existing material
-5. For each gap, switch to Interview Mode for that topic
-6. Validate completeness against the domain coverage map
+2. Identify natural domain boundaries in the content
+3. Create the `ideation/` folder structure: one domain file per identified domain
+4. Seed each domain file with the relevant content from the source
+5. Present the organized inventory: "Here's what I extracted, organized by domain: [list]. Is anything missing?"
+6. Identify gaps — domains or sub-topics not covered by the existing material
+7. For each gap, switch to Interview Mode for that topic
+8. Run Deep Think: "Based on the content you provided, I would also expect to see [X] and [Y]. Are those relevant?"
+9. Validate completeness against the domain map in `ideation-index.md`
 
 **Anti-patterns:**
 - ❌ Summarizing 738KB into 70 lines (lossy compression)
 - ❌ Ignoring details because they don't fit the template
 - ❌ Re-asking questions the material already answers
-- ✅ Preserving depth, organizing structure, filling gaps
+- ❌ Writing everything to one file then reorganizing later
+- ✅ Preserving depth, writing to domain files as you go, filling gaps
 
 ### Expansion Mode — Thin Input
 
@@ -58,87 +85,159 @@ to organize it, validate it, and fill gaps.
 input should spawn 3-5 follow-up questions that drive toward implementation depth.
 
 **Process:**
-1. Read the input and understand its structure
-2. For each section, identify the depth level (surface → detailed → implementation-ready)
-3. Start with the shallowest sections first
-4. For each shallow section, ask targeted deepening questions
-5. Build out the domain coverage map as you go
-6. Don't stop until every section reaches implementation depth
+1. Read the input and identify domain boundaries
+2. Create domain files for each identified area
+3. For each domain, identify the depth level (surface → detailed → implementation-ready)
+4. Start with the shallowest domains first
+5. For each shallow domain, ask targeted deepening questions
+6. Run Deep Think at each level to identify gaps
+7. Update domain files and index as you go
 
 **Deepening questions by section type:**
 - **Feature mentioned without detail:** "You listed [feature]. Help me understand: What does the user see? What happens when they interact with it? What happens when it fails? What data does it need?"
-- **User type without specifics:** "You mentioned [user type]. What's their primary workflow? What are they trying to accomplish? What frustrates them about existing solutions? What would make them switch?"
-- **Constraint without numbers:** "You noted [constraint]. Can we put a number on that? For latency — what's the threshold where users notice? For budget — what's the monthly ceiling?"
+- **User type without specifics:** "You mentioned [user type]. What's their primary workflow? What frustrates them about existing solutions? What would make them switch?"
+- **Constraint without numbers:** "You noted [constraint]. Can we put a number on that? For latency — what's the threshold? For budget — what's the monthly ceiling?"
 
 ### Interview Mode — No Input / One-Liner
 
-**Trigger:** User has no file input. They describe the idea verbally or provide a one-liner
-like "I want to build a trading app."
+**Trigger:** User has no file input. They describe the idea verbally or provide a
+one-liner like "I want to build a repair shop management platform."
 
 **The job:** Be the relentless interviewer. Extract everything from the user's head through
-persistent, deep questioning. No topic is "done" until the user explicitly says "I don't
-know" or "I haven't decided" — and even then, help them decide.
+persistent, deep questioning.
 
 **Process:**
-1. Start with the highest-level question: "In one sentence, what problem does this solve and for whom?"
-2. From that sentence, identify the key nouns — these become your initial domains
-3. For each domain, drill systematically (see Domain Exhaustion Protocol below)
-4. Maintain and share the domain coverage map
+1. Start: "In one sentence, what problem does this solve and for whom?"
+2. From that sentence, identify key nouns — these become initial domains
+3. Create domain files for each identified domain
+4. Run the Recursive Domain Exhaustion Protocol (below)
 5. Use the decision classification rule to route questions appropriately
-6. Don't stop until the coverage map shows ≥80% of identified domains at ≥3 levels deep
+6. Don't stop until the deep think protocol generates zero new hypotheses
 
 **Interview techniques:**
-- **Follow the thread:** When a user mentions a concept, drill into it before moving on. Don't breadth-first hop between topics.
-- **Challenge weak answers:** "You mentioned risk management — can you tell me more? For example, what happens when a user hits their position limit? What's the escalation path?"
-- **Generate new thinking:** "You've described [concept A] and [concept B] — what happens when they interact? If A triggers while B is active, what should the system do?"
-- **Make them think about failures:** "What's the worst thing a user could do with [feature]? How should the system prevent or recover from that?"
-- **Help them decide:** When the user says "I'm not sure," don't log it as an open question. Present 2-3 options with trade-offs: "Most platforms handle this one of three ways: [A], [B], or [C]. A is simpler but less flexible. C is powerful but complex to build. B is the middle ground. Which resonates?"
+- **Challenge weak answers:** "You mentioned risk management — what happens when a user hits their position limit? What's the escalation path?"
+- **Generate new thinking:** "You've described [A] and [B] — what happens when they interact? If A triggers while B is active, what should the system do?"
+- **Make them think about failures:** "What's the worst thing a user could do with [feature]?"
+- **Help them decide:** When the user says "I'm not sure," present 2-3 options with trade-offs.
 
 ---
 
-## Expansion Mode Awareness
+## Deep Think Protocol
 
-Before beginning any drilling, read the current expansion mode from `ideation.md`. The mode overrides the default depth-first behavior:
+> **This is the core behavioral change.** At every step of ideation, you actively reason
+> about what should exist — you don't just record what the user says.
 
-| Mode | Drilling Strategy |
-|---|---|
-| Full | Breadth-first during horizontal sweep; depth-first during vertical drilling; interaction-first during synthesis |
-| Vertical | Depth-first — finish one domain before moving to the next |
-| Horizontal | Breadth-first — map all domains before deepening any |
-| Cross-cutting | Interaction-first — focus on connection points, not individual domain depth |
-| Combination | User-directed — follow the user's specified sequence of modes in order |
-| As-is | No active drilling — scan only |
+### The Protocol
 
-### Cross-cut Watch Protocol
+At **every step** — domain discovery, breadth mapping, vertical drilling — pause and
+ask yourself these four questions before moving on:
 
-Cross-cut detection is always-on regardless of mode. During all active drilling, ask these questions:
+1. **What have I captured so far in this domain/sub-area?**
+   Quick inventory of what's been discussed.
 
-- After each sub-feature: "Does this behavior depend on or affect any other domain?"
-- After each edge case: "Which other parts of the system need to know about this failure mode?"
-- After each state transition: "Does this state change trigger anything in another domain?"
+2. **What would a domain expert expect to see here that hasn't been surfaced?**
+   Based on the product type, industry, and user personas — what's standard in this
+   space that we haven't discussed? What would a competitor's feature list include?
 
-When a cross-cut is identified, immediately log it to `## Cross-cutting Candidates` in `ideation.md`:
-`[Domain A] × [Domain B]: [what the connection is]` — status: pending
+3. **What should exist here because of interactions with other domains?**
+   Based on cross-domain knowledge already captured — does this domain need something
+   because of how it connects to other domains?
 
-Do not stop to explore the cross-cut immediately — flag and continue the current drill. The synthesis pass will address all candidates.
+4. **What common failure modes or edge cases are missing?**
+   Based on production systems in similar industries — what breaks? What do users
+   complain about? What do post-mortems reveal?
 
-### Cross-cut Candidate Format
+### Presenting Hypotheses
 
-After synthesis, annotate each candidate with its outcome:
-- `✅ confirmed → see [Interaction Name]`
-- `❌ rejected: [reason]`
+For each hypothesis generated, present it to the user:
 
-Never clear the candidates section — it is the audit trail.
+> "Based on [reasoning], I think [X] might be relevant here. For example, in similar
+> systems, [concrete example]. Is this something your product needs?"
+
+**Outcomes:**
+- **CONFIRMED** → Add to the domain file. Drill into it.
+- **REJECTED** → Note the rejection with reason in the domain file's Deep Think table. Move on.
+- **DEFERRED** → Note as an open question with owner and target stage.
+
+### Tracking
+
+Record all hypotheses in each domain file's Deep Think Annotations table:
+
+```
+| Hypothesis | Source | Outcome |
+|-----------|--------|---------|
+| "Purgatory queue needed for diagnostics not yet tied to a ticket" | Industry pattern | ✅ CONFIRMED |
+| "Customer loyalty program integration" | Competitor analysis | ❌ REJECTED: out of scope |
+```
+
+### Exhaustion Signal
+
+**The ideation process is considered complete for a domain when:**
+1. Deep Think generates **zero new hypotheses** after a full pass
+2. The user confirms "nothing else" for that domain
+3. Both conditions must be true simultaneously
+
+This replaces the old "completed N passes" model. Exhaustion is evidence-based,
+not count-based.
 
 ---
 
-## Domain Exhaustion Protocol
+## Recursive Domain Exhaustion Protocol
 
-> **Mode-aware**: This protocol operates differently depending on the active expansion mode. Read the Expansion Mode Awareness section above before applying this protocol. In Full Mode, apply breadth-first during the horizontal sweep and depth-first during vertical drilling. In As-is Mode, skip active drilling entirely.
+> **This protocol replaces the old fixed-pass model.** Exploration is recursive:
+> breadth is always mapped before depth, and new discoveries at any level can trigger
+> re-exploration of higher levels.
 
-This is the core mechanism. For every domain identified, drill systematically using these
-questions. **Never accept a bucket label as a feature.** "Risk management" is a category,
-not a feature — drill until you have specific, testable behaviors.
+### Level 0 — Global Domain Map
+
+**Goal:** Identify ALL domains before exploring ANY of them.
+
+1. List all domains from the user's input
+2. **Deep Think:** "Based on this product type and industry, what domains would I expect to see that haven't been mentioned?" Present hypotheses to user.
+3. Create a domain file for each confirmed domain (using the ideation-domain-template)
+4. Update `ideation-index.md` with the complete domain map
+5. Note preliminary cross-cuts: "Domain A might touch Domain B because [reason]" → add to ledger as Level 0 entries
+6. **Gate:** User confirms the domain list before proceeding
+
+### Level 1 — Domain Breadth Sweep
+
+**Goal:** For each domain, map ALL sub-areas before drilling into ANY of them.
+
+For each domain (dependency order — foundational first):
+1. List all sub-areas/capabilities within the domain
+2. **Deep Think:** "Based on this domain in this industry, what sub-areas would an expert expect?" Present hypotheses.
+3. Write the breadth map to the domain file with `[SURFACE]` markers
+4. Note cross-cuts at sub-area level → add to ledger as Level 1 entries
+5. **NEW DOMAINS DISCOVERED?** → Loop back to Level 0. Do NOT proceed until domain map is stable.
+6. **Gate:** User confirms the breadth maps before proceeding to drilling
+7. Mark domain status as `[BREADTH]` in the index
+
+### Level 2+ — Vertical Drilling
+
+**Goal:** Drill each sub-area to implementation depth. Deep Think at every step.
+
+For each sub-area:
+1. Apply the entity/feature/user/integration questions (see Exhaustion Questions below)
+2. **Deep Think** per sub-area: "Based on this feature in this product, what edge cases, interactions, and failure modes would a production system need?"
+3. Write drill results to the domain file
+4. Cross-cuts with evidence → add to ledger as Level 2+ entries with evidence
+5. **NEW SUB-AREAS DISCOVERED?** → Loop back to Level 1 for this domain. Map the new sub-area's breadth before drilling it.
+6. **NEW DOMAINS DISCOVERED?** → Loop back to Level 0. Stabilize the domain map first.
+7. When Deep Think yields zero new hypotheses AND user confirms → mark sub-area as `[EXHAUSTED]`
+8. When all sub-areas are `[DEEP]` or `[EXHAUSTED]` → mark domain as `[DEEP]` or `[EXHAUSTED]`
+
+### Status Markers
+
+| Marker | Meaning |
+|--------|---------|
+| `[SURFACE]` | Identified, not yet explored |
+| `[BREADTH]` | All sub-areas mapped, none drilled |
+| `[DEEP]` | Sub-areas drilled, some may still have open questions |
+| `[EXHAUSTED]` | Deep Think yields zero hypotheses, user confirms complete |
+
+---
+
+## Exhaustion Questions
 
 ### For Every Entity
 
@@ -179,71 +278,100 @@ not a feature — drill until you have specific, testable behaviors.
 
 ---
 
+## Cross-Cut Watch Protocol
+
+Cross-cut detection is **always-on** regardless of mode or level. During all active
+exploration, maintain awareness:
+
+- After each sub-feature: "Does this behavior depend on or affect any other domain?"
+- After each edge case: "Which other parts of the system need to know about this failure mode?"
+- After each state transition: "Does this state change trigger anything in another domain?"
+
+When a cross-cut is identified, immediately log it to `cross-cuts/cross-cut-ledger.md`
+at the appropriate level:
+
+- **Level 0** (during domain map): surface guesses, low confidence
+- **Level 1** (during breadth sweep): sub-domain connections, medium confidence
+- **Level 2+** (during drilling): evidence-backed, high confidence
+
+### Cross-Cut Synthesis Questions
+
+For each confirmed cross-cut pair, ask all five questions:
+
+1. **Shared state conflict**: If both features write to the same entity, who wins? Merge/override strategy? Canonical owner?
+2. **Trigger chain**: Does A automatically trigger B? Rollback semantics if B fails? Sync or async?
+3. **Permission intersection**: Does permission in Domain A affect what's possible in Domain B?
+4. **Notification fan-out**: Does an event in A need to notify actors in B? Who owns the notification contract?
+5. **State transition conflict**: Can A and B be triggered simultaneously? Data consistency if they race?
+
+Record synthesis outcomes in the cross-cut ledger. Never clear entries — the ledger is the audit trail.
+
+---
+
 ## Domain Coverage Map
 
-Throughout the conversation, maintain and periodically share a coverage map with the user.
-
-**Format:**
+Throughout the conversation, maintain and periodically share a coverage map. The format
+uses level-based status with sub-area counts:
 
 ```
 Domain Coverage Map — [Project Name]
-═══════════════════════════════════════════
+═══════════════════════════════════════
 
-[████████████ ] Strategy Lifecycle (85%) — 12 sub-topics explored
-[████████░░░░ ] Risk Management (60%) — 7 sub-topics explored
-[████░░░░░░░░ ] Market Data Pipeline (30%) — 3 sub-topics explored
-[░░░░░░░░░░░░ ] AI/ML Integration (5%) — 1 sub-topic mentioned
-[████████████ ] User Authentication (90%) — 10 sub-topics explored
-...
+Domain 01: Consumer Platform [DEEP]
+  ├── Intake Flow [EXHAUSTED] — 12 sub-topics, 4 hypotheses confirmed
+  ├── Customer Portal [DEEP] — 8 sub-topics, 2 hypotheses confirmed
+  └── Payments [BREADTH] — 5 sub-areas mapped, not yet drilled
 
-Overall: 54% complete — 8 domains identified, 3 deeply explored
+Domain 02: Shop Software [BREADTH]
+  ├── Counter Mode [DEEP] — 8 sub-topics, 3 hypotheses confirmed
+  ├── Tech Mode [SURFACE] — 2 sub-topics noted
+  ├── Inventory [EXHAUSTED] — 15 sub-topics, 0 new hypotheses
+  └── Multi-Location [SURFACE] — 1 sub-topic noted
 
-Next suggested domain: Risk Management (currently at 60%, high importance)
+Overall: 7 domains | 2 EXHAUSTED, 3 DEEP, 1 BREADTH, 1 SURFACE
+Deep Think: 23 hypotheses presented, 18 confirmed, 5 rejected
+Cross-cuts: 12 confirmed, 4 pending, 3 rejected
 ```
 
 **Rules:**
-- Share the map after every 5-6 questions, or whenever switching domains
-- Use it to guide the conversation: "We've covered Strategy deeply. Risk Management is important and only at 60%. Want to dig into that next?"
-- Don't compile the vision document until overall coverage is ≥80%
-- When the user says "I think that's everything," check the map. If domains are under-explored, point it out: "We're at 65% overall. [Domain X] and [Domain Y] are still shallow — should we explore them, or are they intentionally minimal?"
+- Share the map after every domain or every 3-4 drilling sequences
+- Use it to guide: "Domain 02 has 2 sub-areas still at SURFACE. Should we drill those?"
+- Write the coverage map to `ideation-index.md` after each update
+- Don't compile the vision summary until all domains are at least `[DEEP]`
 
 ---
 
 ## Decision Routing During Extraction
 
-When a decision point arises, classify it using the decision classification rule:
-
 | Decision Type | During Ideation | Example |
 |---|---|---|
 | **Product** | Ask the user. It's their product. | "Should free users be able to...?" |
-| **Architecture** | Note it for `/create-prd`. Don't burden the user. | "Should we use SQL or NoSQL?" |
-| **Implementation** | Note it for later. Don't even mention it. | "How should we name the routes?" |
+| **Architecture** | Note for `/create-prd`. Don't burden the user. | "Should we use SQL or NoSQL?" |
+| **Implementation** | Note for later. Don't even mention it. | "How should we name the routes?" |
 
-**Exception:** If the user brings up an architecture or implementation topic, engage with it.
-Don't refuse to discuss it — just don't initiate it. The user may have strong opinions about
-their tech stack, and those opinions are valuable context.
+**Exception:** If the user brings up architecture or implementation, engage with it.
+Don't refuse to discuss it — just don't initiate it.
 
 ---
 
-## Anti-Rushing Mechanisms
+## Breadth Before Depth
 
-### Depth Before Breadth
+### No Premature Drilling
 
-Finish exploring the current topic completely before moving to the next. If you're
-discussing "user authentication," don't jump to "payment processing" until auth is
-explored to satisfaction. The user can redirect if they want — but you shouldn't hop.
+Complete the breadth map of all sub-areas within a domain **before drilling any
+single sub-area**. This ensures no sub-area is missed because you went deep too early.
 
 ### No Premature Compilation
 
-Don't start writing the output document until:
-- At least 80% of identified domains are explored
-- Every Must Have feature has been discussed at level ≥2 (sub-features and failure modes)
-- The user has confirmed the domain coverage map
+Don't start writing the vision summary until:
+- All domains are at least `[DEEP]`
+- Every Must Have feature explored to ≥Level 2 (sub-features and failure modes)
+- Deep Think yields zero new hypotheses across ALL domains
+- User has confirmed the domain coverage map
 
 ### Challenge Weak Answers
 
-When the user gives a one-sentence answer to a complex question, don't accept it. Probe
-deeper with a concrete follow-up:
+When the user gives a one-sentence answer to a complex question, don't accept it. Probe:
 
 - **Weak:** "Yeah, we need notifications."
 - **Probe:** "What kinds of notifications? Just in-app, or also email and push? What events trigger them? Can users configure which ones they receive? What happens with notification overload?"
@@ -251,14 +379,14 @@ deeper with a concrete follow-up:
 ### Summarize and Validate
 
 After every 5-6 questions, pause and summarize:
-- "Here's what I've captured about [topic] so far: [summary]. Does this cover everything, or is there more?"
-- This prevents drift, catches misunderstandings early, and gives the user a chance to add things they forgot.
+- "Here's what I've captured about [topic] so far: [summary]. Does this cover everything?"
+- This prevents drift, catches misunderstandings, and creates natural checkpoints.
 
 ### Progress Transparency
 
-Don't let the user wonder "how much longer." Be transparent:
-- "We've covered [N] of [M] domains. We're about [X]% through the exploration."
-- "This is a complex project — I want to make sure we don't miss anything that will cause rework later. We've got [domains] left to explore."
+Be transparent about where you are:
+- "We've explored [N] of [M] domains to DEEP level. [Domain X] is still at BREADTH."
+- "Deep Think is still generating hypotheses for this domain — we're not done yet."
 
 ---
 
@@ -266,6 +394,7 @@ Don't let the user wonder "how much longer." Be transparent:
 
 - **Does not make product decisions** — It extracts them from the user
 - **Does not explore architecture** — That's `/create-prd`'s job
-- **Does not replace brainstorming** — Brainstorming is a lightweight modifier skill for quick decisions; this skill is a heavyweight extraction engine for ideation only
-- **Does not produce the vision document** — The ideate workflow compiles the document; this skill drives the conversation that produces the raw material
+- **Does not replace brainstorming** — Brainstorming is a lightweight modifier for quick decisions; this is a heavyweight extraction engine
+- **Does not produce the vision document** — The ideate-validate workflow compiles the summary; this skill drives the conversation that fills the domain files
 - **Does not rush** — The entire downstream pipeline depends on the depth produced here
+- **Does not write to a monolithic file** — Each domain gets its own file from the moment it's discovered

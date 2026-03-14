@@ -14,6 +14,6 @@
 > **Deep Dive audit note**: When auditing dimension 7, read each deep dive file directly — do not infer its completeness from the parent shard's reference to it. A parent shard that links to a deep dive scores ⚠️ (not ✅) if the deep dive file itself is still a skeleton. Score ✅ only when the deep dive file contains exhaustive subsystem detail that an implementer could work from without asking questions.
 
 > **Dimension 1 audit procedure**:
-> 1. Read `docs/plans/vision.md` (and `ideation.md` appendix if present) to extract the authoritative list of Level-1 sub-features per domain.
+> 1. Read `docs/plans/ideation/ideation-index.md` and the relevant domain files in `docs/plans/ideation/domains/` to extract the authoritative list of Level-1 sub-features per domain.
 > 2. For each shard, open `docs/plans/ia/[NN-domain-name].md` and confirm every sub-feature from step 1 appears in the `## Features` section. Score ❌ if Must Have sub-features are missing entirely.
 > 3. For each sub-feature listed in `## Features`, verify it is represented in at least one section body (User Interactions, Data Model, Access Control, or Edge Cases). A sub-feature that appears only as a headline in `## Features` but has no corresponding detail in any section body scores ⚠️ — headline only = warning, not pass.

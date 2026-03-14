@@ -21,7 +21,7 @@ Write one section at a time in document order. Before writing section N+1, re-re
 
 - For BE specs, the upstream source is the IA shard
 - For FE specs, the upstream source is the BE spec
-- For IA shards, the upstream sources are `vision.md` and `architecture-design.md`
+- For IA shards, the upstream sources are `ideation-index.md` (+ domain files) and `architecture-design.md`
 
 **Hard rules:**
 
@@ -74,7 +74,7 @@ MAPPING GAP: BE endpoint [name] field [field] → not referenced in FE spec.
 
 Hard-stop spec writing and raise to the user if any of the following are true:
 
-**(a)** A requirement cannot be resolved from `docs/plans/vision.md`, `docs/plans/architecture-design.md`, or the upstream spec document for the current layer — it is not a judgment the spec writer can make.
+**(a)** A requirement cannot be resolved from `docs/plans/ideation/ideation-index.md`, `docs/plans/architecture-design.md`, or the upstream spec document for the current layer — it is not a judgment the spec writer can make.
 
 **(b)** Two valid, meaningfully different implementations exist for a requirement and neither is obviously more correct given the upstream context.
 

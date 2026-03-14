@@ -58,7 +58,7 @@ Read each skill listed in `{{SECURITY_SKILLS}}` (comma-separated). For each skil
 
 ### Compliance escalation
 
-If any compliance constraint from `vision.md` involves **minors, payments, health data, or government-regulated domains**, it is NOT a sub-bullet — it becomes its own top-level section in the architecture document with the same depth as System Architecture. For example:
+If any compliance constraint from `docs/plans/ideation/meta/constraints.md` involves **minors, payments, health data, or government-regulated domains**, it is NOT a sub-bullet — it becomes its own top-level section in the architecture document with the same depth as System Architecture. For example:
 
 - **Minors/COPPA/age-gating** → requires: account type hierarchy, consent flows, content filtering architecture, Guardian oversight model, age verification mechanism, blocked content categories, notification system for filter triggers
 - **Payments/PCI** → requires: token handling architecture, PCI scope boundaries, payment name verification, refund flows, dispute handling

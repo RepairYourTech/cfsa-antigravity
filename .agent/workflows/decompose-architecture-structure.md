@@ -53,9 +53,9 @@ The `00-infrastructure` skeleton must contain these five items:
 
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **Shard Skeleton** template. For each shard, create a skeleton file at `docs/plans/ia/[NN-domain-name].md` using the template.
 
-Read .agent/skills/prd-templates/SKILL.md and follow its Shard Seeding Procedure for Level-1 sub-feature extraction from ideation.md into shard ## Features sections.
+Read .agent/skills/prd-templates/SKILL.md and follow its Shard Seeding Procedure for Level-1 sub-feature extraction from the relevant domain files in `docs/plans/ideation/domains/` into shard ## Features sections.
 
-Fallback for domains not in ideation.md is defined in the skill's Shard Seeding Procedure.
+Fallback for domains not covered in the ideation domain files is defined in the skill's Shard Seeding Procedure.
 
 ## 6. Create IA index
 

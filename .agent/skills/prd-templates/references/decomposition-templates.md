@@ -18,7 +18,7 @@ For each shard, create at `docs/plans/ia/[NN-domain-name].md`:
 [1-2 sentence description of this domain's scope]
 
 ## Features
-[Level-1 sub-features from ideation.md for this domain. NOT architecture-level headlines. See /decompose-architecture-structure Step 5 for seeding instructions.]
+[Level-1 sub-features from the relevant domain file in `docs/plans/ideation/domains/` for this domain. NOT architecture-level headlines. See /decompose-architecture-structure Step 5 for seeding instructions.]
 
 ## User Interactions
 [To be filled during /write-architecture-spec]
@@ -167,7 +167,7 @@ Create or update `docs/plans/index.md`:
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [Vision](vision.md) | Problem, personas, features, constraints | ✅ |
+| [Ideation](ideation/ideation-index.md) | Problem, personas, features, constraints, domain map | ✅ |
 | [Architecture Design](YYYY-MM-DD-architecture-design.md) | Tech stack, system design, security | ✅ |
 
 ## Specification Layers
@@ -188,7 +188,7 @@ Create or update `docs/plans/index.md`:
 
 | Document | Description | Status |
 |----------|-------------|--------|
-| [Vision](vision.md) | Problem, personas, features, constraints | ✅ |
+| [Ideation](ideation/ideation-index.md) | Problem, personas, features, constraints, domain map | ✅ |
 | [Architecture Design](YYYY-MM-DD-architecture-design.md) | Tech stack, system design, security | ✅ |
 
 ## Surfaces

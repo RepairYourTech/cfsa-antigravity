@@ -50,7 +50,7 @@ If these files contain `{{PLACEHOLDER}}` values, the information hasn't been dec
 **Check second — the pipeline's own output**
 
 The answer may already exist in a document written by an earlier pipeline stage:
-- `docs/plans/vision.md` — Problem, personas, features, constraints
+- `docs/plans/ideation/ideation-index.md` + domain files — Problem, personas, features, constraints, domain map
 - `docs/plans/*-architecture-design.md` — Tech stack, system design, security model
 - `docs/plans/ENGINEERING-STANDARDS.md` — Quality thresholds, performance budgets
 - `docs/plans/ia/*.md` — IA shards (features, data models, access control, edge cases)

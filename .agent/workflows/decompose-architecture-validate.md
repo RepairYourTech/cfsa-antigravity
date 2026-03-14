@@ -59,7 +59,7 @@ Verify the decomposition (structural checks only — content doesn't exist yet):
 
 Read .agent/skills/architecture-mapping/SKILL.md and follow its methodology for dependency graph validation.
 
-- **Must Have coverage gate**: Read `docs/plans/vision.md` and extract every feature listed under "Must Have". For each Must Have feature, verify it appears in at least one shard's Features section. If any Must Have feature is not covered by any shard → **STOP**: "The following Must Have features from vision.md are not covered by any shard: [list]. Add them to the appropriate shards before proceeding."
+- **Must Have coverage gate**: Read `docs/plans/ideation/ideation-index.md` and extract every feature listed under "Must Have" in the MoSCoW Summary. For each Must Have feature, verify it appears in at least one shard's Features section. If any Must Have feature is not covered by any shard → **STOP**: "The following Must Have features from ideation-index.md are not covered by any shard: [list]. Add them to the appropriate shards before proceeding."
 
 - **Shard load calibration gate**: After the Must Have coverage gate passes, count the sub-features in each shard's `## Features` section using the **bullet/named-item rule**: count every bullet point or named item under `## Features`, **excluding** group headers (lines that introduce a group of sub-features but are not themselves a concrete capability). Compare against the following thresholds:
 

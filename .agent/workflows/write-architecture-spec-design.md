@@ -50,13 +50,13 @@ Before loading skills, check whether the shard file at `docs/plans/ia/[shard-nam
 
 ### 1a. Read the authoritative sources
 
-Read the following files and build a **reconciliation table** comparing what each source says about this shard's features. `docs/plans/ideation.md` is the **primary source of truth** for sub-features — the architecture design is secondary context.
+Read the following files and build a **reconciliation table** comparing what each source says about this shard's features. The relevant domain file in `docs/plans/ideation/domains/` is the **primary source of truth** for sub-features — the architecture design is secondary context.
 
-1. `docs/plans/ideation.md` — the primary sub-feature inventory (locate the section for this shard's domain)
+1. The relevant domain file in `docs/plans/ideation/domains/` — the primary sub-feature inventory for this shard's domain
 2. The shard's `## Features` section (seeded during `/decompose-architecture-structure`)
-3. `docs/plans/vision.md` — Must Have features relevant to this domain
+3. `docs/plans/ideation/ideation-index.md` — Must Have features relevant to this domain
 
-Read .agent/skills/architecture-mapping/SKILL.md and follow its Sub-Feature Reconciliation Protocol. Build the reconciliation table comparing ideation.md against the shard skeleton and apply mismatch handling rules before proceeding to Step 1b.
+Read .agent/skills/architecture-mapping/SKILL.md and follow its Sub-Feature Reconciliation Protocol. Build the reconciliation table comparing the ideation domain file against the shard skeleton and apply mismatch handling rules before proceeding to Step 1b.
 
 ### 1b. Scope confirmation
 
@@ -66,8 +66,8 @@ Present the reconciled `## Features` list to the user, including a count of newl
 > 
 > [bullet list of all sub-features, with `[Architecture-only]` markers where applicable]
 > 
-> **[N] sub-features added from ideation.md** that were missing from the shard skeleton.
-> **[M] sub-features marked `[Architecture-only]`** — not found in ideation.md, added during decomposition.
+> **[N] sub-features added from ideation domain file** that were missing from the shard skeleton.
+> **[M] sub-features marked `[Architecture-only]`** — not found in ideation domain file, added during decomposition.
 > 
 > "Does this feature list match your intent for this domain? Any sub-features to add, remove, or re-scope?"
 
