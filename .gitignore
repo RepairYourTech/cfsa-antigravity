@@ -1,6 +1,7 @@
 # Build artifacts
 template/
 node_modules/
+package-lock.json
 
 # Audit / comparison files (dev only)
 _audit/

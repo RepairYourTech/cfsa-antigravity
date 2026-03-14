@@ -10,13 +10,6 @@ A pipeline that turns a raw idea into exhaustively specified, test-driven, produ
 npx cfsa-antigravity init
 ```
 
-Or install globally:
-
-```bash
-npm install -g cfsa-antigravity
-cfsa-antigravity init
-```
-
 This installs the `.agent/` folder, `docs/` structure, and agent config files into your project.
 
 ## CLI
@@ -52,6 +45,10 @@ The pipeline tells you what to run next at every step. You never have to guess.
 4. **Progressive decision locking** — each stage locks decisions for downstream
 5. **TDD as the implementation contract** — Red → Green → Refactor, every slice
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up, make changes, and submit PRs.
+
 ## License
 
-MIT
+[MIT](LICENSE)

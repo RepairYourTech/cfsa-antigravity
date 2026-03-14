@@ -2,6 +2,11 @@
     "name": "cfsa-antigravity",
     "version": "1.0.1",
     "description": "CFSA Pipeline — Constraint-First Specification Architecture for AI agents. Production-grade from line one.",
+    "scripts": {
+        "changeset": "changeset",
+        "version": "changeset version",
+        "build": "./scripts/build-template.sh"
+    },
     "bin": {
         "cfsa-antigravity": "./bin/cli.mjs"
     },
@@ -30,5 +35,9 @@
     "homepage": "https://github.com/RepairYourTech/cfsa-antigravity#readme",
     "engines": {
         "node": ">=18.0.0"
+    },
+    "devDependencies": {
+        "@changesets/changelog-github": "^0.6.0",
+        "@changesets/cli": "^2.30.0"
     }
 }
