@@ -39,17 +39,11 @@ This is an optimization, not a requirement. Sequential validation is always corr
 
 ## 1. Run test suite
 
-Read .agent/skills/{{E2E_TESTING_SKILL}}/SKILL.md and follow its E2E test conventions.
-
-Run `{{TEST_COMMAND}}`.
-
-All tests must pass. Zero tolerance for failing tests.
+Run the Test Cmd from `.agent/instructions/commands.md`. All tests must pass. Zero tolerance.
 
 ## 2. Check coverage
 
-Read .agent/skills/{{UNIT_TESTING_SKILL}}/SKILL.md and follow its test writing conventions.
-
-Run `{{TEST_COVERAGE_COMMAND}}`.
+Run the Test Coverage Cmd from `.agent/instructions/commands.md`.
 
 Read `docs/plans/ENGINEERING-STANDARDS.md` and use the coverage thresholds defined in the "Test Coverage" section. If the file doesn't exist or thresholds aren't defined, fall back to these defaults:
 - Statements: 80%
@@ -59,29 +53,37 @@ Read `docs/plans/ENGINEERING-STANDARDS.md` and use the coverage thresholds defin
 
 Critical paths are defined as: auth flows, payment processing, data mutations, and permission/authorization checks.
 
+## 2.5. Mutation testing (critical paths)
+
+**Optional but recommended.** If the project's test tooling supports mutation testing (e.g., Stryker for JS/TS, mutmut for Python, cargo-mutants for Rust):
+
+1. Run the mutation testing tool against critical path modules only (auth, payments, data mutations, permission checks)
+2. **Required**: Mutation score ≥ 70% on critical paths — if below, the tests are passing but not actually catching bugs
+3. **Recommended**: Mutation score ≥ 50% on non-critical paths — log as a finding but don't block
+
+If mutation testing is not available in the project's tooling, skip and note in the validation report that mutation testing was not run.
+
 ## 3. Lint
 
-Run `{{LINT_COMMAND}}`.
+Run the Lint Cmd from the surface stack map.
 
 Zero lint errors. Warnings should be reviewed and addressed.
 
 ## 4. Type check
 
-Run `{{TYPE_CHECK_COMMAND}}`.
+Run the Type Check Cmd from the surface stack map.
 
 Zero type errors. Strict mode must be enabled.
 
 ## 5. Build
 
-Run `{{BUILD_COMMAND}}`.
+Run the Build Cmd from the surface stack map.
 
 Build must succeed with no errors.
 
 ---
 
 ## 5.5. CI/CD pipeline verification
-
-Read .agent/skills/{{CI_CD_SKILL}}/SKILL.md and follow its pipeline configuration conventions.
 
 Verify the CI/CD pipeline is green for this phase's changes:
 
@@ -97,9 +99,7 @@ Verify the CI/CD pipeline is green for this phase's changes:
 
 ## 5.6. Staging deployment gate
 
-Read .agent/skills/{{HOSTING_SKILL}}/SKILL.md and follow its deployment conventions.
-
-1. Deploy to staging using the deployment skill (`.agent/skills/deployment-procedures/SKILL.md`)
+1. Deploy to staging using `.agent/skills/deployment-procedures/SKILL.md`
 2. Verify deployment succeeded (no rollback triggered, no error logs in the deployment output)
 3. Run smoke tests against the staging environment:
    - Health check endpoint returns 200
@@ -114,9 +114,7 @@ Read .agent/skills/{{HOSTING_SKILL}}/SKILL.md and follow its deployment conventi
 
 ## 5.7. Migration verification
 
-Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema conventions.
-
-1. Run the migration status command (e.g., `prisma migrate status`, `drizzle-kit status`, or equivalent for your ORM)
+1. Run the migration status command (e.g., `prisma migrate status`, `drizzle-kit status`, or equivalent)
 2. Verify there are no pending migrations and no failed migrations
 3. Verify the CI/CD pipeline ran migrations successfully as part of this phase's deployment
 4. Check that rollback scripts exist for each migration in this phase
@@ -134,22 +132,21 @@ Read `.agent/skills/prd-templates/references/spec-coverage-sweep.md` and follow 
 
 ## 6. Accessibility audit (if UI changes)
 
-Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md and follow its methodology.
-Audit all new UI components in this phase for WCAG 2.1 AA compliance.
+Audit all new UI components in this phase for WCAG 2.1 AA compliance using the Accessibility skill(s) from the cross-cutting section.
 
-## 7. Performance check (if web surface exists)
+## 7. Performance check
 
-Check if the `web-performance-optimization` skill is installed (look for `.agent/skills/web-performance-optimization/SKILL.md`).
+Check if the `performance-optimization` skill is installed (look for `.agent/skills/performance-optimization/SKILL.md`).
 
 **If installed**:
-1. Read `.agent/skills/web-performance-optimization/SKILL.md`
-2. Run the skill's audit protocol against the phase's changed pages/routes
-3. Compare results to the targets in `docs/plans/ENGINEERING-STANDARDS.md` (LCP, FID, CLS, bundle size)
+1. Read `.agent/skills/performance-optimization/SKILL.md`
+2. Run the skill's audit protocol against the phase's changed pages/routes/endpoints
+3. Compare results to the targets in `docs/plans/ENGINEERING-STANDARDS.md` (response time budgets, bundle sizes, memory limits, or other surface-appropriate metrics)
 4. Report any metrics that exceed the defined thresholds
 
 **If not installed**:
-- Note: "No web performance skill installed. Skipping automated performance audit."
-- Manually verify that no obviously expensive operations were added (large synchronous imports, unoptimized images, missing lazy loading)
+- Note: "No performance optimization skill installed. Skipping automated performance audit."
+- Manually verify that no obviously expensive operations were added (large synchronous imports, unoptimized assets, missing lazy loading, N+1 queries, unbounded loops)
 - If performance is critical for this project, recommend installing the skill via `find-skills`
 
 ## 8. Security review
@@ -158,7 +155,7 @@ Read .agent/skills/adversarial-review/SKILL.md and follow its structured methodo
 
 Read .agent/skills/security-scanning-security-hardening/SKILL.md and run its full defense-in-depth audit protocol against the phase's changes (new endpoints, new data flows, new auth checks). Report findings with severity levels. Block the phase if any Critical or High severity issues are found.
 
-**Supplemental security checks (conditional)**: After the core audit completes, read `{{SECURITY_SKILLS}}` (comma-separated list of security skill directory names). For each skill directory name in the list, read `.agent/skills/[skill]/SKILL.md` and run its audit protocol as a supplement to the core audit.
+**Supplemental security checks (conditional)**: After the core audit completes, read the Security skill(s) from the cross-cutting section of the surface stack map. For each listed skill directory name, read `.agent/skills/[skill]/SKILL.md` and run its audit protocol as a supplement to the core audit.
 
 Report any additional findings from supplemental audits with the same severity classification.
 

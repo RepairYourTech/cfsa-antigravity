@@ -15,14 +15,16 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 ├── instructions/    # Core directives (the "brainstem")
 ├── progress/        # State and memory (the "hippocampus")
 ├── rules/           # Non-negotiable constraints (the "laws")
-├── skills/          # Reusable capabilities (the "tools")
+├── skill-library/   # Installable skill packages (the "toolbox")
+├── skills/          # Active capabilities (the "tools")
 └── workflows/       # Structured processes (the "playbooks")
 ```
 
 ### Core Components
 
-*   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, etc.) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
+*   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, `commands.md`) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
 *   **Rules:** Preemptively loaded constraints that apply to *every* task. Includes security best practices (`security-first.md`), TDD mandates (`tdd-contract-first.md`), and vertical-slice enforcement (`vertical-slices.md`).
+*   **Skill Library:** (`.agent/skill-library/`) Installable skill packages organized by category (e.g., `stack/databases/`, `stack/frontend-frameworks/`). Skills are provisioned from here into `.agent/skills/` by the bootstrap system when tech decisions are confirmed. Contains `MANIFEST.md` with the full taxonomy.
 *   **Skills:** Modular capabilities (e.g., `technical-writer`, `brainstorming`). Agents load these explicitly when a task requires them, preventing context bloat.
 *   **Workflows:** Step-by-step markdown checklists invoked via `/slash-commands` (e.g., `/create-prd`, `/implement-slice`). They chain skills together to achieve complex, multi-stage goals.
 
@@ -136,7 +138,7 @@ This directory acts as the agent's long-term and working memory.
 
 ### Cross-references
 
-- **Dated File Convention** — See below in this section (Section 2) — governs which artifact paths use glob patterns vs. hardcoded names.
+- **Dated File Convention** — See below in this section (Section 3) — governs which artifact paths use glob patterns vs. hardcoded names.
 - **Placeholder Verification Gate Protocol** — See Section 4.5 — governs the Step 0 guard that prevents workflows from reading `{{PLACEHOLDER}}`-dependent skills before bootstrap has run.
 - **Kit Maintenance Checklist** — See Section 6 — governs what must be updated when new workflows or skills are added.
 - **Surface Model** — `.agent/skills/prd-templates/references/surface-model.md` — The authoritative reference for surface types (web/mobile/cli/etc.) and implementation layers, and how the two models relate.
@@ -183,6 +185,29 @@ Workflow files declare skills in two places with different semantics:
 
 **Leaf workflows (shards)** should have body reads that match their frontmatter — if a skill is listed in a shard's frontmatter, the shard body should contain a corresponding `Read` instruction.
 
+### Shared References (`prd-templates/references/`)
+
+The `prd-templates` skill contains a `references/` directory with 23 shared reference files that are consumed by multiple workflows. These references eliminate content duplication by centralizing:
+
+| Reference Category | Examples | Used By |
+|---|---|---|
+| **Document templates** | `architecture-design-template.md`, `be-spec-template.md`, `fe-spec-template.md` | Spec and PRD writing workflows |
+| **Shared policies** | `tdd-testing-policy.md`, `slice-completion-gates.md` | Implementation and validation workflows |
+| **Classification procedures** | `fe-classification-procedures.md`, `placeholder-guard-template.md` | Classify shards of spec workflows |
+| **Design system** | `design-system-decisions.md`, `design-system-prerequisite-check.md` | FE spec and PRD workflows |
+| **Cross-cutting protocols** | `skill-loading-protocol.md`, `spec-coverage-sweep.md`, `surface-model.md` | 15+ workflows |
+
+When a workflow needs a policy, template, or procedure, it references the shared file rather than inlining the content. This keeps workflows focused on orchestration logic and keeps shared policies maintainable in one place.
+
+### Skill Loading Protocol
+
+Workflows that need stack-specific skills (Languages, Databases, FE Frameworks, etc.) reference `.agent/skills/prd-templates/references/skill-loading-protocol.md` instead of repeating the loading instructions inline. The protocol centralizes:
+
+- How to read the surface stack map in `tech-stack.md`
+- Which skill categories to load per workflow
+- The missing-skill fallback procedure
+- Surface stack map verification before loading
+
 ---
 
 ## 4.5. Bootstrap System
@@ -224,10 +249,11 @@ Two distinct gate types enforce placeholder readiness at different pipeline stag
 
 | Gate type | Where it runs | When | Purpose |
 |---|---|---|---|
-| **Spec-phase gate** | Step 0 of specification workflows (`create-prd-architecture`, `write-architecture-spec-design`, `write-fe-spec-classify`) | Before any skill reads | Guard spec authoring from unfilled stack placeholders |
-| **Implementation-phase gate** | `/implement-slice-setup` Step -1 | Before any code is written | Guard code generation from broken agent context across all seven instruction files |
+| **Spec-phase gate** | Step 0 of specification workflows (`write-architecture-spec-design`, `write-be-spec-classify`, `write-fe-spec-classify`) | Before any skill reads | Guard spec authoring from unfilled stack placeholders |
+| **Planning-phase gate** | `/plan-phase-write` | Before slice planning | Guard phase planning from unfilled CI/CD and Hosting skill placeholders |
+| **Implementation-phase gate** | `/implement-slice-setup` Step -1 | Before any code is written | Guard code generation from broken agent context across all five instruction files |
 
-Both gates emit a **four-part hard stop message** per unfilled placeholder:
+All three gates emit a **four-part hard stop message** per unfilled placeholder:
 
 1. **Which exact `{{PLACEHOLDER}}` is unfilled** — the literal placeholder name
 2. **Which pipeline stage fills it** — the `/create-prd-stack` decision that triggers bootstrap
@@ -242,7 +268,7 @@ For detailed per-workflow placeholder mappings and recovery commands, see `.agen
 
 ### Implementation-Phase Placeholder Gate
 
-Before any implementation begins, `/implement-slice-setup` (Step -1) scans all seven instruction files for unfilled `{{` patterns. If any are found, implementation stops with a specific remediation path per file. This gate is the last line of defense against broken agent context reaching the implementation phase.
+Before any implementation begins, `/implement-slice-setup` (Step -1) scans all five instruction files for unfilled `{{` patterns. If any are found, implementation stops with a specific remediation path per file. This gate is the last line of defense against broken agent context reaching the implementation phase.
 
 ---
 
@@ -252,7 +278,7 @@ Before any implementation begins, `/implement-slice-setup` (Step -1) scans all s
 
 The defining architectural pattern of the code produced by this kit.
 
-1.  **Contract (Zod):** Define the schema first.
+1.  **Contract ({{CONTRACT_LIBRARY}}):** Define the schema first.
 2.  **Tests (Failing):** Write tests that assert against the contract.
 3.  **Implementation:** Write the code to make the tests pass.
 

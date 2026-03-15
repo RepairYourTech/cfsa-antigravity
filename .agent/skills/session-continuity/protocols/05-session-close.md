@@ -26,7 +26,7 @@
    - [ ] Phase 2, Slice 4 — Rate limiting (blocked on Redis config)
 
    ## Patterns Learned
-   - PAT-007: Zod coercion for URL params
+   - PAT-007: Schema coercion for URL params
 
    ## Next Session
    - Resolve BLK-003 (Redis config)

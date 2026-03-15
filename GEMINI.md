@@ -81,9 +81,9 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |
-| 9.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
+| 7.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
-| 11 | `/evolve-contract` | Changed Zod schema | Safe schema migration | Maintenance |
+| 11 | `/evolve-contract` | Changed `{{CONTRACT_LIBRARY}}` schema | Safe schema migration | Maintenance |
 
 
 > **Note**: Rows marked with ↳ are independently-invocable sub-workflows (shards)
@@ -176,4 +176,4 @@ graph TD
 
 ### Mandatory Validation
 
-**CRITICAL:** Run `{{VALIDATION_COMMAND}}` after **EVERY** code change. Do not finish a task until all pass.
+**CRITICAL:** Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.

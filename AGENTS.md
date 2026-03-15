@@ -173,4 +173,4 @@ graph TD
 
 ### Mandatory Validation
 
-**CRITICAL:** Run `{{VALIDATION_COMMAND}}` after **EVERY** code change. Do not finish a task until all pass.
+**CRITICAL:** Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.

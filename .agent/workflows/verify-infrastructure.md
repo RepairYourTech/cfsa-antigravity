@@ -1,7 +1,7 @@
 ---
 description: Verify operational infrastructure after the infrastructure or auth slice — CI/CD green, staging live, migrations clean, auth working
 pipeline:
-  position: 9.5
+  position: 7.5
   stage: verification
   predecessors: [implement-slice]
   successors: [implement-slice, validate-phase]
@@ -19,15 +19,15 @@ Operational verification gate that runs after the `00-infrastructure` slice and 
 
 ## 0. Placeholder audit
 
-Scan the repository for any remaining `{{PLACEHOLDER}}` values:
+Scan the surface stack map (`.agent/instructions/tech-stack.md`) for completeness:
 
-```bash
-grep -rn '{{' --include='*.md' --include='*.ts' --include='*.json' . | grep -v node_modules | grep -v '.git/'
-```
+1. Verify all per-surface rows have filled values for required columns
+2. Verify cross-cutting categories (Auth, Security, CI/CD, Hosting) have filled values
+3. Verify `.agent/instructions/commands.md` has non-template values
 
-**If any `{{PLACEHOLDER}}` values are found** → **STOP.** Run `/bootstrap-agents` to fill them before proceeding.
+**If any map cells are empty** → **STOP.** Run `/bootstrap-agents` to populate them before proceeding.
 
-**Pass criteria**: Zero `{{PLACEHOLDER}}` values in the repository (excluding `node_modules` and `.git`).
+**Pass criteria**: Surface stack map fully populated for all project surfaces.
 
 > Update report: Mark check 0 as `✅` in the report file.
 
@@ -55,7 +55,7 @@ Read `.agent/skills/prd-templates/references/infrastructure-report-template.md` 
 Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 Read .agent/skills/systematic-debugging/SKILL.md and follow its methodology.
 
-Read .agent/skills/{{CI_CD_SKILL}}/SKILL.md and follow its pipeline configuration conventions.
+Load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 
 Locate the CI/CD configuration file (e.g., `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`).
 
@@ -98,7 +98,7 @@ Verify the CI/CD pipeline has run for the latest commit and ALL jobs are passing
 
 ## 4. Migration check
 
-Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema conventions.
+Load the ORMs skill(s) from the `shared` surface row per the skill loading protocol.
 
 1. Run the migration status command (e.g., `prisma migrate status`, `drizzle-kit status`, or equivalent)
 2. Verify no pending or failed migrations
@@ -115,7 +115,7 @@ Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema co
 
 ## 5. Staging deployment
 
-Read .agent/skills/{{HOSTING_SKILL}}/SKILL.md and follow its deployment conventions.
+Load the Hosting skill(s) from the cross-cutting section per the skill loading protocol.
 Read .agent/skills/deployment-procedures/SKILL.md and follow its pre-deployment checklist and verification protocol.
 
 1. Deploy to staging using the project's deployment process

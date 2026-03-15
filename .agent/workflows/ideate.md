@@ -4,8 +4,8 @@ pipeline:
   position: 1
   stage: vision
   predecessors: [] # entry point
-  successors: [create-prd]
-  skills: [brainstorming, idea-extraction, pipeline-rubrics, prd-templates, resolve-ambiguity, technical-writer]
+  successors: [audit-ambiguity, create-prd] # audit-ambiguity recommended before create-prd
+  skills: [brainstorming, idea-extraction, pipeline-rubrics, prd-templates, prompt-engineer, resolve-ambiguity, technical-writer]
   calls-bootstrap: false
 shards: [ideate-extract, ideate-discover, ideate-validate]
 ---

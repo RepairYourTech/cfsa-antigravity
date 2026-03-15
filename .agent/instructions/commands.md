@@ -2,43 +2,19 @@
 
 <!-- 
   THIS FILE IS A TEMPLATE.
-  The /bootstrap-agents workflow will fill in your project-specific commands.
-  Replace {{PLACEHOLDERS}} with your actual commands.
+  The /bootstrap-agents workflow fills per-surface command sections below.
+  For single-surface projects, one flat section is written.
+  For multi-surface projects, one section per surface.
 -->
 
-## Package Manager: {{PACKAGE_MANAGER}}
+<!-- Bootstrap writes command sections here. Each surface from the map gets its own section. -->
+<!-- Single-surface projects get a flat layout (no surface header). -->
 
-## Development
-
-```bash
-{{DEV_COMMAND}}                    # Start dev server
-```
-
-## Testing
-
-```bash
-{{TEST_COMMAND}}                   # Run all tests
-{{TEST_WATCH_COMMAND}}             # Watch mode
-{{TEST_COVERAGE_COMMAND}}          # With coverage report
-```
-
-## Linting & Formatting
-
-```bash
-{{LINT_COMMAND}}                   # Lint check
-{{LINT_FIX_COMMAND}}               # Lint with auto-fix
-{{FORMAT_COMMAND}}                 # Format check
-{{TYPE_CHECK_COMMAND}}             # TypeScript type validation
-```
-
-## Build & Preview
-
-```bash
-{{BUILD_COMMAND}}                  # Production build
-{{PREVIEW_COMMAND}}                # Preview production build locally
-```
+{{COMMAND_SECTIONS}}
 
 ## Validation (run after every code change)
+
+The validation command runs all checks for the primary surface. For multi-surface projects, run each surface's validation command.
 
 // turbo
 ```bash

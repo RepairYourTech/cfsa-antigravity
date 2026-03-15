@@ -1,5 +1,5 @@
 ---
-description: Safely evolve a Zod schema — identify all consumers, write migration tests, update across all four surfaces
+description: Safely evolve a {{CONTRACT_LIBRARY}} schema — identify all consumers, write migration tests, update across all four surfaces
 pipeline:
   position: utility
   stage: maintenance
@@ -11,7 +11,7 @@ pipeline:
 
 # Evolve Contract
 
-Safely modify a Zod schema without breaking existing consumers.
+Safely modify a {{CONTRACT_LIBRARY}} schema without breaking existing consumers.
 
 **Input**: The contract to change and the desired modification
 **Output**: Updated contract, migration tests, and all consumers updated
@@ -44,9 +44,9 @@ Read these skills for safe schema migration:
 
 ## 1. Identify the contract
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
+Determine which surface this contract belongs to (from the file path or calling context). Load the Languages skill(s) from that surface's row per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 
-Determine which Zod schema needs to change and what the change is:
+Determine which {{CONTRACT_LIBRARY}} schema needs to change and what the change is:
 - **Additive** (new optional field) — Low risk
 - **Narrowing** (tighter validation) — Medium risk
 - **Breaking** (rename, remove, type change) — High risk
@@ -77,32 +77,32 @@ If a new API version is needed, document the versioning approach (URL prefix, he
 
 Read .agent/skills/tdd-workflow/SKILL.md and follow its Red→Green→Refactor cycle for contract evolution.
 
-Read .agent/skills/{{UNIT_TESTING_SKILL}}/SKILL.md and follow its test writing conventions.
+Load the Unit Tests skill(s) from this contract's surface row per the skill loading protocol.
 
 Before changing anything, write tests that validate:
 - Existing data still passes the new schema (backward compatibility)
 - New data shape is accepted
 - Invalid data is rejected
 
-Run `{{TEST_COMMAND}}` — tests should FAIL until the schema is updated.
+Run the Test Cmd from this contract's surface row in the surface stack map (see `.agent/instructions/tech-stack.md`) — tests should FAIL until the schema is updated.
 
 ## 4. Update the contract
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
+Load the Languages skill(s) from this contract's surface row per the skill loading protocol.
 
-Modify the Zod schema. For breaking changes:
+Modify the {{CONTRACT_LIBRARY}} schema. For breaking changes:
 - Consider versioning (v1 → v2)
 - Add runtime migration helpers if needed
 
 ## 4.5. New dependency check
 
-If the contract change introduces a dependency not currently in the skill set — for example, a new Zod plugin, a Pydantic extension, a binary serialization library, or a new validation pattern — read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents NEW_DEPENDENCY=[package]` before updating consumers in Step 5.
+If the contract change introduces a dependency not currently in the skill set — for example, a new validation library plugin, a schema extension, a binary serialization library, or a new validation pattern — read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents NEW_DEPENDENCY=[package]` before updating consumers in Step 5.
 
 Confirm the matching skill is installed (or no new dependency was introduced) before proceeding to Step 5.
 
 ## 5. Update all consumers
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
+Load the Languages skill(s) from this contract's surface row per the skill loading protocol.
 
 For each consumer found in Step 2:
 - Update the code to use the new schema shape
@@ -110,7 +110,7 @@ For each consumer found in Step 2:
 
 ## 6. Validate
 
-Run `{{VALIDATION_COMMAND}}` (see `.agent/instructions/commands.md` for the configured validation command).
+Run the Validation Cmd from this contract's surface row in the surface stack map (see `.agent/instructions/tech-stack.md` and `.agent/instructions/commands.md`).
 
 All must pass.
 

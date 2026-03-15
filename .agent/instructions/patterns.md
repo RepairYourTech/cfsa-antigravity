@@ -9,9 +9,9 @@
 ## TypeScript → skills: `clean-code`, `typescript-advanced-patterns`
 - **Strict mode** everywhere — `strict: true` in tsconfig
 - **Explicit types** — No `any`, no implicit returns
-- **Zod validation** — All API inputs validated with Zod schemas
+- **{{CONTRACT_LIBRARY}} validation** — All API inputs validated with {{CONTRACT_LIBRARY}} schemas
 - **Self-documenting** — Clear naming over comments
-- **Zod inference** — Derive TypeScript types from Zod schemas with `z.infer<typeof schema>`
+- **{{CONTRACT_LIBRARY}} inference** — Derive types from {{CONTRACT_LIBRARY}} schemas (e.g., `z.infer<typeof schema>` for Zod, type inference for Pydantic)
 
 ## File Organization → skill: `clean-code`
 - **File size limits** — Per-type limits (enforced by extensibility rule): 200 lines for components (.tsx), 300 for utilities (.ts), 150 for schemas (.schema.ts), 400 for tests (.test.ts), 100 for config files
@@ -24,7 +24,7 @@
 > ⚠️ **Framework component patterns not yet configured.** Run /bootstrap-agents with FRAMEWORK_PATTERNS to fill this section. Until then, follow the framework's official documentation for component conventions and apply the naming and file organisation rules above.
 
 ## API & Data → skill: `rest-api-design`
-- **Input validation** — Zod schemas on every endpoint
+- **Input validation** — {{CONTRACT_LIBRARY}} schemas on every endpoint
 - **Error format** — Consistent: `{ success: boolean, data?: T, error?: { code, message } }`
 - **No magic strings** — Constants and enums for repeated values
 - **Rate limiting** — On all public-facing endpoints

@@ -18,8 +18,8 @@ For each slice in the phase plan (`docs/plans/phases/phase-N.md`):
 
 4. Identify the BE spec section(s) for each endpoint in this slice
 5. For each endpoint:
-   - Verify every Zod-validated field in the BE spec has a corresponding test
-   - Verify every error code defined in the BE spec has a corresponding test
+   - Verify every {{CONTRACT_LIBRARY}}-validated field in the BE spec has a corresponding test
+   - Verify every error code defined in the BE spec has a corresponding test that asserts the **full error response shape** (status + error code + message), not just the HTTP status
    - Verify every auth rule (role, ownership check) defined in the BE spec has a corresponding permission test
 
 ### IA Shard Coverage
@@ -33,7 +33,7 @@ For each slice in the phase plan (`docs/plans/phases/phase-N.md`):
 
 If any flow, field, error code, auth rule, IA acceptance criterion, or accessibility requirement has no corresponding test:
 
-> ❌ STOP — Do not mark this phase as complete. List the uncovered items. Either write the missing tests and re-run `{{TEST_COMMAND}}`, or if the item was genuinely deferred (valid boundary stub + tracking issue), document the deferral explicitly in the phase validation report.
+> ❌ STOP — Do not mark this phase as complete. List the uncovered items. Either write the missing tests and re-run the Test Cmd from `.agent/instructions/commands.md`, or if the item was genuinely deferred (valid boundary stub + tracking issue), document the deferral explicitly in the phase validation report.
 
 ## Pass Criteria
 

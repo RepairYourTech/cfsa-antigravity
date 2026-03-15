@@ -1,359 +1,133 @@
 ---
 name: database-schema-design
-description: Design database schemas with normalization, relationships, and constraints. Use when creating new database schemas, designing tables, or planning data models for PostgreSQL and MySQL.
+description: Design database schemas with normalization, relationships, and constraints. Use when creating new database schemas, designing tables, or planning data models for any database paradigm.
 ---
 
 # Database Schema Design
 
 ## Overview
 
-Design scalable, normalized database schemas with proper relationships, constraints, and data types. Includes normalization techniques, relationship patterns, and constraint strategies.
+Design scalable, well-structured database schemas with proper relationships, constraints, and data types. This skill covers universal data modeling principles. For paradigm-specific patterns, see references.
 
 ## When to Use
 
 - New database schema design
 - Data model planning
-- Table structure definition
-- Relationship design (1:1, 1:N, N:N)
-- Normalization analysis
-- Constraint and trigger planning
+- Relationship design (1:1, 1:N, N:N, graph edges)
+- Normalization or denormalization analysis
+- Constraint and validation planning
 - Performance optimization at schema level
+- Cross-store entity consistency
 
-## Normalization Strategy
-
-### First Normal Form (1NF)
-
-**PostgreSQL - Eliminate Repeating Groups:**
-
-```sql
--- NOT 1NF: repeating group in single column
-CREATE TABLE orders_bad (
-  id UUID PRIMARY KEY,
-  customer_name VARCHAR(255),
-  product_ids VARCHAR(255)  -- "1,2,3" - repeating group
-);
-
--- 1NF: separate table for repeating data
-CREATE TABLE orders (
-  id UUID PRIMARY KEY,
-  customer_name VARCHAR(255),
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE order_items (
-  id UUID PRIMARY KEY,
-  order_id UUID NOT NULL,
-  product_id UUID NOT NULL,
-  quantity INTEGER NOT NULL,
-  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
-);
-```
-
-### Second Normal Form (2NF)
-
-**PostgreSQL - Remove Partial Dependencies:**
-
-```sql
--- NOT 2NF: non-key attribute depends on part of composite key
-CREATE TABLE enrollment_bad (
-  student_id UUID,
-  course_id UUID,
-  professor_name VARCHAR(255),  -- depends on course_id only
-  PRIMARY KEY (student_id, course_id)
-);
-
--- 2NF: separate tables
-CREATE TABLE enrollments (
-  id UUID PRIMARY KEY,
-  student_id UUID NOT NULL,
-  course_id UUID NOT NULL,
-  FOREIGN KEY (student_id) REFERENCES students(id),
-  FOREIGN KEY (course_id) REFERENCES courses(id),
-  UNIQUE(student_id, course_id)
-);
-
-CREATE TABLE courses (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255),
-  professor_id UUID NOT NULL,
-  FOREIGN KEY (professor_id) REFERENCES professors(id)
-);
-```
-
-### Third Normal Form (3NF)
-
-**PostgreSQL - Remove Transitive Dependencies:**
-
-```sql
--- NOT 3NF: transitive dependency (customer_city depends on customer_state)
-CREATE TABLE orders_bad (
-  id UUID PRIMARY KEY,
-  customer_city VARCHAR(100),
-  customer_state VARCHAR(50),
-  state_tax_rate DECIMAL(5,3)  -- depends on customer_state
-);
-
--- 3NF: separate tables
-CREATE TABLE states (
-  id UUID PRIMARY KEY,
-  code VARCHAR(2) UNIQUE,
-  name VARCHAR(100),
-  tax_rate DECIMAL(5,3)
-);
-
-CREATE TABLE orders (
-  id UUID PRIMARY KEY,
-  customer_city VARCHAR(100),
-  state_id UUID NOT NULL,
-  FOREIGN KEY (state_id) REFERENCES states(id)
-);
-```
-
-## Table Design Patterns
-
-### Entity-Relationship Patterns
-
-**PostgreSQL - One-to-Many:**
-
-```sql
--- One user has many orders
-CREATE TABLE users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email VARCHAR(255) UNIQUE NOT NULL,
-  name VARCHAR(255) NOT NULL,
-  created_at TIMESTAMP DEFAULT NOW()
-);
-
-CREATE TABLE orders (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL,
-  order_date TIMESTAMP DEFAULT NOW(),
-  total DECIMAL(10,2),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  INDEX idx_user_id (user_id)
-);
-```
-
-**PostgreSQL - One-to-One:**
-
-```sql
--- One user has one profile
-CREATE TABLE user_profiles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID UNIQUE NOT NULL,
-  bio TEXT,
-  avatar_url VARCHAR(500),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-```
-
-**PostgreSQL - Many-to-Many:**
-
-```sql
--- Students and courses (many-to-many)
-CREATE TABLE students (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255)
-);
-
-CREATE TABLE courses (
-  id UUID PRIMARY KEY,
-  title VARCHAR(255)
-);
-
--- Junction table
-CREATE TABLE course_enrollments (
-  id UUID PRIMARY KEY,
-  student_id UUID NOT NULL,
-  course_id UUID NOT NULL,
-  enrolled_at TIMESTAMP DEFAULT NOW(),
-  FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
-  FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
-  UNIQUE(student_id, course_id)
-);
-```
-
-## Constraint Strategy
-
-**PostgreSQL - Data Integrity:**
-
-```sql
--- NOT NULL constraints
-CREATE TABLE products (
-  id UUID PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  sku VARCHAR(100) NOT NULL,
-  price DECIMAL(10,2) NOT NULL
-);
-
--- UNIQUE constraints
-ALTER TABLE products
-ADD CONSTRAINT unique_sku UNIQUE(sku);
-
--- CHECK constraints
-ALTER TABLE products
-ADD CONSTRAINT price_positive CHECK (price > 0);
-
-ALTER TABLE orders
-ADD CONSTRAINT valid_status
-CHECK (status IN ('pending', 'processing', 'completed', 'cancelled'));
-
--- DEFAULT values
-CREATE TABLE audit_logs (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  table_name VARCHAR(100) NOT NULL,
-  operation VARCHAR(10) NOT NULL,
-  user_id UUID,
-  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
-## Data Type Selection
-
-**PostgreSQL - Optimal Data Types:**
-
-```sql
-CREATE TABLE users (
-  -- Identifiers
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-
-  -- Text fields
-  email VARCHAR(255),          -- Fixed length for emails
-  name TEXT,                   -- Unbounded text
-  bio TEXT,
-
-  -- Numeric data
-  age SMALLINT,                -- 0-32767
-  balance DECIMAL(15,2),       -- Financial data (precise)
-  rating NUMERIC(3,1),         -- Range 0.0-9.9
-
-  -- Boolean
-  is_active BOOLEAN DEFAULT true,
-  email_verified BOOLEAN,
-
-  -- Dates and Times
-  birth_date DATE,
-  last_login TIMESTAMP WITH TIME ZONE,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  -- JSON/Binary
-  metadata JSONB,
-  profile_image BYTEA,
-
-  -- Arrays (PostgreSQL specific)
-  tags TEXT[] DEFAULT ARRAY[]::TEXT[]
-);
-```
-
-**MySQL - Compatible Data Types:**
-
-```sql
-CREATE TABLE users (
-  id CHAR(36) PRIMARY KEY,       -- UUID as CHAR
-
-  email VARCHAR(255),
-  name VARCHAR(255),
-
-  age TINYINT UNSIGNED,
-  balance DECIMAL(15,2),
-
-  is_active BOOLEAN DEFAULT true,
-
-  birth_date DATE,
-  last_login TIMESTAMP,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-  metadata JSON,
-
-  KEY idx_email (email)
-);
-```
-
-## Schema Evolution
-
-**PostgreSQL - Backward Compatible Changes:**
-
-```sql
--- Add column with default
-ALTER TABLE users ADD COLUMN phone VARCHAR(20);
-
--- Add column for new feature
-ALTER TABLE orders
-ADD COLUMN notes TEXT DEFAULT '';
-
--- Add constraint on new column
-ALTER TABLE orders
-ADD CONSTRAINT check_notes CHECK (LENGTH(notes) <= 500);
-
--- Deprecate column safely
-ALTER TABLE users RENAME COLUMN old_field TO old_field_deprecated;
-```
-
-**MySQL - Schema Changes:**
-
-```sql
--- Add column with default
-ALTER TABLE users ADD COLUMN phone VARCHAR(20) DEFAULT '';
-
--- Add multiple columns
-ALTER TABLE orders
-ADD COLUMN notes TEXT DEFAULT '',
-ADD COLUMN internal_status VARCHAR(50);
-
--- Modify column
-ALTER TABLE users MODIFY COLUMN bio TEXT;
-```
-
-## Performance Considerations
-
-**PostgreSQL - Partitioning Large Tables:**
-
-```sql
--- Partition by date range for time-series data
-CREATE TABLE events (
-  id UUID PRIMARY KEY,
-  user_id UUID NOT NULL,
-  event_type VARCHAR(100),
-  created_at TIMESTAMP NOT NULL
-) PARTITION BY RANGE (DATE_TRUNC('month', created_at));
-
-CREATE TABLE events_2024_01 PARTITION OF events
-FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
-```
+## Paradigm-Specific References
+
+After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.agent/instructions/tech-stack.md`):
+
+| Paradigm | Reference | Example Stores |
+|----------|-----------|----------------|
+| Relational | `references/relational.md` | PostgreSQL, MySQL, SQLite |
+| Document | `references/document.md` | MongoDB, Firestore, CouchDB |
+| Graph | `references/graph.md` | SurrealDB, Neo4j, ArangoDB |
+| Key-Value | `references/key-value.md` | Redis, DynamoDB, Memcached |
+
+---
+
+## Universal Data Modeling Principles
+
+### 1. Entity Identification
+
+Start with the domain:
+1. **Identify nouns** — these become entities/tables/collections
+2. **Identify relationships** — how entities connect
+3. **Identify attributes** — what data each entity holds
+4. **Identify cardinality** — one-to-one, one-to-many, many-to-many
+
+### 2. Normalization vs Denormalization
+
+**Normalization** reduces data duplication at the cost of join complexity:
+- **1NF** — Eliminate repeating groups (no arrays/CSVs in a single field)
+- **2NF** — Remove partial dependencies (every non-key attribute depends on the WHOLE key)
+- **3NF** — Remove transitive dependencies (non-key attributes don't depend on each other)
+
+**Denormalization** trades storage for read performance:
+- Embed frequently co-read data together
+- Pre-compute aggregates for dashboards
+- Duplicate data intentionally (with consistency strategy)
+
+**Decision framework:**
+- Write-heavy, consistency-critical → normalize
+- Read-heavy, latency-sensitive → denormalize
+- Mixed → normalize core, denormalize read models
+
+### 3. Relationship Patterns
+
+| Pattern | Relational | Document | Graph |
+|---------|-----------|----------|-------|
+| **One-to-One** | Foreign key with UNIQUE | Embed subdocument | Edge with cardinality constraint |
+| **One-to-Many** | Foreign key on child | Embed array OR reference | Edge from parent to children |
+| **Many-to-Many** | Junction/join table | Array of references on both sides | Direct edges |
+| **Hierarchical** | Self-referencing FK | Nested documents | Recursive graph traversal |
+
+### 4. Access Pattern Design
+
+Schema design is driven by how data is **queried**, not just how it's structured:
+
+1. **List your read queries** — what does the UI need to display?
+2. **List your write queries** — what creates/updates data?
+3. **Design schema to serve the reads** — not the other way around
+4. **Index for query patterns** — not for every possible query
+
+### 5. Constraint Strategy
+
+Every schema must enforce:
+- **Required fields** — NOT NULL / required validators
+- **Uniqueness** — unique constraints on natural keys (email, SKU, slug)
+- **Referential integrity** — foreign keys, references, or application-level checks
+- **Domain constraints** — CHECK constraints, enums, value ranges
+- **Cascade behavior** — what happens when parent is deleted (CASCADE, SET NULL, RESTRICT)
+
+### 6. ID Strategy
+
+| Strategy | When to Use |
+|----------|-------------|
+| **UUID v4** | Default choice. No ordering, globally unique, no collision |
+| **UUID v7** | When you need time-sortable UUIDs (better index performance) |
+| **Auto-increment** | Simple cases, single-database, non-distributed |
+| **ULID** | Time-sortable, lexicographically sortable, URL-safe |
+| **Natural key** | When domain provides a unique identifier (ISBN, SSN) — use with caution |
+
+---
 
 ## Schema Design Checklist
 
-- Identify entities and relationships
-- Apply normalization rules (1NF, 2NF, 3NF)
-- Define primary keys for all tables
-- Create foreign keys for relationships
-- Add constraints for data integrity
-- Select appropriate data types
-- Plan indexes for common queries
-- Design for scalability (denormalization if needed)
-- Document table purposes and relationships
-- Plan for schema evolution
+- [ ] Identify entities and relationships
+- [ ] Choose ID strategy
+- [ ] Apply normalization rules (or consciously denormalize with rationale)
+- [ ] Define primary keys for all entities
+- [ ] Create foreign keys / references for relationships
+- [ ] Add constraints for data integrity
+- [ ] Select appropriate data types
+- [ ] Plan indexes for common queries
+- [ ] Design for scalability
+- [ ] Document entity purposes and relationships
+- [ ] Plan for schema evolution
 
 ## Common Pitfalls
 
 ❌ Don't skip normalization for convenience
-❌ Don't use VARCHAR(MAX) for all text fields
-❌ Don't forget to add foreign key constraints
-❌ Don't use natural keys as primary keys
-❌ Don't store calculated values in base tables
+❌ Don't use unbounded text types for all string fields
+❌ Don't forget referential integrity constraints
+❌ Don't use mutable natural keys as primary keys
+❌ Don't store computed values without a cache invalidation strategy
+❌ Don't design schema without knowing query patterns
 
-✅ DO use UUIDs or sequences for primary keys
-✅ DO normalize data appropriately
-✅ DO add CHECK constraints for data validity
-✅ DO create indexes on foreign keys
-✅ DO use TIMESTAMP for audit trails
+✅ DO use UUIDs or equivalent for primary keys
+✅ DO normalize data unless you have a measured performance reason not to
+✅ DO add validation constraints at the schema level
+✅ DO index foreign keys and common query fields
+✅ DO use timestamps for audit trails
 
-## Resources
-
-- [PostgreSQL Data Types](https://www.postgresql.org/docs/current/datatype.html)
-- [MySQL Data Types](https://dev.mysql.com/doc/refman/8.0/en/data-types.html)
-- [Database Normalization Guide](https://en.wikipedia.org/wiki/Database_normalization)
-- [Draw.io](https://draw.io/) - Schema diagram tool
+---
 
 ## Persistence Map Interview
 
@@ -392,7 +166,7 @@ For each confirmed store, fire bootstrap with its specific sub-key:
 
 - e.g., `DATABASE_PRIMARY=PostgreSQL`, `DATABASE_VECTOR=Qdrant`
 - One bootstrap call per sub-key.
-- Each confirmation appends to `{{DATABASE_SKILLS}}`.
+- Each confirmation adds a database skill to the Databases column of the relevant surface row in the surface stack map.
 
 ### Sub-step E — Write Persistence Map
 
@@ -401,6 +175,8 @@ After all stores are confirmed, write to `docs/plans/architecture-draft.md` as a
 Must include:
 - The feature-to-query table from Sub-step A
 - A mapping of each query type to its canonical store with rationale
+
+---
 
 ## Cross-Store Entity Consistency Protocol
 
@@ -422,7 +198,7 @@ For each cross-store entity, answer the following in order:
 
 ### Skill Instruction
 
-Read all skills in `{{DATABASE_SKILLS}}` for advice on each store's transaction semantics and consistency guarantees before completing this step.
+Read all database skills listed in the Databases column of the surface stack map (`.agent/instructions/tech-stack.md`) for advice on each store's transaction semantics and consistency guarantees before completing this step.
 
 ### Output
 

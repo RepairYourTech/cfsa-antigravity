@@ -25,7 +25,7 @@ trigger: always_on
 A feature slice is complete when:
 
 - [ ] Data layer: schema defined, permissions set, seed data exists
-- [ ] API layer: endpoints exist, validated with Zod, tested
+- [ ] API layer: endpoints exist, validated with {{CONTRACT_LIBRARY}}, tested
 - [ ] User-facing: component renders, handles loading/error/empty states
 - [ ] Admin: can create/read/update/delete the resource
 - [ ] Tests pass at all levels (contract, unit, integration, E2E)

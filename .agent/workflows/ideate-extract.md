@@ -54,8 +54,41 @@ uses and how the rest of the workflow behaves.
 **For verbal / no input (Interview mode):**
 1. Read `.agent/skills/idea-extraction/SKILL.md` and enter Interview mode
 2. Start with: "In one sentence, what problem does this solve and for whom?"
-3. From that sentence, identify the key nouns — these become initial domains
-4. Proceed to folder seeding (Step 1.5) then domain exploration in `/ideate-discover`
+3. **Immediately after**: Run Structural Classification (Step 1.3) — ask about audiences and surfaces before identifying domains
+4. From that sentence + classification, identify the key nouns — these become initial domains
+5. Proceed to folder seeding (Step 1.5) then domain exploration in `/ideate-discover`
+
+## 1.3. Structural Classification
+
+Read the **Structural Classification Protocol** in `.agent/skills/idea-extraction/SKILL.md`.
+
+This step determines the folder layout for all ideation output. It MUST run **before** any domain files are created (Step 1.5).
+
+**For rich/thin document input:**
+1. Scan the document for surface signals:
+   - Distinct platform names in section headings (e.g., "Consumer Web Platform", "Shop Software")
+   - Different tech stacks per surface (e.g., "Astro for web", "Tauri for desktop")
+   - Surface-exclusive features (e.g., "Board Viewer (desktop only)")
+2. If signals detected → classify as **multi-product**
+3. If no signals → classify as **single-surface**
+4. If ambiguous → ask the user the two classification questions before proceeding
+
+**For interview / verbal input:**
+1. After the opening problem statement, ask:
+   - "Who are the distinct user types or audiences for this?"
+   - "What platforms does this need to live on?" (web, mobile, desktop, API, CLI)
+2. Based on the answers, classify the project shape
+3. If the user's one-liner already specifies a single surface ("make me a website"), classify as **single-surface** without asking
+
+**Record the classification** in `ideation-index.md` under `## Structural Classification`:
+
+```markdown
+## Structural Classification
+
+- **Project Shape**: [single-surface | multi-surface-shared | multi-product]
+- **Surfaces**: [list of identified surfaces, e.g., "Web (Astro/React), Desktop (Rust/Tauri), Mobile (React Native)" — or "N/A" for single-surface]
+- **Classification Basis**: [how this was determined — "detected from document", "user interview", "inferred from one-liner"]
+```
 
 ## 1.4. Re-run check
 
@@ -72,7 +105,9 @@ Read `.agent/skills/prd-templates/references/ideation-index-template.md` and the
 
 Read `.agent/skills/technical-writer/SKILL.md` and follow its methodology.
 
-Create the `docs/plans/ideation/` folder structure:
+Read the **Structural Classification** from Step 1.3 and create the appropriate folder structure.
+
+**Single-surface layout** (project shape = `single-surface` or `multi-surface-shared`):
 
 ```
 docs/plans/ideation/
@@ -88,9 +123,31 @@ docs/plans/ideation/
     └── cross-cut-ledger.md
 ```
 
+**Multi-product layout** (project shape = `multi-product`):
+
+```
+docs/plans/ideation/
+├── ideation-index.md
+├── meta/
+│   ├── problem-statement.md
+│   ├── personas.md
+│   ├── competitive-landscape.md
+│   └── constraints.md
+├── surfaces/
+│   ├── {surface-1-name}/
+│   ├── {surface-2-name}/
+│   └── {surface-N-name}/
+├── domains/
+│   └── (shared/cross-cutting domain files)
+└── cross-cuts/
+    └── cross-cut-ledger.md
+```
+
+Create the surface folders based on the surfaces identified in Step 1.3.
+
 **Seeding behavior by input type:**
 
-- **Rich document**: Parse by domain → create one domain file per identified domain → seed each with relevant content from source. Preserve all detail. Add reference at top of index: `> Source: path/to/original.md`. Do not modify the original. Run the **Source → Domain Files fidelity check**: every major section of the source maps to a domain file — nothing dropped during parsing.
+- **Rich document**: Parse by domain → create one domain file per identified domain → seed each with relevant content from source. **For multi-product projects:** place each domain file in the correct surface folder or shared `domains/` folder based on the domain placement rules in the idea-extraction skill. Preserve all detail. Add reference at top of index: `> Source: path/to/original.md`. Do not modify the original. Run the **Source → Domain Files fidelity check**: every major section of the source maps to a domain file — nothing dropped during parsing.
 - **Chat transcript**: Run the noise filter (read full transcript, extract decisions/ideas/rejections, discard filler, present extracted signal to user for confirmation), then create domain files with the clean structured signal. Attribute decisions: `> Decided in conversation: [decision]`.
 - **Thin document**: Create domain files annotated with `[SURFACE]`, `[PARTIAL]`, or `[DEEP]` depth markers per sub-area.
 - **Verbal / one-liner**: Create domain files with scaffolding based on the initial description. Sub-areas are `[SURFACE]` placeholders.

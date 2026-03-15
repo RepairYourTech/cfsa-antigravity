@@ -52,7 +52,12 @@ Run this procedure when filling the `## Features` section of each shard skeleton
 
 ### Source
 
-Read `docs/plans/ideation/ideation-index.md` and locate the relevant domain file in `docs/plans/ideation/domains/` for each shard's domain.
+Read `docs/plans/ideation/ideation-index.md` — specifically the `## Structural Classification` and `## Domain Documents` sections.
+
+- **Single-surface projects**: Locate the relevant domain file in `docs/plans/ideation/domains/` for each shard's domain.
+- **Multi-product projects**: Use the path from the Domain Documents table in `ideation-index.md`. Domain files may be in `docs/plans/ideation/surfaces/{surface-name}/` (surface-exclusive) or `docs/plans/ideation/domains/` (shared).
+
+Match each shard to its ideation domain by name. If the ideation structure is `surfaces/`, the shard's decomposition surface (from `decompose-architecture`) tells you which surface subfolder to look in.
 
 ### Actor + Goal Format Rule
 
@@ -68,7 +73,7 @@ List sub-features as bullet points in the `## Features` section. Group by functi
 
 ### `[THIN — review with user]` Fallback Rule
 
-If a shard's domain has no corresponding file in `docs/plans/ideation/domains/` (the domain was introduced during architecture design, not ideation), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead.
+If a shard's domain has no corresponding ideation domain file (the domain was introduced during architecture design, not ideation — check the `ideation-index.md` Domain Documents table for both `domains/` and `surfaces/` paths), mark the skeleton with `[THIN — review with user]` at the top of `## Features` and seed from the architecture design description instead.
 
 At the validation step, the user must confirm whether to:
 - Keep the shard separate
@@ -77,12 +82,24 @@ At the validation step, the user must confirm whether to:
 
 ### Directory Example
 
-Seeded skeletons live in the `docs/plans/ia/` directory:
+Seeded skeletons live in the `docs/plans/ia/` directory (or per-surface directories for multi-product):
 
+**Single-surface:**
 ```
 docs/plans/ia/
 ├── 00-infrastructure.md
 ├── 01-user-accounts.md      ← ## Features seeded from ideation/domains/user-accounts.md
 ├── 02-content-library.md    ← ## Features seeded from ideation/domains/content-library.md
 ├── ...
+```
+
+**Multi-product:**
+```
+docs/plans/desktop/ia/
+├── 00-infrastructure.md
+├── 01-operations.md         ← ## Features seeded from ideation/surfaces/desktop/operations.md
+├── 02-inventory.md          ← ## Features seeded from ideation/surfaces/desktop/inventory.md
+
+docs/plans/shared/ia/
+├── 01-device-history.md     ← ## Features seeded from ideation/domains/device-history.md
 ```

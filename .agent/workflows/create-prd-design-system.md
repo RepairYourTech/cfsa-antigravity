@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-stack]
   successors: [create-prd-architecture]
-  skills: [brand-guidelines, design-direction, prd-templates, technical-writer]
+  skills: [brand-guidelines, design-anti-cliche, design-direction, prd-templates, technical-writer]
   calls-bootstrap: false
 ---
 

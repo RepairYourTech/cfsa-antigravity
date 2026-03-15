@@ -78,7 +78,7 @@ The dependency chain follows strict TDD: Red → Green → Verify.
 
 | Phase | Tag | What Happens | Depends On |
 |-------|-----|-------------|------------|
-| 1. Contract | (untagged) | Orchestrator writes Zod schemas | Nothing |
+| 1. Contract | (untagged) | Orchestrator writes {{CONTRACT_LIBRARY}} schemas | Nothing |
 | 2. QA-RED | `QA` | Write comprehensive failing tests from acceptance criteria | Contract `[x]` |
 | 3. BE + FE | `BE`, `FE` | Implement in parallel to make tests pass | QA-RED `[x]` |
 | 4. QA-GREEN | `QA` | Second pass — verify all tests pass, check for cheating, add integration/E2E | BE `[x]` + FE `[x]` |

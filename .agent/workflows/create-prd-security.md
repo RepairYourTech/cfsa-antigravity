@@ -11,7 +11,7 @@ pipeline:
   successors: [create-prd-compile]
   skills: [logging-best-practices, prd-templates, resolve-ambiguity, security-scanning-security-hardening]
   calls-bootstrap: true
-requires_placeholders: [SECURITY_SKILLS, AUTH_SKILL]
+requires_map_columns: [Security, Auth]
 ---
 
 // turbo-all
@@ -24,18 +24,18 @@ Define the security model with full compliance escalation, and document all inte
 
 ---
 
-## 0. Placeholder guard
+## 0. Map guard
 
-Before any skill reads, verify that the following placeholder values have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 6.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the following cross-cutting categories for filled values:
 
-| Placeholder | Filled by | Recovery | Why this matters |
+| Map Location | Category | Recovery | Why this matters |
 |---|---|---|---|
-| `{{SECURITY_SKILLS}}` | `/create-prd-stack` when security tooling is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed security framework, then run `/bootstrap-agents SECURITY=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Security model (Step 6) cannot produce stack-specific threat analysis without the security skill — the model will miss framework-specific attack vectors. |
-| `{{AUTH_SKILL}}` | `/create-prd-stack` when auth provider is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed auth provider, then run `/bootstrap-agents AUTH=<confirmed-provider>`. Otherwise run `/create-prd-stack` first. | Authentication design (Step 6.1) cannot produce correct auth flows without the auth skill — identity provider conventions and token handling will be generic. |
+| Cross-Cutting | Security | Run `/create-prd-stack` to confirm security framework, then bootstrap. | Security model (Step 6) needs stack-specific threat analysis patterns. |
+| Cross-Cutting | Auth | Run `/create-prd-stack` to confirm auth provider, then bootstrap. | Authentication design (Step 6.1) needs provider-specific auth flow patterns. |
 
-For the hard stop message format and recovery instructions, see `.agent/skills/prd-templates/references/placeholder-guard-template.md`.
+> **Timing fallback**: During `/create-prd`, the map may be partially populated. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
 
-Only proceed to Step 6 when both placeholders report no literal `{{` characters.
+If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
 ---
 
@@ -43,9 +43,7 @@ Only proceed to Step 6 when both placeholders report no literal `{{` characters.
 
 Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its defense-in-depth methodology.
 
-Using `{{AUTH_SKILL}}`:
-
-Read each skill listed in `{{SECURITY_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
+Load the Auth and Security skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 
 1. **Authentication** — How do users prove identity?
 2. **Authorization** — RBAC vs ABAC? Permission model?

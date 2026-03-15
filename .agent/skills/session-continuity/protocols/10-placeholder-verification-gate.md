@@ -1,104 +1,83 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+# Protocol 10: Surface Stack Map Verification Gate
 
-# Placeholder Verification Gate Protocol
+## Purpose
 
-## Overview
+Specification and implementation workflows must verify the surface stack map is populated **before** any skill reads. This prevents spec authoring from running with empty map cells, which would produce patterns incompatible with the chosen tech stack.
 
-Specification workflows that read `{{PLACEHOLDER}}`-dependent skill paths must verify those placeholders are filled **before** any skill reads. This prevents spec authoring from running with unfilled stack placeholders, which would produce patterns incompatible with the chosen tech stack.
+> **Note**: As of v3, workflows no longer use `{{PLACEHOLDER}}` values for skill paths. Instead, they read skill names from the surface stack map in `.agent/instructions/tech-stack.md`. This gate verifies map completeness.
 
-## When to Use
+## How to Apply
 
-Add a **Step 0 — Placeholder guard** to any specification workflow that reads `{{PLACEHOLDER}}` values as skill paths. The guard runs before all other steps, including re-run checks and prerequisite validations.
+Add a **Step 0 — Map guard** to any specification or implementation workflow that reads skills from the surface stack map. The guard runs before all other steps, including re-run checks and prerequisite validations.
 
-## Key Constraint
+## Guard Logic
 
-**No auto-refire of bootstrap.** The agent stops and tells the user exactly what to run. The guard does not attempt to call `/bootstrap-agents` itself — it emits a HARD STOP with the exact recovery command.
+### 1. Read the surface stack map
 
-## Four-Part Hard Stop Message Structure
+Read `.agent/instructions/tech-stack.md` and parse both tables:
+- **Per-Surface Skills** — One row per surface
+- **Cross-Cutting Skills** — Project-wide categories
 
-When any placeholder contains literal `{{` characters, emit this message for **each** unfilled placeholder:
+### 2. Determine required cells
 
-> ❌ **Bootstrap incomplete — cannot proceed.**
->
-> **Unfilled placeholder:** `{{PLACEHOLDER_NAME}}`
->
-> **Recovery:** If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed [tech decision] value, then run `/bootstrap-agents` with `KEY=<confirmed-value>`. If no architecture design document exists, run `/create-prd-stack` first to confirm tech stack decisions.
->
-> **Why this matters:** [specific step] cannot produce correct output without this skill — [concrete consequence of proceeding without it].
+Based on the workflow type, identify which columns/categories must have filled values:
 
----
+| Workflow Type | Required Per-Surface Columns | Required Cross-Cutting Categories |
+|---|---|---|
+| **IA spec** (`write-architecture-spec-*`) | Databases | Security, Surfaces |
+| **BE spec** (`write-be-spec-*`) | Languages, Databases, BE Frameworks, ORMs, Unit Tests | Auth |
+| **FE spec** (`write-fe-spec-*`) | Languages, FE Frameworks, FE Design, State Mgmt | Accessibility |
+| **Implementation** (`implement-slice-*`) | Languages, Unit Tests, E2E Tests + surface-specific | All |
+| **Validation** (`validate-phase`) | All | All |
+| **Architecture** (`create-prd-architecture`) | Databases, ORMs | Hosting |
+| **Security** (`create-prd-security`) | — | Security, Auth |
+| **Compile** (`create-prd-compile`) | Unit Tests, E2E Tests | CI/CD |
 
-## Per-Workflow Placeholder Mappings
+### 3. Check for empty cells
 
-### `create-prd-architecture`
+For each required cell, verify it contains at least one skill name (not `—`, not empty, not a `{{` literal).
 
-**Frontmatter:** `requires_placeholders: [HOSTING_SKILL, ORM_SKILL, DATABASE_SKILLS]`
+### 4. Hard stop on empty cells
 
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{HOSTING_SKILL}}` | `/create-prd-stack` when hosting provider is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed hosting provider, then run `/bootstrap-agents HOSTING=<confirmed-provider>`. Otherwise run `/create-prd-stack` first. | Data strategy and schema design steps (Steps 4 and 5) cannot run without the hosting skill — deployment topology decisions will lack provider-specific conventions. |
-| `{{ORM_SKILL}}` | `/create-prd-stack` when ORM is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed ORM, then run `/bootstrap-agents ORM=<confirmed-orm>`. Otherwise run `/create-prd-stack` first. | Migration strategy (Step 5.4) cannot run without the ORM skill — schema conventions and migration patterns will be generic instead of stack-specific. |
-| `{{DATABASE_SKILLS}}` | `/create-prd-stack` when database technology is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed database, then run `/bootstrap-agents DATABASE=<confirmed-db>`. Otherwise run `/create-prd-stack` first. | Data strategy (Step 5) cannot run without the database skill — schema design patterns will be incompatible with the chosen database. |
+When ANY required cell is empty, emit this message for **each** empty cell:
 
-### `write-architecture-spec-design`
+> **Empty map cell:** `{column}` for surface `{surface}`
+> **Filled by:** `/create-prd-stack` when the {component} is confirmed
+> **Recovery:** Run `/create-prd-stack` first to make tech stack decisions, then `/bootstrap-agents` to populate the map.
+> **Impact:** Without this skill, {downstream impact description}.
 
-**Frontmatter:** `requires_placeholders: [DATABASE_SKILLS, SECURITY_SKILLS]`
+Then emit:
 
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{DATABASE_SKILLS}}` | `/create-prd-stack` when database technology is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed database, then run `/bootstrap-agents DATABASE=<confirmed-db>`. Otherwise run `/create-prd-stack` first. | Data model design (Step 4) would produce schema patterns incompatible with the chosen database. |
-| `{{SECURITY_SKILLS}}` | `/create-prd-stack` when security tooling is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed security framework, then run `/bootstrap-agents SECURITY=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Edge case and attack surface analysis (Step 7) would run without the project's security skill, missing stack-specific threat vectors. |
+> ⛔ **HARD STOP** — {N} map cell(s) are empty. This workflow cannot proceed without populated stack data. See recovery steps above.
 
-### `write-fe-spec-classify`
+### 5. Timing fallback (create-prd context)
 
-**Frontmatter:** `requires_placeholders: [LANGUAGE_SKILL, FRONTEND_FRAMEWORK_SKILL, FRONTEND_DESIGN_SKILL, ACCESSIBILITY_SKILL, STATE_MANAGEMENT_SKILL]`
+During `/create-prd`, the map is being built incrementally. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), the workflow may proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
 
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{LANGUAGE_SKILL}}` | `/create-prd-stack` when the primary language is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed language, then run `/bootstrap-agents LANGUAGE=<confirmed-language>`. Otherwise run `/create-prd-stack` first. | FE spec components would be written without the correct language skill, producing patterns incompatible with the chosen language. |
-| `{{FRONTEND_FRAMEWORK_SKILL}}` | `/create-prd-stack` when the frontend framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed frontend framework, then run `/bootstrap-agents FRONTEND_FRAMEWORK=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | FE spec components would be written without the correct framework skill, producing patterns incompatible with the chosen framework. |
-| `{{FRONTEND_DESIGN_SKILL}}` | `/create-prd-stack` when the frontend design system is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed design system, then run `/bootstrap-agents FRONTEND_DESIGN=<confirmed-design>`. Otherwise run `/create-prd-stack` first. | FE spec components would be written without the correct design skill, producing visual patterns incompatible with the chosen design system. |
-| `{{ACCESSIBILITY_SKILL}}` | `/create-prd-stack` when accessibility tooling is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed accessibility tooling, then run `/bootstrap-agents ACCESSIBILITY=<confirmed-tooling>`. Otherwise run `/create-prd-stack` first. | FE spec components would lack stack-specific accessibility patterns and WCAG implementation guidance. |
-| `{{STATE_MANAGEMENT_SKILL}}` | `/create-prd-stack` when state management is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed state management library, then run `/bootstrap-agents STATE_MANAGEMENT=<confirmed-library>`. Otherwise run `/create-prd-stack` first. | FE spec components would be written without the correct state management conventions, producing patterns incompatible with the chosen state library. |
+This fallback **only** applies to workflows invoked within the `/create-prd` orchestrator. Standalone invocations must have the map populated.
 
----
+## Recovery Table
 
-## Reference Implementation
+| Empty Cell (Per-Surface) | Recovery Command |
+|---|---|
+| Languages | `/create-prd-stack` → confirm language |
+| Databases | `/create-prd-stack` → confirm database(s) |
+| BE Frameworks | `/create-prd-stack` → confirm backend framework |
+| FE Frameworks | `/create-prd-stack` → confirm frontend framework |
+| ORMs | `/create-prd-stack` → confirm ORM |
+| Unit Tests | `/create-prd-stack` → confirm unit testing framework |
+| E2E Tests | `/create-prd-stack` → confirm E2E testing framework |
+| FE Design | `/create-prd-stack` → confirm frontend design approach |
+| State Mgmt | `/create-prd-stack` → confirm state management library |
 
-`write-be-spec-classify.md` Step 2.5 is the canonical example of a correctly implemented placeholder guard. It follows the exact four-part message structure and demonstrates the scan-then-stop pattern.
+| Empty Cell (Cross-Cutting) | Recovery Command |
+|---|---|
+| Auth | `/create-prd-stack` → confirm auth provider |
+| Security | `/create-prd-stack` → confirm security framework |
+| CI/CD | `/create-prd-stack` → confirm CI/CD platform |
+| Hosting | `/create-prd-stack` → confirm hosting provider |
+| Accessibility | `/create-prd-stack` → confirm accessibility tooling |
 
----
+## Commands verification
 
-## Additional Per-Workflow Placeholder Mappings
-
-### `create-prd-security`
-
-**Frontmatter:** `requires_placeholders: [SECURITY_SKILLS, AUTH_SKILL]`
-
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{SECURITY_SKILLS}}` | `/create-prd-stack` when security tooling is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed security framework, then run `/bootstrap-agents SECURITY=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Security model (Step 6) cannot produce stack-specific threat analysis without the security skill — the model will miss framework-specific attack vectors. |
-| `{{AUTH_SKILL}}` | `/create-prd-stack` when auth provider is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed auth provider, then run `/bootstrap-agents AUTH=<confirmed-provider>`. Otherwise run `/create-prd-stack` first. | Authentication design (Step 6.1) cannot produce correct auth flows without the auth skill — identity provider conventions and token handling will be generic. |
-
-### `create-prd-compile`
-
-**Frontmatter:** `requires_placeholders: [UNIT_TESTING_SKILL, E2E_TESTING_SKILL, CI_CD_SKILL]`
-
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{UNIT_TESTING_SKILL}}` | `/create-prd-stack` when the unit testing framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed unit testing framework, then run `/bootstrap-agents UNIT_TESTING=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Development methodology (Step 8) cannot document correct test conventions without the unit testing skill — TDD patterns will be generic instead of framework-specific. |
-| `{{E2E_TESTING_SKILL}}` | `/create-prd-stack` when the E2E testing framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed E2E testing framework, then run `/bootstrap-agents E2E_TESTING=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Development methodology (Step 8) cannot document correct E2E test conventions without the E2E testing skill — integration test patterns will be generic. |
-| `{{CI_CD_SKILL}}` | `/create-prd-stack` when CI/CD platform is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed CI/CD platform, then run `/bootstrap-agents CI_CD=<confirmed-platform>`. Otherwise run `/create-prd-stack` first. | Phasing strategy (Step 9) cannot produce correct pipeline configuration without the CI/CD skill — deployment and quality gate patterns will lack platform-specific conventions. |
-
-### `write-be-spec-classify`
-
-**Frontmatter:** `requires_placeholders: [LANGUAGE_SKILL, DATABASE_SKILLS, AUTH_SKILL, BACKEND_FRAMEWORK_SKILL, ORM_SKILL, UNIT_TESTING_SKILL]`
-
-| Placeholder | Filled by | Recovery | Why this matters |
-|---|---|---|---|
-| `{{LANGUAGE_SKILL}}` | `/create-prd-stack` when the primary language is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed language, then run `/bootstrap-agents LANGUAGE=<confirmed-language>`. Otherwise run `/create-prd-stack` first. | BE spec code conventions would be written without the correct language skill, producing patterns incompatible with the chosen language. |
-| `{{DATABASE_SKILLS}}` | `/create-prd-stack` when database technology is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed database, then run `/bootstrap-agents DATABASE=<confirmed-db>`. Otherwise run `/create-prd-stack` first. | Schema design and query patterns would be incompatible with the chosen database. |
-| `{{AUTH_SKILL}}` | `/create-prd-stack` when auth provider is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed auth provider, then run `/bootstrap-agents AUTH=<confirmed-provider>`. Otherwise run `/create-prd-stack` first. | Authentication middleware and token handling would use generic patterns instead of provider-specific conventions. |
-| `{{BACKEND_FRAMEWORK_SKILL}}` | `/create-prd-stack` when the backend framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed backend framework, then run `/bootstrap-agents BACKEND_FRAMEWORK=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Route definitions, middleware patterns, and request handling would be framework-agnostic instead of following confirmed framework conventions. |
-| `{{ORM_SKILL}}` | `/create-prd-stack` when ORM is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed ORM, then run `/bootstrap-agents ORM=<confirmed-orm>`. Otherwise run `/create-prd-stack` first. | Migration patterns and schema conventions would be generic instead of ORM-specific. |
-| `{{UNIT_TESTING_SKILL}}` | `/create-prd-stack` when the unit testing framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed unit testing framework, then run `/bootstrap-agents UNIT_TESTING=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Test writing conventions would use generic patterns instead of framework-specific assertions and utilities. |
+Additionally verify that `.agent/instructions/commands.md` has non-template values. If the commands section still contains `{{COMMAND_SECTIONS}}`, run `/bootstrap-agents` to fill it.

@@ -30,6 +30,20 @@ This installs the `.agent/` folder, `docs/` structure, and agent config files in
 
 The pipeline tells you what to run next at every step. You never have to guess.
 
+## Keeping Up to Date
+
+The kit evolves independently of your project. To pull improvements into an existing project:
+
+```
+/sync-kit
+```
+
+This performs a **semantic merge** — it applies new workflows, skills, and rules from the upstream kit while preserving your project-specific values (tech stack, validation commands, filled placeholders). It will never overwrite your project decisions.
+
+- First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
+- Tracks sync state in `.agent/kit-sync.md` so it knows what changed since last update
+- Flags any structural migrations needed (e.g., ideation format changes)
+
 ## Documentation
 
 | Document | Contents |

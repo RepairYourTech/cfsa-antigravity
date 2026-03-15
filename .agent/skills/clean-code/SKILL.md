@@ -2,9 +2,6 @@
 name: clean-code
 description: "Applies battle-tested clean code principles to writing, reviewing, and refactoring code. Covers naming, functions, comments, error handling, class design, and the critical difference between clever code and clear code."
 version: 2.0.0
-source: self
-date_added: "2026-02-27"
-date_rewritten: "2026-03-14"
 ---
 
 # Clean Code
@@ -17,6 +14,17 @@ Code is read 10x more than it's written. Every naming choice, every function bou
 - Reviewing pull requests
 - Refactoring existing code
 - When code "works but feels wrong"
+
+## Stack-Specific References
+
+The principles below are language-agnostic. For idiomatic patterns and syntax, read the reference matching your surface's Languages column:
+
+| Language | Reference |
+|----------|-----------|
+| TypeScript / JavaScript | `references/typescript.md` |
+| Python | `references/python.md` |
+| Go | `references/go.md` |
+| Rust | `references/rust.md` |
 
 ## Core Principles
 
@@ -36,7 +44,7 @@ Names should reveal intent. If a name requires a comment to explain it, the name
 | `Utils` | `StringFormatter` | Util for what? |
 
 **Rules:**
-- Classes → nouns (`UserRepository`, `PaymentGateway`)
+- Classes/types → nouns (`UserRepository`, `PaymentGateway`)
 - Functions → verbs (`calculateTotal`, `sendNotification`)
 - Booleans → questions (`isActive`, `hasPermission`, `canEdit`)
 - Constants → screaming snake with context (`MAX_RETRY_ATTEMPTS`, not `MAX`)
@@ -48,46 +56,16 @@ A function that does one thing well is easy to name, test, and reuse. A function
 
 **The test:** Can you describe the function without using "and"? If not, split it.
 
-```typescript
-// ❌ Does three things
-function processOrder(order: Order): void {
-  // Validate
-  if (!order.items.length) throw new Error("Empty order");
-  if (!order.customer) throw new Error("No customer");
+```
+❌ processOrder(order)
+   — validates order
+   — calculates total with tax
+   — saves to database
+   — sends confirmation email
 
-  // Calculate
-  let total = 0;
-  for (const item of order.items) {
-    total += item.price * item.quantity;
-    if (item.taxable) total += item.price * 0.08;
-  }
-
-  // Save
-  db.orders.insert({ ...order, total, status: "pending" });
-  emailService.send(order.customer.email, "Order confirmed");
-}
-
-// ✅ Each function does one thing
-function validateOrder(order: Order): void {
-  if (!order.items.length) throw new InvalidOrderError("Empty order");
-  if (!order.customer) throw new InvalidOrderError("No customer");
-}
-
-function calculateOrderTotal(items: OrderItem[]): number {
-  return items.reduce((total, item) => {
-    const subtotal = item.price * item.quantity;
-    const tax = item.taxable ? item.price * TAX_RATE : 0;
-    return total + subtotal + tax;
-  }, 0);
-}
-
-function submitOrder(order: Order): OrderConfirmation {
-  validateOrder(order);
-  const total = calculateOrderTotal(order.items);
-  const saved = db.orders.insert({ ...order, total, status: "pending" });
-  emailService.send(order.customer.email, "Order confirmed");
-  return { orderId: saved.id, total };
-}
+✅ validateOrder(order)        → throws if invalid
+   calculateOrderTotal(items) → returns numeric total
+   submitOrder(order)         → orchestrates the above
 ```
 
 **Function size limits:**
@@ -100,111 +78,79 @@ function submitOrder(order: Order): OrderConfirmation {
 
 - **0-2 parameters**: ideal
 - **3 parameters**: acceptable with named/destructured args
-- **4+ parameters**: use an options object
+- **4+ parameters**: use an options object/struct/dataclass
 - **Boolean parameters**: almost always a code smell — split into two functions
 
-```typescript
-// ❌ Boolean flag parameter
-function createUser(name: string, isAdmin: boolean): User { ... }
+```
+❌ createUser(name, isAdmin)
+✅ createUser(name)  /  createAdmin(name)
 
-// ✅ Two clear functions
-function createUser(name: string): User { ... }
-function createAdmin(name: string): User { ... }
-
-// ❌ Too many positional args
-function sendEmail(to: string, from: string, subject: string, body: string, cc?: string): void { ... }
-
-// ✅ Options object
-interface SendEmailOptions {
-  to: string;
-  from: string;
-  subject: string;
-  body: string;
-  cc?: string;
-}
-function sendEmail(options: SendEmailOptions): void { ... }
+❌ sendEmail(to, from, subject, body, cc)
+✅ sendEmail(options)   ← options is a structured type
 ```
 
 ### 4. Comments: Why, Not What
 
 Good code doesn't need comments to explain WHAT it does. Comments should explain WHY — the non-obvious reasoning, business rules, or constraints.
 
-```typescript
-// ❌ Comment explains what (redundant)
-// Increment counter by one
-counter += 1;
+```
+❌ // Increment counter by one
+   counter += 1
 
-// ❌ Comment explains obvious logic
-// Check if user is admin
-if (user.role === "admin") { ... }
+❌ // Check if user is admin
+   if user.role == "admin"
 
-// ✅ Comment explains WHY
-// Stripe requires amount in cents, not dollars
-const amountInCents = Math.round(price * 100);
+✅ // Stripe requires amount in cents, not dollars
+   amountInCents = round(price * 100)
 
-// ✅ Comment explains business rule
-// FDA regulation 21 CFR Part 11 requires audit trail for all changes
-await auditLog.record(changeEvent);
+✅ // FDA regulation 21 CFR Part 11 requires audit trail
+   auditLog.record(changeEvent)
 
-// ✅ Comment warns about non-obvious consequence
-// WARNING: This query locks the orders table — avoid running during peak hours
-await db.execute(batchUpdateQuery);
+✅ // WARNING: This query locks the orders table — avoid during peak hours
+   db.execute(batchUpdateQuery)
 ```
 
 **Delete these comments immediately:**
 - `// TODO: fix this later` — fix it now or create a tracked issue
 - `// This is a hack` — then don't commit the hack
 - `// I don't know why this works` — figure it out before shipping
-- Commented-out code — delete it; git has your history
+- Commented-out code — delete it; version control has your history
 
 ### 5. Error Handling
 
 Errors are not edge cases — they're expected behavior. Handle them explicitly.
 
-```typescript
-// ❌ Swallowing errors
-try {
-  await saveOrder(order);
-} catch (e) {
-  console.log("error"); // What error? What happens to the order?
-}
+```
+❌ try { save(order) } catch { log("error") }
+   → What error? What happens to the order?
 
-// ❌ Generic catch-all
-try {
-  await processPayment(order);
-} catch (e) {
-  throw new Error("Something went wrong"); // Useless to the caller
-}
+❌ try { processPayment(order) } catch { throw Error("Something went wrong") }
+   → Useless to the caller
 
-// ✅ Specific, actionable error handling
-try {
-  await processPayment(order);
-} catch (error) {
-  if (error instanceof InsufficientFundsError) {
-    return { success: false, code: "INSUFFICIENT_FUNDS", retry: false };
-  }
-  if (error instanceof PaymentGatewayError) {
-    logger.error("Payment gateway failure", { orderId: order.id, error });
-    return { success: false, code: "GATEWAY_ERROR", retry: true };
-  }
-  throw error; // Unknown errors bubble up
-}
+✅ try {
+     processPayment(order)
+   } catch InsufficientFundsError:
+     return { success: false, code: "INSUFFICIENT_FUNDS", retry: false }
+   catch PaymentGatewayError:
+     logger.error("Payment gateway failure", { orderId: order.id })
+     return { success: false, code: "GATEWAY_ERROR", retry: true }
+   catch unknown:
+     rethrow  → Unknown errors bubble up
 ```
 
 ### 6. Don't Repeat Yourself (DRY) — But Don't Over-Abstract
 
 **DRY violation** — same logic copy-pasted in 3+ places:
-```typescript
-// If you change the tax rate, you need to find and update all copies
-const tax1 = price1 * 0.08;
-const tax2 = price2 * 0.08;
-const tax3 = price3 * 0.08;
+```
+tax1 = price1 * 0.08
+tax2 = price2 * 0.08
+tax3 = price3 * 0.08
+→ Extract: calculateTax(price)
 ```
 
 **Over-abstraction** — premature DRY that couples unrelated things:
-```typescript
-// ❌ "Universal" handler that handles everything poorly
-function handleEntity(type: "user" | "order" | "product", action: "create" | "update" | "delete", data: unknown) { ... }
+```
+❌ handleEntity(type, action, data)  → "universal" handler for everything
 ```
 
 **Rule of Three**: Duplicate once is acceptable. Duplicate twice means extract.

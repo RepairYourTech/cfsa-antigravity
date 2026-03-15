@@ -220,7 +220,13 @@ Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills pla
 | Stack Key | Value Pattern | Library Path | Installed As |
 |-----------|--------------|-------------|-------------|
 | `CI_CD` | `*github*` | `stack/devops/github-actions` | `github-actions` |
+| `CI_CD` | `*github*` | `stack/devops/git-workflow` | `git-workflow` |
+| `CI_CD` | `*github*` | `stack/devops/git-advanced` | `git-advanced` |
 | `CI_CD` | `*terraform*` | `stack/devops/terraform` | `terraform` |
+| `CI_CD` | `*gitlab*` | `stack/devops/git-workflow` | `git-workflow` |
+| `CI_CD` | `*gitlab*` | `stack/devops/git-advanced` | `git-advanced` |
+| `CI_CD` | `*bitbucket*` | `stack/devops/git-workflow` | `git-workflow` |
+| `CI_CD` | `*bitbucket*` | `stack/devops/git-advanced` | `git-advanced` |
 
 ### DevOps / Infrastructure
 

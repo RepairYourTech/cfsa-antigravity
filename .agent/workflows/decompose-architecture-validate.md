@@ -23,6 +23,23 @@ Identify deep dive candidates, annotate shard document types, validate the depen
 
 ---
 
+## 9.5. Proactive shard load pre-check (ideation signal)
+
+Before identifying deep dives, read the ideation domain files that fed each shard. The sub-area count from ideation is a **leading indicator** of shard complexity.
+
+For each shard skeleton:
+1. Read the corresponding ideation domain file (use the path from `ideation-index.md` Domain Documents table — may be in `domains/` or `surfaces/{name}/`)
+2. Count the sub-areas listed in the domain file's `## Sub-Areas` or breadth map section
+3. Compare against the shard load thresholds:
+
+| Ideation Sub-Areas | Pre-Check Action |
+|---|---|
+| ≤6 | ✅ No concern — proceed to skeleton validation |
+| 7–9 | ⚠️ **Pre-flag for split review** — note in the shard skeleton: `> ⚠️ Ideation source has [N] sub-areas — likely split candidate. Review at calibration gate.` |
+| ≥10 | 🚩 **Proactive split proposal** — present a split proposal to the user NOW, before the calibration gate. Use the same split format as Step 12. If the user approves, create the split shards immediately and update the decomposition plan. |
+
+> **Why proactive?** The reactive calibration gate (Step 12) catches overloaded shards, but only after skeletons are fully seeded. By reading ideation sub-area counts first, we avoid creating a massive skeleton only to immediately split it. For multi-product projects where a single surface domain (e.g., "Operations" in a desktop shop app) might have 15+ sub-areas, this saves significant rework.
+
 ## 10. Identify deep dive candidates
 
 Read .agent/skills/architecture-mapping/SKILL.md and follow its methodology.
@@ -61,7 +78,7 @@ Read .agent/skills/architecture-mapping/SKILL.md and follow its methodology for 
 
 - **Must Have coverage gate**: Read `docs/plans/ideation/ideation-index.md` and extract every feature listed under "Must Have" in the MoSCoW Summary. For each Must Have feature, verify it appears in at least one shard's Features section. If any Must Have feature is not covered by any shard → **STOP**: "The following Must Have features from ideation-index.md are not covered by any shard: [list]. Add them to the appropriate shards before proceeding."
 
-- **Shard load calibration gate**: After the Must Have coverage gate passes, count the sub-features in each shard's `## Features` section using the **bullet/named-item rule**: count every bullet point or named item under `## Features`, **excluding** group headers (lines that introduce a group of sub-features but are not themselves a concrete capability). Compare against the following thresholds:
+- **Shard load calibration gate**: After the Must Have coverage gate passes, count the sub-features in each shard's `## Features` section using the **bullet/named-item rule**: count every bullet point or named item under `## Features`, **excluding** group headers (lines that introduce a group of sub-features but are not themselves a concrete capability). If Step 9.5 pre-flagged any shards, they should be reviewed first. Compare against the following thresholds:
 
   | Sub-feature Count | Action |
   |-------------------|--------|

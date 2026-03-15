@@ -27,7 +27,7 @@
 
 3. **Write to `memory/patterns.md`** (only for best-practice or anti-pattern):
    ```markdown
-   ### PAT-007: Zod schema coercion for URL params (2026-02-15)
+   ### PAT-007: Schema coercion for URL params (2026-02-15)
    - **Type**: best-practice
    - **Confidence**: 0.7 (applied 1 time)
    - **Context**: Astro API routes receive all params as strings

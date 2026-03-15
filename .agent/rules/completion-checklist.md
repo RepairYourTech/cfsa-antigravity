@@ -38,6 +38,11 @@ A unit of work is only DONE when:
    - Overall progress fractions updated
 4. **The Locks**: All task claims (`[!]` flags and `files:` blocks) are removed.
 5. **The Memory**: Blockers and patterns are logged to `.agent/progress/memory/`.
+   - Follow `.agent/skills/session-continuity/protocols/04-pattern-extraction.md` — reflect on what worked, what didn't, classify, and write to `memory/patterns.md`
+   - Log any new blockers or resolutions to `memory/blockers.md`
+   - If decisions were made using Protocol 6 (Decision Effect Analysis), verify they're recorded in `memory/decisions.md`
+6. **The Session Log**: A session close log exists in `.agent/progress/sessions/`.
+   - Follow `.agent/skills/session-continuity/protocols/05-session-close.md` — write what was accomplished, deferred, and where the next session should start
 
 ## Enforcement
 
@@ -46,3 +51,4 @@ updating progress files, **you may not skip it**.
 
 If you skip the progress tracking steps, you have failed the task, regardless of how
 good the code is.
+

@@ -17,5 +17,5 @@ This gives you a checklist to resume from if the session is interrupted during s
    - Update shared contracts if needed
    - Install any new dependencies
    - Wire cross-surface integrations
-3. **Run full validation** — run `{{VALIDATION_COMMAND}}` after synthesis
+3. **Run full validation** — run the Validation Cmd from `.agent/instructions/commands.md` after synthesis
 4. **Create synthesis report** per the `parallel-agents` skill (Synthesize step)

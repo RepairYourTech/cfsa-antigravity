@@ -6,6 +6,7 @@ Before taking any action on a task:
 - Read the agent config file at project root (`AGENTS.md` for Antigravity, `GEMINI.md` for Gemini CLI, or equivalent for your agent)
 - Read relevant `.agent/instructions/` files for the task type
 - Check [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) for quality bar — if this file doesn't exist yet, the pipeline hasn't reached /create-prd; run /ideate then /create-prd first
+- **Session Resumption**: If `.agent/progress/index.md` exists, read `.agent/skills/session-continuity/protocols/01-session-resumption.md` and follow the **Session Resumption Protocol** to load cross-session context and identify the resumption point
 
 ## 2. Check Skills
 - Scan `.agent/skills/` for applicable skills
@@ -27,10 +28,20 @@ Before taking any action on a task:
 ## 4. Validate (MANDATORY)
 After **every** code change, run:
 ```bash
-{{VALIDATION_COMMAND}}
+See `.agent/instructions/commands.md` for the validation command.
 ```
 
 Do NOT mark a task complete until all validations pass.
+
+## 5. Learn (MANDATORY)
+
+After completing a workflow or substantial task:
+
+- **Pattern Extraction**: Read `.agent/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `memory/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
+- **Session Close**: Read `.agent/skills/session-continuity/protocols/05-session-close.md` and follow the **Session Close Protocol**. Write a session log to `.agent/progress/sessions/` so the next session can resume cleanly.
+
+> These steps are **not optional**. They are what differentiate a pipeline that gets
+> smarter over time from one that repeats the same mistakes.
 
 ## Principles
 

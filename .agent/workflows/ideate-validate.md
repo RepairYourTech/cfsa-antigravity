@@ -36,11 +36,11 @@ Explore constraints with the user. Write to `docs/plans/ideation/meta/constraint
 3. **Team** — Solo dev? Small team? Skill gaps?
 4. **Compliance** — GDPR, PCI, COPPA, HIPAA, SOC 2? Age restrictions?
 5. **Performance** — Expected scale (users, requests, data)? Latency requirements?
-6. **Surface classification** — What platforms will this run on? (web, mobile, desktop, CLI, API)
+6. **Surface classification validation** — Verify the structural classification from `ideation-index.md` (set in `ideate-extract` Step 1.3) still holds. Have any new surfaces been discovered during exploration? Has the project shape changed (e.g., what started as single-surface now has a mobile app too)? If the classification needs updating, update it now and note any domain files that need to be relocated.
 
 **Deep Think**: "Based on the product type and user personas, what constraints would I expect that haven't been mentioned? For example, does this product handle payments (PCI)? Does it serve minors (COPPA)? Does it store health data (HIPAA)?"
 
-Write the surface classification to `meta/constraints.md` — downstream workflows use this to determine which decision axes apply.
+Write constraints to `meta/constraints.md`. If the surface classification changed, update `ideation-index.md` `## Structural Classification` section.
 
 ### Success metrics
 
@@ -162,7 +162,7 @@ Read `.agent/skills/pipeline-rubrics/references/ideation-rubric.md` before apply
 | 9 | **Domain Coverage** | Are all domains at `[DEEP]` or `[EXHAUSTED]`? |
 | 10 | **Deep Think Coverage** | Were hypotheses tracked? Are all resolved (confirmed/rejected)? |
 | 11 | **Cross-Cut Completeness** | Is the ledger clean? No pending entries? |
-| 12 | **Folder Structure Compliance** | Does the folder match the template structure? |
+| 12 | **Folder Structure Compliance** | Does the folder match the classified structure? (flat `domains/` for single-surface, `surfaces/` + `domains/` for multi-product) |
 
 For any dimension that scores ⚠️ or ❌, resolve it NOW — don't present a document with known gaps. Loop back to the relevant step and work through it with the user.
 

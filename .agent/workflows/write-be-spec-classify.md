@@ -73,37 +73,41 @@ Before classifying a shard as multi-domain, build a **sub-feature endpoint inven
 - For multi-domain: the proposed split boundaries
 - For structural reference: confirmation that no BE spec is needed
 
-## 2.5. Verify tech stack skills are provisioned
+## 2.5. Verify surface stack map is populated
 
-Before loading the skill bundle, scan the skill bundle list in Step 3 for any values still containing literal `{{` characters.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Determine this shard's surface from its directory path:
+- `docs/plans/shared/be/` or `docs/plans/be/` → surface `shared`
+- `docs/plans/web/be/` → surface `web`
+- `docs/plans/desktop/be/` → surface `desktop`
+- etc.
 
-If `{{LANGUAGE_SKILL}}`, `{{DATABASE_SKILLS}}`, `{{AUTH_SKILL}}`, `{{BACKEND_FRAMEWORK_SKILL}}`, `{{ORM_SKILL}}`, or `{{UNIT_TESTING_SKILL}}` are still unfilled → **stop** and tell the user: *"Tech stack skills haven't been provisioned yet. The skill bundle placeholders are still unfilled. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
+Check that the following map cells have filled values for this shard's surface:
+- **Languages** (per-surface)
+- **Databases** (per-surface)
+- **BE Frameworks** (per-surface)
+- **ORMs** (per-surface)
+- **Unit Tests** (per-surface)
+- **Auth** (cross-cutting)
 
-Only proceed to Step 3 when all skill bundle placeholders are filled with actual skill directory names.
+If any required cells are empty → **stop** and tell the user: *"Surface stack map is not fully populated for the `{surface}` surface. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
+
+Only proceed to Step 3 when all required map cells are filled.
 
 ## 3. Load skill bundle
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
-Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
-Read .agent/skills/{{AUTH_SKILL}}/SKILL.md
-Read .agent/skills/{{BACKEND_FRAMEWORK_SKILL}}/SKILL.md
-Read .agent/skills/{{API_DESIGN_SKILL}}/SKILL.md
-Read .agent/skills/api-design-principles/SKILL.md
-Read .agent/skills/error-handling-patterns/SKILL.md
-Read .agent/skills/database-schema-design/SKILL.md
-Read .agent/skills/migration-management/SKILL.md
-Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema conventions.
-Read .agent/skills/{{UNIT_TESTING_SKILL}}/SKILL.md and follow its test writing conventions.
-Read .agent/skills/testing-strategist/SKILL.md
-Read .agent/skills/logging-best-practices/SKILL.md
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-be-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
+- `.agent/skills/api-design-principles/SKILL.md`
+- `.agent/skills/error-handling-patterns/SKILL.md`
+- `.agent/skills/database-schema-design/SKILL.md`
+- `.agent/skills/migration-management/SKILL.md`
+- `.agent/skills/testing-strategist/SKILL.md`
+- `.agent/skills/logging-best-practices/SKILL.md`
 
-**Missing skill fallback**: If any skill in the bundle above is not installed in `.agent/skills/` and is not in `.agent/skill-library/MANIFEST.md`, read `.agent/skills/find-skills/SKILL.md` and follow its discovery methodology to search for a community equivalent before proceeding without it.
-
-**Async/background processing (conditional)**: If the IA shard includes background processing, async operations, event-driven workflows, scheduled tasks, or queue-based processing, read `.agent/skills/workflow-automation/SKILL.md` and follow its methodology for durable workflow patterns (step functions, retry strategies, idempotency, fan-out).
+**Async/background processing (conditional)**: If the IA shard includes background processing, async operations, event-driven workflows, or queue-based processing, also read `.agent/skills/workflow-automation/SKILL.md`.
 
 ### Ambiguity resolution
 
-When writing the BE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA specs, **do not guess**. Instead, load and follow `.agent/skills/resolve-ambiguity/SKILL.md` to systematically resolve the ambiguity before proceeding.
+When writing the BE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA specs, **do not guess**. Load and follow `.agent/skills/resolve-ambiguity/SKILL.md` to resolve it first.
 
 ## 4. Read reference documents
 

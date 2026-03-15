@@ -1,5 +1,17 @@
 # cfsa-antigravity
 
+## 2.1.0
+
+### Minor Changes
+
+- ### Workflow perfection audit
+
+  - **Shared references extracted**: Created `skill-loading-protocol.md`, `tdd-testing-policy.md`, and `slice-completion-gates.md` in `prd-templates/references/` — eliminates 25 instances of duplicated content across 15 workflows
+  - **All 49 workflows verified**: Zero over 12k character limit, zero verbose skill loading patterns, zero TODO markers, zero redundant boilerplate
+  - **`implement-slice-tdd.md` reduced 45%**: From 13,399 → 7,343 chars by extracting inlined policies into shared references
+  - **`kit-architecture.md` accuracy audit**: Fixed 8 inaccuracies including missing `skill-library/` in directory tree, wrong placeholder gate workflows, hardcoded "Zod" → `{{CONTRACT_LIBRARY}}`, wrong instruction file count; added Shared References and Skill Loading Protocol sections
+  - **Skill and rule quality improvements**: Deduplicated verbose loading instructions, compressed boilerplate, standardized cross-references
+
 ## 2.0.0
 
 ### Major Changes

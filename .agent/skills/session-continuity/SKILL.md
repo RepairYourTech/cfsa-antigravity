@@ -155,7 +155,7 @@ for complex ones.
    ## Slices
 
    - [ ] **Slice 1**: {{DESCRIPTION}} ({{S|M|L}})
-     - [ ] Contract: Zod schema for {{entity}}
+     - [ ] Contract: {{CONTRACT_LIBRARY}} schema for {{entity}}
      - [ ] `BE` API endpoints for {{entity}}
        - [ ] Subtask 1
        - [ ] Subtask 2
@@ -296,7 +296,7 @@ for complex ones.
 
 3. **Write to `memory/patterns.md`** (only for best-practice or anti-pattern):
    ```markdown
-   ### PAT-007: Zod schema coercion for URL params (2026-02-15)
+   ### PAT-007: Schema coercion for URL params (2026-02-15)
    - **Type**: best-practice
    - **Confidence**: 0.7 (applied 1 time)
    - **Context**: Astro API routes receive all params as strings
@@ -354,7 +354,7 @@ for complex ones.
    - [ ] Phase 2, Slice 4 — Rate limiting (blocked on Redis config)
 
    ## Patterns Learned
-   - PAT-007: Zod coercion for URL params
+   - PAT-007: Schema coercion for URL params
 
    ## Next Session
    - Resolve BLK-003 (Redis config)
@@ -643,7 +643,7 @@ The dependency chain follows strict TDD: Red → Green → Verify.
 
 | Phase | Tag | What Happens | Depends On |
 |-------|-----|-------------|------------|
-| 1. Contract | (untagged) | Orchestrator writes Zod schemas | Nothing |
+| 1. Contract | (untagged) | Orchestrator writes {{CONTRACT_LIBRARY}} schemas | Nothing |
 | 2. QA-RED | `QA` | Write comprehensive failing tests from acceptance criteria | Contract `[x]` |
 | 3. BE + FE | `BE`, `FE` | Implement in parallel to make tests pass | QA-RED `[x]` |
 | 4. QA-GREEN | `QA` | Second pass — verify all tests pass, check for cheating, add integration/E2E | BE `[x]` + FE `[x]` |
@@ -695,23 +695,25 @@ Workflows reference this skill's protocols, not its internals:
 | Workflow | Step | Protocol |
 |----------|------|----------|
 | `instructions/workflow.md` | Step 1 (context) | Session Resumption |
+| `instructions/workflow.md` | Step 5 (learn) | Pattern Extraction + Session Close |
+| `rules/completion-checklist.md` | Definition of Done #5 | Pattern Extraction |
+| `rules/completion-checklist.md` | Definition of Done #6 | Session Close |
+| `/create-prd-stack` | Per-axis tech decisions | Decision Effect Analysis |
+| `/create-prd-architecture` | After system architecture approval | Decision Effect Analysis |
 | `/decompose-architecture` | After creating indexes | Spec Pipeline Generation |
+| `/write-architecture-spec` | During data model + access control design | Decision Effect Analysis |
 | `/write-architecture-spec` | After updating IA index | Spec Pipeline Update |
 | `/write-architecture-spec` | Before request review | Ambiguity Gates (micro + macro) |
-| `/write-architecture-spec` | During design choices | Decision Effect Analysis |
 | `/write-be-spec` | After updating BE index | Spec Pipeline Update |
 | `/write-be-spec` | Before request review | Ambiguity Gates (micro + macro) |
 | `/write-fe-spec` | After updating FE index | Spec Pipeline Update |
 | `/write-fe-spec` | Before request review | Ambiguity Gates (micro + macro) |
 | `/plan-phase` | Step 7 | Progress Generation |
-| `/create-prd` | During design choices | Decision Effect Analysis |
 | `/implement-slice` | Step 0 | Session Resumption |
 | `/implement-slice` | Step 1.5 | Parallel Claim |
 | `/implement-slice` | Step 4 (during impl) | Decision Effect Analysis |
+| `/implement-slice` | Step 6 | Parallel Synthesis |
 | `/implement-slice` | Step 7 | Progress Update (incl. claim release) |
-| `/fix-bug` | End | Pattern Extraction |
-| `/refactor` | End | Pattern Extraction |
-| Any workflow | End | Pattern Extraction + Session Close |
 
 ## DO / DON'T
 

@@ -37,7 +37,7 @@
    ## Slices
 
    - [ ] **Slice 1**: {{DESCRIPTION}} ({{S|M|L}})
-     - [ ] Contract: Zod schema for {{entity}}
+     - [ ] Contract: {{CONTRACT_LIBRARY}} schema for {{entity}}
      - [ ] `BE` API endpoints for {{entity}}
        - [ ] Subtask 1
        - [ ] Subtask 2
@@ -63,7 +63,7 @@
    **Complexity**: {{S|M|L}}
 
    ## Tasks
-   - [ ] Contract: Zod schema for [entity]
+   - [ ] Contract: {{CONTRACT_LIBRARY}} schema for [entity]
    - [ ] `FE` [entity] page and components
    - [ ] `BE` API endpoints for [entity]
 

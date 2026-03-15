@@ -6,7 +6,7 @@ pipeline:
   predecessors: [plan-phase]
   successors: [validate-phase]
   loop: true # repeats per slice within a phase
-  skills: [clean-code, code-review-pro, parallel-agents, parallel-debugging, parallel-feature-development, session-continuity, systematic-debugging, tdd-workflow, verification-before-completion]
+  skills: [clean-code, code-review-pro, minimalist-surgical-development, parallel-agents, parallel-debugging, parallel-feature-development, session-continuity, systematic-debugging, tdd-workflow, verification-before-completion]
   calls-bootstrap: true # may discover new dependencies during implementation
 shards: [implement-slice-setup, implement-slice-tdd]
 ---
@@ -35,7 +35,7 @@ Implement a single vertical slice using strict TDD: Red → Green → Refactor.
 
 ### Step A — Run `.agent/workflows/implement-slice-setup.md`
 
-Checks progress state and session continuity, loads all bundled skills, reads the slice acceptance criteria, determines if parallel mode applies, and writes the contract (Zod schema). If parallel mode is detected, dispatches agents for the TDD cycle.
+Checks progress state and session continuity, loads all bundled skills, reads the slice acceptance criteria, determines if parallel mode applies, and writes the contract ({{CONTRACT_LIBRARY}} schema). If parallel mode is detected, dispatches agents for the TDD cycle.
 
 ### Step B — Run `.agent/workflows/implement-slice-tdd.md`
 
@@ -46,7 +46,7 @@ Executes the TDD cycle (RED: write failing tests → GREEN: implement → REFACT
 ## Quality Gate
 
 You may not call `notify_user` until:
-- [ ] All tests pass (`{{TEST_COMMAND}}`)
-- [ ] Full validation passes (`{{VALIDATION_COMMAND}}`)
+- [ ] All tests pass (Test Cmd from surface stack map)
+- [ ] Full validation passes (Validation Cmd from surface stack map)
 - [ ] All 4 progress tracking files updated (slice, phase, index, memory)
 - [ ] Each tracking file verified by re-reading after edit

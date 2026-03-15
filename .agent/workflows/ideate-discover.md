@@ -27,19 +27,23 @@ Explore domains through recursive breadth-before-depth with the Deep Think proto
 
 Read `.agent/skills/idea-extraction/SKILL.md` and follow its Recursive Domain Exhaustion Protocol and Deep Think Protocol.
 
-Read the `## Expansion Mode` section from `docs/plans/ideation/ideation-index.md` and route accordingly. All findings are written to the appropriate files in `docs/plans/ideation/` in real time — not held in context.
+Read the `## Expansion Mode` and `## Structural Classification` sections from `docs/plans/ideation/ideation-index.md`. The expansion mode shapes exploration behavior. The structural classification determines where domain files are created.
+
+> **Multi-product projects:** When creating domain files, always check whether the domain belongs to a specific surface or is shared. Use `surfaces/{name}/` for surface-exclusive domains and `domains/` for shared/cross-cutting domains. Ask the user if placement is unclear.
 
 ### Full Mode (recommended for 3+ domains)
 
 #### Level 0 — Global Domain Map
 
-1. Read `ideation-index.md` for currently identified domains
+1. Read `ideation-index.md` for currently identified domains and structural classification
 2. Apply the idea-extraction skill's Deep Think Protocol:
    - "Based on this product type and industry, what domains would I expect to see that haven't been mentioned?"
    - Present hypotheses to user for confirmation or rejection
-3. For each confirmed domain, create a domain file in `domains/` using the `ideation-domain-template.md`
+3. For each confirmed domain, create a domain file:
+   - **Single-surface**: Create in `domains/` using the `ideation-domain-template.md`
+   - **Multi-product**: Determine placement first — "Does this belong to a specific surface, or is it shared?" Create in `surfaces/{name}/` or `domains/` accordingly.
 4. Note preliminary cross-cuts: "Domain A might touch Domain B because [reason]" → add to `cross-cuts/cross-cut-ledger.md` as **Level 0** entries
-5. Update `ideation-index.md` with the complete domain map
+5. Update `ideation-index.md` with the complete domain map (paths reflect actual folder locations)
 6. **Gate**: Present complete domain map to user. Get confirmation before Level 1.
 
 #### Level 1 — Domain Breadth Sweep
@@ -50,7 +54,7 @@ For each domain (dependency order — foundational first):
 2. **Deep Think**: "Based on this domain in this industry, what sub-areas would an expert expect that haven't been mentioned?" Present hypotheses.
 3. Write the breadth map to the domain file. Mark each sub-area as `[SURFACE]`.
 4. Note cross-cuts at sub-area level → add to ledger as **Level 1** entries
-5. **NEW DOMAINS DISCOVERED?** → Create domain file, update index, loop back to Level 0 for the new domain. Do NOT proceed until domain map is stable.
+5. **NEW DOMAINS DISCOVERED?** → Classify placement (surface-specific or shared), create domain file in the correct folder, update index, loop back to Level 0 for the new domain. Do NOT proceed until domain map is stable.
 6. Mark domain status as `[BREADTH]` in the index
 7. **Gate**: Pause after EACH domain's breadth map. "Here's what I mapped for [Domain]. Anything missing?" Then after ALL domains: "All domains are at BREADTH. Ready to drill?"
 
@@ -67,7 +71,7 @@ For each domain (dependency order), for each sub-area:
 4. Record Deep Think outcomes in the domain file's Deep Think Annotations table
 5. Cross-cuts with evidence → add to ledger as **Level 2+** entries with specific evidence
 6. **NEW SUB-AREAS DISCOVERED?** → Add to domain file breadth map as `[SURFACE]`, complete breadth mapping first, THEN drill
-7. **NEW DOMAINS DISCOVERED?** → Create domain file, update index, loop back to Level 0
+7. **NEW DOMAINS DISCOVERED?** → Classify placement (surface-specific or shared), create domain file in the correct folder, update index, loop back to Level 0
 8. When Deep Think yields zero new hypotheses AND user confirms → mark sub-area `[EXHAUSTED]`
 9. When all sub-areas are `[DEEP]` or `[EXHAUSTED]` → mark domain `[DEEP]` or `[EXHAUSTED]` in index
 10. **Gate**: Pause after each domain is drilled. "Here's what I captured for [Domain]. Anything missing?"

@@ -13,7 +13,7 @@ When invoked, you must:
 
 1.  **Analyze structural layout at a granular level:** Identify exactly where specific functionality lives, listing out key files (e.g., `src/api/worker.ts`, specific domain schemas, core components). **Do not just list directories; list the critical files within them**.
 2.  **Trace data flow explicitly:** Determine how information moves through the system down to the exact environment bindings, database connections (e.g., SurrealDB KV bindings, Worker `Env` interfaces), and request interceptors.
-3.  **Map relationships & contracts:** Detail the actual Zod schemas and API routes present in the codebase. If an API worker exists, document its exposed routes, rate limiting, and exact CORS configurations.
+3.  **Map relationships & contracts:** Detail the actual contract/validation schemas and API routes present in the codebase. If an API worker exists, document its exposed routes, rate limiting, and exact CORS configurations.
 4.  **Extract key patterns:** Identify the architectural decisions and conventions in use, providing exact file references where these patterns are implemented (e.g., CFPA, React Islands).
 5.  **Generate/Update Document:** Write these highly granular findings into a structured `docs/ARCHITECTURE.md` file. Avoid generic boilerplate; if the project only has 3 files, document precisely what those 3 files do.
 
@@ -24,11 +24,11 @@ Follow these strictly granular steps to perform an architecture mapping:
 ### Step 1: Deep Codebase Reconnaissance
 - **Do not just list directories.** Use your file exploration tools (`list_dir`, `view_file_outline`, `grep_search`) to survey the repository, but immediately follow up by reading the *contents* of key files (`view_file`).
 - Identify exact entry points (`src/api/worker.ts`, `src/pages/index.astro`), configuration files (`astro.config.mjs`, `wrangler.toml`), and trace their imports.
-- Locate exact schemas (Zod or TypeScript interfaces) defining the data models.
+- Locate exact schemas (contract library schemas, type interfaces, or data models) defining the data models.
 
 ### Step 2: Component & Contract Analysis
 - Group files logically, but identify the specific files governing these components.
-- For each component, trace its exact Zod schemas, API routes, or React props.
+- For each component, trace its exact validation schemas, API routes, or component props.
 - Document exact environment variables and secrets expected by the code.
 
 ### Step 3: Granular Dependency Tracing
@@ -69,7 +69,7 @@ Create or update `docs/ARCHITECTURE.md` using the following structure:
 (Determine how information moves through the system down to the exact environment bindings, database connections, and request interceptors.)
 
 ## 3. Module Relationships & Contracts
-(Detail the actual Zod schemas and API routes present. Document exposed routes, rate limiting, and exact CORS configurations.)
+(Detail the actual contract/validation schemas and API routes present. Document exposed routes, rate limiting, and exact CORS configurations.)
 
 ## 4. Key Patterns & Implementation Evidence
 (Identify architectural decisions, providing exact file references where these patterns are implemented.)
@@ -79,7 +79,7 @@ Create or update `docs/ARCHITECTURE.md` using the following structure:
 
 *   **Granularity is Mandatory:** Do not describe the system abstractly. Use exact file paths, exact schema names, and exact environment binding names.
 *   **Trace the Code:** Never guess architectural boundaries. Use `grep_search` and `view_file` to trace imports and confirm how modules interact before documenting them.
-*   **Be Explicit:** Avoid boilerplate. If an API has 3 endpoints, list the 3 endpoints and their exact Zod validation schemas.
+*   **Be Explicit:** Avoid boilerplate. If an API has 3 endpoints, list the 3 endpoints and their exact validation schemas.
 *   **Living Document:** If updating an *existing* `ARCHITECTURE.md`, do not simply append. Integrate new, granular findings holistically into the existing structure. Update the "Last Updated" date.
 
 ## Domain Boundary Protocol
@@ -102,7 +102,7 @@ Ideation sub-features:
 Split trigger: [none | review | mandatory-split]
 ```
 
-Read the relevant domain files from `docs/plans/ideation/domains/` and the architecture design to build each record.
+Read the relevant ideation domain files (use `ideation-index.md` Domain Documents table for correct paths — files may be in `domains/` or `surfaces/{name}/`) and the architecture design to build each record.
 
 ### Split Trigger Rules
 
@@ -145,7 +145,7 @@ Run this protocol when beginning any architecture spec shard. The ideation domai
 
 ### Sources to Read
 
-1. The relevant domain file in `docs/plans/ideation/domains/` for this shard's domain
+1. The relevant ideation domain file for this shard (path from `ideation-index.md` Domain Documents table)
 2. The shard's `## Features` section
 3. `docs/plans/ideation/ideation-index.md` Must Have features for this domain
 

@@ -26,7 +26,12 @@ interactions — then present hypotheses to the user for confirmation or rejecti
 ## Output Structure
 
 This skill writes directly to the `docs/plans/ideation/` folder. No monolithic
-intermediary file.
+intermediary file. The **folder structure is dynamic** — it adapts to the project's
+complexity based on the Structural Classification decided in `ideate-extract`.
+
+### Single-Surface Layout (default)
+
+Used for projects with one delivery platform (e.g., just a web app).
 
 ```
 docs/plans/ideation/
@@ -43,7 +48,106 @@ docs/plans/ideation/
     └── cross-cut-ledger.md        ← Running ledger accumulated at every level
 ```
 
+### Multi-Product Layout (Option B)
+
+Used when the project has **distinct products** with different tech stacks, different
+users, or surface-exclusive features. Surfaces are top-level folders. Shared/cross-cutting
+domains live in `domains/` as siblings.
+
+```
+docs/plans/ideation/
+├── ideation-index.md
+├── meta/
+│   ├── problem-statement.md
+│   ├── personas.md
+│   ├── competitive-landscape.md
+│   └── constraints.md
+├── surfaces/                      ← Only created for multi-product projects
+│   ├── web/
+│   │   ├── 01-accounts.md
+│   │   └── 02-education-hub.md
+│   ├── desktop/
+│   │   ├── 01-operations.md
+│   │   └── 02-inventory.md
+│   └── mobile/
+│       ├── 01-device-guardian.md
+│       └── 02-device-locator.md
+├── domains/                       ← Shared/cross-cutting domains
+│   ├── 01-device-history.md
+│   ├── 02-payments.md
+│   └── 03-certification.md
+└── cross-cuts/
+    └── cross-cut-ledger.md
+```
+
 Templates for each file type are in `.agent/skills/prd-templates/references/ideation-*.md`.
+
+---
+
+## Structural Classification Protocol
+
+> **This classification must happen BEFORE any domain files are written.**
+> It determines the folder layout for the entire ideation phase. The classification
+> is performed in `ideate-extract` (Step 1.3) and recorded in `ideation-index.md`.
+
+### Three Project Shapes
+
+| Shape | Signals | Folder Structure |
+|---|---|---|
+| **Single-surface** | One platform, simple audience, "make me a website" | Flat `domains/` |
+| **Multi-surface, mostly shared** | 2+ platforms, same tech stack, >80% shared logic | Flat `domains/` + surface annotation in domain frontmatter |
+| **Multi-product** | 2+ platforms, different tech stacks/users, surface-exclusive features | `surfaces/` + `domains/` (Option B) |
+
+### Detection: When to Ask vs When to Detect
+
+| Input Mode | How Structure Is Determined |
+|---|---|
+| **Interview** (verbal / no input) | Ask the user directly — see Interview Questions below |
+| **Document** (rich / thin) | Scan for surface signals — see Detection Signals below |
+| **One-liner** | Infer from the description — "make me a website" = single surface, skip the question |
+
+### Interview Questions (asked early, before domain exploration)
+
+When the input doesn't make the project shape obvious, ask these two questions
+**immediately after the opening problem statement question** — before any domain
+exploration or file creation:
+
+1. **"Who are the distinct user types or audiences?"**
+   - Single audience (e.g., "small business owners") → likely single-surface
+   - Multiple distinct audiences (e.g., "consumers, repair technicians, shop owners") → likely multi-product
+
+2. **"What platforms or surfaces does this need to live on?"** (web, mobile, desktop, API, CLI)
+   - One platform → single-surface
+   - Multiple platforms, same stack → multi-surface-shared
+   - Multiple platforms, different stacks or exclusive features → multi-product
+
+### Detection Signals (for document input)
+
+When processing a document, scan for these signals before creating any domain files:
+
+| Signal | Example | Classification |
+|---|---|---|
+| Distinct platform names in section headings | "Consumer Web Platform", "Shop Software (Tauri)", "Native Mobile Apps" | Multi-product |
+| Different tech stacks mentioned per surface | "Astro/React for web", "Rust/Tauri for desktop", "React Native for mobile" | Multi-product |
+| Surface-exclusive features | "Board Viewer (desktop only)", "Device Guardian (Android only)" | Multi-product |
+| Single platform implied | "The website will...", "Users visit the app and..." | Single-surface |
+| Features described without surface context | "User authentication", "Dashboard", "Settings" | Single-surface (default) |
+
+### Domain Placement Rules (for multi-product)
+
+Once the multi-product classification is confirmed, every domain must be assigned:
+
+| Domain type | Placement | Test |
+|---|---|---|
+| **Surface-exclusive** | `surfaces/{surface-name}/NN-domain.md` | "Does this feature/capability exist ONLY on one surface?" |
+| **Shared / cross-cutting** | `domains/NN-domain.md` | "Does this feature span 2+ surfaces?" |
+| **Uncertain** | Ask the user: "Does [domain] belong to [surface] specifically, or is it shared across surfaces?" | — |
+
+### Classification Persistence
+
+The classification is recorded in `ideation-index.md` under a `## Structural Classification`
+section. All downstream steps (domain creation, discovery, validation) read this section
+to determine where to place new domain files.
 
 ---
 
@@ -61,10 +165,11 @@ to organize it, validate it, and fill gaps.
 
 **Process:**
 1. Read/ingest every document provided
-2. Identify natural domain boundaries in the content
-3. Create the `ideation/` folder structure: one domain file per identified domain
-4. Seed each domain file with the relevant content from the source
-5. Present the organized inventory: "Here's what I extracted, organized by domain: [list]. Is anything missing?"
+2. **Run Structural Classification** — scan for surface signals (see protocol above). Determine project shape before creating any files.
+3. Identify natural domain boundaries in the content
+4. Create the `ideation/` folder structure using the classified layout — one domain file per identified domain, placed in the correct folder (surface-specific or shared)
+5. Seed each domain file with the relevant content from the source
+6. Present the organized inventory: "Here's what I extracted, organized by domain: [list]. Is anything missing?"
 6. Identify gaps — domains or sub-topics not covered by the existing material
 7. For each gap, switch to Interview Mode for that topic
 8. Run Deep Think: "Based on the content you provided, I would also expect to see [X] and [Y]. Are those relevant?"
@@ -108,11 +213,12 @@ persistent, deep questioning.
 
 **Process:**
 1. Start: "In one sentence, what problem does this solve and for whom?"
-2. From that sentence, identify key nouns — these become initial domains
-3. Create domain files for each identified domain
-4. Run the Recursive Domain Exhaustion Protocol (below)
-5. Use the decision classification rule to route questions appropriately
-6. Don't stop until the deep think protocol generates zero new hypotheses
+2. **Run Structural Classification** — ask the two interview questions (audiences + surfaces) immediately after the opening problem statement. Determine project shape before creating any files.
+3. From the problem statement + classification, identify key nouns — these become initial domains
+4. Create domain files for each identified domain, placing them in the correct folder based on the structural classification
+5. Run the Recursive Domain Exhaustion Protocol (below)
+6. Use the decision classification rule to route questions appropriately
+7. Don't stop until the deep think protocol generates zero new hypotheses
 
 **Interview techniques:**
 - **Challenge weak answers:** "You mentioned risk management — what happens when a user hits their position limit? What's the escalation path?"
@@ -194,8 +300,9 @@ not count-based.
 
 1. List all domains from the user's input
 2. **Deep Think:** "Based on this product type and industry, what domains would I expect to see that haven't been mentioned?" Present hypotheses to user.
-3. Create a domain file for each confirmed domain (using the ideation-domain-template)
-4. Update `ideation-index.md` with the complete domain map
+3. **For multi-product projects:** For each confirmed domain, determine placement — "Does this belong to a specific surface, or is it shared?" Create the domain file in the appropriate folder (`surfaces/{name}/` or `domains/`).
+   **For single-surface projects:** Create a domain file for each confirmed domain in `domains/` (using the ideation-domain-template).
+4. Update `ideation-index.md` with the complete domain map (paths reflect the actual folder structure)
 5. Note preliminary cross-cuts: "Domain A might touch Domain B because [reason]" → add to ledger as Level 0 entries
 6. **Gate:** User confirms the domain list before proceeding
 

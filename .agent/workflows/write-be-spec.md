@@ -66,7 +66,7 @@ Before presenting to the user, verify:
 
 Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
 
-- [ ] Every endpoint has a Zod request AND response schema
+- [ ] Every endpoint has a {{CONTRACT_LIBRARY}} request AND response schema
 - [ ] Every database table has defined fields, indexes, and permissions
 - [ ] Security constraints from IA shard reflected in middleware section
 - [ ] Error codes are specific (not generic 500s)

@@ -22,9 +22,14 @@ Explore requirements, map all interactions, and define contracts, data models, a
 
 **Prerequisite**: Skeleton IA shard must exist in `docs/plans/ia/`. If it does not, tell the user to run `/decompose-architecture` first.
 
-## 0. Placeholder guard
+## 0. Map guard
 
-Verify `{{DATABASE_SKILLS}}`, `{{SECURITY_SKILLS}}`, and `{{SURFACES}}` are filled (no literal `{{` characters). If any are unfilled → **HARD STOP**. For format and recovery mappings, see `.agent/skills/prd-templates/references/placeholder-guard-template.md` and `.agent/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Verify that the following have filled values:
+- **Databases** column (per-surface, any row)
+- **Security** category (cross-cutting)
+- **Global Settings → Surfaces** list
+
+If any are empty → **HARD STOP**: tell the user to run `/create-prd` first.
 
 ---
 
@@ -41,9 +46,9 @@ Before loading skills, check whether the shard file at `docs/plans/ia/[shard-nam
 
 ### 1a. Read the authoritative sources
 
-Read the following files and build a **reconciliation table** comparing what each source says about this shard's features. The relevant domain file in `docs/plans/ideation/domains/` is the **primary source of truth** for sub-features — the architecture design is secondary context.
+Read the following files and build a **reconciliation table** comparing what each source says about this shard's features. Use the `ideation-index.md` Domain Documents table to find the correct domain file path (may be in `domains/` or `surfaces/{name}/` for multi-product projects). The ideation domain file is the **primary source of truth** for sub-features — the architecture design is secondary context.
 
-1. The relevant domain file in `docs/plans/ideation/domains/`
+1. The relevant ideation domain file for this shard (path from `ideation-index.md` Domain Documents table)
 2. The shard's `## Features` section (from `/decompose-architecture-structure`)
 3. `docs/plans/ideation/ideation-index.md` — Must Have features for this domain
 
@@ -85,30 +90,28 @@ For each feature in the shard, document:
 
 ## 3. Define contracts
 
-Read .agent/skills/{{API_DESIGN_SKILL}}/SKILL.md and follow its methodology.
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and load the API Design skill(s) from the cross-cutting section.
 
 For each interaction, define the contract shape:
 - Request shape (params, query, body)
 - Response shape (all fields typed)
 - Error shape (specific error codes)
-- Note: actual Zod schemas written in BE spec phase
+- Note: actual {{CONTRACT_LIBRARY}} schemas written in BE spec phase
 
 **Review questions**: "Are there fields I'm missing from these requests/responses?" / "Are these error codes specific enough?"
 
 ## 4. Design data models
 
-Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding. Also load these community skills for guidance:
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and load the Databases skill(s) for this shard's surface. Also load:
 - `.agent/skills/database-schema-design/SKILL.md` — Schema design principles
 - `.agent/skills/error-handling-patterns/SKILL.md` — Error categories for contracts
 - `.agent/skills/technical-writer/SKILL.md` — Specification clarity
-- Tables/collections, fields, types
-- Relationships (graph edges, foreign keys, etc.)
-- Indexes for query patterns
-- Constraints and validation rules
+
+Define for each entity: tables/collections, fields, types, relationships, indexes, constraints and validation rules.
 
 **Review questions**: "Does this schema capture everything this domain needs to store?" / "Are the relationships and cardinalities correct?" / "Are there derived/computed fields I should account for?"
 
-**Missing skill fallback**: If any database or security skill listed above is not installed and not in the MANIFEST, read `.agent/skills/find-skills/SKILL.md` and follow its discovery methodology before proceeding.
+> **Decision recording**: For non-trivial data model decisions (schema approach, denormalization trade-offs, index strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**.
 
 ## 5. Design access control
 
@@ -121,6 +124,8 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and apply its a
 - Admin-only operations
 
 **Review questions**: "Can you think of a scenario where a user should be blocked that this matrix allows?" / "Can you think of a scenario where a user should be allowed that this matrix blocks?"
+
+> **Decision recording**: For access control architecture decisions (role hierarchy, ownership model, escalation paths), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Record to `memory/decisions.md`.
 
 ## 5.5. Accessibility specifications
 

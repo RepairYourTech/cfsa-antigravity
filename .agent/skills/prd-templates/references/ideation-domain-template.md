@@ -2,6 +2,7 @@
 
 > **Status**: `[SURFACE]` / `[BREADTH]` / `[DEEP]` / `[EXHAUSTED]`
 > **Domain number**: NN
+> **Surface**: _surface name (e.g., "web", "desktop", "mobile") or "shared"_
 > **Last updated**: _timestamp_
 
 ## Overview
@@ -35,8 +36,13 @@ _Vertical drill content — features, behaviors, edge cases, failure modes._
 
 #### Cross-Cut Notes
 
-- Touches **Domain NN** ([domain-file.md](../domains/NN-domain.md)) because: _reason_
-- Touches **Domain NN** ([domain-file.md](../domains/NN-domain.md)) because: _reason_
+> **Path note:** Use the path from `ideation-index.md` Domain Documents table for cross-references.
+> For single-surface: `../domains/NN-domain.md`. For multi-product: paths vary by location
+> (same surface = `../NN-domain.md`, different surface = `../../surfaces/{name}/NN-domain.md`,
+> shared = `../../domains/NN-domain.md`). Always verify against the index.
+
+- Touches **Domain NN** ([domain-file.md](path-from-index)) because: _reason_
+- Touches **Domain NN** ([domain-file.md](path-from-index)) because: _reason_
 
 ---
 

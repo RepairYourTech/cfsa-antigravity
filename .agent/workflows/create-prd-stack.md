@@ -8,8 +8,8 @@ pipeline:
   position: 2.1
   stage: architecture
   predecessors: [ideate]
-  successors: [create-prd-architecture]
-  skills: [database-schema-design, design-direction, tech-stack-catalog]
+  successors: [create-prd-design-system]
+  skills: [database-schema-design, design-direction, session-continuity, tech-stack-catalog]
   calls-bootstrap: true
 ---
 
@@ -25,10 +25,14 @@ Build the decision constraints map from the ideation output, then walk through e
 
 ## 2.5. Constraint-first discovery
 
-Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**:
+Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**.
+
+Also read `docs/plans/ideation/ideation-index.md` — specifically the `## Structural Classification` section. This is the **authoritative source** for the project's surface list and project shape (single-surface, multi-surface-shared, or multi-product). Use this to determine which decision axes apply and whether tech stack decisions need to be made per-surface.
+
+Build the constraints map:
 
 1. **Hard constraints** — decisions already locked by compliance, team, or budget
-2. **Surface constraints** — the project surfaces constrain framework choices
+2. **Surface constraints** — the project surfaces (from structural classification) constrain framework choices. For multi-product projects, some axes may need separate decisions per surface (e.g., different frontend frameworks for web vs desktop vs mobile).
 3. **Soft constraints** — preferences that should bias decisions but aren't hard rules
 
 Present the constraints map to the user before starting tech decisions. Constraints narrow the option space — some decisions may be obvious. Skip those with a brief rationale.
@@ -61,6 +65,8 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 > These are independent MANIFEST entries. Firing bootstrap with `BACKEND_FRAMEWORK=Hono` does **not** provision the tRPC skill — `API_LAYER=tRPC` must be fired separately. Similarly, skipping the `Database` axis (handled by the Persistence Map Interview) does not affect backend framework or API layer keys — those must still fire individually.
 
 Get explicit user decisions — no "TBD" allowed. Use the brainstorming skill's approach — one decision at a time.
+
+> **Decision recording**: For each confirmed tech stack decision, read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Tech stack choices have high downstream impact (they constrain frameworks, skills, deployment, and testing). Record each decision to `memory/decisions.md` with upstream/downstream effects.
 
 ### Database: Persistence Map Interview
 

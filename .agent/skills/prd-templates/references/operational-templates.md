@@ -14,7 +14,7 @@ Use when writing slice entries during `/plan-phase` Step 4:
 **Surfaces**: Contract, API, DB, UI
 
 #### Tasks
-- [ ] Contract: Zod schema for [entity] ← no tag (orchestrator handles sequentially)
+- [ ] Contract: {{CONTRACT_LIBRARY}} schema for [entity] ← no tag (orchestrator handles sequentially)
 - [ ] `BE` API endpoints for [entity] ← backend agent
 - [ ] `FE` [entity] page and components ← frontend agent
 - [ ] `QA` Integration tests for [entity] ← QA agent (runs FIRST to write failing tests, AND after BE+FE to verify)

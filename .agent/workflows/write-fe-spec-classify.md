@@ -72,22 +72,16 @@ Not every FE spec maps 1:1 to a BE feature spec. Before writing anything, classi
 - For feature specs: the BE spec(s) and IA shard it maps to
 - For cross-cutting specs: confirmation that BE spec/IA shard mapping is skipped
 
-## 3. Load skill bundle
+Determine this shard's surface from its directory path (e.g., `docs/plans/web/fe/` → surface `web`; flat `docs/plans/fe/` → surface `shared` or the project's single surface).
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
-Read .agent/skills/{{FRONTEND_FRAMEWORK_SKILL}}/SKILL.md
-Read .agent/skills/{{FRONTEND_DESIGN_SKILL}}/SKILL.md and follow its design methodology.
-Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md
-Read .agent/skills/{{STATE_MANAGEMENT_SKILL}}/SKILL.md and follow its state management conventions.
-Read .agent/skills/error-handling-patterns/SKILL.md
-Read .agent/skills/testing-strategist/SKILL.md
-Read .agent/skills/technical-writer/SKILL.md
-
-**Missing skill fallback**: If any skill in the bundle above is not installed in `.agent/skills/` and is not in `.agent/skill-library/MANIFEST.md`, read `.agent/skills/find-skills/SKILL.md` and follow its discovery methodology to search for a community equivalent before proceeding without it.
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-fe-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
+- `.agent/skills/error-handling-patterns/SKILL.md`
+- `.agent/skills/testing-strategist/SKILL.md`
+- `.agent/skills/technical-writer/SKILL.md`
 
 ### Ambiguity resolution
 
-When writing the FE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA/BE specs, **do not guess**. Instead, load and follow `.agent/skills/resolve-ambiguity/SKILL.md` to systematically resolve the ambiguity before proceeding.
+When writing the FE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA/BE specs, **do not guess**. Load and follow `.agent/skills/resolve-ambiguity/SKILL.md` to resolve it first.
 
 ## 4. Read source documents
 

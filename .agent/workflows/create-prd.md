@@ -4,8 +4,8 @@ pipeline:
   position: 2
   stage: architecture
   predecessors: [ideate]
-  successors: [decompose-architecture]
-  skills: [api-design-principles, brainstorming, brand-guidelines, clean-code, database-schema-design, design-direction, error-handling-patterns, find-skills, logging-best-practices, performance-budgeting, pipeline-rubrics, prd-templates, resolve-ambiguity, security-scanning-security-hardening, tdd-workflow, tech-stack-catalog, technical-writer]
+  successors: [audit-ambiguity, decompose-architecture] # audit-ambiguity recommended before decompose
+  skills: [api-design-principles, brainstorming, brand-guidelines, clean-code, database-schema-design, design-anti-cliche, design-direction, error-handling-patterns, find-skills, logging-best-practices, performance-budgeting, pipeline-rubrics, prd-templates, resolve-ambiguity, security-scanning-security-hardening, tdd-workflow, tech-stack-catalog, technical-writer]
   calls-bootstrap: true # tech stack decisions trigger skill provisioning
 shards: [create-prd-stack, create-prd-design-system, create-prd-architecture, create-prd-security, create-prd-compile]
 ---
@@ -50,8 +50,7 @@ Pay special attention to the **Project Surfaces** section in `meta/constraints.m
 ### Bundled skills
 
 These skills are included in the kit — read each SKILL.md:
-1. `.agent/skills/{{API_DESIGN_SKILL}}/SKILL.md` — API conventions
-2. `.agent/skills/api-design-principles/SKILL.md` — API design principles
+1. `.agent/skills/api-design-principles/SKILL.md` — API design principles
 3. `.agent/skills/security-scanning-security-hardening/SKILL.md` — Security model
 4. `.agent/skills/clean-code/SKILL.md` — Architecture principles
 5. `.agent/skills/brainstorming/SKILL.md` — For collaborative decisions
@@ -100,7 +99,7 @@ Documents development methodology and phasing strategy. Compiles `docs/plans/YYY
 
 ---
 
-## 12. Quality gate
+## Step E — Quality gate
 
 ### Self-check against Architecture rubric
 
@@ -157,7 +156,7 @@ If gaps are found, loop back to the relevant step and resolve with the user.
 > independent audit with evidence citations, run `/audit-ambiguity architecture` as a
 > separate step after this workflow completes.
 
-## 13. Request review and next steps
+## Step F — Request review and next steps
 
 Use `notify_user` to present to the user:
 - **Both** the architecture design document and the Engineering Standards document

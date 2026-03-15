@@ -1,102 +1,90 @@
 ---
 name: bootstrap-agents
-description: "Utility — fill {{PLACEHOLDER}} values and provision skills from the library. Called by pipeline commands when tech stack info changes."
-version: 2.0.0
+description: "Utility — fill the surface stack map in tech-stack.md and provision skills using intelligent resolution. Called by pipeline commands when tech stack info changes."
+version: 3.0.0
 ---
 
 # Bootstrap Agents
 
-**This is a utility command, not an entry point.** It gets called by other pipeline commands (like `/create-prd`, `/iterate-plan`, `/write-be-spec`, `/write-fe-spec`, `/add-feature`, `/implement-slice`) whenever they make tech stack decisions or introduce new dependencies.
+**This is a utility command, not an entry point.** It gets called by other pipeline commands (like `/create-prd`, `/write-be-spec`, `/write-fe-spec`, `/implement-slice`) whenever they make tech stack decisions or introduce new dependencies.
 
 Bootstrap does two things:
-1. **Fill `{{PLACEHOLDER}}` values** in kit instruction templates
-2. **Provision skills** from `skill-library/` based on stack and surface triggers
+1. **Fill the surface stack map** in `.agent/instructions/tech-stack.md` with stack decisions
+2. **Provision skills** from `skill-library/` using the 4-tier resolution chain
 
-**Input**: Template values (package manager, framework, database, etc.) + optional stack/surface triggers
-**Output**: Filled templates + newly installed skills in `.claude/skills/`
+**Input**: Surface-keyed stack values + optional global values
+**Output**: Filled map cells + newly installed skills in `.agent/skills/`
 
 ---
 
-## 1. Receive template values
+## 1. Receive values
 
-The calling command provides these values (all optional — fill only what's provided, leave others as `{{PLACEHOLDER}}`):
+The calling command provides values in two categories:
 
-### Command & Tool Values
+### Surface-Keyed Values (fill the Per-Surface Skills table)
+
+Each value is tagged with a surface. Format: `SURFACE=<surface> KEY=<value>`
+
+Example invocation from `/create-prd-stack`:
+```
+SURFACE=shared  LANGUAGES=typescript  BE_FRAMEWORKS=hono  DATABASES=supabase,surrealdb  ORMS=drizzle
+SURFACE=web     LANGUAGES=typescript  FE_FRAMEWORKS=astro  FE_DESIGN=tailwind,vanilla-css  STATE_MGMT=nanostores  DATABASES=supabase,surrealdb  UNIT_TESTS=vitest  E2E_TESTS=playwright
+SURFACE=desktop LANGUAGES=typescript,rust  FE_FRAMEWORKS=—  BE_FRAMEWORKS=tauri  DATABASES=supabase,surrealdb,pglite,surrealdb-embedded  UNIT_TESTS=vitest,cargo-test
+```
+
+Per-surface column keys:
+
+| Column Key | Map Column | Example |
+|-----------|------------|---------|
+| `LANGUAGES` | Languages | typescript, rust |
+| `BE_FRAMEWORKS` | BE Frameworks | hono, tauri |
+| `FE_FRAMEWORKS` | FE Frameworks | astro, react-native |
+| `FE_DESIGN` | FE Design | tailwind, vanilla-css |
+| `ORMS` | ORMs | drizzle |
+| `STATE_MGMT` | State Mgmt | nanostores, zustand |
+| `DATABASES` | Databases | supabase, surrealdb, pglite |
+| `UNIT_TESTS` | Unit Tests | vitest, cargo-test |
+| `E2E_TESTS` | E2E Tests | playwright, detox |
+| `TEST_CMD` | Test Cmd | npm test |
+| `VALIDATION_CMD` | Validation Cmd | npm run validate |
+| `LINT_CMD` | Lint Cmd | npm run lint |
+| `BUILD_CMD` | Build Cmd | npm run build |
+| `DEV_CMD` | Dev Cmd | npm run dev |
+| `PACKAGE_MGR` | Package Mgr | npm |
+
+### Cross-Cutting Values (fill the Cross-Cutting Skills table)
+
+These are project-wide, not per-surface:
+
+| Key | Map Category | Example |
+|-----|-------------|---------|
+| `AUTH` | Auth | clerk, supabase-auth |
+| `CI_CD` | CI/CD | github-actions |
+| `HOSTING` | Hosting | vercel, tauri-updater |
+| `SECURITY` | Security | owasp-web, desktop-sandboxing |
+| `API_DESIGN` | API Design | api-design-principles |
+| `ACCESSIBILITY` | Accessibility | accessibility |
+| `CONTRACT_LIBRARY` | Contract Library | zod |
+
+### Global Values (fill Global Settings in tech-stack.md + root configs)
 
 | Key | Example |
 |-----|---------|
-| `PACKAGE_MANAGER` | pnpm |
-| `DEV_COMMAND` | pnpm dev |
-| `TEST_COMMAND` | pnpm test |
-| `TEST_WATCH_COMMAND` | pnpm test:watch |
-| `TEST_COVERAGE_COMMAND` | pnpm test:coverage |
-| `LINT_COMMAND` | pnpm lint |
-| `LINT_FIX_COMMAND` | pnpm lint:fix |
-| `FORMAT_COMMAND` | pnpm format |
-| `TYPE_CHECK_COMMAND` | pnpm type-check |
-| `BUILD_COMMAND` | pnpm build |
-| `PREVIEW_COMMAND` | pnpm preview |
-| `VALIDATION_COMMAND` | pnpm test && pnpm lint && pnpm type-check && pnpm build |
-
-### Project Identity
-
-| Key | Example |
-|-----|---------|
-| `PROJECT_NAME` | My Project |
+| `PROJECT_NAME` | RepairYour.Tech |
 | `DESCRIPTION` | One-line description |
-| `TECH_STACK_SUMMARY` | Astro + React + SurrealDB + Firebase Auth |
+| `TECH_STACK_SUMMARY` | Supabase + SurrealDB + Astro + Tauri |
+| `SURFACES` | web, desktop, mobile |
+| `ARCHITECTURE_DOC` | docs/plans/2026-03-13-architecture-design.md |
 
-### Architecture & Structure
+### Structural Values (fill instruction templates — unchanged from v2)
 
 | Key | Example |
 |-----|---------|
 | `FRAMEWORK_PATTERNS` | Framework-specific patterns block |
 | `PROJECT_STRUCTURE` | Directory layout block |
 | `ARCHITECTURE_TABLE` | Concern/Location/Runtime table rows |
-| `ARCHITECTURE_DOC` | docs/plans/2026-02-10-architecture-design.md |
-| `CONTRACTS_DIR` | src/contracts/ |
-| `BUILD_OUTPUT_DIR` | dist/ |
 
-### Stack Values (trigger skill provisioning)
-
-| Key | Example |
-|-----|---------|
-| `DATABASE` | SurrealDB (self-hosted) |
-| `FRONTEND_FRAMEWORK` | Astro + React Islands |
-| `BACKEND_FRAMEWORK` | Hono |
-| `API_LAYER` | tRPC |
-| `BACKEND_RUNTIME` | Cloudflare Workers |
-| `ORM` | Drizzle |
-| `CSS_FRAMEWORK` | Tailwind CSS v4 |
-| `UI_LIBRARY` | shadcn/ui |
-| `AUTH_PROVIDER` | Firebase Auth |
-| `PAYMENTS` | Stripe |
-| `AI_SDK` | Vercel AI SDK |
-| `STATE_MANAGEMENT` | TanStack Query |
-| `E2E_TESTING` | Playwright |
-| `UNIT_TESTING` | Vitest |
-| `HOSTING` | Cloudflare Pages + Workers |
-| `CDN_ASSETS` | Cloudflare R2 |
-| `MONITORING` | Sentry |
-| `ANALYTICS` | Google Analytics |
-| `EMAIL` | Resend |
-| `QUEUE` | Inngest |
-| `REALTIME` | Socket.io |
-| `SEARCH` | Meilisearch |
-| `CMS` | Payload CMS |
-| `STORAGE` | AWS S3 |
-| `CI_CD` | GitHub Actions |
-| `MOBILE_FRAMEWORK` | Expo |
-| `LANGUAGE` | TypeScript |
-| `3D_FRAMEWORK` | Three.js / R3F |
-| `DESKTOP_FRAMEWORK` | Tauri |
-| `GAME_ENGINE` | Godot |
-| `SECURITY` | OWASP |
-| `TEST_RUNNER` | Vitest |
-| `LINTER` | ESLint |
-| `TYPE_CHECKER` | TypeScript (tsc) |
-
-### Infrastructure Values
+### Infrastructure Values (fill instruction templates — unchanged from v2)
 
 | Key | Example |
 |-----|---------|
@@ -106,65 +94,69 @@ The calling command provides these values (all optional — fill only what's pro
 | `SECRET_MANAGEMENT` | wrangler secret |
 | `DEPLOY_COMMAND` | wrangler deploy |
 
-### Surface Types
-
-| Key | Example |
-|-----|---------|
-| `SURFACES` | web, api |
-
-If any values are missing, leave those `{{PLACEHOLDER}}`s in place — they'll be filled on a future invocation.
+If any values are missing, leave those cells empty — they'll be filled on a future invocation.
 
 ---
 
-## 2. Fill project skill templates
+## 2. Fill the surface stack map
 
-### `.claude/skills/project-commands/SKILL.md`
-Replace: `{{PACKAGE_MANAGER}}`, `{{DEV_COMMAND}}`, `{{TEST_COMMAND}}`, `{{TEST_WATCH_COMMAND}}`, `{{TEST_COVERAGE_COMMAND}}`, `{{LINT_COMMAND}}`, `{{LINT_FIX_COMMAND}}`, `{{FORMAT_COMMAND}}`, `{{TYPE_CHECK_COMMAND}}`, `{{BUILD_COMMAND}}`, `{{PREVIEW_COMMAND}}`, `{{VALIDATION_COMMAND}}`
+Open `.agent/instructions/tech-stack.md` and update:
 
-### `.claude/skills/project-workflow/SKILL.md`
-Replace: `{{VALIDATION_COMMAND}}`
+### 2a. Per-Surface Skills table
 
-### `.claude/skills/project-patterns/SKILL.md`
-Replace: `{{FRAMEWORK_PATTERNS}}` if provided
+For each `SURFACE=<name>` received:
+1. If a row for `<name>` exists → update the cells for the provided column keys only (don't overwrite cells that already have values unless explicitly re-provided)
+2. If no row exists → add a new row with the provided values, `—` for unprovided columns
 
-### `.claude/skills/project-structure/SKILL.md`
-Replace: `{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}` if provided
+### 2b. Cross-Cutting Skills table
 
-### `.claude/skills/project-tech-stack/SKILL.md`
-Replace: `{{TECH_STACK_SUMMARY}}`, `{{FRONTEND_FRAMEWORK}}`, `{{BACKEND_RUNTIME}}`, `{{DATABASE}}`, `{{AUTH_PROVIDER}}`, `{{HOSTING}}`, `{{CDN_ASSETS}}`, `{{CICD}}`, `{{MONITORING}}`, `{{PACKAGE_MANAGER}}`, `{{TEST_RUNNER}}`, `{{LINTER}}`, `{{TYPE_CHECKER}}`, `{{INSTALLED_SKILLS}}`
+For each cross-cutting key received, update the corresponding category row. If the value is additive (e.g., adding a second database), **append** to the comma-separated list rather than overwriting. If the value is already present, skip (idempotent).
 
----
+### 2c. Global Settings
 
-## 3. Fill default operational skill templates
-
-Scan all `.claude/skills/*/SKILL.md` files for `{{PLACEHOLDER}}` values and fill any that match the provided template values:
-
-- `{{VALIDATION_COMMAND}}` — in `fix-bug`, `main-workflow`, `deploy`, `refactor`
-- `{{PACKAGE_MANAGER}}` — in `refactor`, `security-audit`
-- `{{TEST_COVERAGE_COMMAND}}` — in `refactor`
-- `{{BUILD_COMMAND}}` — in `deploy`
-- `{{DEPLOY_COMMAND}}` — in `deploy`
-- `{{BUILD_OUTPUT_DIR}}` — in `deploy`
-- `{{SSH_HOST}}` — in `setup-session`
-- `{{DB_PORT}}` — in `setup-session`
-- `{{CREDENTIAL_TOOL}}` — in `setup-session`
+Fill the Global Settings table with any provided global values.
 
 ---
 
-## 4. Fill rule templates
+## 3. Fill root agent config files
 
-### `.claude/rules/contract-first.md`
-Replace: `{{VALIDATION_COMMAND}}`, `{{TEST_RUNNER}}`
-
----
-
-## 5. Fill CLAUDE.md
-
-Replace in `CLAUDE.md` at project root:
+Replace in **both** `AGENTS.md` and `GEMINI.md`:
 - `{{PROJECT_NAME}}`
 - `{{DESCRIPTION}}`
 - `{{TECH_STACK_SUMMARY}}`
-- `{{VALIDATION_COMMAND}}`
+- `{{VALIDATION_COMMAND}}` — use the **primary surface's** validation command from the map (first non-shared row, or shared if only shared exists)
+- `{{ARCHITECTURE_DOC}}`
+- `{{CONTRACT_LIBRARY}}`
+- `{{INSTALLED_SKILLS}}` (if provided; otherwise leave for step 8)
+
+> **Note**: Both files serve as root agent config. Both must be kept in sync — any value filled in one must be filled in the other.
+
+---
+
+## 4. Fill instruction templates
+
+### `.agent/instructions/commands.md`
+Write per-surface command sections. For each surface in the map, create a section with its commands (Test Cmd, Validation Cmd, Lint Cmd, Build Cmd, Dev Cmd, Package Mgr).
+
+### `.agent/instructions/workflow.md`
+Fill `{{VALIDATION_COMMAND}}` with the primary surface's validation command.
+
+### `.agent/instructions/patterns.md`
+Replace `{{FRAMEWORK_PATTERNS}}` if provided.
+
+### `.agent/instructions/structure.md`
+Replace `{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}` if provided.
+
+---
+
+## 5. Fill operational skill and rule templates
+
+Scan `.agent/skills/*/SKILL.md` and `.agent/rules/*.md` for `{{PLACEHOLDER}}` values and fill any that match the provided values. Currently applicable:
+
+- `{{VALIDATION_COMMAND}}` — in `fix-bug`, `main-workflow`, `deploy`, `refactor`
+- `{{PACKAGE_MANAGER}}` — in `refactor`, `security-audit`
+- `{{CONTRACT_LIBRARY}}` — in `tdd-contract-first.md`
+- Other command/infra placeholders as documented in v2
 
 ---
 
@@ -172,62 +164,67 @@ Replace in `CLAUDE.md` at project root:
 
 Read `skill-library/MANIFEST.md` to load the trigger tables.
 
-If `skill-library/MANIFEST.md` does not exist (e.g., user deleted it or is using a minimal kit), skip steps 7-8 and go to step 9.
+If `skill-library/MANIFEST.md` does not exist, skip steps 7-8 and go to step 9.
 
 ---
 
-## 7. Provision skills from library
+## 7. Provision skills — 4-Tier Resolution Chain
 
-For each stack key provided in the template values, check the **Stack Triggers** table in the manifest:
+For each skill name referenced in ANY cell of the surface stack map, resolve it using this chain:
 
-1. Match the provided value against the manifest's `Value Pattern` (case-insensitive)
-2. If a match is found AND the skill is NOT already in `.claude/skills/[installed-as]/`:
-   - Copy the entire directory from `skill-library/[library-path]/` → `.claude/skills/[installed-as]/`
-   - Fill any `{{PLACEHOLDER}}`s in the newly-copied `SKILL.md` with current template values
-3. If the skill already exists in `.claude/skills/`, skip it (idempotent)
+### Tier 1: Exact Match
+Check `.agent/skill-library/{name}/` (or `.agent/skills/{name}/` if already installed).
+- **Found in library** AND not yet installed → copy to `.agent/skills/{name}/`, fill any `{{PLACEHOLDER}}`s in the copied SKILL.md
+- **Already installed** → skip (idempotent)
+- **Not found** → proceed to Tier 2
 
-For each surface type provided in `SURFACES`, check the **Surface Triggers** table:
+### Tier 2: Partial Match + Adequacy Check
+Search `.agent/skill-library/` and `.agent/skills/` for skills whose name contains the base term. E.g., for `surrealdb-embedded`, check if `surrealdb` exists.
 
-1. Match the surface type against the manifest's `Surface Type` column
-2. Copy matching skills that don't already exist, same as above
+- **Partial match found** → Read its `SKILL.md`. Assess: does it cover the needed variant? Check for keywords related to the specific need (e.g., "embedded", "WASM", "Rust-native" for `surrealdb-embedded`).
+  - **Adequate** — the existing skill covers the variant → use it. Note in the report: `"{name}" resolved by existing "{partial}" skill (covers {variant})`.
+  - **Falls short** — the skill doesn't address the specific variant → proceed to Tier 3
+- **No partial match** → proceed to Tier 3
 
-### Matching rules
+### Tier 3: External Discovery
+Read `.agent/skills/find-skills/SKILL.md` and invoke its discovery methodology to search for the skill externally.
 
-| Manifest Pattern | Matches |
-|-----------------|---------|
-| `*surrealdb*` | "SurrealDB", "surrealdb (self-hosted)", "SurrealDB Cloud" |
-| `*cloudflare*` | "Cloudflare Workers", "Cloudflare Pages + Workers" |
-| `*tailwind*` | "Tailwind CSS v4", "Tailwind CSS" |
-| `*vercel*` OR `*ai-sdk*` | "Vercel AI SDK", "AI SDK" |
-| `*three*` OR `*r3f*` | "Three.js", "React Three Fiber", "R3F" |
+- **Found** → install → fill map cell with resolved name
+- **Not found** → proceed to Tier 4
 
-Pattern matching is glob-style with `*` as wildcard, case-insensitive.
+### Tier 4: Human Escalation
+Mark the map cell with `⚠️ {name} [not found]`. Include in the report:
+
+> "Skill `{name}` was not found in the skill library, via partial match, or externally. Options:
+> 1. Create it with `/skill-creator`
+> 2. Provide an alternative skill name
+> 3. Mark as not needed (change cell to `—`)"
+
+### Resolution reporting
+After resolving all skills, report:
+- Which skills were installed (Tier 1)
+- Which skills were resolved by adequacy check (Tier 2) — include justification
+- Which skills were discovered externally (Tier 3)
+- Which skills need human attention (Tier 4) — include the `⚠️` cells
 
 ---
 
 ## 8. Update installed skills list
 
-After provisioning, build a markdown list of all installed skills (both defaults and library-provisioned) and update `{{INSTALLED_SKILLS}}` in `project-tech-stack`:
+After provisioning, build a markdown list of all installed skills and update `{{INSTALLED_SKILLS}}` in `tech-stack.md`:
 
 ```markdown
 ### Default Skills
 - fix-bug — TDD bug fix workflow
 - refactor — Safe refactoring with test verification
-- add-feature — Add feature to existing architecture
-- deploy — Full deployment pipeline
-- pr-review — Structured PR review
-- security-audit — Security review across all layers
-- main-workflow — General development workflow
-- iterate-plan — Tech stack gap analysis
-- setup-session — Session initialization
-- using-git-worktrees — Isolated workspace management
-- github-workflow-automation — GitHub CI/CD patterns
-- audit-context-building — Deep code analysis
-- context7-auto-research — Auto documentation lookup
-- self-improving-agent — Learning from experiences
+- ...
 
-### Stack Skills
-- [skill-name] — [description] (installed for [STACK_KEY]=[value])
+### Stack Skills (Per-Surface)
+- [skill-name] — [description] (surface: [surface], column: [column])
+- ...
+
+### Stack Skills (Cross-Cutting)
+- [skill-name] — [description] (category: [category])
 - ...
 
 ### Surface Skills
@@ -241,10 +238,11 @@ After provisioning, build a markdown list of all installed skills (both defaults
 
 Present the results to the calling command (not directly to the user — the calling command handles user communication):
 
-- Which `{{PLACEHOLDER}}`s were filled (and their values)
-- Which `{{PLACEHOLDER}}`s remain unfilled
-- Which skills were provisioned from the library (if any)
+- Which map cells were filled (and their values)
+- Which map cells remain empty
+- Skill resolution report (from step 7)
 - Which skills were already installed and skipped
+- Any `⚠️` cells requiring user attention
 - Any errors (missing files, missing library paths)
 
 ---
@@ -253,7 +251,8 @@ Present the results to the calling command (not directly to the user — the cal
 
 Bootstrap is safe to call multiple times:
 
-- **Already-filled placeholders**: If a `{{PLACEHOLDER}}` has already been replaced with a value, it is NOT re-filled unless the calling command explicitly provides a new value for that key
-- **Already-installed skills**: Skills that already exist in `.claude/skills/` are not re-copied from the library
-- **New values**: New stack/surface values trigger new skill installations without affecting existing ones
-- **Partial invocation**: Bootstrap can be called with just one or two new values — it only fills what's provided
+- **Already-filled map cells**: Cells with values are NOT overwritten unless the calling command explicitly re-provides a value for that surface + column
+- **Already-installed skills**: Skills that already exist in `.agent/skills/` are not re-copied from the library
+- **New surface rows**: New surfaces trigger new row creation without affecting existing rows
+- **Appending values**: Cross-cutting skills and accumulated columns append to existing comma-separated lists without duplicating
+- **Partial invocation**: Bootstrap can be called with just one surface or one key — it only fills what's provided

@@ -16,6 +16,12 @@
 - Cross-cut Detection: always-on
 - Deep Think Protocol: active
 
+## Structural Classification
+
+- **Project Shape**: [single-surface | multi-surface-shared | multi-product]
+- **Surfaces**: [list of identified surfaces, e.g., "Web (Astro/React), Desktop (Rust/Tauri), Mobile (React Native)" — or "N/A" for single-surface]
+- **Classification Basis**: [how this was determined — "detected from document", "user interview", "inferred from one-liner"]
+
 ## Progress Summary
 
 | Metric | Value |
@@ -44,9 +50,27 @@
 
 ### Domain Documents
 
+> **Path convention:** For single-surface projects, domains live in `domains/NN-slug.md`.
+> For multi-product projects, surface-exclusive domains live in `surfaces/{surface}/NN-slug.md`
+> and shared domains live in `domains/NN-slug.md`.
+
+| # | Domain | Surface | Path | Status | Sub-areas | Deep Think |
+|---|--------|---------|------|--------|-----------|------------|
+| 01 | _Domain Name_ | _surface or shared_ | [01-domain-slug.md](domains/01-domain-slug.md) | `[SURFACE]` | _N_ sub-areas | _N_ hypotheses |
+
+_For multi-product projects, group domains by surface:_
+
+#### Surface: _Surface Name_
+
 | # | Domain | Path | Status | Sub-areas | Deep Think |
 |---|--------|------|--------|-----------|------------|
-| 01 | _Domain Name_ | [01-domain-slug.md](domains/01-domain-slug.md) | `[SURFACE]` | _N_ sub-areas | _N_ hypotheses |
+| 01 | _Domain Name_ | [01-slug.md](surfaces/{surface}/01-slug.md) | `[SURFACE]` | _N_ | _N_ |
+
+#### Shared Domains
+
+| # | Domain | Consumed By | Path | Status | Sub-areas | Deep Think |
+|---|--------|-------------|------|--------|-----------|------------|
+| 01 | _Domain Name_ | _surface list_ | [01-slug.md](domains/01-slug.md) | `[SURFACE]` | _N_ | _N_ |
 
 ### Cross-Cut Ledger
 

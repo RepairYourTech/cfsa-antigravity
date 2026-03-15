@@ -27,7 +27,7 @@ Write the FE spec to `docs/plans/fe/`, update indexes, run quality checks, and p
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 Read .agent/skills/spec-writing/SKILL.md and follow its completeness testing and cross-reference checking methodology.
-Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md and follow its methodology.
+Load the Accessibility skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 
 **Naming convention**: Numbered prefix matching feature position + kebab-case name (e.g., `01-auth-ui.md`). Cross-cutting: `00-` prefix.

@@ -14,15 +14,15 @@ trigger: always_on
 | Rule | Implementation |
 |------|---------------|
 | **No PII in AI payloads** | User data (email, name, DOB, payment info) is NEVER included in AI model requests |
-| **PII fields tagged in schemas** | Zod schemas mark sensitive fields with `.describe('PII')` for automated auditing |
+| **PII fields tagged in schemas** | {{CONTRACT_LIBRARY}} schemas mark sensitive fields for automated auditing |
 | **No PII in logs** | Structured logging with automatic PII redaction |
 | **No PII in error messages** | Error responses never include user data — use IDs and codes only |
 | **Encrypted at rest** | All PII fields encrypted in database |
 
 ## Input Validation
 
-- **Every** API endpoint validates input with Zod — no exceptions
-- **Every** form validates client-side with Zod AND server-side with the same schema
+- **Every** API endpoint validates input with {{CONTRACT_LIBRARY}} — no exceptions
+- **Every** form validates client-side with {{CONTRACT_LIBRARY}} AND server-side with the same schema
 - **No** raw user input reaches a database query — always parameterized
 - **No** user input is rendered as HTML — always escaped
 - **Rate limiting** — Every public-facing endpoint must have rate limiting configured. No exceptions. Use the project's configured rate limiting utility (see `patterns.md` for the approach). Unauthenticated endpoints must have stricter limits than authenticated ones.

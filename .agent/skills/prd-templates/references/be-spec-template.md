@@ -24,7 +24,7 @@ that lets a reviewer verify nothing was missed or invented.]
 | [specific subsystem] | [deep-dive.md] | § Key Decisions |
 
 ## API Endpoints
-## Request/Response Contracts (Zod schemas)
+## Request/Response Contracts ({{CONTRACT_LIBRARY}} schemas)
 ## Database Schema
 ## Middleware & Policies
 ## Data Flow
@@ -42,7 +42,7 @@ that lets a reviewer verify nothing was missed or invented.]
 
 Apply after writing every BE spec:
 
-- [ ] Every endpoint has a Zod request AND response schema
+- [ ] Every endpoint has a {{CONTRACT_LIBRARY}} request AND response schema
 - [ ] Every database table has defined fields, indexes, and permissions
 - [ ] Security constraints from IA shard reflected in middleware section
 - [ ] Error codes are specific (not generic 500s)

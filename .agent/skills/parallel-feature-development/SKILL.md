@@ -1,13 +1,13 @@
 ---
 name: parallel-feature-development
-description: Prevent tool call conflicts when making concurrent edits across a codebase. Establishes strict file ownership, interface contracts, and merge strategies. Use with parallel-agents when executing concurrent `replace_file_content` calls.
+description: Prevent tool call conflicts when making concurrent edits across a codebase. Establishes strict file ownership, interface contracts, and merge strategies. Use with parallel-agents when executing concurrent code changes.
 ---
 
 # Concurrent Feature Development
 
 ## Overview
 
-When making concurrent code edits (e.g. implementing the frontend and backend of a slice simultaneously), the #1 risk is **file hash conflicts** — trying to execute multiple `replace_file_content` calls on the same file, which causes the operation to fail. This skill prevents that with strict file ownership, typed interface contracts, and batched execution.
+When making concurrent code edits (e.g. implementing the frontend and backend of a slice simultaneously), the #1 risk is **file conflicts** — trying to modify the same file from multiple streams, which causes the operation to fail. This skill prevents that with strict file ownership, typed interface contracts, and batched execution.
 
 **Core principle:** One concurrent stream per file, always. No exceptions. If two streams need the same file, they're not independent — restructure the decomposition.
 
@@ -36,58 +36,51 @@ If Stream A owns `src/auth/login.ts`, no other stream may modify that file — n
 
 ### 1. Ownership Declaration
 
-Before writing code concurrently, create an explicit mental or written ownership manifest:
+Before writing code concurrently, create an explicit ownership manifest:
 
 ```markdown
 ## File Ownership Manifest
 
 | Stream | Owned Files | Interface Files |
 |--------|-------------|-----------------|
-| Stream 1 (Auth) | `src/auth/*`, `src/middleware/auth.ts` | `src/types/auth.ts` |
-| Stream 2 (API) | `src/api/*`, `src/middleware/api.ts` | `src/types/api.ts` |
-| Stream 3 (UI) | `src/components/*`, `src/pages/*` | `src/types/ui.ts` |
+| Stream 1 (Auth) | `src/auth/*`, `src/middleware/auth.*` | `src/types/auth.*` |
+| Stream 2 (API) | `src/api/*`, `src/middleware/api.*` | `src/types/api.*` |
+| Stream 3 (UI) | `src/components/*`, `src/pages/*` | `src/types/ui.*` |
 
 ### Shared Files (Frozen)
-- `src/types/shared.ts` — modify only in synthesis step
-- `src/config.ts` — frozen during parallel work
-- `package.json` — frozen during parallel work
+- `src/types/shared.*` — modify only in synthesis step
+- `src/config.*` — frozen during parallel work
+- Package manifest — frozen during parallel work
 ```
 
 **Rules:**
-- Every source file to be edited appears in exactly ONE workstream
-- Shared files are **frozen** — do not mutate them concurrently
+- Every source file appears in exactly ONE workstream
+- Shared files are **frozen** — do not mutate concurrently
 - If a stream needs a change to a shared file, document it as a `// BOUNDARY:` stub
 - Interface files define the contract between streams
 
 ### 2. Interface Contracts
 
-Before generating concurrent edits, define the typed interfaces they'll communicate through:
+Before generating concurrent edits, define the typed interfaces they'll communicate through.
 
-```typescript
-// src/types/auth.ts — Stream 1 PRODUCES this, Stream 2 CONSUMES it
-export interface AuthResult {
-  userId: string;
-  roles: string[];
-  token: string;
-}
+**Example (pseudocode — adapt to your language):**
+```
+// src/types/auth — Stream 1 PRODUCES, Stream 2 CONSUMES
+AuthResult { userId: string, roles: string[], token: string }
 
-// src/types/api.ts — Stream 2 PRODUCES this, Stream 3 CONSUMES it
-export interface UserResponse {
-  id: string;
-  name: string;
-  email: string;
-}
+// src/types/api — Stream 2 PRODUCES, Stream 3 CONSUMES
+UserResponse { id: string, name: string, email: string }
 ```
 
 **Contract rules:**
-- Interfaces are strictly defined BEFORE generating logic
-- Do NOT change interface files during the concurrent implementation phase
+- Interfaces defined BEFORE generating logic
+- Do NOT change interface files during the concurrent phase
 - Each interface has exactly one PRODUCER and one or more CONSUMERS
 - Develop against the interface, not assumptions
 
 ### 3. Batched Tool Execution
 
-When generating concurrent tool calls in the same turn:
+When generating concurrent tool calls:
 
 ```markdown
 ## Stream: [Role]
@@ -110,7 +103,7 @@ If you need something from another stream's domain:
 
 ### 4. Merge Protocol
 
-Always execute edits that don't overlap in a single batched `multi_replace_file_content` call, but conceptually process dependencies:
+Process dependencies in order:
 
 ```
 1. Interface files (already defined, verify no changes)
@@ -127,19 +120,17 @@ Always execute edits that don't overlap in a single batched `multi_replace_file_
 
 ### 5. Conflict Resolution
 
-If despite everything, a conflict is detected:
-
 | Conflict Type | Resolution |
 |---------------|-----------|
-| **Same file modified** | `replace_file_content` block. Separate edits into sequential tool calls. |
+| **Same file modified** | Separate edits into sequential tool calls |
 | **Interface mismatch** | Producer's implementation doesn't match contract → fix producer |
 | **Missing dependency** | Assumed something exists that doesn't → add BOUNDARY stub |
-| **Mutual dependency** | A needs B's output AND B needs A's output → can't go concurrent, code sequentially |
+| **Mutual dependency** | A needs B's output AND B needs A's → can't go concurrent, code sequentially |
 
 ## Integration with Kit
 
-- **With `session-continuity` Protocol 9 (Parallel Claim):** When tasks in progress files have surface tags (`BE`, `FE`, `QA`) and claim markers (`[!]`), the `files:` blocks under claimed tasks serve as your live ownership manifest. By analyzing these blocks, you can safely batch `replace_file_content` calls for both `FE` and `BE` tasks simultaneously.
-- **With `boundary-not-placeholder`:** Use `// BOUNDARY:` stubs for cross-stream dependencies you can't resolve concurrently. Resolve them sequentially afterward.
+- **With `session-continuity` Protocol 9 (Parallel Claim):** Surface tags (`BE`, `FE`, `QA`) and claim markers (`[!]`) in progress files serve as your live ownership manifest.
+- **With `boundary-not-placeholder`:** Use `// BOUNDARY:` stubs for cross-stream dependencies. Resolve them sequentially afterward.
 - **With `implement-slice`:** When a slice enters parallel mode (step 1.5), claim all tags concurrently. The synthesis step (6.5) resolves BOUNDARY stubs on frozen files.
 
 ## Example: Concurrent Vertical Slice
@@ -148,19 +139,19 @@ If despite everything, a conflict is detected:
 
 | Stream | Surface | Owned Files | Produces | Consumes |
 |--------|---------|-------------|----------|----------|
-| DB Stream | Schema | `migrations/003-profile.sql`, `src/db/profile.ts` | `ProfileRecord` type | — |
-| API Stream | Endpoint | `src/api/profile.ts`, `src/api/profile.test.ts` | `GET /api/profile` | `ProfileRecord` |
-| UI Stream | Component | `src/components/Profile.tsx`, `src/pages/profile.astro` | Rendered page | `GET /api/profile` |
+| DB | Schema | `migrations/003-profile.*`, `src/db/profile.*` | `ProfileRecord` type | — |
+| API | Endpoint | `src/api/profile.*`, `src/api/profile.test.*` | `GET /api/profile` | `ProfileRecord` |
+| UI | Component | `src/components/Profile.*`, `src/pages/profile.*` | Rendered page | `GET /api/profile` |
 
 **Merge order:** DB → API → UI (dependency chain)
 
-**Frozen files:** `src/types/shared.ts`, `astro.config.mjs`, `package.json`
+**Frozen files:** `src/types/shared.*`, config, package manifest
 
 ## Common Mistakes
 
 | Mistake | Consequence | Fix |
 |---------|-------------|-----|
-| Two sub-tasks mutate the same file | Tool call conflict, lost edits | ONE STREAM PER FILE. NO EXCEPTIONS. |
+| Two streams mutate the same file | Tool call conflict, lost edits | ONE STREAM PER FILE |
 | No interface contracts | Mismatched assumptions | Define types BEFORE editing |
 | Skipping integration tests | Interfaces match but behavior doesn't | Full suite after batch edits |
-| Parallelizing tightly coupled code | Constant blocking, BOUNDARY stubs everywhere | Code sequentially |
+| Parallelizing tightly coupled code | Constant blocking, stubs everywhere | Code sequentially |

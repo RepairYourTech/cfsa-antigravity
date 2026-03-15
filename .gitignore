@@ -3,6 +3,9 @@ template/
 node_modules/
 package-lock.json
 
+# Kit development tools (not distributed)
+.agent/skills/antigravity-workflows/
+
 # Project-specific content (kit provides empty scaffolding only)
 # These dirs exist with README.md/.gitkeep but content is project-specific
 docs/audits/*.md

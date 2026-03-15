@@ -39,11 +39,9 @@ This shard is **always** created for every project, regardless of what the archi
 
 The `00-infrastructure` skeleton must contain these five items:
 
-1. CI/CD pipeline setup (using the confirmed CI/CD skill from bootstrap)
-   Read .agent/skills/{{CI_CD_SKILL}}/SKILL.md and follow its pipeline configuration conventions.
+1. CI/CD pipeline setup — load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`)
 2. Environment configuration (`.env.example`, environment variable documentation)
-3. Deployment pipeline (using the confirmed hosting skill)
-   Read .agent/skills/{{HOSTING_SKILL}}/SKILL.md and follow its deployment conventions.
+3. Deployment pipeline — load the Hosting skill(s) from the cross-cutting section per the skill loading protocol
 4. Project scaffolding (directory structure, base configuration files)
 5. Database initialization (schema creation, migration tooling setup)
 
@@ -53,7 +51,7 @@ The `00-infrastructure` skeleton must contain these five items:
 
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **Shard Skeleton** template. For each shard, create a skeleton file at `docs/plans/ia/[NN-domain-name].md` using the template.
 
-Read .agent/skills/prd-templates/SKILL.md and follow its Shard Seeding Procedure for Level-1 sub-feature extraction from the relevant domain files in `docs/plans/ideation/domains/` into shard ## Features sections.
+Read .agent/skills/prd-templates/SKILL.md and follow its Shard Seeding Procedure for Level-1 sub-feature extraction. The procedure reads `ideation-index.md` to find the correct domain file path — files may be in `domains/` or `surfaces/{name}/` depending on the structural classification.
 
 Fallback for domains not covered in the ideation domain files is defined in the skill's Shard Seeding Procedure.
 

@@ -39,7 +39,7 @@ Analyze the project structure using file exploration tools. Do not just stop at 
 Read .agent/skills/architecture-mapping/SKILL.md and follow its component analysis methodology.
 
 Group files logically into components, but extract their exact contracts:
-- Use `grep_search` to find `z.object` or `interface` definitions.
+- Use `grep_search` to find contract/validation schema definitions. Search for patterns appropriate to the project's contract library (e.g., `z.object` for Zod, `BaseModel` for Pydantic, `Joi.object` for Joi, `schema(` for Yup, `struct` for Rust/Go, or `interface`/`type` definitions for TypeScript). Check `.agent/instructions/tech-stack.md` for the project's confirmed contract library if unsure.
 - Document exact schema names, required environment variables, and binding names (e.g., KV namespaces, R2 buckets).
 
 ## 3. Map Explicit Data Flow and Relationships
@@ -65,10 +65,27 @@ Create or update `docs/ARCHITECTURE.md`.
 
 Ensure the document is human-readable, well-structured, and focuses on high-level system interactions rather than low-level functional documentation.
 
-## 6. Present Results and Next Steps
+## 6. Phase completion gate
 
-Use `notify_user` to present a summary of the architecture map updates.
+Read `docs/plans/*-architecture-design.md` → **Phasing** section to determine the total number of planned phases.
+Read `.agent/progress/index.md` to determine the current phase number N and how many phases have `status: complete`.
 
-### Proposed next steps
+### If completed phases < total phases
 
-"Architecture map updated. Next: Run `/plan-phase` for the next phase, or if all phases are complete, the project is ready for deployment — refer to your CI/CD pipeline configuration and the deployment procedures documented in `docs/plans/ENGINEERING-STANDARDS.md`."
+The pipeline has more phases to implement. Present:
+
+> "Architecture map updated for Phase N. **Next**: Run `/plan-phase` for Phase [N+1]."
+
+### If completed phases = total phases
+
+All phases are complete. The pipeline has reached its terminal state. Present:
+
+> "✅ **All phases complete.** Architecture map updated. The project is ready for deployment.
+>
+> - Refer to `docs/plans/ENGINEERING-STANDARDS.md` for deployment procedures
+> - Refer to your CI/CD pipeline configuration for automated deployment
+> - Run `/validate-phase` for the final phase if not already done
+>
+> No further `/plan-phase` iterations are needed."
+
+**Do NOT propose `/plan-phase` after the final phase.** The loop terminates here.

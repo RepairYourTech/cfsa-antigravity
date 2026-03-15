@@ -9,9 +9,9 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-stack]
   successors: [create-prd-security]
-  skills: [api-design-principles, database-schema-design, error-handling-patterns, prd-templates, technical-writer]
+  skills: [api-design-principles, database-schema-design, error-handling-patterns, prd-templates, session-continuity, technical-writer]
   calls-bootstrap: false
-requires_placeholders: [HOSTING_SKILL, ORM_SKILL, DATABASE_SKILLS]
+requires_map_columns: [Databases, ORMs, Hosting]
 ---
 
 // turbo-all
@@ -22,32 +22,32 @@ Design the high-level system architecture and data strategy. Create the data pla
 
 ---
 
-## 0. Placeholder guard
+## 0. Map guard
 
-Before any skill reads, verify that the following placeholder values have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 4.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the following columns/categories for filled values:
 
-| Placeholder | Filled by | Recovery | Why this matters |
+| Map Location | Column/Category | Recovery | Why this matters |
 |---|---|---|---|
-| `{{HOSTING_SKILL}}` | `/create-prd-stack` when hosting provider is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed hosting provider, then run `/bootstrap-agents HOSTING=<confirmed-provider>`. Otherwise run `/create-prd-stack` first. | Data strategy and schema design steps (Steps 4 and 5) cannot run without the hosting skill — deployment topology decisions will lack provider-specific conventions. |
-| `{{ORM_SKILL}}` | `/create-prd-stack` when ORM is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed ORM, then run `/bootstrap-agents ORM=<confirmed-orm>`. Otherwise run `/create-prd-stack` first. | Migration strategy (Step 5.4) cannot run without the ORM skill — schema conventions and migration patterns will be generic instead of stack-specific. |
-| `{{DATABASE_SKILLS}}` | `/create-prd-stack` when database technology is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed database, then run `/bootstrap-agents DATABASE=<confirmed-db>`. Otherwise run `/create-prd-stack` first. | Data strategy (Step 5) cannot run without the database skill — schema design patterns will be incompatible with the chosen database. |
+| Cross-Cutting | Hosting | Run `/create-prd-stack` to confirm hosting provider, then bootstrap. | Deployment topology (Step 4.3) needs hosting-specific conventions. |
+| Per-Surface (shared) | ORMs | Run `/create-prd-stack` to confirm ORM, then bootstrap. | Migration strategy (Step 5.4) needs ORM-specific schema conventions. |
+| Per-Surface (shared) | Databases | Run `/create-prd-stack` to confirm database(s), then bootstrap. | Data strategy (Step 5) needs database-specific schema design patterns. |
 
-For the hard stop message format and recovery instructions, see `.agent/skills/prd-templates/references/placeholder-guard-template.md`.
+> **Timing fallback**: During `/create-prd`, the map may be partially populated. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
 
-Only proceed to Step 4 when all three placeholders report no literal `{{` characters.
+If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
 ---
 
 ## 4. System architecture
 
-Read .agent/skills/{{API_DESIGN_SKILL}}/SKILL.md and .agent/skills/api-design-principles/SKILL.md for API surface design.
+Read `.agent/skills/api-design-principles/SKILL.md` for API surface design.
 
 Design the high-level system. Each sub-item requires full exploration, not a summary sentence:
 
 1. **Component diagram** — What services exist? How do they communicate? What protocols? What happens if one is down?
 2. **Data flow** — Request lifecycle from client to database and back. Every hop, every transformation, every auth check along the way. Draw the full sequence.
 3. **Deployment topology** — What runs where? Edge? Origin? External? Local machine? App Store? What are the latency implications? What are the cost implications?
-   Read .agent/skills/{{HOSTING_SKILL}}/SKILL.md and follow its deployment conventions.
+   Load the Hosting skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
    Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 4. **API surface** — REST? GraphQL? RPC? Versioning strategy? Error format? Pagination? Rate limit headers?
 
@@ -69,6 +69,8 @@ Refine based on discussion before proceeding.
 
 Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user.
 
+> **Decision recording**: For each non-trivial architecture decision (technology choices, deployment topology, API style, failure handling strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Architecture decisions have the highest downstream impact in the pipeline — record them to `memory/decisions.md` with the Philosopher + Devil's Advocate deliberation.
+
 ## 4.5. Error architecture
 
 > **Hard gate.** This step is mandatory for every project. All five decisions below must be confirmed by the user before `## 5. Data strategy` begins. Do not proceed to Data Strategy until every decision is explicitly approved.
@@ -81,13 +83,13 @@ Write the completed decisions to `docs/plans/architecture-draft.md` under a new 
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its schema design methodology.
 
-Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding. Each sub-item must be explored to field-level depth:
+Load the Databases skill(s) from the `shared` surface row per the skill loading protocol. Each sub-item must be explored to field-level depth:
 
 1. **Data placement** — What lives in the database vs cache vs object storage vs external service vs local device storage? For each entity: which service owns it and why
 2. **Schema approach** — Strict schema vs schemaless vs hybrid? Field types, constraints, indexes, relations with cardinality
 3. **Query patterns** — Read-heavy? Write-heavy? What are the hot paths? What needs caching? What are the N+1 risks?
 4. **Migration strategy** — How will schema evolve? Backward compatibility approach? Zero-downtime migration plan?
-   Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema conventions.
+   Load the ORMs skill(s) from the `shared` surface row per the skill loading protocol.
 5. **PII boundaries** — Which fields contain PII? Where is PII stored vs where is it NOT stored? How is PII isolated from AI/analytics pipelines?
 
 For multi-surface projects, additionally define:

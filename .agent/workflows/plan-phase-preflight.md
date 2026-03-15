@@ -50,7 +50,7 @@ Read these skills for slice planning guidance:
 
 ## 0.5. Application Completeness Audit
 
-Read `{{SURFACES}}` from `.agent/instructions/tech-stack.md`. For each row below, only run the check if "Applies To" matches the project's confirmed surfaces. Skip inapplicable rows.
+Read the **Surfaces** list from the Global Settings section of `.agent/instructions/tech-stack.md`. For each row below, only run the check if "Applies To" matches the project's confirmed surfaces. Skip inapplicable rows.
 
 Read all FE specs in `docs/plans/fe/` and check the following table.
 
@@ -106,13 +106,17 @@ Do not proceed until the user confirms all uncovered specs are resolved.
 
 ### 0.6b. Cross-Layer Field and Contract Consistency
 
-Using the `cross-layer-consistency` skill's methodology, verify:
+Using the `cross-layer-consistency` skill's methodology as a guide, verify the following **minimum checks** regardless of skill depth:
 
 1. **Field mapping**: For every BE response field consumed by an FE component, verify the field name, type, and nullability match exactly between the BE spec and FE spec.
 2. **Error code propagation**: For every error code defined in a BE spec, verify the corresponding FE spec documents how that error is displayed to the user.
 3. **Access control consistency**: For every RBAC role referenced in a BE spec's access control, verify the FE spec's conditional rendering matrix includes that role.
+4. **Data contract drift**: For every IA shard entity, verify that the BE spec's request/response schemas contain all fields defined in the IA shard's data model — no fields silently dropped or renamed.
+5. **State management consistency**: For every FE component that manages optimistic updates, verify the corresponding BE endpoint's error response is specified well enough for the FE to roll back.
 
 Collect all mismatches into a consistency report. If any exist → **hard stop** and present them to the user for resolution before proceeding.
+
+> These 5 checks are **non-negotiable minimums**. The `cross-layer-consistency` skill may define additional checks — run those too, but never skip these 5 even if the skill doesn't mention them.
 
 ---
 

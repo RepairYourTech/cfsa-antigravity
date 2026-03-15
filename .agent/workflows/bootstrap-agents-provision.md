@@ -1,5 +1,5 @@
 ---
-description: Skill library provisioning, workflow placeholder filling, and result reporting for the bootstrap-agents workflow
+description: Skill library provisioning using 4-tier resolution chain and map cell filling for the bootstrap-agents workflow
 parent: bootstrap-agents
 shard: provision
 standalone: true
@@ -9,7 +9,7 @@ pipeline:
   stage: provisioning
   predecessors: [bootstrap-agents-fill]
   successors: []
-  skills: [prd-templates]
+  skills: [prd-templates, find-skills]
   calls-bootstrap: false
 ---
 
@@ -17,9 +17,9 @@ pipeline:
 
 # Bootstrap Agents — Provision Skills
 
-Read the skill library manifest, provision matching skills, fill workflow placeholders, and report results.
+Read the surface stack map, resolve each skill using the 4-tier chain, provision from the library, and report results.
 
-**Prerequisite**: If invoked standalone, the caller must have template values available (from a previous `/bootstrap-agents-fill` run or direct invocation with stack/surface keys).
+**Prerequisite**: The surface stack map in `.agent/instructions/tech-stack.md` must have at least one row with filled cells (from a previous `/bootstrap-agents-fill` run).
 
 ---
 
@@ -27,112 +27,111 @@ Read the skill library manifest, provision matching skills, fill workflow placeh
 
 Read `.agent/skill-library/MANIFEST.md` to load the trigger tables.
 
-If `.agent/skill-library/MANIFEST.md` does not exist (e.g., user deleted it or is using a minimal kit), skip steps 7-8 and go to step 9.
+If `.agent/skill-library/MANIFEST.md` does not exist (e.g., user deleted it or is using a minimal kit), use only Tier 2-4 resolution (no manifest matching).
 
 ---
 
-## 7. Provision skills from library
+## 7. Provision skills — 4-Tier Resolution Chain
 
-For each stack key provided in the template values, check the **Stack Triggers** table in the manifest:
+Read the surface stack map from `.agent/instructions/tech-stack.md`. For **every skill name** referenced in any cell of both the Per-Surface Skills table and Cross-Cutting Skills table, resolve it:
 
-1. Match the provided value against the manifest's `Value Pattern` (case-insensitive)
-2. If a match is found AND the skill is NOT already in `.agent/skills/[installed-as]/`:
-   - Copy the entire directory from `.agent/skill-library/[library-path]/` → `.agent/skills/[installed-as]/`
-   - Fill any `{{PLACEHOLDER}}`s in the newly-copied `SKILL.md` with current template values
-3. If the skill already exists in `.agent/skills/`, skip it (idempotent)
+### Tier 1: Exact Match
 
-For each surface type provided in `SURFACES`, check the **Surface Triggers** table:
+Check `.agent/skills/{name}/` (already installed) and `.agent/skill-library/{name}/`:
 
-1. Match the surface type against the manifest's `Surface Type` column
-2. Copy matching skills that don't already exist, same as above
+- **Already installed** → skip (idempotent) ✅
+- **Found in library** → copy directory to `.agent/skills/{name}/`, fill any `{{PLACEHOLDER}}`s in the copied SKILL.md ✅
+- **Not found** → check manifest `Value Pattern` matches (glob-style, case-insensitive) → if matched, install the mapped skill → update the map cell to use the installed directory name ✅
+- **Still not found** → proceed to Tier 2
 
-### Matching rules
+### Tier 2: Partial Match + Adequacy Check
 
-| Manifest Pattern | Matches |
-|-----------------|---------|
-| `*surrealdb*` | "SurrealDB", "surrealdb (self-hosted)", "SurrealDB Cloud" |
-| `*cloudflare*` | "Cloudflare Workers", "Cloudflare Pages + Workers" |
-| `*tailwind*` | "Tailwind CSS v4", "Tailwind CSS" |
-| `*vercel*` OR `*ai-sdk*` | "Vercel AI SDK", "AI SDK" |
-| `*three*` OR `*r3f*` | "Three.js", "React Three Fiber", "R3F" |
+Search `.agent/skills/` and `.agent/skill-library/` for skills whose name contains the base term (e.g., for `surrealdb-embedded`, check `surrealdb`):
 
-Pattern matching is glob-style with `*` as wildcard, case-insensitive.
+1. **Partial match found** → read its `SKILL.md`
+2. **Assess adequacy**: Does the skill cover the needed variant? Check for:
+   - Keywords matching the variant (e.g., "embedded", "WASM", "Rust-native")
+   - Sections addressing the use case
+   - Examples relevant to the variant
+3. **Adequate** → use the existing skill. Report: `"{name}" resolved by existing "{partial}" skill (covers {variant})` ✅
+4. **Falls short** → the skill doesn't address the variant. Proceed to Tier 3.
+
+### Tier 3: External Discovery
+
+Read `.agent/skills/find-skills/SKILL.md` and invoke its methodology:
+
+1. Search for the skill externally
+2. **Found** → install → fill map cell with resolved name ✅
+3. **Not found** → proceed to Tier 4
+
+### Tier 4: Human Escalation
+
+Mark the map cell with `⚠️ {name} [not found]`. Add to the report:
+
+> Skill `{name}` was not found in the skill library, via partial match, or externally.
+> Options:
+> 1. Create it with `/skill-creator`
+> 2. Provide an alternative skill name
+> 3. Mark as not needed (change cell to `—`)
 
 ---
 
 ## 8. Update installed skills list
 
-After provisioning, build a markdown list of all installed skills (both defaults and library-provisioned) and update `{{INSTALLED_SKILLS}}` in the tech stack instruction.
+After provisioning, build a markdown list of all installed skills and update `{{INSTALLED_SKILLS}}` in:
+- `.agent/instructions/tech-stack.md`
+- `AGENTS.md`
+- `GEMINI.md`
 
-Also update `{{INSTALLED_SKILLS}}` in `AGENTS.md` and `GEMINI.md` with the same installed skills list. These root agent config files must reflect the full skill inventory so agents reading them have complete context.
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Installed Skills List** template. Organize skills by:
 
-Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Installed Skills List** template. Use the template structure, filling in actual installed skill names and descriptions.
+```markdown
+### Default Skills
+- fix-bug — TDD bug fix workflow
+- refactor — Safe refactoring with test verification
+- ...
 
-### 8.5. Compose and fill FRAMEWORK_PATTERNS
+### Stack Skills (Per-Surface)
+- [skill-name] — [description] (surface: [surface], column: [column])
+- ...
 
-Identify any frontend-capable framework skill provisioned or matched during this invocation by checking across all relevant stack axes:
+### Stack Skills (Cross-Cutting)
+- [skill-name] — [description] (category: [category])
+- ...
 
-| Stack Axis | Example Skills |
-|------------|---------------|
-| `FRONTEND_FRAMEWORK` | `nextjs`, `astro-framework`, `sveltekit`, `nuxt`, `react-best-practices` |
-| `MOBILE_FRAMEWORK` | `expo-react-native` |
-
-If any of these axes resolved to a provisioned skill in Step 7, use that skill for composition.
-
-**If a frontend-capable framework skill is present:**
-1. Read the installed skill's `SKILL.md` from `.agent/skills/[installed-as]/SKILL.md`
-2. Extract the component patterns section (file structure, naming conventions, composition patterns, what to avoid)
-3. Compose a `FRAMEWORK_PATTERNS` markdown block summarising these component conventions
-4. Fire `bootstrap-agents-fill` with `FRAMEWORK_PATTERNS=[composed value]` to fill the `## Components` section of `.agent/instructions/patterns.md`
-5. If multiple frontend-capable skills are present (e.g., `FRONTEND_FRAMEWORK` + `MOBILE_FRAMEWORK`), merge their patterns into a single `FRAMEWORK_PATTERNS` block with clearly labelled sections per surface
-
-This step is idempotent — it can be re-run on existing projects to fill `patterns.md` without re-provisioning the skill. For remediation flows, provide the relevant stack axis value(s) so this step resolves the correct skill(s).
-
-**If no frontend-capable framework skill is present:** Skip — `patterns.md` already has a sensible fallback for non-visual projects.
+### Surface Skills
+- [skill-name] — [description] (installed for [surface] surface)
+- ...
+```
 
 ---
 
-## 9. Fill workflow skill placeholders
+## 8.5. Compose and fill FRAMEWORK_PATTERNS
 
-In the generic workflows, replace the following placeholders with the **directory name** of the installed skill (e.g., `surrealdb-expert`, `typescript-advanced-patterns`). The surrounding path `.agent/skills/.../SKILL.md` is hardcoded in each workflow. If no skill was installed for a given category, instruct the agent to skip it or provide a reasonable default.
+Identify any frontend-capable framework skill provisioned during this invocation:
 
-### DATABASE_SKILLS accumulation logic
+| Stack Axis | Example Skills |
+|------------|---------------|
+| FE Frameworks | `nextjs`, `astro-framework`, `sveltekit`, `nuxt`, `react-best-practices` |
+| BE Frameworks (with desktop UI) | `tauri` |
 
-`{{DATABASE_SKILLS}}` is a comma-separated list of installed skill directory names (one per confirmed database store, e.g., `postgresql,qdrant,redis`). Bootstrap appends the new skill name to the existing list value rather than overwriting it. If the list is empty, set it to the single name. If the name is already present, skip (idempotent).
+Check the map's FE Frameworks and BE Frameworks columns across ALL surfaces. If any resolved to a skill with component patterns:
 
-The following sub-keys all trigger the `{{DATABASE_SKILLS}}` accumulation logic:
-- `DATABASE_PRIMARY` — Main relational/document/multi-model store
-- `DATABASE_VECTOR` — Semantic search, embeddings, similarity
-- `DATABASE_GRAPH` — Graph traversal, relationship queries
-- `DATABASE_CACHE` — Caching layer
-- `DATABASE_TIMESERIES` — Time-ordered data, metrics, IoT
+1. Read the installed skill's `SKILL.md`
+2. Extract component patterns (file structure, naming, composition, what to avoid)
+3. Compose a `FRAMEWORK_PATTERNS` markdown block
+4. Fire `bootstrap-agents-fill` with `FRAMEWORK_PATTERNS=[composed value]`
+5. If multiple frontend-capable skills across surfaces → merge with labelled sections per surface
 
-> **Backward compatibility**: If the incoming key is `DATABASE`, treat it as `DATABASE_PRIMARY` and proceed identically.
+---
 
-### SECURITY_SKILLS accumulation logic
+## 9. CONTRACT_LIBRARY resolution
 
-`{{SECURITY_SKILLS}}` is a comma-separated list of all security skill directory names provisioned for this project. Bootstrap appends the new skill name to the existing list value rather than overwriting it. If the list is empty, set it to the single name. If the name is already present, skip (idempotent).
+This step fires when ANY Languages cell is confirmed.
 
-The following keys all contribute to `{{SECURITY_SKILLS}}` accumulation:
-- `SECURITY` — Explicit user-named security skill (e.g., `SECURITY=owasp-web-security`)
-- Surface trigger: web → appends `owasp-web-security`, `csp-cors-headers`, `input-sanitization`
-- Surface trigger: api → appends `input-sanitization` (if not already present)
-- Surface trigger: desktop → appends `desktop-security-sandboxing`
-- Surface trigger: any → appends `dependency-auditing`
+For each unique language across all surfaces, derive `CONTRACT_LIBRARY`:
 
-`{{SECURITY_SKILLS}}` is used in `create-prd-security.md` Step 6 to load all relevant security skills before designing the security model.
-
-### Placeholder → Workflow mapping
-
-Read `.agent/skills/prd-templates/references/placeholder-workflow-mapping.md` for the full mapping table of placeholders → source keys → consuming workflows.
-
-### 9.1. CONTRACT_LIBRARY resolution
-
-This step fires when the `LANGUAGE` key is confirmed (either from the current invocation or from an already-filled `tech-stack.md`).
-
-Derive `CONTRACT_LIBRARY` using the following mapping table:
-
-| `LANGUAGE` value | `CONTRACT_LIBRARY` value |
+| Language | Contract Library |
 |---|---|
 | TypeScript / JavaScript | Zod |
 | Python | Pydantic |
@@ -140,43 +139,27 @@ Derive `CONTRACT_LIBRARY` using the following mapping table:
 | Rust | Serde |
 | Java | Jakarta Bean Validation |
 | Kotlin | kotlinx.serialization |
-| C / C++ | (prompt user — no dominant standard) |
-| Bash / Shell | (none — validate inline with functions) |
+| C / C++ | (prompt user) |
+| Bash / Shell | (none) |
 
-For any language **not in this table**: prompt the user — "What is your preferred schema validation / contract library for [LANGUAGE]?" — and use their confirmed answer as the `CONTRACT_LIBRARY` value.
+For languages **not in this table**: prompt the user.
 
-Once the value is confirmed, invoke `bootstrap-agents-fill` with `CONTRACT_LIBRARY=[value]` so that `tdd-contract-first.md` is filled at the same time as the language skill is provisioned (the fill workflow's extended Step 3 scan will now reach `.agent/rules/`).
+> **Multi-language**: If the project uses multiple languages (e.g., TypeScript + Rust), set `CONTRACT_LIBRARY` to a comma-separated list: `zod, serde`. Update `tdd-contract-first.md` to reference the appropriate library based on the file's language.
 
----
-
-## 9.5. Fill workflow command placeholders
-
-Workflows use `{{COMMAND}}` placeholders for test, lint, build, and validation commands. Replace them with the values gathered during tech stack decisions (step 1).
-
-In `.agent/workflows/implement-slice-tdd.md`:
-- `{{TEST_COMMAND}}` → the project's test runner command
-- `{{VALIDATION_COMMAND}}` → the full validation pipeline command
-
-In `.agent/workflows/validate-phase.md`:
-- `{{TEST_COMMAND}}` → the project's test runner command
-- `{{TEST_COVERAGE_COMMAND}}` → the test runner with coverage enabled
-- `{{LINT_COMMAND}}` → the linter command
-- `{{TYPE_CHECK_COMMAND}}` → the type checker command
-- `{{BUILD_COMMAND}}` → the production build command
-
-In `.agent/workflows/evolve-contract.md`:
-- `{{TEST_COMMAND}}` → the project's test runner command
-- `{{VALIDATION_COMMAND}}` → the full validation pipeline command
-
+Fire `bootstrap-agents-fill` with `CONTRACT_LIBRARY=[value]` to fill `tdd-contract-first.md`.
 
 ---
 
 ## 10. Report results
 
-Return to the calling workflow a summary:
+Return to the calling workflow:
 
-- Which `{{PLACEHOLDER}}`s were filled (and their values)
-- Which `{{PLACEHOLDER}}`s remain unfilled
-- Which skills were provisioned from the library (if any)
-- Which skills were already installed and skipped
-- Any errors (missing files, missing library paths)
+- **Map cells filled** — which surface/column combinations were resolved
+- **Skills provisioned** — installed from library (Tier 1)
+- **Skills resolved by adequacy** — existing skill covers variant (Tier 2), with justification
+- **Skills discovered externally** — found via find-skills (Tier 3)
+- **⚠️ Cells requiring attention** — skills not found (Tier 4)
+- **Skills skipped** — already installed
+- **Contract library** — resolved value(s)
+- **Framework patterns** — composed and filled (if applicable)
+- **Errors** — missing files, missing library paths

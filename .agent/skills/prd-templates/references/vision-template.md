@@ -25,7 +25,7 @@ Not the full 6-field exploration — that detail stays in the personas file.]
 [2-3 paragraphs describing what the product does and why it matters.]
 
 ## Domain Map
-[One paragraph per domain, condensed from the domain files in `ideation/domains/`.
+[One paragraph per domain, condensed from the ideation domain files (paths in `ideation-index.md` Domain Documents table).
 Each domain links to its full file.]
 
 ## Feature Inventory (MoSCoW)

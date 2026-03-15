@@ -23,25 +23,28 @@ Check progress state, load skills, read the slice, detect parallel mode, and wri
 
 ## -1. Placeholder verification (CRITICAL — run before anything else)
 
-Scan for unfilled placeholders before writing code. Read each file and scan for `{{`:
+Scan the surface stack map in `.agent/instructions/tech-stack.md` for completeness before writing code.
 
-1. `AGENTS.md`
-2. `GEMINI.md`
-3. `.agent/instructions/workflow.md`
-4. `.agent/instructions/commands.md`
-5. `.agent/instructions/structure.md`
-6. `.agent/instructions/patterns.md`
-7. `.agent/instructions/tech-stack.md`
+Verify:
+1. The slice's surface row has filled values for **all** required columns (Languages, Databases, BE Frameworks, FE Frameworks, ORMs, Unit Tests, E2E Tests, FE Design, State Mgmt)
+2. Cross-cutting categories have filled values (Auth, Security, CI/CD, Hosting, Accessibility)
+3. Commands section in `.agent/instructions/commands.md` has non-template values
 
-**If ANY `{{PLACEHOLDER}}` found** → STOP. Tell user which files contain unfilled placeholders with remediation:
+Also scan these instruction files for any remaining template markers:
+- `.agent/instructions/structure.md`
+- `.agent/instructions/patterns.md`
+- `.agent/instructions/tech-stack.md`
 
-| Unfilled pattern | Remediation |
-|-----------------|-------------|
-| `AGENTS.md`, `GEMINI.md`, `workflow.md`, `commands.md`, `tech-stack.md` | Run `/create-prd` |
-| `structure.md` (`{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}`) | Run `/create-prd-compile` Step 9.5 |
-| `patterns.md` (`{{FRAMEWORK_PATTERNS}}`) | Run `/bootstrap-agents-provision` |
+**If the map has empty cells for this slice's surface** → STOP. Tell user which cells are empty with remediation:
 
-Only proceed when zero `{{` patterns remain in all seven files.
+| Empty Cell | Remediation |
+|---|---|
+| Languages / Databases / Frameworks | Run `/create-prd-stack` first |
+| Commands section | Run `/bootstrap-agents` |
+| `structure.md` (project structure) | Run `/create-prd-compile` Step 9.5 |
+| `patterns.md` (framework patterns) | Run `/bootstrap-agents-provision` |
+
+Only proceed when the map is fully populated for this slice's surface.
 
 ---
 
@@ -55,10 +58,9 @@ Verify previous slice was fully marked complete before starting this one.
 
 Read these skill SKILL.md files: `tdd-workflow`, `error-handling-patterns`, `git-workflow`, `code-review-pro`, `testing-strategist`, `clean-code`, `logging-best-practices`, `minimalist-surgical-development`, `systematic-debugging`. All are in `.agent/skills/[name]/SKILL.md`.
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
-If this slice includes BE tasks: Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema conventions. Skip if no BE tasks or `{{ORM_SKILL}}` is not provisioned.
-Read .agent/skills/{{UNIT_TESTING_SKILL}}/SKILL.md and follow its test writing conventions.
-If this slice includes FE tasks: Read .agent/skills/{{STATE_MANAGEMENT_SKILL}}/SKILL.md and follow its state management conventions. Skip if no FE tasks or `{{STATE_MANAGEMENT_SKILL}}` is not provisioned.
+Determine which surface this slice belongs to from the phase plan. Read the surface stack map.
+
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and load skills for this slice's surface: Languages, Unit Tests, and conditionally ORMs (if BE tasks) and State Mgmt (if FE tasks).
 
 Use `find-skills` to discover a test framework skill if needed.
 
@@ -95,16 +97,16 @@ Log each dispatch phase to `.agent/progress/slices/phase-NN-slice-NN.md` `## Dis
 
 ---
 
-## 2. Write the contract (Zod schema)
+## 2. Write the contract ({{CONTRACT_LIBRARY}} schema)
 
 Before writing the schema, locate the BE endpoint(s) referenced by this slice's acceptance criteria. For each endpoint:
-1. Read the BE spec section that defines it. Copy the typed Zod contract completely — every request field, response field, error code, and validation rule.
+1. Read the BE spec section that defines it. Copy the typed {{CONTRACT_LIBRARY}} contract completely — every request field, response field, error code, and validation rule.
 2. Read the slice's acceptance criteria. Add any additional request/response shapes required by behavioral assertions that are not already present in the BE contract (e.g., query parameters implied by filter behavior, UI-specific error payloads).
 3. Verify the combined schema covers every acceptance criterion and every BE contract field. Flag any drift between the BE spec and the IA shard it implements.
 
-Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventions.
+Load the Languages skill(s) from this slice's surface row per the skill loading protocol.
 
-Define request/response shapes as Zod schemas in the contracts directory (see `.agent/instructions/structure.md`). This is the source of truth.
+Define request/response shapes as {{CONTRACT_LIBRARY}} schemas in the contracts directory (see `.agent/instructions/structure.md`). This is the source of truth.
 
 ### Propose next step
 

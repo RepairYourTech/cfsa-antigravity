@@ -44,7 +44,7 @@ Use this template when writing FE specs to `docs/plans/fe/[NN-feature-name].md`.
 [Server state, client state, URL state, loading/error/empty]
 
 ## Interaction Specification
-[Click, hover, keyboard, form validation matching Zod]
+[Click, hover, keyboard, form validation matching {{CONTRACT_LIBRARY}}]
 
 ## Responsive Behavior
 [Breakpoints, component behavior per breakpoint]

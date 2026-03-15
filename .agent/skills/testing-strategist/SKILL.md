@@ -6,7 +6,18 @@ version: 1.0.0
 
 # Testing Strategist
 
-Test the right things at the right level - write tests that give you confidence to ship.
+Test the right things at the right level — write tests that give you confidence to ship.
+
+## Stack-Specific References
+
+After reading the methodology below, read the reference matching your surface's Languages column in the surface stack map (`.agent/instructions/tech-stack.md`):
+
+| Language | Reference |
+|----------|-----------|
+| TypeScript / JavaScript | `references/typescript.md` |
+| Python | `references/python.md` |
+| Go | `references/go.md` |
+| Rust | `references/rust.md` |
 
 ## Core Principle
 
@@ -14,11 +25,11 @@ Test the right things at the right level - write tests that give you confidence 
 
 Tests should be:
 
-- **Fast** - Run in milliseconds (unit) to seconds (integration) to minutes (E2E)
-- **Isolated** - Test one thing at a time
-- **Repeatable** - Same input = same output
-- **Self-checking** - Pass/fail automatically, no manual verification
-- **Timely** - Written alongside code (or before, with TDD)
+- **Fast** — Run in milliseconds (unit) to seconds (integration) to minutes (E2E)
+- **Isolated** — Test one thing at a time
+- **Repeatable** — Same input = same output
+- **Self-checking** — Pass/fail automatically, no manual verification
+- **Timely** — Written alongside code (or before, with TDD)
 
 ---
 
@@ -57,194 +68,24 @@ Test individual functions, components, or classes in isolation.
 **Good candidates:**
 
 - ✅ Business logic functions (calculations, validation, transformations)
-- ✅ Utility functions (formatDate, parseUrl, etc.)
-- ✅ React components (rendering, props, state)
-- ✅ Hooks (custom React hooks)
+- ✅ Utility functions (formatting, parsing, etc.)
+- ✅ UI components (rendering, props, state)
 - ✅ Pure functions (same input = same output)
 
 **Skip:**
 
 - ❌ Third-party libraries (assume they work)
-- ❌ Framework internals (React, Next.js)
+- ❌ Framework internals
 - ❌ Simple getters/setters with no logic
-
-### Unit Test Examples
-
-#### Testing Business Logic (Jest + TypeScript)
-
-```typescript
-// src/lib/pricing.ts
-export function calculateTotal(items: { price: number; quantity: number }[]) {
-  return items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-}
-
-export function applyDiscount(total: number, discountPercent: number) {
-  if (discountPercent < 0 || discountPercent > 100) {
-    throw new Error('Invalid discount percentage')
-  }
-  return total * (1 - discountPercent / 100)
-}
-
-// src/lib/pricing.test.ts
-import { calculateTotal, applyDiscount } from './pricing'
-
-describe('calculateTotal', () => {
-  it('calculates total for single item', () => {
-    const items = [{ price: 10, quantity: 2 }]
-    expect(calculateTotal(items)).toBe(20)
-  })
-
-  it('calculates total for multiple items', () => {
-    const items = [
-      { price: 10, quantity: 2 },
-      { price: 5, quantity: 3 }
-    ]
-    expect(calculateTotal(items)).toBe(35)
-  })
-
-  it('returns 0 for empty array', () => {
-    expect(calculateTotal([])).toBe(0)
-  })
-})
-
-describe('applyDiscount', () => {
-  it('applies discount correctly', () => {
-    expect(applyDiscount(100, 20)).toBe(80)
-  })
-
-  it('throws error for invalid discount', () => {
-    expect(() => applyDiscount(100, -10)).toThrow('Invalid discount')
-    expect(() => applyDiscount(100, 150)).toThrow('Invalid discount')
-  })
-})
-```
-
-#### Testing React Components (Jest + React Testing Library)
-
-```typescript
-// src/components/Button.tsx
-export function Button({
-  children,
-  variant = 'primary',
-  onClick
-}: {
-  children: React.ReactNode
-  variant?: 'primary' | 'secondary'
-  onClick?: () => void
-}) {
-  return (
-    <button
-      className={`btn btn-${variant}`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  )
-}
-
-// src/components/Button.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Button } from './Button'
-
-describe('Button', () => {
-  it('renders with correct text', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByText('Click me')).toBeInTheDocument()
-  })
-
-  it('applies primary variant by default', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByRole('button')).toHaveClass('btn-primary')
-  })
-
-  it('applies secondary variant when specified', () => {
-    render(<Button variant="secondary">Click me</Button>)
-    expect(screen.getByRole('button')).toHaveClass('btn-secondary')
-  })
-
-  it('calls onClick when clicked', () => {
-    const handleClick = jest.fn()
-    render(<Button onClick={handleClick}>Click me</Button>)
-
-    fireEvent.click(screen.getByRole('button'))
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
-})
-```
-
-#### Testing Custom Hooks
-
-```typescript
-// src/hooks/useCounter.ts
-import { useState } from 'react'
-
-export function useCounter(initialValue = 0) {
-  const [count, setCount] = useState(initialValue)
-
-  const increment = () => setCount(c => c + 1)
-  const decrement = () => setCount(c => c - 1)
-  const reset = () => setCount(initialValue)
-
-  return { count, increment, decrement, reset }
-}
-
-// src/hooks/useCounter.test.ts
-import { renderHook, act } from '@testing-library/react'
-import { useCounter } from './useCounter'
-
-describe('useCounter', () => {
-  it('initializes with default value', () => {
-    const { result } = renderHook(() => useCounter())
-    expect(result.current.count).toBe(0)
-  })
-
-  it('initializes with custom value', () => {
-    const { result } = renderHook(() => useCounter(10))
-    expect(result.current.count).toBe(10)
-  })
-
-  it('increments count', () => {
-    const { result } = renderHook(() => useCounter())
-
-    act(() => {
-      result.current.increment()
-    })
-
-    expect(result.current.count).toBe(1)
-  })
-
-  it('decrements count', () => {
-    const { result } = renderHook(() => useCounter(5))
-
-    act(() => {
-      result.current.decrement()
-    })
-
-    expect(result.current.count).toBe(4)
-  })
-
-  it('resets to initial value', () => {
-    const { result } = renderHook(() => useCounter(10))
-
-    act(() => {
-      result.current.increment()
-      result.current.increment()
-      result.current.reset()
-    })
-
-    expect(result.current.count).toBe(10)
-  })
-})
-```
 
 ### Unit Test Best Practices
 
 ✅ **Do:**
 
 - Test behavior, not implementation
-- Use descriptive test names (it should...)
+- Use descriptive test names
 - Follow AAA pattern: Arrange, Act, Assert
-- Test edge cases (empty arrays, null, negative numbers)
+- Test edge cases (empty, null, negative, boundary values)
 - Keep tests simple and readable
 
 ❌ **Don't:**
@@ -260,184 +101,22 @@ describe('useCounter', () => {
 
 ### What to Test
 
-Test multiple units working together - typically API routes, database operations, or service integrations.
+Test multiple units working together — typically API routes, database operations, or service integrations.
 
 **Good candidates:**
 
-- ✅ API endpoints (request → controller → database → response)
+- ✅ API endpoints (request → handler → database → response)
 - ✅ Database operations (queries, transactions)
-- ✅ Third-party integrations (Stripe, SendGrid)
+- ✅ Third-party integrations (payment, email, etc.)
 - ✅ Authentication flows
 - ✅ File upload/download
-
-### Integration Test Examples
-
-#### Testing API Routes (Next.js + Supertest)
-
-```typescript
-// app/api/posts/route.ts
-export async function GET() {
-  const posts = await db.post.findMany({
-    include: { author: true },
-    orderBy: { createdAt: 'desc' }
-  })
-  return Response.json(posts)
-}
-
-export async function POST(request: Request) {
-  const body = await request.json()
-
-  // Validate
-  const result = PostSchema.safeParse(body)
-  if (!result.success) {
-    return Response.json({ errors: result.error.issues }, { status: 400 })
-  }
-
-  // Create post
-  const post = await db.post.create({
-    data: {
-      title: result.data.title,
-      content: result.data.content,
-      authorId: request.user.id
-    }
-  })
-
-  return Response.json(post, { status: 201 })
-}
-
-// app/api/posts/route.test.ts
-import { testClient } from '@/lib/test-utils'
-
-describe('POST /api/posts', () => {
-  beforeEach(async () => {
-    // Clean database before each test
-    await db.post.deleteMany()
-  })
-
-  it('creates a new post', async () => {
-    const response = await testClient
-      .post('/api/posts')
-      .set('Authorization', `Bearer ${authToken}`)
-      .send({
-        title: 'Test Post',
-        content: 'This is a test post'
-      })
-
-    expect(response.status).toBe(201)
-    expect(response.body).toMatchObject({
-      title: 'Test Post',
-      content: 'This is a test post'
-    })
-
-    // Verify in database
-    const posts = await db.post.findMany()
-    expect(posts).toHaveLength(1)
-    expect(posts[0].title).toBe('Test Post')
-  })
-
-  it('returns 400 for invalid data', async () => {
-    const response = await testClient
-      .post('/api/posts')
-      .set('Authorization', `Bearer ${authToken}`)
-      .send({
-        title: '' // Invalid: empty title
-      })
-
-    expect(response.status).toBe(400)
-    expect(response.body.errors).toBeDefined()
-  })
-
-  it('returns 401 for unauthenticated request', async () => {
-    const response = await testClient.post('/api/posts').send({
-      title: 'Test',
-      content: 'Test'
-    })
-
-    expect(response.status).toBe(401)
-  })
-})
-
-describe('GET /api/posts', () => {
-  beforeEach(async () => {
-    await db.post.deleteMany()
-
-    // Seed test data
-    await db.post.createMany({
-      data: [
-        { title: 'Post 1', content: 'Content 1', authorId: user.id },
-        { title: 'Post 2', content: 'Content 2', authorId: user.id }
-      ]
-    })
-  })
-
-  it('returns all posts', async () => {
-    const response = await testClient.get('/api/posts')
-
-    expect(response.status).toBe(200)
-    expect(response.body).toHaveLength(2)
-    expect(response.body[0].author).toBeDefined()
-  })
-})
-```
-
-#### Testing Database Operations
-
-```typescript
-// src/lib/repositories/userRepository.test.ts
-import { db } from '@/lib/db'
-import { createUser, findUserByEmail, updateUser } from './userRepository'
-
-describe('userRepository', () => {
-  beforeEach(async () => {
-    await db.user.deleteMany()
-  })
-
-  afterAll(async () => {
-    await db.$disconnect()
-  })
-
-  describe('createUser', () => {
-    it('creates user with hashed password', async () => {
-      const user = await createUser({
-        email: 'test@example.com',
-        password: 'password123'
-      })
-
-      expect(user.email).toBe('test@example.com')
-      expect(user.password).not.toBe('password123') // Should be hashed
-      expect(user.password).toMatch(/^\$2[aby]/) // bcrypt hash format
-    })
-
-    it('throws error for duplicate email', async () => {
-      await createUser({ email: 'test@example.com', password: 'pass' })
-
-      await expect(createUser({ email: 'test@example.com', password: 'pass' })).rejects.toThrow()
-    })
-  })
-
-  describe('findUserByEmail', () => {
-    it('finds existing user', async () => {
-      await createUser({ email: 'test@example.com', password: 'pass' })
-
-      const user = await findUserByEmail('test@example.com')
-      expect(user).toBeDefined()
-      expect(user?.email).toBe('test@example.com')
-    })
-
-    it('returns null for non-existent user', async () => {
-      const user = await findUserByEmail('nonexistent@example.com')
-      expect(user).toBeNull()
-    })
-  })
-})
-```
 
 ### Integration Test Best Practices
 
 ✅ **Do:**
 
 - Use test database (separate from development/production)
-- Clean up test data (beforeEach/afterEach)
+- Clean up test data before/after each test
 - Test happy path + error cases
 - Test authentication/authorization
 - Use factories/fixtures for test data
@@ -468,113 +147,20 @@ Test complete user journeys through the actual UI.
 - ❌ Every possible UI interaction (too slow/brittle)
 - ❌ Edge cases (cover with unit/integration tests)
 
-### E2E Test Examples (Playwright)
-
-```typescript
-// tests/e2e/auth.spec.ts
-import { test, expect } from '@playwright/test'
-
-test.describe('Authentication', () => {
-  test('user can sign up and log in', async ({ page }) => {
-    // Navigate to signup
-    await page.goto('/signup')
-
-    // Fill signup form
-    await page.fill('input[name="email"]', 'test@example.com')
-    await page.fill('input[name="password"]', 'SecurePass123!')
-    await page.fill('input[name="confirmPassword"]', 'SecurePass123!')
-
-    // Submit form
-    await page.click('button[type="submit"]')
-
-    // Should redirect to dashboard
-    await expect(page).toHaveURL('/dashboard')
-    await expect(page.locator('h1')).toContainText('Welcome')
-
-    // Logout
-    await page.click('[data-testid="logout-button"]')
-
-    // Should redirect to login
-    await expect(page).toHaveURL('/login')
-
-    // Login again
-    await page.fill('input[name="email"]', 'test@example.com')
-    await page.fill('input[name="password"]', 'SecurePass123!')
-    await page.click('button[type="submit"]')
-
-    // Should be back at dashboard
-    await expect(page).toHaveURL('/dashboard')
-  })
-
-  test('shows error for invalid credentials', async ({ page }) => {
-    await page.goto('/login')
-
-    await page.fill('input[name="email"]', 'wrong@example.com')
-    await page.fill('input[name="password"]', 'wrongpassword')
-    await page.click('button[type="submit"]')
-
-    // Should show error message
-    await expect(page.locator('[role="alert"]')).toContainText('Invalid credentials')
-
-    // Should stay on login page
-    await expect(page).toHaveURL('/login')
-  })
-})
-
-// tests/e2e/checkout.spec.ts
-test.describe('Checkout Flow', () => {
-  test('user can complete purchase', async ({ page }) => {
-    // Login first
-    await page.goto('/login')
-    await page.fill('input[name="email"]', 'test@example.com')
-    await page.fill('input[name="password"]', 'password')
-    await page.click('button[type="submit"]')
-
-    // Add product to cart
-    await page.goto('/products')
-    await page.click('[data-testid="product-1"] button:text("Add to Cart")')
-
-    // Verify cart badge
-    await expect(page.locator('[data-testid="cart-badge"]')).toContainText('1')
-
-    // Go to checkout
-    await page.click('[data-testid="cart-button"]')
-    await page.click('button:text("Checkout")')
-
-    // Fill shipping info
-    await page.fill('input[name="address"]', '123 Main St')
-    await page.fill('input[name="city"]', 'San Francisco')
-    await page.fill('input[name="zip"]', '94103')
-
-    // Fill payment info (test mode)
-    await page.fill('input[name="cardNumber"]', '4242424242424242')
-    await page.fill('input[name="expiry"]', '12/25')
-    await page.fill('input[name="cvc"]', '123')
-
-    // Submit order
-    await page.click('button:text("Place Order")')
-
-    // Should see confirmation
-    await expect(page).toHaveURL(/\/orders\/\d+/)
-    await expect(page.locator('h1')).toContainText('Order Confirmed')
-  })
-})
-```
-
 ### E2E Test Best Practices
 
 ✅ **Do:**
 
 - Test critical paths only (< 20 tests)
-- Use data-testid attributes (stable selectors)
+- Use stable selectors (test IDs, roles, labels — not CSS classes)
 - Run in CI/CD pipeline
-- Test across browsers (Chrome, Firefox, Safari)
+- Test across browsers if web surface
 - Take screenshots on failure
 
 ❌ **Don't:**
 
 - Test every UI variation
-- Use fragile selectors (text content, nth-child)
+- Use fragile selectors (nth-child, CSS classes)
 - Run E2E tests on every commit (too slow)
 - Ignore flaky tests (fix or remove them)
 
@@ -584,50 +170,9 @@ test.describe('Checkout Flow', () => {
 
 ### The Red-Green-Refactor Cycle
 
-1. **Red:** Write a failing test
+1. **Red:** Write a failing test that defines expected behavior
 2. **Green:** Write minimal code to make it pass
 3. **Refactor:** Improve code while keeping tests green
-
-### TDD Example
-
-```typescript
-// 1. RED: Write failing test first
-describe('formatCurrency', () => {
-  it('formats number as USD currency', () => {
-    expect(formatCurrency(1234.56)).toBe('$1,234.56')
-  })
-})
-
-// Run test: FAILS (formatCurrency doesn't exist)
-
-// 2. GREEN: Write minimal implementation
-export function formatCurrency(amount: number): string {
-  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-}
-
-// Run test: PASSES
-
-// 3. REFACTOR: Improve implementation
-export function formatCurrency(
-  amount: number,
-  currency: string = 'USD',
-  locale: string = 'en-US'
-): string {
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency
-  }).format(amount)
-}
-
-// Add more tests
-it('formats EUR currency', () => {
-  expect(formatCurrency(1234.56, 'EUR', 'de-DE')).toBe('1.234,56 €')
-})
-
-it('handles negative amounts', () => {
-  expect(formatCurrency(-100)).toBe('-$100.00')
-})
-```
 
 ### When to Use TDD
 
@@ -653,67 +198,46 @@ it('handles negative amounts', () => {
 - ✅ External APIs (slow, unreliable, cost money)
 - ✅ Time/randomness (make tests deterministic)
 - ✅ File system operations
-- ✅ Database (in unit tests only)
+- ✅ Database (in unit tests only — NEVER in integration tests)
 
-### Mock Examples (Jest)
+### Anti-Mock-Abuse Rules
 
-```typescript
-// Mock external API
-import { fetchUserData } from '@/lib/api'
-
-jest.mock('@/lib/api')
-const mockFetchUserData = fetchUserData as jest.MockedFunction<typeof fetchUserData>
-
-it('displays user data', async () => {
-  mockFetchUserData.mockResolvedValue({
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com'
-  })
-
-  render(<UserProfile userId="1" />)
-
-  await waitFor(() => {
-    expect(screen.getByText('John Doe')).toBeInTheDocument()
-  })
-})
-
-// Mock Date
-beforeAll(() => {
-  jest.useFakeTimers()
-  jest.setSystemTime(new Date('2024-01-01'))
-})
-
-afterAll(() => {
-  jest.useRealTimers()
-})
-
-it('shows correct date', () => {
-  expect(getCurrentDate()).toBe('2024-01-01')
-})
-
-// Mock Math.random
-const mockRandom = jest.spyOn(Math, 'random')
-mockRandom.mockReturnValue(0.5)
-
-expect(generateRandomId()).toBe('expected-id-with-0.5-random')
-
-mockRandom.mockRestore()
-```
+1. **Never mock what you own** — if you wrote the module, test it directly
+2. **One mock = one boundary** — only mock at the boundary between your code and external systems
+3. **Verify mock interactions** — assert that mocked deps were called with correct arguments
+4. **Mock return values, not internals** — mock the return value, not the internal implementation
 
 ### Mocking Best Practices
 
 ✅ **Do:**
 
-- Mock at boundaries (APIs, file system)
+- Mock at boundaries (APIs, file system, network)
 - Restore mocks after tests
 - Make mocks realistic (same shape as real data)
 
 ❌ **Don't:**
 
-- Over-mock (makes tests brittle)
+- Over-mock (makes tests brittle and meaningless)
 - Mock your own code (test real behavior)
-- Mock what you don't own (unless external)
+- Leave mocks unreset between tests
+
+---
+
+## Assertion Depth Rules
+
+### ❌ Shallow Assertions (BANNED)
+
+Assertions that prove nothing about correctness:
+- "Result is defined" — undefined would also be defined
+- "Result is truthy" — empty arrays and objects are truthy
+- "Status is 200" alone — doesn't verify response body
+
+### ✅ Deep Assertions (REQUIRED)
+
+Every test must assert:
+1. **The correct output** — specific values, not just types
+2. **The correct side effects** — what changed in the system
+3. **The correct error behavior** — specific error type and message
 
 ---
 
@@ -721,20 +245,20 @@ mockRandom.mockRestore()
 
 ### Coverage Targets
 
-- **70% minimum** - Below this, you're missing important tests
-- **80% good** - Solid coverage of critical paths
-- **90%+ diminishing returns** - Chasing 100% often not worth it
+- **70% minimum** — Below this, you're missing important tests
+- **80% good** — Solid coverage of critical paths
+- **90%+ diminishing returns** — Chasing 100% often not worth it
 
 ### What to Focus On
 
-**High priority (must have 90%+ coverage):**
+**High priority (90%+ coverage):**
 
 - Business logic
 - Authentication/authorization
 - Payment processing
 - Data validation
 
-**Medium priority (aim for 70%+):**
+**Medium priority (70%+):**
 
 - API routes
 - Database queries
@@ -742,128 +266,22 @@ mockRandom.mockRestore()
 
 **Low priority (okay to skip):**
 
-- UI components (test behavior, not implementation)
+- UI components (test behavior, not rendering)
 - Configuration files
 - Type definitions
-- Third-party integrations (integration tests better)
-
-### Checking Coverage
-
-```bash
-# Jest
-npm test -- --coverage
-
-# View HTML report
-open coverage/lcov-report/index.html
-```
-
-### Coverage Configuration (jest.config.js)
-
-```javascript
-module.exports = {
-  collectCoverageFrom: [
-    'src/**/*.{ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.tsx',
-    '!src/types/**'
-  ],
-  coverageThresholds: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
-    },
-    // Critical paths need higher coverage
-    './src/lib/auth/**': {
-      branches: 90,
-      functions: 90,
-      lines: 90
-    }
-  }
-}
-```
-
----
-
-## Testing Strategies by Framework
-
-### Next.js (React)
-
-- Unit: Jest + React Testing Library
-- Integration: Supertest (API routes)
-- E2E: Playwright
-
-### Express API
-
-- Unit: Jest
-- Integration: Supertest
-- E2E: Playwright (if has UI)
-
-### FastAPI (Python)
-
-- Unit: pytest
-- Integration: pytest + TestClient
-- E2E: Playwright
 
 ---
 
 ## Common Testing Patterns
 
 ### Testing Async Code
-
-```typescript
-// Using async/await
-it('fetches user data', async () => {
-  const user = await fetchUser('123')
-  expect(user.name).toBe('John')
-})
-
-// Using waitFor (React Testing Library)
-it('shows loading then data', async () => {
-  render(<UserProfile userId="123" />)
-
-  expect(screen.getByText('Loading...')).toBeInTheDocument()
-
-  await waitFor(() => {
-    expect(screen.getByText('John Doe')).toBeInTheDocument()
-  })
-})
-```
+Write tests that properly wait for async operations to complete before asserting. Use your framework's async test utilities.
 
 ### Testing Error Handling
-
-```typescript
-it('handles errors gracefully', async () => {
-  mockFetchUser.mockRejectedValue(new Error('Network error'))
-
-  render(<UserProfile userId="123" />)
-
-  await waitFor(() => {
-    expect(screen.getByText(/error/i)).toBeInTheDocument()
-  })
-})
-```
+Mock dependencies to throw errors, then assert your code handles them correctly — shows the right error message, returns the right status code, logs appropriately.
 
 ### Testing Forms
-
-```typescript
-it('submits form with valid data', async () => {
-  const handleSubmit = jest.fn()
-  render(<LoginForm onSubmit={handleSubmit} />)
-
-  await userEvent.type(screen.getByLabelText('Email'), 'test@example.com')
-  await userEvent.type(screen.getByLabelText('Password'), 'password123')
-  await userEvent.click(screen.getByRole('button', { name: 'Login' }))
-
-  await waitFor(() => {
-    expect(handleSubmit).toHaveBeenCalledWith({
-      email: 'test@example.com',
-      password: 'password123'
-    })
-  })
-})
-```
+Fill form fields programmatically, submit, and assert both the submission data and any validation errors.
 
 ---
 
@@ -871,32 +289,23 @@ it('submits form with valid data', async () => {
 
 ### File Structure
 
+Tests co-locate with source files:
+
 ```
-src/
-├── components/
-│   ├── Button.tsx
-│   └── Button.test.tsx         # Co-located with component
-├── lib/
-│   ├── utils.ts
-│   └── utils.test.ts           # Co-located with module
-└── __tests__/
-    ├── integration/            # Integration tests
-    │   └── api.test.ts
-    └── e2e/                    # E2E tests
-        └── checkout.spec.ts
+source-file.ext      → source-file.test.ext     (unit tests)
+route-handler.ext    → route-handler.test.ext   (integration tests)
+e2e/                 → feature-name.e2e.ext     (E2E tests)
 ```
 
 ### Naming Conventions
 
-- Unit/Integration: `*.test.ts` or `*.spec.ts`
-- E2E: `*.e2e.ts` or `*.spec.ts` (in tests/e2e/)
-- Test names: `it('should do X when Y')` or `it('does X')`
+- Unit/Integration: `*.test.*` or `*.spec.*`
+- E2E: `*.e2e.*` or `*.spec.*` (in tests/e2e/)
+- Test names should describe behavior: "returns X when Y" or "throws error for invalid input"
 
 ---
 
 ## When to Use This Skill
-
-Use testing-strategist skill when:
 
 - ✅ Setting up testing for new project
 - ✅ Choosing test frameworks
@@ -904,28 +313,6 @@ Use testing-strategist skill when:
 - ✅ Implementing TDD
 - ✅ Improving code coverage
 - ✅ Fixing flaky tests
-
----
-
-## Related Resources
-
-**Skills:**
-
-- `security-engineer` - Security testing
-- `api-designer` - API testing strategies
-- `frontend-builder` - React testing patterns
-
-**Patterns:**
-
-- `/STANDARDS/best-practices/testing-best-practices.md`
-- `/TEMPLATES/testing/jest-nextjs-setup.md`
-- `/TEMPLATES/testing/playwright-e2e-setup.md`
-
-**External:**
-
-- [Jest Documentation](https://jestjs.io/)
-- [React Testing Library](https://testing-library.com/react)
-- [Playwright](https://playwright.dev/)
 
 ---
 

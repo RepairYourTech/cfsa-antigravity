@@ -11,7 +11,7 @@ pipeline:
   successors: [decompose-architecture]
   skills: [performance-budgeting, pipeline-rubrics, prd-templates, tdd-workflow, technical-writer]
   calls-bootstrap: true
-requires_placeholders: [UNIT_TESTING_SKILL, E2E_TESTING_SKILL, CI_CD_SKILL]
+requires_map_columns: [Unit Tests, E2E Tests, CI/CD]
 ---
 
 // turbo-all
@@ -24,19 +24,19 @@ Document the development methodology and phasing strategy. Compile the architect
 
 ---
 
-## 0. Placeholder guard
+## 0. Map guard
 
-Before any skill reads, verify that the following placeholder values have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 8.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the following columns/categories for filled values:
 
-| Placeholder | Filled by | Recovery | Why this matters |
+| Map Location | Column/Category | Recovery | Why this matters |
 |---|---|---|---|
-| `{{UNIT_TESTING_SKILL}}` | `/create-prd-stack` when the unit testing framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed unit testing framework, then run `/bootstrap-agents UNIT_TESTING=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Development methodology (Step 8) cannot document correct test conventions without the unit testing skill — TDD patterns will be generic instead of framework-specific. |
-| `{{E2E_TESTING_SKILL}}` | `/create-prd-stack` when the E2E testing framework is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed E2E testing framework, then run `/bootstrap-agents E2E_TESTING=<confirmed-framework>`. Otherwise run `/create-prd-stack` first. | Development methodology (Step 8) cannot document correct E2E test conventions without the E2E testing skill — integration test patterns will be generic. |
-| `{{CI_CD_SKILL}}` | `/create-prd-stack` when CI/CD platform is confirmed | If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed CI/CD platform, then run `/bootstrap-agents CI_CD=<confirmed-platform>`. Otherwise run `/create-prd-stack` first. | Phasing strategy (Step 9) cannot produce correct pipeline configuration without the CI/CD skill — deployment and quality gate patterns will lack platform-specific conventions. |
+| Per-Surface (any) | Unit Tests | Run `/create-prd-stack` to confirm unit testing framework, then bootstrap. | Development methodology (Step 8) needs framework-specific TDD patterns. |
+| Per-Surface (any) | E2E Tests | Run `/create-prd-stack` to confirm E2E testing framework, then bootstrap. | Development methodology (Step 8) needs E2E-specific test conventions. |
+| Cross-Cutting | CI/CD | Run `/create-prd-stack` to confirm CI/CD platform, then bootstrap. | Phasing strategy (Step 9) needs platform-specific pipeline patterns. |
 
-For the hard stop message format and recovery instructions, see `.agent/skills/prd-templates/references/placeholder-guard-template.md`.
+> **Timing fallback**: During `/create-prd`, the map may be partially populated. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
 
-Only proceed to Step 8 when all three placeholders report no literal `{{` characters.
+If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
 ---
 
@@ -48,15 +48,14 @@ Document the agreed approach:
 
 1. **Contract-first** — Zod schemas (or equivalent) before implementation
 2. **TDD** — Failing tests before code
-   Read .agent/skills/{{UNIT_TESTING_SKILL}}/SKILL.md and follow its test writing conventions.
-   Read .agent/skills/{{E2E_TESTING_SKILL}}/SKILL.md and follow its E2E test conventions.
+   Load the Unit Tests and E2E Tests skill(s) from the surface stack map per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 3. **Vertical slices** — All surfaces per feature
 4. **Spec layers** — IA → BE → FE pipeline
 5. **Quality gates** — What must pass before merge
 
 ## 9. Phasing strategy
 
-Read .agent/skills/{{CI_CD_SKILL}}/SKILL.md and follow its pipeline configuration conventions.
+Load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol.
 
 Break the feature inventory from `docs/plans/ideation/ideation-index.md` (MoSCoW Summary) into dependency-ordered phases.
 
