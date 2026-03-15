@@ -7,7 +7,7 @@
     "version": "changeset version",
     "build": "./scripts/build-template.sh",
     "check": "./scripts/check-template-integrity.sh",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "bin": {
     "cfsa-antigravity": "./bin/cli.mjs"
