@@ -3,6 +3,19 @@ template/
 node_modules/
 package-lock.json
 
+# Project-specific content (kit provides empty scaffolding only)
+# These dirs exist with README.md/.gitkeep but content is project-specific
+docs/audits/*.md
+!docs/audits/README.md
+docs/plans/**/*.md
+!docs/plans/**/README.md
+
+# Session-specific agent data
+.agent/progress/slices/
+.agent/progress/blockers/
+.agent/progress/memory/*.md
+!.agent/progress/memory/README.md
+
 # Audit / comparison files (dev only)
 _audit/
 
