@@ -5,7 +5,7 @@ pipeline:
   stage: quality-gate
   predecessors: [] # callable from any stage
   successors: [] # returns to caller
-  skills: [resolve-ambiguity, code-review-pro, technical-writer]
+  skills: [code-review-pro, pipeline-rubrics, prd-templates, resolve-ambiguity, verification-before-completion]
   calls-bootstrap: false
 shards: [remediate-pipeline-assess, remediate-pipeline-execute]
 ---

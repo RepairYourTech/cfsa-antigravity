@@ -5,7 +5,7 @@ pipeline:
   stage: architecture
   predecessors: [ideate]
   successors: [decompose-architecture]
-  skills: [brainstorming, resolve-ambiguity, technical-writer, database-schema-design]
+  skills: [api-design-principles, brainstorming, brand-guidelines, clean-code, database-schema-design, design-direction, error-handling-patterns, find-skills, logging-best-practices, performance-budgeting, pipeline-rubrics, prd-templates, resolve-ambiguity, security-scanning-security-hardening, tdd-workflow, tech-stack-catalog, technical-writer]
   calls-bootstrap: true # tech stack decisions trigger skill provisioning
 shards: [create-prd-stack, create-prd-design-system, create-prd-architecture, create-prd-security, create-prd-compile]
 ---
@@ -23,7 +23,7 @@ Transform the ideation output into a production-grade architecture design docume
 > to the point where a developer cannot misinterpret it. If you can write a
 > one-paragraph section summary, it's not detailed enough. Each section should
 > define every field, every flow, every error case, every permission boundary.
-> The depth-standards rule (`.agent/rules/depth-standards.md`) applies to every
+> The specificity-standards rule (`.agent/rules/specificity-standards.md`) applies to every
 > word of the output. One-line placeholders like `[Auth, authorization, rate limits]`
 > are not architecture — they are headings waiting for content.
 
@@ -50,7 +50,7 @@ Pay special attention to the **Project Surfaces** section in `meta/constraints.m
 ### Bundled skills
 
 These skills are included in the kit — read each SKILL.md:
-1. `.agent/skills/rest-api-design/SKILL.md` — API conventions
+1. `.agent/skills/{{API_DESIGN_SKILL}}/SKILL.md` — API conventions
 2. `.agent/skills/api-design-principles/SKILL.md` — API design principles
 3. `.agent/skills/security-scanning-security-hardening/SKILL.md` — Security model
 4. `.agent/skills/clean-code/SKILL.md` — Architecture principles

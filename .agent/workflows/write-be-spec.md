@@ -5,8 +5,8 @@ pipeline:
   stage: specification
   predecessors: [write-architecture-spec]
   successors: [plan-phase]
-  parallel-with: [write-fe-spec] # can run in parallel
-  skills: [resolve-ambiguity, error-handling-patterns, database-schema-design, migration-management, testing-strategist, logging-best-practices]
+  parallel-with: [write-fe-spec] # cross-shard only — see Parallelism Note in write-fe-spec.md
+  skills: [api-design-principles, code-review-pro, database-schema-design, error-handling-patterns, find-skills, logging-best-practices, migration-management, prd-templates, resolve-ambiguity, session-continuity, spec-writing, technical-writer, testing-strategist, verification-before-completion, workflow-automation]
   calls-bootstrap: true # may discover new backend dependencies
 shards: [write-be-spec-classify, write-be-spec-write]
 ---

@@ -10,6 +10,8 @@ pipeline:
 shards: [bootstrap-agents-fill, bootstrap-agents-provision]
 ---
 
+// turbo-all
+
 # Bootstrap Agents
 
 **This is a utility workflow, not an entry point.** It gets called by other pipeline workflows (like `/create-prd`, `/iterate-plan`, `/write-be-spec`, `/write-fe-spec`, `/add-feature`, `/implement-slice`) whenever they make tech stack decisions or introduce new dependencies.

@@ -9,7 +9,7 @@ pipeline:
   stage: quality-gate
   predecessors: [] # callable standalone
   successors: [remediate-pipeline-execute]
-  skills: [code-review-pro]
+  skills: [code-review-pro, prd-templates]
   calls-bootstrap: false
 ---
 

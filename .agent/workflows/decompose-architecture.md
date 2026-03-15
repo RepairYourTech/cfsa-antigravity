@@ -5,7 +5,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd]
   successors: [write-architecture-spec]
-  skills: [technical-writer, resolve-ambiguity]
+  skills: [architecture-mapping, brainstorming, prd-templates, session-continuity]
   calls-bootstrap: false
 shards: [decompose-architecture-structure, decompose-architecture-validate]
 ---

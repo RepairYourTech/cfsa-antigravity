@@ -9,7 +9,7 @@ pipeline:
   stage: specification
   predecessors: [write-be-spec-classify]
   successors: [plan-phase]
-  skills: [technical-writer, testing-strategist, prd-templates]
+  skills: [prd-templates, session-continuity, spec-writing, technical-writer, testing-strategist, verification-before-completion]
   calls-bootstrap: true
 ---
 
@@ -38,6 +38,7 @@ Write the BE spec(s) to `docs/plans/be/`, update indexes, run quality checks, an
 **Gate**: Do not write the spec sections until every expected endpoint is either specced or explicitly deferred. This reconciliation table becomes the first section of the spec file after `## Classification`.
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
+Read .agent/skills/spec-writing/SKILL.md and follow its completeness testing and cross-reference checking methodology.
 Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 
 **Naming convention**: Use the same number prefix as the IA shard that sources it, followed by a kebab-case feature name. For multi-domain splits from the same shard, append a letter suffix (e.g., `09a-chat-api.md`, `09b-agent-flow-api.md`). For cross-cutting specs, use the `00-` prefix (e.g., `00-api-conventions.md`).

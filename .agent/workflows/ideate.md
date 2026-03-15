@@ -5,7 +5,7 @@ pipeline:
   stage: vision
   predecessors: [] # entry point
   successors: [create-prd]
-  skills: [idea-extraction, resolve-ambiguity]
+  skills: [brainstorming, idea-extraction, pipeline-rubrics, prd-templates, resolve-ambiguity, technical-writer]
   calls-bootstrap: false
 shards: [ideate-extract, ideate-discover, ideate-validate]
 ---
@@ -68,50 +68,12 @@ Explores constraints, success metrics, and competitive positioning. Runs domain 
 
 ---
 
-## Quality Gate (Step 12)
+## Quality Gate
 
-### Self-check against Ideation rubric
-
-Before presenting to the user, self-check the ideation output:
-
-Read `.agent/skills/pipeline-rubrics/references/ideation-rubric.md` before applying the self-check dimensions.
-
-| # | Dimension | Check |
-|---|-----------|-------|
-| 1 | Problem Clarity | Is the problem one sentence, specific, and testable? |
-| 2 | Persona Specificity | Are personas named with all 6 fields? |
-| 3 | Feature Completeness | Is MoSCoW complete? Are Must Haves explored to ≥Level 2 depth? |
-| 4 | Constraint Explicitness | Are all axes (budget, timeline, team, compliance, performance) addressed? |
-| 5 | Success Measurability | Are there concrete numbers/thresholds? |
-| 6 | Competitive Positioning | Are competitors named with differentiation? |
-| 7 | Open Question Resolution | Do all open questions have owners + deadlines? |
-| 8 | **Input-Output Proportionality** | Is the ideation output proportional to input richness? Rich inputs must produce rich output. |
-| 9 | **Domain Coverage** | Are all domains at `[DEEP]` or `[EXHAUSTED]`? |
-| 10 | **Deep Think Coverage** | Were hypotheses tracked and resolved (confirmed/rejected)? |
-| 11 | **Cross-Cut Completeness** | Is the cross-cut ledger clean? No pending entries? |
-| 12 | **Folder Structure Compliance** | Does the `ideation/` folder match the template structure? |
-
-For any dimension that scores ⚠️ or ❌, resolve it NOW — don't present with known gaps.
-Loop back to the relevant step and work through it with the user.
-
-> **Note**: This is an internal self-check, not a formal audit. For a rigorous,
-> independent audit with evidence citations, run `/audit-ambiguity ideation` as a
-> separate step after this workflow completes.
-
-### Request review
-
-Use `notify_user` to request review of:
-- `docs/plans/ideation/ideation-index.md` — the pipeline key file
-- `docs/plans/vision.md` — the human summary
-
-Include:
-- Summary of the self-check results (all 12 dimensions)
-- Any areas where gaps were resolved during the self-check
-- The final domain coverage map
-- Deep Think stats: N hypotheses presented, N confirmed, N rejected
-
-The ideation must be approved before proceeding. Do NOT proceed until the user sends a message explicitly approving. Wait for explicit approval.
+> The quality self-check and review request are handled by `ideate-validate.md` (Step 12).
+> The parent does not duplicate shard-level quality gates.
 
 ### Proposed next steps
 
 **Mandatory next step**: Run `/audit-ambiguity ideation` for all inputs, regardless of input type. Even a rich document can have gaps the agent missed. The audit is cheap; the cost of a gap propagating to architecture is high. Do not propose `/create-prd` until `/audit-ambiguity ideation` has run.
+

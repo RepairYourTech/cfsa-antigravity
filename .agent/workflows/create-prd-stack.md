@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [ideate]
   successors: [create-prd-architecture]
-  skills: [brainstorming, resolve-ambiguity, tech-stack-catalog, design-direction]
+  skills: [database-schema-design, design-direction, tech-stack-catalog]
   calls-bootstrap: true
 ---
 

@@ -76,6 +76,8 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | ↳ | `/evolve-feature-classify` | Feature description | Classified change + new content at entry point | Evolution |
 | ↳ | `/evolve-feature-cascade` | Classified change + entry point | Layer-by-layer additions + implementation impact | Evolution |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
+| ↳ | `/plan-phase-preflight` | Approved specs | Phase gate + completeness audit + consistency check | Planning |
+| ↳ | `/plan-phase-write` | Preflight pass | Slices + acceptance criteria + progress files | Planning |
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |

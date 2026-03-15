@@ -9,7 +9,7 @@ pipeline:
   stage: quality-gate
   predecessors: [evolve-feature-classify]
   successors: []
-  skills: [resolve-ambiguity, technical-writer]
+  skills: [prd-templates, resolve-ambiguity, technical-writer]
   calls-bootstrap: true
 ---
 

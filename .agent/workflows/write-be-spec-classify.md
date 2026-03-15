@@ -9,7 +9,7 @@ pipeline:
   stage: specification
   predecessors: [write-architecture-spec]
   successors: [write-be-spec-write]
-  skills: [resolve-ambiguity, database-schema-design]
+  skills: [api-design-principles, database-schema-design, error-handling-patterns, find-skills, logging-best-practices, migration-management, prd-templates, resolve-ambiguity, testing-strategist, workflow-automation]
   calls-bootstrap: false
 requires_placeholders: [LANGUAGE_SKILL, DATABASE_SKILLS, AUTH_SKILL, BACKEND_FRAMEWORK_SKILL, ORM_SKILL, UNIT_TESTING_SKILL]
 ---
@@ -87,7 +87,7 @@ Read .agent/skills/{{LANGUAGE_SKILL}}/SKILL.md and follow its language conventio
 Read each skill listed in `{{DATABASE_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
 Read .agent/skills/{{AUTH_SKILL}}/SKILL.md
 Read .agent/skills/{{BACKEND_FRAMEWORK_SKILL}}/SKILL.md
-Read .agent/skills/rest-api-design/SKILL.md
+Read .agent/skills/{{API_DESIGN_SKILL}}/SKILL.md
 Read .agent/skills/api-design-principles/SKILL.md
 Read .agent/skills/error-handling-patterns/SKILL.md
 Read .agent/skills/database-schema-design/SKILL.md
@@ -98,6 +98,8 @@ Read .agent/skills/testing-strategist/SKILL.md
 Read .agent/skills/logging-best-practices/SKILL.md
 
 **Missing skill fallback**: If any skill in the bundle above is not installed in `.agent/skills/` and is not in `.agent/skill-library/MANIFEST.md`, read `.agent/skills/find-skills/SKILL.md` and follow its discovery methodology to search for a community equivalent before proceeding without it.
+
+**Async/background processing (conditional)**: If the IA shard includes background processing, async operations, event-driven workflows, scheduled tasks, or queue-based processing, read `.agent/skills/workflow-automation/SKILL.md` and follow its methodology for durable workflow patterns (step functions, retry strategies, idempotency, fan-out).
 
 ### Ambiguity resolution
 

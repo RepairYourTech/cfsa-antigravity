@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-stack]
   successors: [create-prd-security]
-  skills: [database-schema-design, technical-writer, prd-templates, error-handling-patterns]
+  skills: [api-design-principles, database-schema-design, error-handling-patterns, prd-templates, technical-writer]
   calls-bootstrap: false
 requires_placeholders: [HOSTING_SKILL, ORM_SKILL, DATABASE_SKILLS]
 ---
@@ -40,7 +40,7 @@ Only proceed to Step 4 when all three placeholders report no literal `{{` charac
 
 ## 4. System architecture
 
-Read .agent/skills/rest-api-design/SKILL.md and .agent/skills/api-design-principles/SKILL.md for API surface design.
+Read .agent/skills/{{API_DESIGN_SKILL}}/SKILL.md and .agent/skills/api-design-principles/SKILL.md for API surface design.
 
 Design the high-level system. Each sub-item requires full exploration, not a summary sentence:
 

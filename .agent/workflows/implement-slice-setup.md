@@ -9,7 +9,7 @@ pipeline:
   stage: implementation
   predecessors: [plan-phase]
   successors: [implement-slice-tdd]
-  skills: [session-continuity, tdd-workflow, parallel-agents, parallel-feature-development]
+  skills: [parallel-agents, parallel-feature-development, session-continuity]
   calls-bootstrap: true
 ---
 

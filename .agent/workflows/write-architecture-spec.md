@@ -5,7 +5,7 @@ pipeline:
   stage: specification
   predecessors: [decompose-architecture]
   successors: [write-be-spec, write-fe-spec] # parallel fork
-  skills: [resolve-ambiguity, database-schema-design, error-handling-patterns, technical-writer]
+  skills: [accessibility, adversarial-review, architecture-mapping, brainstorming, code-review-pro, database-schema-design, error-handling-patterns, find-skills, prd-templates, resolve-ambiguity, security-scanning-security-hardening, session-continuity, spec-writing, technical-writer]
   calls-bootstrap: true # may introduce new contracts/patterns
 shards: [write-architecture-spec-design, write-architecture-spec-deepen]
 ---

@@ -170,6 +170,19 @@ The power of the kit comes from how these modules interact:
 *   **Rules constrain Workflows:** While a workflow dictates the *steps*, the rules dictate *how* those steps are performed (e.g., `/implement-slice` must obey `tdd-contract-first.md`).
 *   **State informs Execution:** Workflows read from `.agent/progress/` to contextualize their execution based on past decisions and current active phases.
 
+### Frontmatter `skills:` Semantic
+
+Workflow files declare skills in two places with different semantics:
+
+| Location | Purpose | Scope |
+|----------|---------|-------|
+| **Frontmatter `skills:` list** | **Dependency manifest** — declares the union of all skills this workflow and its shards may need | Informational tag; not an instruction to load |
+| **Body `Read .agent/skills/[name]/SKILL.md`** | **Actionable instruction** — the agent reads and follows this skill during execution | Exact loading instruction |
+
+**Parent orchestrators** (e.g., `implement-slice.md`, `write-be-spec.md`) list all skills their shards use in frontmatter but typically don't read them in their own body — their shards do the actual reading.
+
+**Leaf workflows (shards)** should have body reads that match their frontmatter — if a skill is listed in a shard's frontmatter, the shard body should contain a corresponding `Read` instruction.
+
 ---
 
 ## 4.5. Bootstrap System

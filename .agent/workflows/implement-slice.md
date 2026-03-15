@@ -6,10 +6,12 @@ pipeline:
   predecessors: [plan-phase]
   successors: [validate-phase]
   loop: true # repeats per slice within a phase
-  skills: [tdd-workflow, error-handling-patterns, git-workflow, code-review-pro, testing-strategist, clean-code, logging-best-practices, minimalist-surgical-development, systematic-debugging]
+  skills: [clean-code, code-review-pro, parallel-agents, parallel-debugging, parallel-feature-development, session-continuity, systematic-debugging, tdd-workflow, verification-before-completion]
   calls-bootstrap: true # may discover new dependencies during implementation
 shards: [implement-slice-setup, implement-slice-tdd]
 ---
+
+// turbo-all
 
 # Implement Slice
 

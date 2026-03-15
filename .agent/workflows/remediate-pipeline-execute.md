@@ -9,7 +9,7 @@ pipeline:
   stage: quality-gate
   predecessors: [remediate-pipeline-assess]
   successors: [] # returns to caller after stop
-  skills: [resolve-ambiguity, technical-writer, code-review-pro, pipeline-rubrics]
+  skills: [code-review-pro, pipeline-rubrics, resolve-ambiguity, verification-before-completion]
   calls-bootstrap: false
 ---
 

@@ -9,7 +9,7 @@ pipeline:
   stage: specification
   predecessors: [write-architecture-spec-design]
   successors: [write-be-spec, write-fe-spec]
-  skills: [technical-writer, resolve-ambiguity]
+  skills: [code-review-pro, resolve-ambiguity, session-continuity, technical-writer]
   calls-bootstrap: true
 ---
 

@@ -5,8 +5,8 @@ pipeline:
   stage: specification
   predecessors: [write-architecture-spec]
   successors: [plan-phase]
-  parallel-with: [write-be-spec] # can run in parallel
-  skills: [resolve-ambiguity, accessibility, error-handling-patterns, testing-strategist, technical-writer]
+  parallel-with: [write-be-spec] # cross-shard only — see Parallelism Note below
+  skills: [brand-guidelines, code-review-pro, error-handling-patterns, find-skills, prd-templates, resolve-ambiguity, session-continuity, spec-writing, technical-writer, testing-strategist, verification-before-completion]
   calls-bootstrap: true # may discover new frontend dependencies
 shards: [write-fe-spec-classify, write-fe-spec-write]
 ---
@@ -17,6 +17,8 @@ shards: [write-fe-spec-classify, write-fe-spec-write]
 
 **Input**: A complete BE spec (and its IA source shard)
 **Output**: Full FE spec with components, routing, state, interactions, accessibility
+
+> **Parallelism Note**: `parallel-with: [write-be-spec]` means BE and FE spec workflows can run **in parallel across different IA shards** (e.g., shard 01 BE + shard 02 FE simultaneously). For the **same IA shard**, BE spec must complete before FE spec starts — the FE classify shard requires a completed BE spec as input.
 
 ---
 

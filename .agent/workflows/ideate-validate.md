@@ -9,7 +9,7 @@ pipeline:
   stage: vision
   predecessors: [ideate-discover]
   successors: [create-prd]
-  skills: [idea-extraction, resolve-ambiguity]
+  skills: [idea-extraction, pipeline-rubrics, prd-templates, technical-writer]
   calls-bootstrap: false
 ---
 

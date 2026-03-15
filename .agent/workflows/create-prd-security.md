@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-architecture]
   successors: [create-prd-compile]
-  skills: [security-scanning-security-hardening, resolve-ambiguity, logging-best-practices]
+  skills: [logging-best-practices, prd-templates, resolve-ambiguity, security-scanning-security-hardening]
   calls-bootstrap: true
 requires_placeholders: [SECURITY_SKILLS, AUTH_SKILL]
 ---

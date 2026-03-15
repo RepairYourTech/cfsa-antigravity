@@ -6,7 +6,7 @@ pipeline:
   predecessors: [implement-slice]
   successors: [update-architecture-map]
   loop: true # one validate per phase
-  skills: [testing-strategist, code-review-pro, deployment-procedures]
+  skills: [adversarial-review, code-review-pro, deployment-procedures, security-scanning-security-hardening, testing-strategist, verification-before-completion]
   calls-bootstrap: false
 ---
 
@@ -128,38 +128,13 @@ Read .agent/skills/{{ORM_SKILL}}/SKILL.md and follow its migration and schema co
 
 ## 5.8. Spec coverage sweep
 
-This step verifies that the phase's implementation actually delivered what the specs required — not just that the tests pass.
-
-For each slice in the phase plan (`docs/plans/phases/phase-N.md`):
-
-1. Read the slice's acceptance criteria
-2. Identify the FE spec(s) referenced by this slice (via the FE spec's `## Source Map`)
-3. For each named user flow in the relevant FE spec `## Interaction Specification` section that belongs to this slice:
-   - Verify a test exists in the test suite that covers this flow by name or by its acceptance criterion
-   - Verify the flow is implemented (not stubbed with `BOUNDARY:`) unless a valid boundary stub exists with a tracking issue
-4. Identify the BE spec section(s) for each endpoint in this slice
-5. For each endpoint:
-   - Verify every Zod-validated field in the BE spec has a corresponding test
-   - Verify every error code defined in the BE spec has a corresponding test
-   - Verify every auth rule (role, ownership check) defined in the BE spec has a corresponding permission test
-6. For each slice in the phase plan, identify which IA shard(s) the slice's features originate from (using either the phase plan's domain references or the FE spec's `## Source Map`). For each identified IA shard:
-   - Read the shard's `## Accessibility` section (surface-conditional: apply only for `web`, `mobile`, or `desktop` surfaces). For each accessibility requirement named there, verify a corresponding test exists (e.g., axe-core check, keyboard navigation test, screen reader label test).
-   - Read the shard's acceptance criteria or testability section (look for Given/When/Then format or numbered acceptance criteria). For each Given/When/Then criterion, verify it maps to at least one named test in the test suite.
-   - Flag any IA criterion with no test coverage as an uncovered item — apply the **same hard-stop rule** below: list the uncovered criterion and either write the missing test or document it as a valid boundary stub with a tracking issue.
-
-**If any flow, field, error code, auth rule, IA acceptance criterion, or accessibility requirement has no corresponding test:**
-
-> ❌ STOP — Do not mark this phase as complete. List the uncovered items. Either write the missing tests and re-run `{{TEST_COMMAND}}`, or if the item was genuinely deferred (valid boundary stub + tracking issue), document the deferral explicitly in the phase validation report.
-
-**Pass criteria**: Every named user flow, BE endpoint field, error code, auth rule, IA acceptance criterion, and accessibility requirement in the phase's scope has a corresponding passing test or a documented valid boundary stub.
-
-> Update report (`docs/audits/phase-N-validation.md`): Add a `## Spec Coverage` section listing the sweep results — covered items, uncovered items, boundary stubs, accessibility coverage, IA testability trace results, and the pass/fail verdict for this step.
+Read `.agent/skills/prd-templates/references/spec-coverage-sweep.md` and follow its full procedure for FE spec, BE spec, and IA shard coverage. Apply its hard-stop rule for any uncovered items.
 
 ---
 
 ## 6. Accessibility audit (if UI changes)
 
-Read .agent/skills/accessibility/SKILL.md and follow its methodology.
+Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md and follow its methodology.
 Audit all new UI components in this phase for WCAG 2.1 AA compliance.
 
 ## 7. Performance check (if web surface exists)
@@ -179,15 +154,11 @@ Check if the `web-performance-optimization` skill is installed (look for `.agent
 
 ## 8. Security review
 
+Read .agent/skills/adversarial-review/SKILL.md and follow its structured methodology for generating attack scenarios, abuse cases, and race conditions against the phase's changes. Produce spec-level gap items for any identified risks. Feed these into the defense-in-depth audit below.
+
 Read .agent/skills/security-scanning-security-hardening/SKILL.md and run its full defense-in-depth audit protocol against the phase's changes (new endpoints, new data flows, new auth checks). Report findings with severity levels. Block the phase if any Critical or High severity issues are found.
 
-**Supplemental security checks (conditional)**: After the core audit completes, check for stack-specific security skills. For each of the following that exists, read it and run its audit protocol as a supplement to the core audit:
-- `.agent/skills/owasp-web-security/SKILL.md`
-- `.agent/skills/api-security-checklist/SKILL.md`
-- `.agent/skills/crypto-patterns/SKILL.md`
-- `.agent/skills/csp-cors-headers/SKILL.md`
-- `.agent/skills/input-sanitization/SKILL.md`
-- `.agent/skills/dependency-auditing/SKILL.md`
+**Supplemental security checks (conditional)**: After the core audit completes, read `{{SECURITY_SKILLS}}` (comma-separated list of security skill directory names). For each skill directory name in the list, read `.agent/skills/[skill]/SKILL.md` and run its audit protocol as a supplement to the core audit.
 
 Report any additional findings from supplemental audits with the same severity classification.
 

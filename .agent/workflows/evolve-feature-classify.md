@@ -9,7 +9,7 @@ pipeline:
   stage: quality-gate
   predecessors: [] # callable standalone
   successors: [evolve-feature-cascade]
-  skills: [technical-writer, brainstorming]
+  skills: [brainstorming, session-continuity, technical-writer]
   calls-bootstrap: false
 ---
 

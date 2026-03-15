@@ -9,7 +9,7 @@ pipeline:
   stage: quality-gate
   predecessors: [audit-ambiguity-rubrics]
   successors: []
-  skills: [resolve-ambiguity, technical-writer]
+  skills: [pipeline-rubrics, resolve-ambiguity, verification-before-completion]
   calls-bootstrap: false
 ---
 
@@ -33,10 +33,10 @@ Do **not** infer rubric paths from layer names — use only what is persisted in
 
 ## 3. Session Independence Check
 
-Before any auditing begins, read `docs/audits/audit-scope.md` and look for a `## Gaps Fixed` section.
+Read `docs/audits/audit-scope.md` and look for a `## Gaps Fixed` section.
 
-- **If the section is absent** — This is a first run or a clean slate. Proceed to Step 3a.
-- **If the section is present** — A prior session remediated gaps. Read the `layer`, `fixed_at`, and `fixed_by_session` fields. You MUST explicitly acknowledge: *"I am auditing remediated work from session `[fixed_by_session]` that ran at `[fixed_at]`. I am a different invocation and did not perform those fixes."* If you cannot make that acknowledgment in good faith (because you are the same session/invocation that produced the `## Gaps Fixed` entry), you MUST stop immediately and instruct the user: *"The session that fixed gaps cannot grade its own homework. Please re-run `/audit-ambiguity [layer]` as a fresh invocation."*
+- **Absent** → first run or clean slate. Proceed to Step 3a.
+- **Present** → a prior session remediated gaps. Read the `layer`, `fixed_at`, and `fixed_by_session` fields. Explicitly acknowledge: *"I am auditing remediated work from session `[fixed_by_session]` at `[fixed_at]`. I am a different invocation."* If you ARE the same session that produced the `## Gaps Fixed` entry → **stop** and instruct the user to re-run `/audit-ambiguity [layer]` as a fresh invocation.
 
 ---
 
@@ -123,21 +123,19 @@ Do NOT stop and ask the user what to do. After compiling the report in Step 4, i
 
 ## 5a. Persist Re-Verification Metadata
 
-Immediately after all remediation fixes from Step 5 are applied, append or update a `## Gaps Fixed` section in `docs/audits/audit-scope.md` with the following structure:
+After all remediation fixes are applied, append or update a `## Gaps Fixed` section in `docs/audits/audit-scope.md`:
 
 ```markdown
 ## Gaps Fixed
 
-- **layer**: [layer that was remediated, e.g. `vision`, `architecture`, `ia`, `be`, `fe`]
-- **fixed_at**: [ISO 8601 timestamp of when fixes were applied]
-- **fixed_by_session**: [a short identifier for this session/invocation, e.g. the conversation ID or a generated UUID]
-- **gaps_resolved**: [count of ⚠️ and ❌ items that were resolved]
-- **report_file**: [path to the ambiguity report, e.g. `docs/audits/ia-ambiguity-report.md`]
+- **layer**: [e.g. `vision`, `architecture`, `ia`, `be`, `fe`]
+- **fixed_at**: [ISO 8601 timestamp]
+- **fixed_by_session**: [conversation ID or generated UUID]
+- **gaps_resolved**: [count of ⬇️ and ❌ items resolved]
+- **report_file**: [e.g. `docs/audits/ia-ambiguity-report.md`]
 ```
 
-If a `## Gaps Fixed` section already exists, **replace it** with the current run's data (only the most recent remediation matters for the session independence check).
-
-This section is consumed by **Step 3 (Session Independence Check)** in subsequent audit runs. Both producer (here) and consumer (Step 3) use the section name `## Gaps Fixed` and the field names `layer`, `fixed_at`, `fixed_by_session`, `gaps_resolved`, `report_file`.
+If a `## Gaps Fixed` section already exists, **replace it** with the current run's data.
 
 ## 6. Propose next steps
 
@@ -150,16 +148,16 @@ After completing remediation in Step 5, propose: "Next: Re-run `/audit-ambiguity
 
 ### If ambiguity is 0%:
 
-> **Passing criteria**: A layer passes the ambiguity gate ONLY when ALL THREE conditions are met:
-> 1. **Fresh run** — This must be a clean invocation, NOT a re-check within the same session that fixed gaps. The agent that fixed the gaps cannot grade its own homework.
-> 2. **0% score** — No ⚠️ or ❌ on any dimension across all documents in the layer.
-> 3. **User confirmation** — The user explicitly confirms they have nothing else to add. The audit only checks what's written against the rubric — it cannot know about features or edge cases the user hasn't mentioned yet.
+**Passing criteria** — ALL THREE conditions must be met:
+1. **Fresh run** — NOT a re-check within the same session that fixed gaps.
+2. **0% score** — No ⚠️ or ❌ on any dimension across all documents.
+3. **User confirmation** — The user explicitly confirms they have nothing else to add.
 
-If all three conditions are met, propose the next pipeline step:
-- **Vision audit passed** → "Vision is clean and confirmed. Next: Run `/create-prd` to design the architecture"
-- **Architecture audit passed** → "Architecture is clean and confirmed. Next: Run `/decompose-architecture` to create IA shards"
-- **IA audit passed** → "IA layer is clean and confirmed. Next: Run `/write-be-spec` for the first IA shard that needs a BE spec"
-- **BE audit passed** → "BE layer is clean and confirmed. Next: Run `/write-fe-spec` for the first BE spec that needs an FE spec"
-- **FE audit passed** → "FE layer is clean and confirmed. Next: Run `/plan-phase` to create implementation slices"
+If all three are met, propose the next pipeline step:
+- **Vision passed** → `/create-prd`
+- **Architecture passed** → `/decompose-architecture`
+- **IA passed** → `/write-be-spec` for the first shard needing a BE spec
+- **BE passed** → `/write-fe-spec` for the first BE spec needing an FE spec
+- **FE passed** → `/plan-phase` to create implementation slices
 
-If the user wants to add something despite 0% score, incorporate their additions into the relevant documents and re-run the audit as a fresh invocation.
+If the user wants to add something despite 0% score, incorporate additions and re-run as a fresh invocation.

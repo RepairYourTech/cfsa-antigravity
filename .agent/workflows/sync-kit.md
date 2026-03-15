@@ -1,5 +1,6 @@
 ---
 description: Sync improvements from the upstream starter kit into this project's .agent folder — semantic merge preserving project-specific values
+skills: [technical-writer]
 ---
 
 # Sync Kit

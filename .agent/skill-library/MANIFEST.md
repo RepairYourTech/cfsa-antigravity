@@ -75,6 +75,8 @@ When a stack key matches a value pattern (case-insensitive), install the listed 
 | `API_LAYER` | `*trpc*` | `stack/api/trpc` | `trpc` |
 | `API_LAYER` | `*graphql*` | `stack/api/graphql` | `graphql` |
 
+> **`{{API_DESIGN_SKILL}}` provision**: When `API_LAYER` is set, bootstrap fills `{{API_DESIGN_SKILL}}` with the matching API skill name (e.g., `trpc`, `graphql`). When `API_LAYER` is not set (REST is the default API style), `{{API_DESIGN_SKILL}}` defaults to `api-design-principles` (pre-installed). This replaces the former hardcoded `rest-api-design` reference.
+
 ### ORM / Data Layer
 
 | Stack Key | Value Pattern | Library Path | Installed As |
@@ -232,6 +234,7 @@ Note: `DESIGN_DIRECTION` does not copy a skill from the library — it fills pla
 | Stack Key | Value Pattern | Library Path | Installed As |
 |-----------|--------------|-------------|-------------|
 | `MOBILE_FRAMEWORK` | `*expo*` OR `*react-native*` OR `*react native*` | `stack/mobile/react-native` | `react-native` |
+| `MOBILE_FRAMEWORK` | `*expo*` | `stack/mobile/expo-react-native` | `expo-react-native` |
 | `MOBILE_FRAMEWORK` | `*flutter*` | `stack/mobile/flutter` | `flutter` |
 | `MOBILE_FRAMEWORK` | `*swiftui*` OR `*swift*` | `stack/mobile/swiftui` | `swiftui` |
 | `MOBILE_FRAMEWORK` | `*kotlin*` OR `*compose*` OR `*jetpack*` | `stack/mobile/kotlin-compose` | `kotlin-compose` |
@@ -465,14 +468,23 @@ To add a new skill to the library:
 | `EMAIL` | Email service | Resend |
 | `QUEUE` | Job queue | Inngest, BullMQ |
 | `REALTIME` | Realtime communication | Socket.io |
-| `SEARCH` | Search engine | Meilisearch |
+| `SEARCH` | Search engine | Meilisearch, Algolia, Typesense, Elasticsearch |
 | `CMS` | Content management | Payload CMS, WordPress, Shopify |
-| `STORAGE` | File/object storage | AWS S3 |
+| `STORAGE` | File/object storage | AWS S3, Cloudflare R2, Google Cloud Storage |
 | `CI_CD` | CI/CD pipeline | GitHub Actions, Terraform |
-| `MOBILE_FRAMEWORK` | Mobile framework | Expo, React Native |
+| `MOBILE_FRAMEWORK` | Mobile framework | Expo, React Native, Flutter, SwiftUI, Kotlin/Compose |
 | `LANGUAGE` | Programming language | TypeScript, Python, Rust, Go, C/C++, Java, Kotlin, JavaScript, GDScript, Bash |
+| `MESSAGE_BROKER` | Message broker/queue | Kafka, RabbitMQ, NATS, AWS SQS |
+| `NOTIFICATIONS` | Notification service | Twilio, FCM, SendGrid |
+| `BROWSER_EXTENSION` | Browser extension framework | WXT, Plasmo, Chrome Extension |
+| `VSCODE_EXTENSION` | VS Code extension | VS Code Extension |
+| `FEATURE_FLAGS` | Feature flag service | LaunchDarkly, PostHog, Flagsmith |
+| `DATABASE_ANALYTICS` | Analytics database | ClickHouse |
 | `3D_FRAMEWORK` | 3D rendering | Three.js, React Three Fiber |
 | `GAME_ENGINE` | Game engine | Godot, Unity |
 | `SECURITY` | Security focus area | OWASP, Crypto, CSP/CORS, Dependency Auditing, Input Sanitization |
 | `SECURITY_SKILLS` | Accumulated list of all provisioned security skills (comma-separated, auto-filled by bootstrap) | e.g., `owasp-web-security,csp-cors-headers,input-sanitization,dependency-auditing` |
+| `API_DESIGN_SKILL` | API design skill for the project's API style (auto-filled by bootstrap, defaults to `api-design-principles`) | `api-design-principles`, `trpc`, `graphql` |
 | `DESIGN_DIRECTION` | Confirmed visual design direction | Minimal/Functional, Editorial, Luxury/Refined, Playful/Expressive, Technical/Brutalist, Cinematic/Immersive, or Hybrid |
+| `CDN_ASSETS` | CDN provider for static assets (no skill provisioned — handled by `HOSTING_SKILL`) | Cloudflare, AWS CloudFront, Vercel Edge |
+| `BACKEND_RUNTIME` | Backend runtime environment (no skill provisioned — handled by `LANGUAGE_SKILL` and `BACKEND_FRAMEWORK_SKILL`) | Node.js, Bun, Deno, Python |

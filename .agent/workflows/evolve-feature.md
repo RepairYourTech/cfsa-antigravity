@@ -5,7 +5,7 @@ pipeline:
   stage: quality-gate
   predecessors: [] # callable from any stage
   successors: [] # returns to caller
-  skills: [resolve-ambiguity, technical-writer, brainstorming]
+  skills: [brainstorming, prd-templates, resolve-ambiguity, session-continuity, technical-writer]
   calls-bootstrap: false
 shards: [evolve-feature-classify, evolve-feature-cascade]
 ---

@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [decompose-architecture-structure]
   successors: [write-architecture-spec]
-  skills: [session-continuity]
+  skills: [architecture-mapping, session-continuity]
   calls-bootstrap: false
 ---
 

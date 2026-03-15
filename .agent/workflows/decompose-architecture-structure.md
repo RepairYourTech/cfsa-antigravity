@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd]
   successors: [decompose-architecture-validate]
-  skills: [technical-writer, prd-templates]
+  skills: [prd-templates]
   calls-bootstrap: false
 ---
 

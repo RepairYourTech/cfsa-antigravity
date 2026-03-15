@@ -9,7 +9,7 @@ pipeline:
   stage: implementation
   predecessors: [implement-slice-setup]
   successors: [validate-phase]
-  skills: [tdd-workflow, systematic-debugging, session-continuity]
+  skills: [clean-code, code-review-pro, parallel-debugging, session-continuity, systematic-debugging, tdd-workflow, verification-before-completion]
   calls-bootstrap: false
 ---
 
@@ -69,6 +69,21 @@ Write the minimum code to make all tests pass:
 
 Run `{{TEST_COMMAND}}` to verify tests pass.
 
+## 4.1. Debug cycle (if tests fail after initial implementation)
+
+If `{{TEST_COMMAND}}` shows failures after completing Step 4:
+
+Read .agent/skills/systematic-debugging/SKILL.md and follow its ACH methodology.
+Read .agent/skills/parallel-debugging/SKILL.md if failures span multiple subsystems.
+
+1. Classify failures: contract mismatch vs logic error vs integration issue
+2. For contract mismatches: re-read the BE spec — is the contract wrong or the implementation?
+3. For logic errors: apply ACH (Analysis of Competing Hypotheses) per the debugging skill
+4. For integration issues: check cross-surface wiring, env vars, service connectivity
+5. Maximum 3 debug iterations before escalating to user with findings
+
+Run `{{TEST_COMMAND}}` after each debug iteration to verify progress.
+
 ## 4.5. New dependency check
 
 After making all tests pass (GREEN), scan the new imports introduced in the implementation files.
@@ -88,9 +103,9 @@ With tests green, improve code quality:
 - Remove duplication
 - Add documentation
 
-Read `.agent/skills/code-review-pro/SKILL.md` and follow its adversarial review methodology against the code written in Steps 3–4. Ask: "How would a senior engineer reject this in a PR review?" Fix any issues found before running the test command.
+Read `.agent/skills/code-review-pro/SKILL.md` and apply its adversarial review: "How would a senior engineer reject this in a PR review?" Fix issues before running tests.
 
-**Mandatory spec traceability check**: Re-read the BE spec section(s) and IA shard sections referenced by this slice's acceptance criteria. For every field in the Zod contract (from Step 2), verify it maps to a field in the BE spec. For every `// IA-EDGE:` tagged test (from Step 3), verify the corresponding IA edge case is covered by the implementation — not just by the test. If any drift is found between the implementation and the spec (missing fields, renamed fields, dropped validations, unimplemented edge cases), fix the implementation now. Do not proceed to Step 6 if any spec drift remains.
+**Spec traceability check**: Re-read the BE spec and IA shard sections for this slice. Verify every Zod contract field maps to a BE spec field. Verify every `// IA-EDGE:` tagged test's edge case is covered by the implementation, not just tested. Fix any spec drift before proceeding.
 
 Run `{{TEST_COMMAND}}` to verify tests still pass after refactor.
 
@@ -106,54 +121,19 @@ All must pass before the slice is complete.
 
 **Skip this step if not in parallel mode.**
 
-> **Write synthesis plan first**: Before beginning any synthesis work, write a `## Synthesis Plan` section to the slice file (`.agent/progress/slices/phase-NN-slice-NN.md`) listing:
-> - All `// BOUNDARY:` stubs found across agent outputs (file path + stub description)
-> - All cross-surface integrations to wire (e.g., "BE auth middleware → FE token refresh handler")
->
-> This gives you a checklist to resume from if the session is interrupted during synthesis.
-
-After all parallel agents have completed and QA-GREEN has passed:
-
-1. **Verify no file conflicts** — confirm no file was modified by multiple agents
-2. **Resolve `// BOUNDARY:` stubs** — agents may have created boundary stubs for frozen files (contracts, config). Resolve these now:
-   - Update shared contracts if needed
-   - Install any new dependencies
-   - Wire cross-surface integrations
-3. **Run full validation** — the validation from step 6 runs again after synthesis
-4. **Create synthesis report** per the `parallel-agents` skill (Synthesize step)
-
-Run `{{VALIDATION_COMMAND}}` for post-synthesis validation.
+Read `.agent/skills/session-continuity/protocols/11-parallel-synthesis.md` and follow its full procedure — write synthesis plan, resolve stubs, wire integrations, run `{{VALIDATION_COMMAND}}`.
 
 ## 7. Update progress (Mandatory)
 
-**CRITICAL ANTI-HALLUCINATION RULE**: You MUST NOT skip the progress update. Agents routinely skip this step after validation passes. You must physically open and edit **each** of the following files using your file editing tools. Protocol reference: `.agent/skills/session-continuity/protocols/03-progress-update.md`.
+**CRITICAL ANTI-HALLUCINATION RULE**: You MUST NOT skip the progress update. Agents routinely skip this step after validation passes.
 
-### 7a. Update the slice file: `.agent/progress/slices/phase-NN-slice-NN.md`
+Read `.agent/skills/session-continuity/protocols/03-progress-update.md` and follow **every step** in the protocol. You must physically open and edit each of the four file targets (slice file, phase file, index, memory) using your file editing tools.
 
-Open the slice file matching the slice you just implemented (e.g., `phase-02-slice-05.md`).
-
-1. Set `**Status**:` to `complete`.
-2. Change every `[ ]` in **Acceptance Criteria** to `[x]`.
-3. Add an **Implementation Notes** section describing the approach taken.
-4. Add a **Files Changed** section listing every file you created or modified.
-
-### 7b. Update the phase file: `.agent/progress/phases/phase-NN.md`
-
-1. Find the slice's entry (e.g., `- [ ] **Slice 05**: ...`) and change it to `- [x] **Slice 05**: ... ✅ YYYY-MM-DD`.
-2. Mark each sub-task under it `[x]`.
-3. Update the `**Progress**:` header fraction (e.g., `4/13 slices` → `5/13 slices`).
-4. Release any `[!]` claim flags and remove `files:` lock blocks.
-
-### 7c. Update the index: `.agent/progress/index.md`
-
-1. Recalculate the **Overall** line: increment the slice count and recompute the percentage (e.g., `23/32 slices (71%)` → `24/32 slices (75%)`).
-2. Update the phase row in the table: increment its progress count.
-3. If the phase is now complete, change its status to `complete` and add ✅.
-
-### 7d. Log to memory
-
-1. Record any learned patterns to `.agent/progress/memory/patterns.md`.
-2. Record any blockers encountered to `.agent/progress/memory/blockers.md`.
+The protocol covers:
+- **7a**: Slice file — status, criteria, implementation notes, files changed
+- **7b**: Phase file — slice entry, sub-tasks, progress fraction, claim releases
+- **7c**: Index — overall percentage, phase row
+- **7d**: Memory — patterns and blockers
 
 ## 8. Completion Gate
 
@@ -177,9 +157,9 @@ Before calling `notify_user`, verify:
 - [ ] No `// DECISION:` annotations exist for behaviors that are actually specified in the BE spec or IA shard (i.e., no spec-defined behavior was treated as an undocumented implementation decision)
 - [ ] The Zod contract written in Step 2 matches the delivered implementation field-for-field — no fields added, removed, or renamed during implementation without a corresponding contract update
 
-> ❌ STOP — Do not call `notify_user` if any of the above are unchecked. Fix the gap, update the contract if needed, and re-run `{{TEST_COMMAND}}`.
+> ❌ STOP — Do not call `notify_user` if any of the above are unchecked. Fix the gap and re-run `{{TEST_COMMAND}}`.
 
-You may not call `notify_user` until you have physically edited **all four** file targets above (7a–7d).
+You may not call `notify_user` until you have edited all four file targets above (7a–7d).
 
 Verify your edits by reading each of the following files:
 - Read `.agent/progress/slices/phase-NN-slice-NN.md` — must show Status: complete and [x] criteria

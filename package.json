@@ -1,43 +1,48 @@
 {
-    "name": "cfsa-antigravity",
-    "version": "1.0.1",
-    "description": "CFSA Pipeline — Constraint-First Specification Architecture for AI agents. Production-grade from line one.",
-    "scripts": {
-        "changeset": "changeset",
-        "version": "changeset version",
-        "build": "./scripts/build-template.sh"
-    },
-    "bin": {
-        "cfsa-antigravity": "./bin/cli.mjs"
-    },
-    "files": [
-        "bin/",
-        "template/"
-    ],
-    "keywords": [
-        "ai",
-        "agent",
-        "cfsa",
-        "specification",
-        "pipeline",
-        "tdd",
-        "antigravity",
-        "production",
-        "workflows",
-        "skills"
-    ],
-    "author": "RepairYourTech",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/RepairYourTech/cfsa-antigravity"
-    },
-    "homepage": "https://github.com/RepairYourTech/cfsa-antigravity#readme",
-    "engines": {
-        "node": ">=18.0.0"
-    },
-    "devDependencies": {
-        "@changesets/changelog-github": "^0.6.0",
-        "@changesets/cli": "^2.30.0"
-    }
+  "name": "cfsa-antigravity",
+  "version": "2.0.0",
+  "description": "CFSA Pipeline — Constraint-First Specification Architecture for AI agents. Production-grade from line one.",
+  "scripts": {
+    "changeset": "changeset",
+    "version": "changeset version",
+    "build": "./scripts/build-template.sh",
+    "check": "./scripts/check-template-integrity.sh",
+    "prepare": "husky"
+  },
+  "bin": {
+    "cfsa-antigravity": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "template/"
+  ],
+  "keywords": [
+    "ai",
+    "agent",
+    "cfsa",
+    "specification",
+    "pipeline",
+    "tdd",
+    "antigravity",
+    "production",
+    "workflows",
+    "skills"
+  ],
+  "author": "RepairYourTech",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RepairYourTech/cfsa-antigravity"
+  },
+  "homepage": "https://github.com/RepairYourTech/cfsa-antigravity#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.30.0",
+    "@commitlint/cli": "^20.4.4",
+    "@commitlint/config-conventional": "^20.4.4",
+    "husky": "^9.1.7"
+  }
 }

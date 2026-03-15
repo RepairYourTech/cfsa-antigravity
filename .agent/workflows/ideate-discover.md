@@ -9,7 +9,7 @@ pipeline:
   stage: vision
   predecessors: [ideate-extract]
   successors: [ideate-validate]
-  skills: [idea-extraction, resolve-ambiguity]
+  skills: [brainstorming, idea-extraction, pipeline-rubrics]
   calls-bootstrap: false
 ---
 

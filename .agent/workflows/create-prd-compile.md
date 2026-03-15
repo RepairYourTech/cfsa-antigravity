@@ -9,7 +9,7 @@ pipeline:
   stage: architecture
   predecessors: [create-prd-security]
   successors: [decompose-architecture]
-  skills: [technical-writer, prd-templates, pipeline-rubrics]
+  skills: [performance-budgeting, pipeline-rubrics, prd-templates, tdd-workflow, technical-writer]
   calls-bootstrap: true
 requires_placeholders: [UNIT_TESTING_SKILL, E2E_TESTING_SKILL, CI_CD_SKILL]
 ---

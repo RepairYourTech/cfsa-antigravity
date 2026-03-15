@@ -9,7 +9,7 @@ pipeline:
   stage: specification
   predecessors: [write-fe-spec-classify]
   successors: [plan-phase]
-  skills: [technical-writer, accessibility, prd-templates, pipeline-rubrics]
+  skills: [prd-templates, session-continuity, spec-writing, technical-writer, testing-strategist, verification-before-completion]
   calls-bootstrap: true
 ---
 
@@ -26,7 +26,8 @@ Write the FE spec to `docs/plans/fe/`, update indexes, run quality checks, and p
 ## 6. Write the spec to `docs/plans/fe/[NN-feature-name].md`
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
-Read .agent/skills/accessibility/SKILL.md and follow its methodology.
+Read .agent/skills/spec-writing/SKILL.md and follow its completeness testing and cross-reference checking methodology.
+Read .agent/skills/{{ACCESSIBILITY_SKILL}}/SKILL.md and follow its methodology.
 Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 
 **Naming convention**: Numbered prefix matching feature position + kebab-case name (e.g., `01-auth-ui.md`). Cross-cutting: `00-` prefix.

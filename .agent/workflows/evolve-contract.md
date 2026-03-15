@@ -5,7 +5,7 @@ pipeline:
   stage: maintenance
   predecessors: [] # callable from any stage
   successors: [] # returns to caller
-  skills: [tdd-workflow, migration-management, testing-strategist, error-handling-patterns]
+  skills: [tdd-workflow, migration-management, testing-strategist, error-handling-patterns, api-versioning]
   calls-bootstrap: true
 ---
 
@@ -15,6 +15,21 @@ Safely modify a Zod schema without breaking existing consumers.
 
 **Input**: The contract to change and the desired modification
 **Output**: Updated contract, migration tests, and all consumers updated
+
+### When to use `/evolve-contract`
+
+| Use `/evolve-contract` | Just edit the schema directly |
+|---|---|
+| The schema has **2+ consumers** across different surfaces | The schema is used in only one place |
+| The change is **breaking** (rename, remove, type change) | The change is purely additive (new optional field, no consumers affected) |
+| The schema is a **shared contract** (API request/response boundary) | The schema is an internal type with no cross-surface consumers |
+| You need a **migration path** for existing data | No stored data uses this schema |
+
+### When NOT to use it
+
+- **During initial implementation** (first time writing the contract) — contracts evolve only after they exist
+- **For test-only types** — internal test fixtures don't need migration safeguards
+- **When `/propagate-decision` is more appropriate** — if the change originates from a locked pipeline decision (architecture, spec), use `/propagate-decision` first, then `/evolve-contract` for the schema specifically
 
 ---
 
@@ -45,6 +60,18 @@ Document all consumers:
 - Frontend components
 - Test files
 - Other contracts that reference this one
+
+### 2.5. API versioning check (conditional)
+
+If any consumer is a **public-facing API endpoint** (i.e., called by external clients, not just internal frontend):
+
+Read .agent/skills/api-versioning/SKILL.md and follow its breaking change classification methodology.
+
+Determine whether the schema change requires:
+1. **In-place migration** — additive or narrowing change, no version bump needed
+2. **New API version** — breaking change to a public contract, requires versioning strategy
+
+If a new API version is needed, document the versioning approach (URL prefix, header, or query param) before proceeding to Step 3. The migration tests must validate both the old and new versions.
 
 ## 3. Write migration tests
 
