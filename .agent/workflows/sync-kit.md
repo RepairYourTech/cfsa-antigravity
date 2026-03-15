@@ -45,7 +45,7 @@ Compare the **entire upstream repo** against the project. Scan at minimum:
 | `.agent/skills/` | All skill directories (SKILL.md + sub-files) |
 | `.agent/skill-library/` | MANIFEST.md, README.md, subdirectories |
 | `.agent/progress/` | Directory structure |
-| `docs/` | README.md, kit-architecture.md, audits/, plans/ scaffolding |
+| `docs/` | README.md, kit-architecture.md, audits/, plans/ scaffolding (including `ideation/` folder structure) |
 
 Compare using SHA hashes or byte-level diff. Classify each file per Step 2.
 
@@ -105,6 +105,51 @@ Only copy files identified as net-new in Step 1. Do not overwrite existing files
 
 ---
 
+## 4.5. Ideation structure migration
+
+The kit's ideation output changed from a monolithic file to a sharded folder. Projects built on the old kit need migration.
+
+### 4.5a. Detect old pattern
+
+Check the project for these indicators:
+
+| Indicator | Meaning |
+|---|---|
+| `docs/plans/ideation.md` exists | Old monolithic ideation file |
+| `docs/plans/vision.md` exists AND is referenced as pipeline input in workflows | Old vision-as-source pattern |
+| `docs/plans/ideation/` folder missing | Ideation scaffold not created |
+| `docs/plans/ideation/ideation-index.md` missing | Pipeline key file not created |
+
+If **none** of these indicators match → skip to Step 5.
+
+### 4.5b. Scaffold the ideation folder
+
+If `docs/plans/ideation/` doesn't exist, create the scaffold:
+
+```
+docs/plans/ideation/
+├── .gitkeep
+├── README.md          ← copy from upstream
+├── domains/.gitkeep
+├── meta/.gitkeep
+└── cross-cuts/.gitkeep
+```
+
+### 4.5c. Flag for re-ideation
+
+If a monolithic `docs/plans/ideation.md` or `docs/plans/vision.md` (used as pipeline source) exists:
+
+1. **DO NOT delete or modify** the old file
+2. Report to the user:
+   > "Your project uses the old monolithic ideation format. The new kit uses a sharded `ideation/` folder with `ideation-index.md` as the pipeline key file.
+   >
+   > **To migrate:** Run `/ideate @docs/plans/ideation.md` (or `@docs/plans/vision.md`). The extract step will treat your old file as a rich document input, parse it into the new folder structure, and preserve all existing detail.
+   >
+   > **After migration:** Run downstream workflows (`/create-prd`, etc.) to propagate the new ideation depth into your specs."
+3. **DO NOT attempt automatic migration** — the old file's structure is unknown and the user should review the re-ideation output
+
+---
+
 ## 5. Audit project-specific files for integration gaps
 
 Project-specific files were written **before** the kit's latest improvements. Check for missing integration points with new kit content.
@@ -116,6 +161,7 @@ Project-specific files were written **before** the kit's latest improvements. Ch
 | Does this file enforce rules that now have nuance? | Rule file bans placeholders — does it know about `// BOUNDARY:` stubs? |
 | Does this file describe processes that could use new skills? | Setup workflow → could `parallel-agents` parallelize verification? |
 | Does this file reference concepts the kit renamed or evolved? | Old terminology → now uses different naming |
+| Does this file reference `vision.md` as a pipeline data source? | `vision.md` is now human-readable only — pipeline reads `ideation-index.md` |
 | Does this file's domain intersect new kit content? | Security rule → should it reference new kit security skills? |
 
 ### 5b. Apply integration updates
