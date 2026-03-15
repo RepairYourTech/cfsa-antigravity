@@ -28,7 +28,78 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 
 ---
 
-## 2. Data Flow & State Management
+## 2. Ideation Architecture
+
+The ideation layer is the pipeline's first output and the source of truth for all downstream specification work. It replaces the former monolithic `vision.md` approach with a sharded folder structure that scales with project complexity.
+
+### Pipeline Key File
+
+`docs/plans/ideation/ideation-index.md` is the **pipeline key file** — the primary entry point for all downstream workflows. When `/create-prd`, `/decompose-architecture`, or any specification workflow needs to understand the product, it reads `ideation-index.md` first, then follows links to relevant domain files for detail.
+
+`docs/plans/vision.md` still exists but is a **human-readable executive summary** only — a sales pitch compiled from the ideation folder. No downstream workflow reads it as a data source.
+
+### Folder Structure
+
+```text
+docs/plans/ideation/
+├── ideation-index.md          # Pipeline key file — domain map, MoSCoW summary, coverage
+├── domains/                   # One file per product domain
+│   ├── user-management.md
+│   ├── billing.md
+│   └── ...
+├── meta/                      # Structured metadata
+│   ├── problem-statement.md
+│   ├── personas.md
+│   ├── constraints.md
+│   └── competitive-landscape.md
+└── cross-cuts/                # Cross-cutting concern tracking
+    └── cross-cut-ledger.md
+```
+
+**Key properties:**
+- **Shard-as-you-go**: Domain files are created the moment a domain is identified during exploration, not batched after all exploration is complete
+- **Living documents**: Domain files and the index are updated in place as exploration deepens — they are never dated (see Dated File Convention below)
+- **Downstream consumers**: `/create-prd` reads `ideation-index.md` + `meta/constraints.md`; `/decompose-architecture` reads `ideation-index.md` + domain files; specification workflows reference domain files for sub-feature detail
+
+### Exploration Model
+
+The `/ideate` workflow uses **recursive breadth-before-depth exploration**:
+
+| Level | Scope | What happens |
+|---|---|---|
+| **Level 0** | Global domain map | Identify all top-level domains in the product. Each gets a file in `domains/`. |
+| **Level 1** | Sub-area sweep per domain | For each domain, identify all sub-areas. Mark each with a depth status marker. |
+| **Level 2+** | Vertical drilling | Drill into each sub-area until no new information emerges. Recursion: new domains discovered during drilling loop back to Level 0. |
+
+Each domain file tracks its sub-areas with status markers:
+
+| Marker | Meaning |
+|---|---|
+| `[SURFACE]` | Identified but unexplored |
+| `[BREADTH]` | Sub-areas listed, not detailed |
+| `[DEEP]` | Core logic, edge cases, interactions documented |
+| `[EXHAUSTED]` | Deep Think yielded nothing new — domain complete |
+
+A domain reaches `[EXHAUSTED]` only when the Deep Think protocol generates no new hypotheses.
+
+### Deep Think Protocol
+
+At every exploration level, the agent actively generates hypotheses:
+
+> *"Based on [industry knowledge / domain patterns / cross-domain interaction], I'd expect [feature/concern/edge case]. Is that relevant to your product?"*
+
+Hypotheses are tracked in domain files with resolution status (confirmed/rejected/deferred). This prevents shallow exploration — the agent doesn't just record what the user says, it actively probes for what the user hasn't mentioned yet.
+
+### Cross-Cut Ledger
+
+Cross-cutting concerns (security, notifications, analytics, error handling, etc.) are tracked continuously in `cross-cuts/cross-cut-ledger.md` as they're discovered at any level, not batched into a separate pass. Each entry includes:
+- Which domains are involved
+- Confidence level (increases as exploration deepens)
+- Resolution status
+
+---
+
+## 3. Data Flow & State Management
 
 Agents are inherently stateless across conversations. The kit uses the **Session Continuity** protocol to provide a persistent memory system.
 
@@ -66,8 +137,8 @@ This directory acts as the agent's long-term and working memory.
 ### Cross-references
 
 - **Dated File Convention** — See below in this section (Section 2) — governs which artifact paths use glob patterns vs. hardcoded names.
-- **Placeholder Verification Gate Protocol** — See Section 3.5 — governs the Step 0 guard that prevents workflows from reading `{{PLACEHOLDER}}`-dependent skills before bootstrap has run.
-- **Kit Maintenance Checklist** — See Section 5 — governs what must be updated when new workflows or skills are added.
+- **Placeholder Verification Gate Protocol** — See Section 4.5 — governs the Step 0 guard that prevents workflows from reading `{{PLACEHOLDER}}`-dependent skills before bootstrap has run.
+- **Kit Maintenance Checklist** — See Section 6 — governs what must be updated when new workflows or skills are added.
 - **Surface Model** — `.agent/skills/prd-templates/references/surface-model.md` — The authoritative reference for surface types (web/mobile/cli/etc.) and implementation layers, and how the two models relate.
 
 ### Dated File Convention
@@ -91,7 +162,7 @@ Any workflow that reads a compiled artifact must use a glob pattern (e.g., `docs
 
 ---
 
-## 3. Module Relationships
+## 4. Module Relationships
 
 The power of the kit comes from how these modules interact:
 
@@ -101,7 +172,7 @@ The power of the kit comes from how these modules interact:
 
 ---
 
-## 3.5. Bootstrap System
+## 4.5. Bootstrap System
 
 The bootstrap system transforms the kit from a generic template into a project-specific configuration. It runs as a utility workflow called by other pipeline workflows — never directly by the user.
 
@@ -162,7 +233,7 @@ Before any implementation begins, `/implement-slice-setup` (Step -1) scans all s
 
 ---
 
-## 4. Key Patterns
+## 5. Key Patterns
 
 ### Test-Driven Contract-First (CFPA)
 
@@ -180,7 +251,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ---
 
-## 5. Kit Maintenance Checklist
+## 6. Kit Maintenance Checklist
 
 **When a new workflow or shard is added to `.agent/workflows/`:**
 
@@ -204,7 +275,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ---
 
-## 6. Git Integration
+## 7. Git Integration
 
 ### Excluding `.agent/` from Git Without `.gitignore`
 
