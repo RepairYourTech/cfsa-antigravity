@@ -34,15 +34,15 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 
 | # | Command | Input | Output | Stage |
 |---|---------|-------|--------|-------|
-| 1 | `/ideate` | Raw idea or `@file` | `docs/plans/vision.md` | Discovery |
-| ↳ | `/ideate-extract` | User input | Classified input + `docs/plans/ideation.md` + loaded skills | Discovery |
-| ↳ | `/ideate-discover` | Classified input | Domain map + feature inventory | Discovery |
-| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (compiled from `ideation.md`) | Discovery |
-| 2 | `/create-prd` | `vision.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
+| 1 | `/ideate` | Raw idea or `@file` | `docs/plans/ideation/` folder + `docs/plans/vision.md` (summary) | Discovery |
+| ↳ | `/ideate-extract` | User input | Classified input + `docs/plans/ideation/` folder + loaded skills | Discovery |
+| ↳ | `/ideate-discover` | Classified input | Domain files + cross-cut ledger (recursive breadth-before-depth) | Discovery |
+| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (human summary compiled from ideation folder) | Discovery |
+| 2 | `/create-prd` | `ideation-index.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
 
-> **Persistent intermediary**: `docs/plans/ideation.md` — kept permanently as audit trail for the vision.
+> **Persistent intermediary**: `docs/plans/ideation/` folder — kept permanently as the pipeline's source of truth for the ideation phase.
 
-| ↳ | `/create-prd-stack` | `vision.md` constraints | Tech stack decisions | Design |
+| ↳ | `/create-prd-stack` | `ideation/meta/constraints.md` | Tech stack decisions | Design |
 | ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
@@ -90,7 +90,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, and `/evolve-feature` are utility commands callable from any stage — they are not sequential pipeline steps.
 
 > [!WARNING]
-> If `docs/plans/vision.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
+> If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
 
 > [!WARNING]
 > If `{{PLACEHOLDER}}` values appear anywhere in this file, bootstrap has not run — do not attempt implementation work.
@@ -156,7 +156,7 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 ```mermaid
 graph TD
     A[Task Received] --> B{Pipeline complete?}
-    B -->|No - vision.md missing| C[Run /ideate first]
+    B -->|No - ideation-index.md missing| C[Run /ideate first]
     B -->|No - placeholders unfilled| D[Run /create-prd first]
     B -->|Yes| E[Read Rules]
     E --> F[Read Instructions]

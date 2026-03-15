@@ -102,13 +102,13 @@ Ideation sub-features:
 Split trigger: [none | review | mandatory-split]
 ```
 
-Read `docs/plans/ideation.md` and the architecture design to build each record.
+Read the relevant domain files from `docs/plans/ideation/domains/` and the architecture design to build each record.
 
 ### Split Trigger Rules
 
 Apply all three rules to every domain:
 
-1. **80-line proxy** — If the `ideation.md` section for this domain exceeds ~80 lines of content (features, user stories, acceptance criteria combined), flag as `mandatory-split`.
+1. **80-line proxy** — If the ideation domain file for this domain exceeds ~80 lines of content (features, user stories, acceptance criteria combined), flag as `mandatory-split`.
 
 2. **3-table rule** — If the domain's sub-features touch ≥3 independent database tables with no shared queries, flag as `mandatory-split`.
 
@@ -141,7 +141,7 @@ User must approve or reject each split before the table is locked.
 
 ### Purpose
 
-Run this protocol when beginning any architecture spec shard. `ideation.md` is the primary source of truth for sub-features — the architecture design is secondary context.
+Run this protocol when beginning any architecture spec shard. The ideation domain files are the primary source of truth for sub-features — the architecture design is secondary context.
 
 ### Sources to Read
 
@@ -151,18 +151,18 @@ Run this protocol when beginning any architecture spec shard. `ideation.md` is t
 
 ### Reconciliation Table
 
-| Sub-feature | ideation.md | Shard ## Features | Must Have? | Decision |
+| Sub-feature | Ideation domain file | Shard ## Features | Must Have? | Decision |
 |-------------|-------------|-------------------|------------|----------|
 | [name] | ✅ Listed | ✅ Listed | Yes/No | Keep |
 | [name] | ✅ Listed | ❌ Missing | Yes | **Add to shard immediately** |
 | [name] | ✅ Listed | ❌ Missing | No | Add to shard — ideation is authoritative |
-| [name] | ❌ Not listed | ✅ Listed | — | `[Architecture-only — not in ideation.md]` — keep but audit |
+| [name] | ❌ Not listed | ✅ Listed | — | `[Architecture-only — not in ideation]` — keep but audit |
 
 ### Mismatch Handling Rules
 
-1. If a sub-feature appears in `ideation.md` but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding. Do not wait for user confirmation to add ideation-sourced sub-features.
+1. If a sub-feature appears in the ideation domain file but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding. Do not wait for user confirmation to add ideation-sourced sub-features.
 
-2. If a sub-feature appears in the shard's `## Features` but not in `ideation.md` → **keep it** but mark it with `[Architecture-only — not in ideation.md]` as an audit trail. These items need explicit user confirmation.
+2. If a sub-feature appears in the shard's `## Features` but not in the ideation domain file → **keep it** but mark it with `[Architecture-only — not in ideation]` as an audit trail. These items need explicit user confirmation.
 
 ### Scope Confirmation Presentation Format
 
@@ -172,8 +172,8 @@ Present the reconciled scope to the user in the following format:
 >
 > [bullet list of all sub-features, with `[Architecture-only]` markers where applicable]
 >
-> **[N] sub-features added from ideation.md** that were missing from the shard skeleton.
-> **[M] sub-features marked `[Architecture-only]`** — not found in ideation.md, added during decomposition.
+> **[N] sub-features added from ideation** that were missing from the shard skeleton.
+> **[M] sub-features marked `[Architecture-only]`** — not found in ideation domain file, added during decomposition.
 >
 > "Does this feature list match your intent for this domain? Any sub-features to add, remove, or re-scope?"
 
