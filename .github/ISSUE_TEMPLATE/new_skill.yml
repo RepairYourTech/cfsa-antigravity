@@ -1,0 +1,54 @@
+name: New Skill Proposal
+description: Propose a new skill for the skill library
+labels: ["new-skill"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposing a new skill for the kit? Tell us what it does and where it fits.
+
+  - type: input
+    id: name
+    attributes:
+      label: Skill Name
+      description: What should this skill be called?
+      placeholder: "e.g. redis-caching"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Skill Category
+      description: Where does this fit in the skill library?
+      options:
+        - stack/databases
+        - stack/frontend-frameworks
+        - stack/backend-frameworks
+        - stack/auth
+        - stack/devops
+        - stack/testing
+        - pipeline (core pipeline skill)
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What This Skill Does
+      description: Describe the skill's purpose, what conventions it teaches, and when agents should load it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: Reference Material
+      description: Links to official docs, best practices, or prior art that the skill should encode.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any other context.

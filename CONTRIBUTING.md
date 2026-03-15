@@ -1,28 +1,41 @@
 # Contributing to CFSA Antigravity
 
-Thanks for your interest in contributing! This guide covers the process from fork to merge.
+Thanks for your interest in contributing! This project uses an **issue-first workflow** — every change starts with an approved issue.
 
-## Getting Started
+## The Process
 
-1. **Fork** the repo on GitHub
-2. **Clone** your fork locally:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/cfsa-antigravity.git
-   cd cfsa-antigravity
-   ```
-3. **Install** dev dependencies:
-   ```bash
-   npm install
-   ```
+```
+1. Open an Issue  →  2. Wait for Approval  →  3. Fork & Branch  →  4. PR (closes issue)
+```
 
-## Making Changes
+**PRs without a linked issue will be closed.**
+
+## 1. Open an Issue First
+
+Every PR must have a linked, maintainer-approved issue. No exceptions.
+
+- 🐛 **Bug?** → [Bug Report](https://github.com/RepairYourTech/cfsa-antigravity/issues/new?template=bug_report.yml)
+- ✨ **Feature?** → [Feature Request](https://github.com/RepairYourTech/cfsa-antigravity/issues/new?template=feature_request.yml)
+- 🧩 **New skill?** → [New Skill Proposal](https://github.com/RepairYourTech/cfsa-antigravity/issues/new?template=new_skill.yml)
+
+**Wait for a maintainer to approve** before starting work. This prevents wasted effort on changes that won't be accepted.
+
+## 2. Fork and Branch
+
+```bash
+git clone https://github.com/YOUR-USERNAME/cfsa-antigravity.git
+cd cfsa-antigravity
+npm install
+git checkout -b issue-123-short-description
+```
 
 ### Branch Naming
 
-Use descriptive branch names:
-- `feat/new-skill-name` — new skills or features
-- `fix/workflow-step-correction` — bug fixes
-- `docs/improve-readme` — documentation changes
+- `feat/issue-123-new-skill-name` — new skills or features
+- `fix/issue-456-workflow-correction` — bug fixes
+- `docs/issue-789-improve-readme` — documentation
+
+## 3. Make Your Changes
 
 ### What You Can Contribute
 
@@ -32,64 +45,59 @@ Use descriptive branch names:
 | **Workflows** | Improvements to pipeline workflows in `.agent/workflows/` |
 | **Rules** | Refinements to agent rules in `.agent/rules/` |
 | **Documentation** | Better explanations, examples, typo fixes |
-| **CLI** | Improvements to the `bin/cli.mjs` installer |
-| **Bug Fixes** | Anything that's broken |
+| **CLI** | Improvements to `bin/cli.mjs` |
 
-### What to Avoid
+### Constraints
 
-- Don't modify `.agent/instructions/` template files unless you understand the `{{PLACEHOLDER}}` system
-- Don't add project-specific content — this is a generic kit
-- Don't add dependencies to the npm package (the CLI is zero-dependency by design)
+- Workflows must be under **12,000 characters**
+- Skills must follow the `SKILL.md` format with YAML frontmatter
+- Shared content goes in `prd-templates/references/`, not inlined in workflows
+- Don't modify `.agent/instructions/` templates unless you understand the `{{PLACEHOLDER}}` system
+- Don't add npm dependencies — the CLI is zero-dependency by design
+- Run `npm run build` to verify template integrity before submitting
 
-## Changesets (Required for PRs)
+## 4. Open a Pull Request
 
-Every PR that changes user-facing behavior must include a changeset. This powers our automated changelog and versioning.
+1. Include a **changeset** (see below)
+2. Use `Closes #123` in the PR body to auto-close the linked issue
+3. Fill out the PR template completely
+4. Wait for maintainer review — **all PRs require approval**
 
-1. **After making your changes**, run:
-   ```bash
-   npx changeset
-   ```
-2. **Select the change type:**
-   - `patch` — bug fixes, doc corrections, minor improvements
-   - `minor` — new skills, new workflows, new CLI features
-   - `major` — breaking changes (renamed files, changed workflow steps, removed features)
-3. **Write a summary** — this becomes the CHANGELOG entry. Be concise but descriptive.
-4. **Commit** the generated `.changeset/*.md` file with your PR.
+### Changesets (Required)
 
-### When a Changeset is NOT Needed
+Every PR with user-facing changes must include a changeset:
 
-- Changes to dev-only files (CI config, test setup)
-- Changes to `README.md` at repo root (GitHub landing page only)
-- Changes to `.changeset/` config itself
+```bash
+npx changeset
+```
 
-## Pull Request Process
+Select the change type:
+- `patch` — bug fixes, doc corrections, minor improvements
+- `minor` — new skills, new workflows, new features
+- `major` — breaking changes (renamed files, changed steps, removed features)
 
-1. **Create your PR** against `main`
-2. **Ensure** your changeset file is included
-3. **Describe** what changed and why in the PR body
-4. **Wait for review** — maintainers will review and may request changes
+Commit the generated `.changeset/*.md` file with your PR.
+
+**When a changeset is NOT needed:** dev-only files (CI config), root `README.md`, `.changeset/` config.
 
 ### PR Checklist
 
-- [ ] Changes follow existing patterns and conventions
-- [ ] New skills include a `SKILL.md` with proper frontmatter
-- [ ] New workflows include a description in the YAML frontmatter
-- [ ] Changeset file is included (if user-facing changes)
+- [ ] I opened an issue **before** this PR and it was approved
+- [ ] This PR uses `Closes #NNN` to link the issue
+- [ ] Changeset file included (if user-facing changes)
+- [ ] `npm run build` passes
+- [ ] New workflows are under 12,000 characters
+- [ ] `AGENTS.md` and `GEMINI.md` updated if adding workflows/skills
 - [ ] No `{{PLACEHOLDER}}` values were hardcoded
 
 ## Release Process (Maintainers)
 
-When changesets accumulate on `main`, the Changesets GitHub Action opens a "Version Packages" PR that:
-- Bumps `package.json` version
-- Updates `CHANGELOG.md`
-- Aggregates all pending changesets
-
-Merging that PR + pushing a version tag triggers npm publish.
+When changesets accumulate on `main`, the Changesets GitHub Action opens a "Version Packages" PR. Merging it bumps the version, updates `CHANGELOG.md`, and triggers npm publish.
 
 ## Code of Conduct
 
-Be respectful. Be constructive. We're building tools that make AI-assisted development better for everyone. Bad faith contributions, spam, and hostile behavior result in an immediate ban.
+Be respectful. Be constructive. Bad faith contributions, spam, and hostile behavior result in an immediate ban.
 
 ## Questions?
 
-Open an issue with the `question` label. We're happy to help.
+Open a [Discussion](https://github.com/RepairYourTech/cfsa-antigravity/discussions) — issues are for actionable work items.
