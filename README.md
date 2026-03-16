@@ -2,7 +2,7 @@
 
 > Constraint-First Specification Architecture — production-grade from line one
 
-A pipeline that turns a raw idea into exhaustively specified, test-driven, production-quality code through progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Every line of code is production-grade from the moment it's written.
+A pipeline that turns a raw idea into exhaustively specified, test-driven, production-quality code through progressive gates. Stack-agnostic. Built for Antigravity on Linux/WSL. Every line of code is production-grade from the moment it's written.
 
 ## Quick Install
 
