@@ -8,11 +8,16 @@ Ideation output created by `/ideate` — the pipeline's source of truth for prod
 
 ## Structure
 
-| Directory | Description |
+The ideation folder uses a **fractal folder structure** — every domain is a folder containing an index file (`*-index.md`), a cross-cut file (`*-cx.md`), and child feature `.md` files. Sub-domains are nested folders following the same pattern.
+
+| Path | Description |
 |---|---|
-| `domains/` | One file per domain, created during `/ideate-discover` as domains are explored |
+| `ideation-index.md` | Pipeline key file — structural classification, structure map, MoSCoW, progress |
+| `ideation-cx.md` | Global cross-cuts (cross-surface interactions for multi-product projects) |
+| `domains/` | Fractal domain folders — each containing index + CX + child features/sub-domains |
 | `meta/` | Structured metadata — problem statement, personas, constraints, competitive landscape |
-| `cross-cuts/` | Cross-cutting concern ledger, accumulated continuously during exploration |
+
+> See `docs/kit-architecture.md` Section 2 for the full tree diagram and detailed documentation.
 
 ## Completion Requirement
 

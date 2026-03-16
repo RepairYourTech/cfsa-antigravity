@@ -29,7 +29,7 @@ If no architecture design exists, tell the user to run `/create-prd` first. Do n
 
 Also check the document's `**Status**:` field. If the status is `Draft` or `Review` → **STOP**: "The architecture design is not yet approved (current status: [status]). Get explicit approval from the user and update the status to `Approved` before decomposing."
 
-Also read `docs/plans/ideation/ideation-index.md` for the domain map, and load specific domain files as needed for context.
+Also read `docs/plans/ideation/ideation-index.md` for the fractal domain map and structural classification. The ideation folder uses a fractal structure — read domain indexes (not flat files) to understand depth, child counts, and cross-cut density.
 
 > **Design system prerequisite (web/mobile/desktop projects)**: Read `.agent/instructions/tech-stack.md` and locate the `SURFACES` value. If surfaces include `web`, `mobile`, or `desktop`, verify that `docs/plans/design-system.md` exists and is not empty.
 >
@@ -53,13 +53,28 @@ Read .agent/skills/architecture-mapping/SKILL.md and follow its methodology.
 
 Analyze the architecture design and identify natural domain boundaries. Each boundary becomes a numbered IA shard.
 
-**Heuristics for finding boundaries:**
+**Fractal tree analysis for shard boundaries:**
+
+The ideation folder uses a fractal structure. Walk the tree to inform shard granularity:
+
+| Signal | What It Means for Sharding |
+|--------|---------------------------|
+| Deep fractal tree (3+ levels) | Domain is complex enough for its own shard |
+| Many children (5+ features) | Consider splitting into multiple shards |
+| Dense CX file (5+ cross-cuts) | This domain has high coupling — keep it together in one shard, or isolate carefully |
+| Rich Role Matrix (3+ roles with access) | Shard needs multi-role IA spec coverage |
+| Hub-and-spoke shared domains | Shared domains often become `00-*` cross-cutting shards |
+| Leaf features marked `[EXHAUSTED]` | Most confident for shard scoping — behavior is fully defined |
+
+**Standard heuristics also apply:**
 - Features that share the same data models belong together
 - Features that can be developed/deployed independently are candidates for separation
 - Features that share the same access control model may belong together
 - Cross-cutting concerns (auth, API conventions, error handling) become `00-*` shards
 
-Read .agent/skills/architecture-mapping/SKILL.md and follow its Domain Boundary Protocol. Build the domain inventory record, apply all three split trigger rules, and produce the domain boundary table. Present split candidates to the user before locking any boundary.
+Read `.agent/skills/architecture-mapping/SKILL.md` and follow its Domain Boundary Protocol. Build the domain inventory record, apply all three split trigger rules, and produce the domain boundary table. Present split candidates to the user before locking any boundary.
+
+> **Important**: Ideation does NOT prescribe shard boundaries. It provides the raw data (depth, features, cross-cuts, roles). This workflow makes the shard boundary decisions based on architectural analysis.
 
 Present the proposed domain decomposition to the user for validation.
 

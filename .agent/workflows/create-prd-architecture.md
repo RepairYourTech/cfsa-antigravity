@@ -50,10 +50,15 @@ Design the high-level system. Each sub-item requires full exploration, not a sum
    Load the Hosting skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
    Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 4. **API surface** — REST? GraphQL? RPC? Versioning strategy? Error format? Pagination? Rate limit headers?
+5. **Deployment strategy** — Rolling? Blue-green? Canary? Read `.agent/skills/deployment-procedures/SKILL.md` Section 6 for the strategy options and selection matrix. Ask:
+   - "Which zero-downtime deployment strategy fits your risk profile? Rolling (standard), Blue-Green (easy rollback), or Canary (validate with real traffic)?"
+   - "Do you want feature flags for controlled rollout of risky features? If yes, which provider (or build your own)?"
+   - "What is your rollback trigger? Error rate spike above N%? Latency threshold? Manual decision?"
+   Write the confirmed strategy to `docs/plans/architecture-draft.md` under `## Deployment Strategy`.
 
 For multi-surface projects, additionally define:
-5. **Surface interconnection** — How do surfaces communicate? What is the source of truth for shared data? What happens when a surface is offline?
-6. **Shared domain boundary** — Which entities/models are shared across surfaces vs surface-specific?
+6. **Surface interconnection** — How do surfaces communicate? What is the source of truth for shared data? What happens when a surface is offline?
+7. **Shared domain boundary** — Which entities/models are shared across surfaces vs surface-specific?
 
 For each component, also define:
 - What it owns (data, logic, auth decisions)

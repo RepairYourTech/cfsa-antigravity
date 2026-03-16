@@ -27,7 +27,7 @@ Build the decision constraints map from the ideation output, then walk through e
 
 Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**.
 
-Also read `docs/plans/ideation/ideation-index.md` — specifically the `## Structural Classification` section. This is the **authoritative source** for the project's surface list and project shape (single-surface, multi-surface-shared, or multi-product). Use this to determine which decision axes apply and whether tech stack decisions need to be made per-surface.
+Also read `docs/plans/ideation/ideation-index.md` — specifically the `## Structural Classification` section. This is the **authoritative source** for the project's surface list and project shape (`single-surface`, `multi-surface-shared`, `multi-product-hub`, or `multi-product-peer`). Use this to determine which decision axes apply and whether tech stack decisions need to be made per-surface.
 
 Build the constraints map:
 

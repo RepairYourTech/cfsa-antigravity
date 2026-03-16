@@ -18,4 +18,12 @@ Non-FE slices skip this block.
 - [ ] No `// DECISION:` annotations exist for behaviors that are actually specified in the BE spec or IA shard (i.e., no spec-defined behavior was treated as an undocumented implementation decision)
 - [ ] The {{CONTRACT_LIBRARY}} contract written in Step 2 matches the delivered implementation field-for-field — no fields added, removed, or renamed during implementation without a corresponding contract update
 
+## Resource Cleanup Gate (all slices)
+
+- [ ] Every database client or connection created in this slice has a corresponding cleanup call (`disconnect`, `close`, `end`, `dispose`) in a `finally` block or lifecycle hook
+- [ ] Every event listener or subscription registered in UI components has a corresponding cleanup in the component's unmount/destroy lifecycle
+- [ ] Every `setInterval` or `setTimeout` with a stored reference has a corresponding `clearInterval`/`clearTimeout` on cleanup
+- [ ] No file handles or streams are opened without corresponding `close`/`destroy` calls
+- [ ] If using connection pools — pool size is configured (not left at framework default) and documented via code comment: `// POOL: max=N, reason=...`
+
 > ❌ STOP — Do not call `notify_user` if any of the above are unchecked. Fix the gap and re-run the Test Cmd from the surface stack map.

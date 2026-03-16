@@ -1,5 +1,32 @@
 # cfsa-antigravity
 
+## 2.2.0
+
+### Minor Changes
+
+- ### Production readiness enforcement
+
+  - **Performance budget enforcement**: Rewrote `validate-phase` Step 7 as two-tiered — mandatory budget verification (7a) blocks on `Fail`-classified thresholds from `ENGINEERING-STANDARDS.md`, optional deep audit (7b) via `performance-optimization` skill
+  - **Dependency supply chain audit**: Added `validate-phase` Step 8.5 with cross-language package manager audit table (npm, pnpm, yarn, pip, cargo, go, bundler, composer) — blocks on HIGH/CRITICAL vulnerabilities
+  - **Deployment strategy verification**: Added interview question to `create-prd-architecture` for rolling/blue-green/canary strategy selection; added `validate-phase` Step 5.6.5 to enforce architecture-documented strategy compliance
+  - **DB query optimization check**: Added `implement-slice-tdd` Step 5.5 for N+1 detection, index coverage verification, and EXPLAIN ANALYZE on critical queries
+  - **API documentation sync**: Added `validate-phase` Step 5.9 — verifies OpenAPI spec exists and matches implemented contracts, runs OpenAPI linter if configured
+  - **Resource cleanup verification**: Added Resource Cleanup Gate to `slice-completion-gates.md` (DB connections, event listeners, timers, file handles, connection pools); added `implement-slice-tdd` Step 5.6 enforcement
+  - **Surface-conditional DAST**: Added `Security testing tool` and `Dependency audit enforcement` fields to `engineering-standards-template.md`; integrated conditional DAST scan into `validate-phase` Step 8
+
+  ### Validate-phase sharding
+
+  - **Sharded `validate-phase.md`** (15,343 bytes → 3 files under 12K limit):
+    - `validate-phase.md` — parent orchestrator (2,249 bytes)
+    - `validate-phase-quality.md` — Steps 0–5.8: tests, coverage, mutation testing, lint, type-check, build, CI/CD, staging deploy, deployment strategy, migrations, spec coverage (6,857 bytes)
+    - `validate-phase-readiness.md` — Steps 5.9–10: API doc sync, accessibility, performance budgets, security/DAST, dependency audit, reporting (9,508 bytes)
+
+  ### Kit architecture sync
+
+  - Fixed `kit-architecture.md`: reference count 23→25, added `validate-phase.md` as parent orchestrator example, documented Resource Cleanup Gate
+  - Updated `GEMINI.md` pipeline table: added `validate-phase-quality` and `validate-phase-readiness` shard rows
+  - Updated `AGENTS.md` pipeline table: added missing `plan-phase` shard rows, added `validate-phase` shard rows, fixed hardcoded `Zod` → `{{CONTRACT_LIBRARY}}`
+
 ## 2.1.0
 
 ### Minor Changes

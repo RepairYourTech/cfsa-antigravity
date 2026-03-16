@@ -21,7 +21,7 @@ Write one section at a time in document order. Before writing section N+1, re-re
 
 - For BE specs, the upstream source is the IA shard
 - For FE specs, the upstream source is the BE spec
-- For IA shards, the upstream sources are `ideation-index.md` (+ domain files) and `architecture-design.md`
+- For IA shards, the upstream sources are `ideation-index.md` (+ the relevant domain folder's `*-index.md`, `*-cx.md`, and feature files) and `architecture-design.md`
 
 **Hard rules:**
 

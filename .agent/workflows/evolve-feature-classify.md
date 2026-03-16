@@ -54,7 +54,7 @@ Based on the classification, determine where the new content enters the pipeline
 
 | Classification | Entry Point Document | Rationale |
 |---------------|---------------------|-----------|
-| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + relevant domain file | New features start at the ideation layer — they affect everything downstream |
+| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + fractal tree placement (see Step 4) | New features start at the ideation layer — placed in the correct domain folder via Classification Gate |
 | **[2] New requirement** | The IA shard that owns the affected domain | Requirements on existing features enter at the domain interaction level |
 | **[3] New technical constraint** | `docs/plans/[dated]-architecture-design.md` | Technical constraints affect the architecture and everything below it |
 | **[4] Scope correction** | Ask the user which document contains the misunderstanding | Corrections enter wherever the original misunderstanding lives |
@@ -69,11 +69,19 @@ Read .agent/skills/technical-writer/SKILL.md and follow its clarity standards fo
 
 This is a real spec-writing step — not a placeholder. Write the new content at the appropriate depth for the entry point layer:
 
-**If entry point is ideation layer** (`docs/plans/ideation/ideation-index.md`):
-- Feature description (what it does, why it matters)
-- Affected personas (who uses this)
-- Success criteria (how we know it works)
-- Constraints (what limits apply)
+**If entry point is ideation layer** (`docs/plans/ideation/`):
+
+1. **Placement**: Read `ideation-index.md` Structure Map. Identify the domain folder where this feature belongs. If no suitable domain exists, create one.
+2. **Classification Gate**: Apply the Node Classification Gate from `.agent/skills/idea-extraction/SKILL.md` — determine if the feature is a leaf feature file or complex enough to warrant a sub-domain folder.
+3. **Write the feature**: Use `.agent/skills/prd-templates/references/fractal-feature-template.md` as the template. Include:
+   - Feature description (what it does, why it matters)
+   - Affected personas (who uses this)
+   - Success criteria (how we know it works)
+   - Constraints (what limits apply)
+   - **Role Lens** — which personas interact with this feature and how
+4. **Update parent index**: Add the new feature to the parent domain's `*-index.md` children table
+5. **Update CX files**: If the feature has cross-domain interactions, update the parent domain's `*-cx.md` and/or `ideation-cx.md` (global)
+6. **Update `ideation-index.md`**: Add the feature to the MoSCoW Summary at the appropriate priority level
 
 **If entry point is architecture layer** (`architecture-design.md`):
 - Technical constraint description

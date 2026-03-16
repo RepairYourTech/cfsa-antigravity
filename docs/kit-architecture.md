@@ -32,36 +32,87 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 
 ## 2. Ideation Architecture
 
-The ideation layer is the pipeline's first output and the source of truth for all downstream specification work. It replaces the former monolithic `vision.md` approach with a sharded folder structure that scales with project complexity.
+The ideation layer is the pipeline's first output and the source of truth for all downstream specification work. It uses a **fractal folder structure** — every node (surface, domain, sub-domain) is a folder containing an index file, a cross-cut (CX) file, and its children. Leaf nodes are `.md` feature files. This pattern is universal regardless of project complexity.
 
 ### Pipeline Key File
 
-`docs/plans/ideation/ideation-index.md` is the **pipeline key file** — the primary entry point for all downstream workflows. When `/create-prd`, `/decompose-architecture`, or any specification workflow needs to understand the product, it reads `ideation-index.md` first, then follows links to relevant domain files for detail.
+`docs/plans/ideation/ideation-index.md` is the **pipeline key file** — the primary entry point for all downstream workflows. When `/create-prd`, `/decompose-architecture`, or any specification workflow needs to understand the product, it reads `ideation-index.md` first, then follows links into the fractal tree.
 
 `docs/plans/vision.md` still exists but is a **human-readable executive summary** only — a sales pitch compiled from the ideation folder. No downstream workflow reads it as a data source.
 
-### Folder Structure
+### Structural Classification (4 Project Shapes)
+
+During `/ideate-extract`, every project is classified into one of four shapes that governs folder layout:
+
+| Shape | When | Folder Pattern |
+|-------|------|----------------|
+| `single-surface` | One surface (e.g., web app only) | Flat `domains/` at top level |
+| `multi-surface-shared` | Multiple surfaces sharing the same backend (e.g., web + mobile) | Flat `domains/` with surface annotations in feature files |
+| `multi-product-hub` | One primary surface owns most logic; others consume it | Primary surface's folder owns shared domains; others reference them |
+| `multi-product-peer` | Independent products with shared infrastructure | `shared/` folder for shared domains; surface folders for exclusive domains |
+
+### Fractal Folder Structure
 
 ```text
 docs/plans/ideation/
-├── ideation-index.md          # Pipeline key file — domain map, MoSCoW summary, coverage
-├── domains/                   # One file per product domain
-│   ├── user-management.md
-│   ├── billing.md
-│   └── ...
+├── ideation-index.md          # Super-index — shape, structure map, MoSCoW, progress
+├── ideation-cx.md             # Global CX — cross-surface interactions (if multi-product)
+├── domains/                   # Top-level domains (single/multi-surface-shared)
+│   ├── 01-user-management/    # Each domain is a FOLDER, not a file
+│   │   ├── user-management-index.md   # Children table, Role Matrix, decisions
+│   │   ├── user-management-cx.md      # Cross-cuts between this domain's children
+│   │   ├── 01-registration.md         # Leaf feature file (Role Lens, behavior, edge cases)
+│   │   ├── 02-authentication/         # Sub-domain (promoted from feature if complex)
+│   │   │   ├── authentication-index.md
+│   │   │   ├── authentication-cx.md
+│   │   │   ├── 01-login.md
+│   │   │   └── 02-password-reset.md
+│   │   └── 03-roles.md
+│   └── 02-billing/
+│       ├── billing-index.md
+│       ├── billing-cx.md
+│       └── ...
 ├── meta/                      # Structured metadata
 │   ├── problem-statement.md
 │   ├── personas.md
 │   ├── constraints.md
 │   └── competitive-landscape.md
-└── cross-cuts/                # Cross-cutting concern tracking
-    └── cross-cut-ledger.md
+└── [surfaces/]                # Only for multi-product-hub or multi-product-peer
+    ├── web/
+    │   ├── web-index.md
+    │   ├── web-cx.md
+    │   └── 01-dashboard/...
+    └── mobile/
+        ├── mobile-index.md
+        ├── mobile-cx.md
+        └── 01-notifications/...
 ```
 
 **Key properties:**
-- **Shard-as-you-go**: Domain files are created the moment a domain is identified during exploration, not batched after all exploration is complete
-- **Living documents**: Domain files and the index are updated in place as exploration deepens — they are never dated (see Dated File Convention below)
-- **Downstream consumers**: `/create-prd` reads `ideation-index.md` + `meta/constraints.md`; `/decompose-architecture` reads `ideation-index.md` + domain files; specification workflows reference domain files for sub-feature detail
+- **Fractal pattern**: Every folder has an index + CX file. Every leaf is a feature `.md` file. This is universal — no exceptions.
+- **Reactive depth**: Folders are created during exploration when complexity is discovered, not pre-scaffolded. A feature file can be promoted to a sub-domain folder if it reveals internal complexity.
+- **Numbering**: Children are numbered `{NN}-{slug}` within their parent. Paths are expressed as dot-separated (e.g., `01.02.03` = domain 01, sub-domain 02, feature 03).
+- **Soft depth limit**: 4 levels recommended. Level 5 triggers a user prompt to confirm structured complexity isn't runaway nesting.
+
+### Role Integration
+
+Roles (personas) are defined once in `meta/personas.md` and then referenced at every level of the tree:
+
+| Location | What | Purpose |
+|----------|------|---------|
+| `meta/personas.md` | Full persona definitions (6 fields each) | Single source of truth |
+| Node index files | **Role Matrix** — which personas access which children | Structural overview of role coverage |
+| Feature files | **Role Lens** — per-persona behavior details | Downstream input for IA/BE/FE multitenancy specs |
+
+### Node Classification Gate
+
+Before creating any new node (domain, sub-domain, or feature), the agent runs a classification gate:
+
+1. **What is it?** — Domain (top-level concept), sub-domain (2+ interacting capabilities), or feature (single capability)
+2. **Where does it go?** — Surface-exclusive, hub-owned, shared, or top-level (depends on project shape)
+3. **Does it already exist?** — Check for duplicates before creating
+
+This prevents incorrect domain placement — the primary failure mode of the old flat structure.
 
 ### Exploration Model
 
@@ -69,20 +120,20 @@ The `/ideate` workflow uses **recursive breadth-before-depth exploration**:
 
 | Level | Scope | What happens |
 |---|---|---|
-| **Level 0** | Global domain map | Identify all top-level domains in the product. Each gets a file in `domains/`. |
-| **Level 1** | Sub-area sweep per domain | For each domain, identify all sub-areas. Mark each with a depth status marker. |
-| **Level 2+** | Vertical drilling | Drill into each sub-area until no new information emerges. Recursion: new domains discovered during drilling loop back to Level 0. |
+| **Level 0** | Global domain map | Identify all top-level domains. Run Classification Gate for each. Create domain folders. |
+| **Level 1** | Domain breadth sweep | For each domain, identify sub-areas. Classification Gate: sub-domain folder or feature file? Update Role Matrix. |
+| **Level 2+** | Vertical drilling | Drill each child. Fill feature files (Role Lens, behavior, edge cases). Promote features to sub-domains if complex. |
 
-Each domain file tracks its sub-areas with status markers:
+Each node tracks its status:
 
 | Marker | Meaning |
 |---|---|
 | `[SURFACE]` | Identified but unexplored |
-| `[BREADTH]` | Sub-areas listed, not detailed |
+| `[BREADTH]` | Children listed, not detailed |
 | `[DEEP]` | Core logic, edge cases, interactions documented |
 | `[EXHAUSTED]` | Deep Think yielded nothing new — domain complete |
 
-A domain reaches `[EXHAUSTED]` only when the Deep Think protocol generates no new hypotheses.
+Status propagates upward: a node is `[EXHAUSTED]` only when ALL its children are `[EXHAUSTED]`.
 
 ### Deep Think Protocol
 
@@ -90,14 +141,30 @@ At every exploration level, the agent actively generates hypotheses:
 
 > *"Based on [industry knowledge / domain patterns / cross-domain interaction], I'd expect [feature/concern/edge case]. Is that relevant to your product?"*
 
-Hypotheses are tracked in domain files with resolution status (confirmed/rejected/deferred). This prevents shallow exploration — the agent doesn't just record what the user says, it actively probes for what the user hasn't mentioned yet.
+Hypotheses are tracked in feature files with resolution status (confirmed/rejected/deferred). This prevents shallow exploration — the agent doesn't just record what the user says, it actively probes for what the user hasn't mentioned yet.
 
-### Cross-Cut Ledger
+### Hierarchical Cross-Cuts
 
-Cross-cutting concerns (security, notifications, analytics, error handling, etc.) are tracked continuously in `cross-cuts/cross-cut-ledger.md` as they're discovered at any level, not batched into a separate pass. Each entry includes:
-- Which domains are involved
-- Confidence level (increases as exploration deepens)
-- Resolution status
+Cross-cutting concerns are tracked **at the level where they occur**, not in a single flat ledger:
+
+| CX File Location | What It Tracks |
+|-----------------|----------------|
+| `ideation-cx.md` (global) | Cross-surface interactions (multi-product only) |
+| `{surface}-cx.md` | Cross-domain interactions within a surface |
+| `{domain}-cx.md` | Cross-sub-domain interactions within a domain |
+| `{sub-domain}-cx.md` | Cross-feature interactions within a sub-domain |
+
+Each CX entry includes which nodes interact, confidence level, 5 synthesis questions (trigger, data, flow, failure, scope), role scoping, and rejected pairs with reasoning.
+
+### Downstream Consumption
+
+| Consumer | What It Reads |
+|----------|--------------|
+| `/create-prd` | `ideation-index.md` + `meta/constraints.md` |
+| `/decompose-architecture` | `ideation-index.md` + domain indexes (walks fractal tree for shard boundary signals: depth, child count, CX density, Role Matrix) |
+| Spec workflows | Domain indexes + feature files for sub-feature detail |
+
+> **Important**: Ideation does NOT prescribe shard boundaries. `/decompose-architecture` reads the fractal tree and makes architectural decisions about where to draw shard lines.
 
 ---
 

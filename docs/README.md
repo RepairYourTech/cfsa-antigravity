@@ -35,19 +35,19 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
       You describe your idea (or point to a document with @file).
       The pipeline explores your idea using recursive breadth-before-depth:
         - Level 0: Maps all domains in your product
-        - Level 1: Sweeps sub-areas within each domain
+        - Level 1: Sweeps each domain for sub-areas (Classification Gate: sub-domain folder or feature file?)
         - Level 2+: Drills vertically until each domain is exhausted
       At every level, a Deep Think protocol generates hypotheses based on
       domain knowledge — "Based on this industry, I'd expect X. Is that relevant?"
-      Cross-cutting concerns are tracked continuously in a dedicated ledger.
-      Each domain gets its own file the moment it's discovered (shard-as-you-go).
+      Cross-cutting concerns are tracked at the level where they occur (CX files).
+      Each domain gets its own folder the moment it's discovered (fractal-as-you-go).
 
-      Output: docs/plans/ideation/ folder:
-                ideation-index.md   ← pipeline key file (domain map, MoSCoW, coverage)
-                domains/*.md        ← one file per domain
-                meta/*.md           ← problem, personas, constraints, competitive landscape
-                cross-cuts/         ← cross-cut ledger
-              docs/plans/vision.md  ← human-readable executive summary (not a pipeline input)
+      Output: docs/plans/ideation/ folder (fractal tree):
+                ideation-index.md      ← pipeline key file (structure map, MoSCoW, coverage)
+                ideation-cx.md         ← global cross-cuts
+                domains/*/             ← domain folders (index + CX + feature files)
+                meta/*.md              ← problem, personas, constraints, competitive landscape
+              docs/plans/vision.md     ← human-readable executive summary (not a pipeline input)
 
     Step 2: /audit-ambiguity ideation  ── MANDATORY ──
       Scores the ideation folder against a 12-dimension rubric.

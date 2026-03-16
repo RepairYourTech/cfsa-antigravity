@@ -25,11 +25,11 @@ Identify deep dive candidates, annotate shard document types, validate the depen
 
 ## 9.5. Proactive shard load pre-check (ideation signal)
 
-Before identifying deep dives, read the ideation domain files that fed each shard. The sub-area count from ideation is a **leading indicator** of shard complexity.
+Before identifying deep dives, read the ideation domain folders that fed each shard. The sub-area count from ideation is a **leading indicator** of shard complexity.
 
 For each shard skeleton:
-1. Read the corresponding ideation domain file (use the path from `ideation-index.md` Domain Documents table — may be in `domains/` or `surfaces/{name}/`)
-2. Count the sub-areas listed in the domain file's `## Sub-Areas` or breadth map section
+1. Read the corresponding ideation domain folder (use the path from `ideation-index.md` Structure Map — may be under `domains/` or `surfaces/{name}/`). Read the folder's `*-index.md` for the children table.
+2. Count the child feature files and sub-domain folders listed in the domain index
 3. Compare against the shard load thresholds:
 
 | Ideation Sub-Areas | Pre-Check Action |

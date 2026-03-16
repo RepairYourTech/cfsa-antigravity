@@ -76,12 +76,16 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | ↳ | `/evolve-feature-classify` | Feature description | Classified change + new content at entry point | Evolution |
 | ↳ | `/evolve-feature-cascade` | Classified change + entry point | Layer-by-layer additions + implementation impact | Evolution |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
+| ↳ | `/plan-phase-preflight` | Approved specs | Phase gate + completeness audit + consistency check | Planning |
+| ↳ | `/plan-phase-write` | Preflight pass | Slices + acceptance criteria + progress files | Planning |
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |
 | 9.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
-| 11 | `/evolve-contract` | Changed Zod schema | Safe schema migration | Maintenance |
+| ↳ | `/validate-phase-quality` | Completed phase | Code quality gates — tests, coverage, lint, type-check, build, CI/CD, staging, migrations, spec coverage | Verification |
+| ↳ | `/validate-phase-readiness` | Quality gates passed | Production readiness gates — API docs, accessibility, performance, security, dependency audit, results | Verification |
+| 11 | `/evolve-contract` | Changed `{{CONTRACT_LIBRARY}}` schema | Safe schema migration | Maintenance |
 
 > **Note**: Rows marked with ↳ are independently-invocable sub-workflows (shards)
 > of their parent command. The parent orchestrates them in sequence, but each shard

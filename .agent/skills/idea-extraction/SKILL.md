@@ -1,6 +1,6 @@
 ---
 name: idea-extraction
-description: "Exhaustive idea extraction through recursive breadth-before-depth exploration with Deep Think protocol. Use during /ideate to transform raw ideas — whether richly documented, lightly sketched, or entirely in the user's head — into comprehensive, structured ideation output. Writes directly to the ideation/ folder structure — one domain file per domain, no monolithic intermediary."
+description: "Exhaustive idea extraction through recursive breadth-before-depth exploration with Deep Think protocol and fractal structure. Use during /ideate to transform raw ideas into comprehensive, structured ideation output. Writes to a fractal folder hierarchy — every node has an index, CX file, and children."
 ---
 
 # Idea Extraction — Exhaustion Engine
@@ -23,64 +23,45 @@ interactions — then present hypotheses to the user for confirmation or rejecti
 
 ---
 
-## Output Structure
+## Fractal Structure Protocol
 
-This skill writes directly to the `docs/plans/ideation/` folder. No monolithic
-intermediary file. The **folder structure is dynamic** — it adapts to the project's
-complexity based on the Structural Classification decided in `ideate-extract`.
-
-### Single-Surface Layout (default)
-
-Used for projects with one delivery platform (e.g., just a web app).
+This skill writes directly to the `docs/plans/ideation/` folder using a **fractal pattern** — every node in the tree (surface, domain, sub-domain) follows the same structure:
 
 ```
-docs/plans/ideation/
-├── ideation-index.md              ← Pipeline key file — domain map + document map
-├── meta/
-│   ├── problem-statement.md
-│   ├── personas.md
-│   ├── competitive-landscape.md
-│   └── constraints.md
-├── domains/
-│   ├── 01-domain-slug.md          ← One file per domain
-│   └── ...
-└── cross-cuts/
-    └── cross-cut-ledger.md        ← Running ledger accumulated at every level
+{node}/
+├── {node}-index.md       ← what's in this node, child listing, Role Matrix
+├── {node}-cx.md          ← cross-cuts connecting this node's children
+├── child-01/             ← same pattern repeats (if child is complex)
+└── 01.01.01-feature.md   ← leaf node = .md file, not a folder
 ```
 
-### Multi-Product Layout (Option B)
+**Key rules:**
 
-Used when the project has **distinct products** with different tech stacks, different
-users, or surface-exclusive features. Surfaces are top-level folders. Shared/cross-cutting
-domains live in `domains/` as siblings.
+1. **Always folders.** Every domain, sub-domain, and even single-surface projects use folders — no flat files. One universal pattern, no exceptions.
+2. **Indexes at every level.** Template: `.agent/skills/prd-templates/references/fractal-node-index-template.md`
+3. **CX files at every level.** Template: `.agent/skills/prd-templates/references/fractal-cx-template.md`
+4. **Feature files are leaf nodes.** Template: `.agent/skills/prd-templates/references/fractal-feature-template.md`
+5. **Depth is reactive.** The structure grows during exploration — never pre-scaffolded beyond what's discovered.
+6. **Soft limit at 4 levels.** If creating a level 5+ node, pause and ask the user: "This is getting unusually deep — should I promote a parent to reduce nesting, or is this depth justified?"
+
+### Super-Index
+
+The top-level `ideation-index.md` uses a different template: `.agent/skills/prd-templates/references/ideation-index-template.md`
+The top-level `ideation-cx.md` uses: `.agent/skills/prd-templates/references/ideation-crosscut-template.md`
+
+### Numbering Convention
+
+Numbers are hierarchical and dot-separated within a surface:
 
 ```
-docs/plans/ideation/
-├── ideation-index.md
-├── meta/
-│   ├── problem-statement.md
-│   ├── personas.md
-│   ├── competitive-landscape.md
-│   └── constraints.md
-├── surfaces/                      ← Only created for multi-product projects
-│   ├── web/
-│   │   ├── 01-accounts.md
-│   │   └── 02-education-hub.md
-│   ├── desktop/
-│   │   ├── 01-operations.md
-│   │   └── 02-inventory.md
-│   └── mobile/
-│       ├── 01-device-guardian.md
-│       └── 02-device-locator.md
-├── domains/                       ← Shared/cross-cutting domains
-│   ├── 01-device-history.md
-│   ├── 02-payments.md
-│   └── 03-certification.md
-└── cross-cuts/
-    └── cross-cut-ledger.md
+{domain}.{sub-domain}.{sub-sub}.{feature}
+  01    .    01     .   02   .    03
 ```
 
-Templates for each file type are in `.agent/skills/prd-templates/references/ideation-*.md`.
+- Folders use number prefix: `01.03.02-ai-assistant/`
+- Feature files use full number: `01.03.02.03-parts-recommendation.md`
+- Cross-surface references prefix with surface: `web/02.01.03`, `desktop/01.03.02`
+- Numbers are stable once assigned — never renumber
 
 ---
 
@@ -90,13 +71,14 @@ Templates for each file type are in `.agent/skills/prd-templates/references/idea
 > It determines the folder layout for the entire ideation phase. The classification
 > is performed in `ideate-extract` (Step 1.3) and recorded in `ideation-index.md`.
 
-### Three Project Shapes
+### Four Project Shapes
 
 | Shape | Signals | Folder Structure |
 |---|---|---|
-| **Single-surface** | One platform, simple audience, "make me a website" | Flat `domains/` |
-| **Multi-surface, mostly shared** | 2+ platforms, same tech stack, >80% shared logic | Flat `domains/` + surface annotation in domain frontmatter |
-| **Multi-product** | 2+ platforms, different tech stacks/users, surface-exclusive features | `surfaces/` + `domains/` (Option B) |
+| **Single-surface** | One platform, one audience, "make me a website" | Domains are top-level children of `ideation/` (no `surfaces/` folder) |
+| **Multi-surface-shared** | 2+ platforms, same stack, >80% shared logic | Domains at top level with surface annotations in feature files |
+| **Multi-product (hub-and-spoke)** | 2+ platforms, one is clearly the central platform/API. Others consume from it. | `surfaces/` with hub surface owning shared domains. Spokes reference hub via CX. |
+| **Multi-product (peer)** | 2+ platforms, no clear primary. Each is equally independent. | `surfaces/` with `shared/` folder as a peer for truly cross-surface domains. |
 
 ### Detection: When to Ask vs When to Detect
 
@@ -108,18 +90,22 @@ Templates for each file type are in `.agent/skills/prd-templates/references/idea
 
 ### Interview Questions (asked early, before domain exploration)
 
-When the input doesn't make the project shape obvious, ask these two questions
+When the input doesn't make the project shape obvious, ask these questions
 **immediately after the opening problem statement question** — before any domain
 exploration or file creation:
 
 1. **"Who are the distinct user types or audiences?"**
-   - Single audience (e.g., "small business owners") → likely single-surface
-   - Multiple distinct audiences (e.g., "consumers, repair technicians, shop owners") → likely multi-product
+   - Single audience → likely single-surface
+   - Multiple distinct audiences → likely multi-product
 
 2. **"What platforms or surfaces does this need to live on?"** (web, mobile, desktop, API, CLI)
    - One platform → single-surface
    - Multiple platforms, same stack → multi-surface-shared
    - Multiple platforms, different stacks or exclusive features → multi-product
+
+3. **"Is there a primary platform that the other surfaces depend on — like a central API or web platform? Or are all surfaces independent peers?"** _(only if multi-product)_
+   - Yes, one primary → hub-and-spoke
+   - No, all independent → peer
 
 ### Detection Signals (for document input)
 
@@ -127,27 +113,148 @@ When processing a document, scan for these signals before creating any domain fi
 
 | Signal | Example | Classification |
 |---|---|---|
-| Distinct platform names in section headings | "Consumer Web Platform", "Shop Software (Tauri)", "Native Mobile Apps" | Multi-product |
-| Different tech stacks mentioned per surface | "Astro/React for web", "Rust/Tauri for desktop", "React Native for mobile" | Multi-product |
-| Surface-exclusive features | "Board Viewer (desktop only)", "Device Guardian (Android only)" | Multi-product |
+| Distinct platform names in section headings | "Consumer Web Platform", "Shop Software (Tauri)" | Multi-product |
+| Different tech stacks mentioned per surface | "Astro/React for web", "Rust/Tauri for desktop" | Multi-product |
+| One surface described as "the platform" or "the API" | "Desktop app calls the platform API" | Hub-and-spoke |
+| All surfaces access a central database through one API | "Everything goes through the web platform's proxy" | Hub-and-spoke |
+| Surfaces described as equally independent | "Web and mobile are separate apps with separate backends" | Peer |
 | Single platform implied | "The website will...", "Users visit the app and..." | Single-surface |
-| Features described without surface context | "User authentication", "Dashboard", "Settings" | Single-surface (default) |
 
-### Domain Placement Rules (for multi-product)
+### Hub-and-Spoke Implications
 
-Once the multi-product classification is confirmed, every domain must be assigned:
+When hub-and-spoke is identified:
 
-| Domain type | Placement | Test |
-|---|---|---|
-| **Surface-exclusive** | `surfaces/{surface-name}/NN-domain.md` | "Does this feature/capability exist ONLY on one surface?" |
-| **Shared / cross-cutting** | `domains/NN-domain.md` | "Does this feature span 2+ surfaces?" |
-| **Uncertain** | Ask the user: "Does [domain] belong to [surface] specifically, or is it shared across surfaces?" | — |
+- **The hub surface owns shared domains.** Device History, Payments, Certification — these live INSIDE the hub surface's domain tree, not in a separate `shared/` folder.
+- **Spoke surfaces reference hub domains via CX.** Desktop's CX files say "Feature X consumes web/domain/feature via API."
+- **The hub surface tends to be the largest.** This is expected and correct.
+
+### Peer Mode Implications
+
+When peer mode is identified:
+
+- **Shared domains live in `shared/`.** `shared/` is treated as a peer node with the same fractal pattern.
+- **Each surface owns only its exclusive features.**
+- **Surface CX files reference `shared/` domains.** Both surfaces point to shared, rather than one owning it.
 
 ### Classification Persistence
 
-The classification is recorded in `ideation-index.md` under a `## Structural Classification`
-section. All downstream steps (domain creation, discovery, validation) read this section
-to determine where to place new domain files.
+The classification is recorded in `ideation-index.md` under `## Structural Classification`.
+All downstream steps read this section to determine where to place new nodes.
+
+---
+
+## Node Classification Gate
+
+> **RUN THIS GATE before creating ANY new node** — domain, sub-domain, or feature.
+
+```
+"I discovered [thing]. What is it?"
+     │
+     ▼
+Does it belong to an EXISTING domain or sub-domain?
+     │
+    YES ──► Does it have 2+ distinct capabilities that interact with each other?
+     │            │
+     │           YES ──► It's a SUB-DOMAIN ──► create folder inside existing parent
+     │            │
+     │           NO ──► It's a FEATURE ──► create .md file inside existing parent
+     │
+    NO ──► Is it surface-exclusive?
+              │
+             YES ──► It's a new DOMAIN ──► create domain folder in the correct surface
+              │
+             NO ──► Is there a hub surface that owns this kind of logic?
+                       │
+                      YES ──► It lives in the HUB surface ──► create domain in hub + CX from spokes
+                       │
+                      NO ──► It's a shared domain ──► create in shared/
+
+**WHEN UNCERTAIN: Ask the user.** Never assume placement.
+```
+
+### Sub-Domain vs Feature Test
+
+The key question: **"Does this thing have its own internal features that interact with each other?"**
+
+| Example | Internal Features? | Classification |
+|---------|-------------------|----------------|
+| AI Assistant | Yes: task generation, guided workflow, parts recommendation, test tracking — these interact | **Sub-domain** (folder) |
+| Print Receipt | No: it does one thing | **Feature** (file) |
+| Inventory Manager | Yes: stock tracking, reorder alerts, supplier integration | **Sub-domain** or **Domain** depending on scope |
+| Password Reset | No: single flow with edge cases | **Feature** (file) |
+
+### Anti-Patterns
+
+| ❌ Wrong | ✅ Right |
+|----------|---------|
+| Creating "Supplier Integration" as a new domain | Recognizing it's a feature within AI Assistant, cross-cutting to web's Supplier Accounts |
+| Creating a domain for every feature mentioned | Grouping related features under their parent domain/sub-domain |
+| Pre-creating 4 levels of empty folders | Creating depth reactively as complexity is discovered |
+| Putting a shared domain in `shared/` when hub-and-spoke is active | Putting it inside the hub surface, with CX references from spokes |
+
+---
+
+## Reactive Depth Protocol
+
+### Depth Grows from Exploration
+
+The structure is NEVER pre-scaffolded. It grows as the agent explores:
+
+| Discovery Event | Action |
+|----------------|--------|
+| New surface identified | Create surface folder + surface index + surface CX |
+| New domain identified | Run Classification Gate. Create domain folder + index + CX inside correct parent |
+| New sub-area with 2+ interacting capabilities | Promote to sub-domain: create folder + index + CX |
+| New sub-area with single capability | Create as feature file (.md) inside current parent |
+| Feature explored and found to have internal complexity | Promote: convert .md to folder (see below) |
+
+### Promotion: Feature → Sub-Domain
+
+During drilling, a feature might reveal internal complexity that warrants promotion:
+
+1. Agent discovers the feature has 2+ interacting capabilities
+2. Agent asks: "This feature has enough internal complexity to be its own sub-domain. Should I promote it?"
+3. If confirmed:
+   - Create `{number}-{slug}/` folder
+   - Create index and CX files inside
+   - Split content from the old feature file into child feature files
+   - Update parent index
+4. Numbering stays the same — the feature number becomes the sub-domain number
+
+### Exhaustion Check (Leaf-Node Model)
+
+Exhaustion is checked at the **leaves** — whatever the deepest items are in each branch:
+
+- **Old model**: "All domains at DEEP"
+- **New model**: "All LEAF NODES at DEEP or EXHAUSTED"
+
+Status propagation rules:
+- All children `[EXHAUSTED]` → node is `[EXHAUSTED]`
+- All children `[DEEP]`+ → node is `[DEEP]`
+- Any child below `[DEEP]` → node stays at its current status
+
+---
+
+## Role Integration
+
+### Global Persona Definitions
+
+Personas are defined ONCE in `meta/personas.md`. This file is the single source of truth.
+
+### Where Persona Info Appears
+
+| Location | What's There | Template |
+|----------|-------------|----------|
+| `meta/personas.md` | Full persona definitions (6 fields each) | Single source of truth |
+| Index files → Role Matrix | Grid of children × personas with access icons | `fractal-node-index-template.md` |
+| Feature files → Role Lens | Per-feature access level + specific behavior | `fractal-feature-template.md` |
+| CX files → Role scoping | Which roles are affected by each cross-cut | `fractal-cx-template.md` |
+
+### Anti-Duplication Rule
+
+- **NEVER** redefine a persona outside `meta/personas.md`
+- **ALWAYS** reference personas by their short name
+- If a new persona is discovered → add to `meta/personas.md` FIRST, then reference
 
 ---
 
@@ -157,74 +264,45 @@ Before starting, classify what the user has provided and select the right mode.
 
 ### Extraction Mode — Rich Input
 
-**Trigger:** User provides substantial existing material (>5KB, detailed docs, chat logs,
-design conversations, competitor analysis, previous specs, old ideation.md files).
+**Trigger:** User provides substantial existing material (>5KB, detailed docs, chat logs).
 
-**The job:** Don't lose information. The user has already done deep thinking — your job is
-to organize it, validate it, and fill gaps.
+**The job:** Don't lose information. Organize, validate, and fill gaps.
 
 **Process:**
 1. Read/ingest every document provided
-2. **Run Structural Classification** — scan for surface signals (see protocol above). Determine project shape before creating any files.
+2. **Run Structural Classification** — determine project shape before creating any files
 3. Identify natural domain boundaries in the content
-4. Create the `ideation/` folder structure using the classified layout — one domain file per identified domain, placed in the correct folder (surface-specific or shared)
-5. Seed each domain file with the relevant content from the source
-6. Present the organized inventory: "Here's what I extracted, organized by domain: [list]. Is anything missing?"
-6. Identify gaps — domains or sub-topics not covered by the existing material
-7. For each gap, switch to Interview Mode for that topic
-8. Run Deep Think: "Based on the content you provided, I would also expect to see [X] and [Y]. Are those relevant?"
-9. Validate completeness against the domain map in `ideation-index.md`
-
-**Anti-patterns:**
-- ❌ Summarizing 738KB into 70 lines (lossy compression)
-- ❌ Ignoring details because they don't fit the template
-- ❌ Re-asking questions the material already answers
-- ❌ Writing everything to one file then reorganizing later
-- ✅ Preserving depth, writing to domain files as you go, filling gaps
+4. Create fractal folder structure — run the **Node Classification Gate** for each domain
+5. Seed each domain folder (index + CX + feature files) with content from the source
+6. Present the organized inventory: "Here's what I extracted, organized by domain"
+7. Identify gaps — domains/sub-topics not covered
+8. For each gap, switch to Interview Mode
+9. Run Deep Think: "Based on your content, I would also expect [X] and [Y]. Are those relevant?"
 
 ### Expansion Mode — Thin Input
 
-**Trigger:** User provides brief notes, a rough sketch, a short PRD (<5KB, structured but shallow).
-
-**The job:** Take what's there and systematically deepen it. Every bullet point in their
-input should spawn 3-5 follow-up questions that drive toward implementation depth.
+**Trigger:** Brief notes, rough sketch, short PRD (<5KB, structured but shallow).
 
 **Process:**
-1. Read the input and identify domain boundaries
-2. Create domain files for each identified area
-3. For each domain, identify the depth level (surface → detailed → implementation-ready)
-4. Start with the shallowest domains first
-5. For each shallow domain, ask targeted deepening questions
-6. Run Deep Think at each level to identify gaps
-7. Update domain files and index as you go
-
-**Deepening questions by section type:**
-- **Feature mentioned without detail:** "You listed [feature]. Help me understand: What does the user see? What happens when they interact with it? What happens when it fails? What data does it need?"
-- **User type without specifics:** "You mentioned [user type]. What's their primary workflow? What frustrates them about existing solutions? What would make them switch?"
-- **Constraint without numbers:** "You noted [constraint]. Can we put a number on that? For latency — what's the threshold? For budget — what's the monthly ceiling?"
+1. Read input and identify domain boundaries
+2. Create fractal folder structure per Classification Gate
+3. For each domain, identify the depth level
+4. Start with shallowest domains, ask targeted deepening questions
+5. Run Deep Think at each level to identify gaps
+6. Update domain indexes and feature files as you go
 
 ### Interview Mode — No Input / One-Liner
 
-**Trigger:** User has no file input. They describe the idea verbally or provide a
-one-liner like "I want to build a repair shop management platform."
-
-**The job:** Be the relentless interviewer. Extract everything from the user's head through
-persistent, deep questioning.
+**Trigger:** No file input. User describes idea verbally.
 
 **Process:**
 1. Start: "In one sentence, what problem does this solve and for whom?"
-2. **Run Structural Classification** — ask the two interview questions (audiences + surfaces) immediately after the opening problem statement. Determine project shape before creating any files.
-3. From the problem statement + classification, identify key nouns — these become initial domains
-4. Create domain files for each identified domain, placing them in the correct folder based on the structural classification
-5. Run the Recursive Domain Exhaustion Protocol (below)
-6. Use the decision classification rule to route questions appropriately
-7. Don't stop until the deep think protocol generates zero new hypotheses
-
-**Interview techniques:**
-- **Challenge weak answers:** "You mentioned risk management — what happens when a user hits their position limit? What's the escalation path?"
-- **Generate new thinking:** "You've described [A] and [B] — what happens when they interact? If A triggers while B is active, what should the system do?"
-- **Make them think about failures:** "What's the worst thing a user could do with [feature]?"
-- **Help them decide:** When the user says "I'm not sure," present 2-3 options with trade-offs.
+2. **Run Structural Classification** — ask the 2-3 interview questions immediately
+3. From the problem statement, identify key nouns → initial domains
+4. Create fractal folder structure per Classification Gate
+5. Run the Recursive Domain Exhaustion Protocol
+6. Use decision classification rule to route questions
+7. Don't stop until Deep Think generates zero new hypotheses
 
 ---
 
@@ -239,212 +317,139 @@ At **every step** — domain discovery, breadth mapping, vertical drilling — p
 ask yourself these four questions before moving on:
 
 1. **What have I captured so far in this domain/sub-area?**
-   Quick inventory of what's been discussed.
-
 2. **What would a domain expert expect to see here that hasn't been surfaced?**
-   Based on the product type, industry, and user personas — what's standard in this
-   space that we haven't discussed? What would a competitor's feature list include?
-
 3. **What should exist here because of interactions with other domains?**
-   Based on cross-domain knowledge already captured — does this domain need something
-   because of how it connects to other domains?
-
 4. **What common failure modes or edge cases are missing?**
-   Based on production systems in similar industries — what breaks? What do users
-   complain about? What do post-mortems reveal?
 
 ### Presenting Hypotheses
-
-For each hypothesis generated, present it to the user:
 
 > "Based on [reasoning], I think [X] might be relevant here. For example, in similar
 > systems, [concrete example]. Is this something your product needs?"
 
 **Outcomes:**
-- **CONFIRMED** → Add to the domain file. Drill into it.
-- **REJECTED** → Note the rejection with reason in the domain file's Deep Think table. Move on.
+- **CONFIRMED** → Add to the domain/feature file. Drill into it.
+- **REJECTED** → Note the rejection with reason in the Deep Think table.
 - **DEFERRED** → Note as an open question with owner and target stage.
 
 ### Tracking
 
-Record all hypotheses in each domain file's Deep Think Annotations table:
-
-```
-| Hypothesis | Source | Outcome |
-|-----------|--------|---------|
-| "Purgatory queue needed for diagnostics not yet tied to a ticket" | Industry pattern | ✅ CONFIRMED |
-| "Customer loyalty program integration" | Competitor analysis | ❌ REJECTED: out of scope |
-```
+Record all hypotheses in each feature file's Deep Think Annotations table (see `fractal-feature-template.md`).
 
 ### Exhaustion Signal
 
-**The ideation process is considered complete for a domain when:**
+The ideation process is complete for a feature when:
 1. Deep Think generates **zero new hypotheses** after a full pass
-2. The user confirms "nothing else" for that domain
-3. Both conditions must be true simultaneously
-
-This replaces the old "completed N passes" model. Exhaustion is evidence-based,
-not count-based.
+2. The user confirms "nothing else" for that feature
+3. Both conditions must be true simultaneously → mark as `[EXHAUSTED]`
 
 ---
 
 ## Recursive Domain Exhaustion Protocol
 
-> **This protocol replaces the old fixed-pass model.** Exploration is recursive:
-> breadth is always mapped before depth, and new discoveries at any level can trigger
-> re-exploration of higher levels.
-
 ### Level 0 — Global Domain Map
 
 **Goal:** Identify ALL domains before exploring ANY of them.
 
-1. List all domains from the user's input
-2. **Deep Think:** "Based on this product type and industry, what domains would I expect to see that haven't been mentioned?" Present hypotheses to user.
-3. **For multi-product projects:** For each confirmed domain, determine placement — "Does this belong to a specific surface, or is it shared?" Create the domain file in the appropriate folder (`surfaces/{name}/` or `domains/`).
-   **For single-surface projects:** Create a domain file for each confirmed domain in `domains/` (using the ideation-domain-template).
-4. Update `ideation-index.md` with the complete domain map (paths reflect the actual folder structure)
-5. Note preliminary cross-cuts: "Domain A might touch Domain B because [reason]" → add to ledger as Level 0 entries
-6. **Gate:** User confirms the domain list before proceeding
+1. List all domains from user input
+2. **Deep Think:** "What domains would a domain expert expect?"
+3. Run **Node Classification Gate** for each domain — determine placement
+4. Create fractal folder for each: `{number}-{slug}/` + index + CX
+5. Update `ideation-index.md` with the complete structure map
+6. Note preliminary cross-cuts in global CX + relevant domain CX files
+7. **Gate:** User confirms domain list before proceeding
 
 ### Level 1 — Domain Breadth Sweep
 
-**Goal:** For each domain, map ALL sub-areas before drilling into ANY of them.
+**Goal:** For each domain, map ALL children before drilling ANY.
 
 For each domain (dependency order — foundational first):
-1. List all sub-areas/capabilities within the domain
-2. **Deep Think:** "Based on this domain in this industry, what sub-areas would an expert expect?" Present hypotheses.
-3. Write the breadth map to the domain file with `[SURFACE]` markers
-4. Note cross-cuts at sub-area level → add to ledger as Level 1 entries
-5. **NEW DOMAINS DISCOVERED?** → Loop back to Level 0. Do NOT proceed until domain map is stable.
-6. **Gate:** User confirms the breadth maps before proceeding to drilling
-7. Mark domain status as `[BREADTH]` in the index
+1. List all sub-areas/capabilities
+2. **Deep Think:** "What sub-areas would an expert expect in this domain?"
+3. Run **Node Classification Gate** for each — sub-domain (folder) or feature (file)?
+4. Create children: sub-domain folders or feature files as classified
+5. Update domain index (Children table + Role Matrix)
+6. Note cross-cuts in domain CX file
+7. **NEW DOMAINS DISCOVERED?** → Loop to Level 0
+8. **Gate:** User confirms breadth maps before drilling
+9. Mark domain status as `[BREADTH]`
 
 ### Level 2+ — Vertical Drilling
 
-**Goal:** Drill each sub-area to implementation depth. Deep Think at every step.
+**Goal:** Drill each child to implementation depth. Deep Think at every step.
 
-For each sub-area:
-1. Apply the entity/feature/user/integration questions (see Exhaustion Questions below)
-2. **Deep Think** per sub-area: "Based on this feature in this product, what edge cases, interactions, and failure modes would a production system need?"
-3. Write drill results to the domain file
-4. Cross-cuts with evidence → add to ledger as Level 2+ entries with evidence
-5. **NEW SUB-AREAS DISCOVERED?** → Loop back to Level 1 for this domain. Map the new sub-area's breadth before drilling it.
-6. **NEW DOMAINS DISCOVERED?** → Loop back to Level 0. Stabilize the domain map first.
-7. When Deep Think yields zero new hypotheses AND user confirms → mark sub-area as `[EXHAUSTED]`
-8. When all sub-areas are `[DEEP]` or `[EXHAUSTED]` → mark domain as `[DEEP]` or `[EXHAUSTED]`
-
-### Status Markers
-
-| Marker | Meaning |
-|--------|---------|
-| `[SURFACE]` | Identified, not yet explored |
-| `[BREADTH]` | All sub-areas mapped, none drilled |
-| `[DEEP]` | Sub-areas drilled, some may still have open questions |
-| `[EXHAUSTED]` | Deep Think yields zero hypotheses, user confirms complete |
+For each feature file / sub-domain:
+1. Apply the Exhaustion Questions
+2. **Deep Think** per feature
+3. Write results to feature files (behavior, edge cases, states, Role Lens)
+4. Cross-cuts with evidence → add to parent's CX file
+5. **Feature reveals 2+ interacting capabilities?** → Run Promotion protocol
+6. **NEW DOMAINS DISCOVERED?** → Loop to Level 0
+7. When Deep Think yields zero hypotheses AND user confirms → mark `[EXHAUSTED]`
 
 ---
 
 ## Exhaustion Questions
 
 ### For Every Entity
-
 - What are its attributes/fields?
 - What are its possible states?
-- What transitions between states? What triggers each transition?
+- What triggers each state transition?
 - What's the full lifecycle (creation → active use → archival/deletion)?
 - Who can create, read, update, delete it?
 - What happens when it's referenced by other entities and gets deleted?
 
 ### For Every Feature
-
 - What does the user see when they first encounter this feature?
 - What's the happy path interaction flow (step by step)?
 - What happens when it fails? What error does the user see?
-- What happens on partial failure (e.g., network drops mid-operation)?
+- What happens on partial failure?
 - What permissions are required? What happens without them?
 - Does it have different states (loading, empty, populated, error)?
 - How does it interact with other features?
-- What edge cases exist? (concurrent edits, duplicate submissions, boundary values)
+- What edge cases exist?
 
 ### For Every User Type
-
-- What's their primary workflow through the product?
-- What's the worst thing they could intentionally do? How is it prevented?
-- What's the worst thing they could accidentally do? How is it recovered?
+- What's their primary workflow?
+- What's the worst thing they could intentionally do?
+- What's the worst thing they could accidentally do?
 - What do they see that other user types don't?
 - What can they do that other user types can't?
-- What's their tolerance for complexity? (progressive disclosure implications)
+- What's their tolerance for complexity?
 
 ### For Every Integration / External System
-
-- What happens when it's unavailable? (retry? fallback? degrade gracefully?)
-- What's the expected latency? What if it's 10x slower than expected?
-- What data format does it use? How does the product transform it?
-- What rate limits exist? How does the product handle hitting them?
+- What happens when it's unavailable?
+- What's the expected latency? What if 10x slower?
+- What data format does it use?
+- What rate limits exist?
 - What happens when the external system changes its API?
 
 ---
 
 ## Cross-Cut Watch Protocol
 
-Cross-cut detection is **always-on** regardless of mode or level. During all active
-exploration, maintain awareness:
+Cross-cut detection is **always-on** regardless of mode or level. During all active exploration:
 
-- After each sub-feature: "Does this behavior depend on or affect any other domain?"
-- After each edge case: "Which other parts of the system need to know about this failure mode?"
-- After each state transition: "Does this state change trigger anything in another domain?"
+- After each sub-feature: "Does this depend on or affect any other domain?"
+- After each edge case: "Which other parts need to know about this failure mode?"
+- After each state transition: "Does this trigger anything in another domain?"
 
-When a cross-cut is identified, immediately log it to `cross-cuts/cross-cut-ledger.md`
-at the appropriate level:
+When a cross-cut is identified, log it to the appropriate CX file:
 
-- **Level 0** (during domain map): surface guesses, low confidence
-- **Level 1** (during breadth sweep): sub-domain connections, medium confidence
-- **Level 2+** (during drilling): evidence-backed, high confidence
+| Discovery Level | Where to Log | Confidence |
+|----------------|-------------|------------|
+| During domain mapping | Parent node's CX file + global `ideation-cx.md` (if cross-surface) | Low |
+| During breadth sweep | Domain CX file | Medium |
+| During drilling | Sub-domain CX file or feature's cross-cut notes | High |
 
 ### Cross-Cut Synthesis Questions
 
-For each confirmed cross-cut pair, ask all five questions:
+For each confirmed cross-cut (CX entry with High confidence), answer all five synthesis questions per the `fractal-cx-template.md`:
 
-1. **Shared state conflict**: If both features write to the same entity, who wins? Merge/override strategy? Canonical owner?
-2. **Trigger chain**: Does A automatically trigger B? Rollback semantics if B fails? Sync or async?
-3. **Permission intersection**: Does permission in Domain A affect what's possible in Domain B?
-4. **Notification fan-out**: Does an event in A need to notify actors in B? Who owns the notification contract?
-5. **State transition conflict**: Can A and B be triggered simultaneously? Data consistency if they race?
-
-Record synthesis outcomes in the cross-cut ledger. Never clear entries — the ledger is the audit trail.
-
----
-
-## Domain Coverage Map
-
-Throughout the conversation, maintain and periodically share a coverage map. The format
-uses level-based status with sub-area counts:
-
-```
-Domain Coverage Map — [Project Name]
-═══════════════════════════════════════
-
-Domain 01: Consumer Platform [DEEP]
-  ├── Intake Flow [EXHAUSTED] — 12 sub-topics, 4 hypotheses confirmed
-  ├── Customer Portal [DEEP] — 8 sub-topics, 2 hypotheses confirmed
-  └── Payments [BREADTH] — 5 sub-areas mapped, not yet drilled
-
-Domain 02: Shop Software [BREADTH]
-  ├── Counter Mode [DEEP] — 8 sub-topics, 3 hypotheses confirmed
-  ├── Tech Mode [SURFACE] — 2 sub-topics noted
-  ├── Inventory [EXHAUSTED] — 15 sub-topics, 0 new hypotheses
-  └── Multi-Location [SURFACE] — 1 sub-topic noted
-
-Overall: 7 domains | 2 EXHAUSTED, 3 DEEP, 1 BREADTH, 1 SURFACE
-Deep Think: 23 hypotheses presented, 18 confirmed, 5 rejected
-Cross-cuts: 12 confirmed, 4 pending, 3 rejected
-```
-
-**Rules:**
-- Share the map after every domain or every 3-4 drilling sequences
-- Use it to guide: "Domain 02 has 2 sub-areas still at SURFACE. Should we drill those?"
-- Write the coverage map to `ideation-index.md` after each update
-- Don't compile the vision summary until all domains are at least `[DEEP]`
+1. **Shared state conflict** — Who owns the entity? Merge strategy?
+2. **Trigger chain** — Does A trigger B? Rollback if B fails? Sync/async?
+3. **Permission intersection** — Does permission in A affect B?
+4. **Notification fan-out** — Does an event in A notify actors in B?
+5. **State transition conflict** — Can A and B race? Consistency impact?
 
 ---
 
@@ -456,44 +461,30 @@ Cross-cuts: 12 confirmed, 4 pending, 3 rejected
 | **Architecture** | Note for `/create-prd`. Don't burden the user. | "Should we use SQL or NoSQL?" |
 | **Implementation** | Note for later. Don't even mention it. | "How should we name the routes?" |
 
-**Exception:** If the user brings up architecture or implementation, engage with it.
-Don't refuse to discuss it — just don't initiate it.
+**Exception:** If the user brings up architecture or implementation, engage. Don't refuse — just don't initiate it.
 
 ---
 
 ## Breadth Before Depth
 
 ### No Premature Drilling
-
-Complete the breadth map of all sub-areas within a domain **before drilling any
-single sub-area**. This ensures no sub-area is missed because you went deep too early.
+Complete the breadth map of all children within a node **before drilling any single child**.
 
 ### No Premature Compilation
-
 Don't start writing the vision summary until:
-- All domains are at least `[DEEP]`
-- Every Must Have feature explored to ≥Level 2 (sub-features and failure modes)
+- All leaf nodes are at least `[DEEP]`
+- Every Must Have feature explored to ≥Level 2
 - Deep Think yields zero new hypotheses across ALL domains
-- User has confirmed the domain coverage map
+- User has confirmed the coverage map
 
 ### Challenge Weak Answers
-
-When the user gives a one-sentence answer to a complex question, don't accept it. Probe:
-
-- **Weak:** "Yeah, we need notifications."
-- **Probe:** "What kinds of notifications? Just in-app, or also email and push? What events trigger them? Can users configure which ones they receive? What happens with notification overload?"
+When the user gives a one-sentence answer to a complex question, don't accept it. Probe.
 
 ### Summarize and Validate
-
-After every 5-6 questions, pause and summarize:
-- "Here's what I've captured about [topic] so far: [summary]. Does this cover everything?"
-- This prevents drift, catches misunderstandings, and creates natural checkpoints.
+After every 5-6 questions, pause and summarize to prevent drift.
 
 ### Progress Transparency
-
-Be transparent about where you are:
-- "We've explored [N] of [M] domains to DEEP level. [Domain X] is still at BREADTH."
-- "Deep Think is still generating hypotheses for this domain — we're not done yet."
+Be transparent: "We've explored [N] of [M] domains to DEEP level. [Domain X] is still at BREADTH."
 
 ---
 
@@ -501,7 +492,7 @@ Be transparent about where you are:
 
 - **Does not make product decisions** — It extracts them from the user
 - **Does not explore architecture** — That's `/create-prd`'s job
-- **Does not replace brainstorming** — Brainstorming is a lightweight modifier for quick decisions; this is a heavyweight extraction engine
-- **Does not produce the vision document** — The ideate-validate workflow compiles the summary; this skill drives the conversation that fills the domain files
+- **Does not replace brainstorming** — Brainstorming is lightweight; this is heavyweight extraction
+- **Does not produce the vision document** — `ideate-validate` compiles the summary
 - **Does not rush** — The entire downstream pipeline depends on the depth produced here
-- **Does not write to a monolithic file** — Each domain gets its own file from the moment it's discovered
+- **Does not prescribe shard boundaries** — That's `/decompose-architecture`'s job

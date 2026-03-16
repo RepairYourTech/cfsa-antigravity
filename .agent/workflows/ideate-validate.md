@@ -19,7 +19,7 @@ pipeline:
 
 Explore constraints, verify domain exhaustion, and compile the vision summary.
 
-**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with domains at `[DEEP]` or `[EXHAUSTED]` level. If not, prompt the user to run `/ideate-discover` first.
+**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with leaf nodes at `[DEEP]` or `[EXHAUSTED]` level. If not, prompt the user to run `/ideate-discover` first.
 
 ---
 
@@ -64,37 +64,41 @@ If not already explored in `/ideate-discover` Step 4, explore competitive landsc
 
 This is the final validation gate before compilation.
 
-### Read the full domain map
+### Read the fractal tree
 
-Read `docs/plans/ideation/ideation-index.md` and review:
-- Every domain's status marker
-- Every domain file's sub-area status markers
-- The cross-cut ledger's pending items
+Read `docs/plans/ideation/ideation-index.md` and recursively review:
+- Every node's status marker (surface → domain → sub-domain → feature)
+- All leaf feature files' status markers
+- All CX files at every level for pending entries
 
 ### Exhaustion criteria
 
 | Check | Criteria | Action if Fail |
 |-------|----------|----------------|
-| All domains ≥ `[DEEP]` | Every domain in index is `[DEEP]` or `[EXHAUSTED]` | Drill remaining domains |
-| All Must Have features ≥ Level 2 | Every Must Have has sub-features AND edge cases explored | Deep Think + drill |
-| Deep Think zero hypotheses | Final Deep Think pass across ALL domains yields no new hypotheses | Present any new hypotheses, drill if confirmed |
-| Cross-cut ledger clean | No `pending` entries remain — all are `confirmed` or `rejected` | Run synthesis questions on pending pairs |
+| All leaf nodes ≥ `[DEEP]` | Every feature file in the tree is `[DEEP]` or `[EXHAUSTED]` | Drill remaining feature files |
+| Status propagation correct | Parent nodes reflect their children's status | Update parent indexes |
+| All Must Have features ≥ Level 2 | Every Must Have has sub-features AND edge cases AND Role Lens | Deep Think + drill |
+| Deep Think zero hypotheses | Final Deep Think pass across ALL leaf nodes yields no new hypotheses | Present any new hypotheses, drill if confirmed |
+| All CX files clean | No Medium/Low confidence entries remain at any level — all are High or rejected | Run synthesis questions on pending pairs |
+| Role Lens complete | Every feature file has a populated Role Lens table | Fill missing Role Lens entries |
 | User confirmation | User explicitly confirms "nothing else" for each domain | Ask for each under-explored domain |
 
 ### Execute exhaustion check
 
-1. Scan index for domains below `[DEEP]`. If any:
-   - "Domain [X] is still at [status]. Should we drill deeper, or is it intentionally minimal?"
-   - If user says "drill" → return to `/ideate-discover` for those domains
-   - If user says "intentionally minimal" → note in domain file and proceed
+1. Walk the fractal tree. For each leaf node below `[DEEP]`:
+   - "Feature [X] in [domain] is still at [status]. Drill deeper or intentionally minimal?"
+   - If "drill" → return to `/ideate-discover`
+   - If "intentionally minimal" → note in feature file and proceed
 
-2. Run **final Deep Think pass**: For each `[DEEP]` (not `[EXHAUSTED]`) domain, apply the four Deep Think questions one more time. Present any new hypotheses.
-   - If new hypotheses are confirmed → drill them, update domain files
-   - If zero hypotheses generated → mark domain as `[EXHAUSTED]`
+2. Run **final Deep Think pass**: For each `[DEEP]` leaf node, apply the four Deep Think questions. Present any new hypotheses.
+   - If confirmed → drill, update feature files
+   - If zero hypotheses → mark `[EXHAUSTED]`, propagate status upward
 
-3. Check cross-cut ledger for `pending` entries. Resolve each.
+3. Walk ALL CX files at every level. Resolve any Medium/Low confidence entries.
 
-4. Update `ideation-index.md` progress summary with final counts.
+4. Verify all feature files have populated Role Lens tables.
+
+5. Update `ideation-index.md` progress summary with final counts (total leaf nodes, exhausted count, CX entries confirmed).
 
 ---
 
@@ -162,7 +166,7 @@ Read `.agent/skills/pipeline-rubrics/references/ideation-rubric.md` before apply
 | 9 | **Domain Coverage** | Are all domains at `[DEEP]` or `[EXHAUSTED]`? |
 | 10 | **Deep Think Coverage** | Were hypotheses tracked? Are all resolved (confirmed/rejected)? |
 | 11 | **Cross-Cut Completeness** | Is the ledger clean? No pending entries? |
-| 12 | **Folder Structure Compliance** | Does the folder match the classified structure? (flat `domains/` for single-surface, `surfaces/` + `domains/` for multi-product) |
+| 12 | **Fractal Structure Compliance** | Does every folder have an index + CX file? Do leaf nodes use the feature template? Does hub-and-spoke placement match classification? Are Role Matrix and Role Lens populated? |
 
 For any dimension that scores ⚠️ or ❌, resolve it NOW — don't present a document with known gaps. Loop back to the relevant step and work through it with the user.
 

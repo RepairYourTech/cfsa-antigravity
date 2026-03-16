@@ -83,6 +83,8 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |
 | 7.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
+| ↳ | `/validate-phase-quality` | Completed phase | Code quality gates — tests, coverage, lint, type-check, build, CI/CD, staging, migrations, spec coverage | Verification |
+| ↳ | `/validate-phase-readiness` | Quality gates passed | Production readiness gates — API docs, accessibility, performance, security, dependency audit, results | Verification |
 | 11 | `/evolve-contract` | Changed `{{CONTRACT_LIBRARY}}` schema | Safe schema migration | Maintenance |
 
 

@@ -94,6 +94,31 @@ Read `.agent/skills/code-review-pro/SKILL.md` and apply its adversarial review: 
 
 Run the Test Cmd to verify tests still pass.
 
+### 5.5. Query optimization check
+
+For each database query introduced or modified in this slice:
+
+1. **N+1 detection**: Review all data-fetching code for loop-based queries. If a query inside a loop fetches related data that could be eagerly loaded or batched, flag as an N+1 pattern and fix using the installed ORM/DB skill's recommended approach (e.g., `include` for Prisma, `with` for Drizzle, JOIN for raw SQL, graph traversal for SurrealDB)
+2. **Index coverage**: For each new WHERE clause, ORDER BY, or JOIN condition, verify a supporting index exists in the migration/schema. If no index exists and the table is expected to exceed 10,000 rows, add one
+3. **Query plan verification** (if test DB is available): Run EXPLAIN ANALYZE (or equivalent) on queries targeting tables with >1,000 rows in seed data. Flag any sequential scan on a table expected to grow beyond 10,000 rows
+
+If `docs/plans/ENGINEERING-STANDARDS.md` defines `### DB Query Time` budgets, annotate each new query with its expected tier in a code comment: `// DB-TIER-2: uncached read, p95 target < 50ms`
+
+### 5.6. Resource cleanup verification
+
+Review all new code in this slice for resource acquisition patterns. For each resource acquired, verify matching cleanup exists:
+
+| Resource Type | Required Cleanup | Example |
+|--------------|-----------------|---------|
+| DB connection/client | `disconnect()`/`close()` in `finally` | Prisma `$disconnect()`, pg `pool.end()` |
+| Event listener | `removeEventListener()` or equivalent on unmount/destroy | React `useEffect` cleanup return |
+| Subscription | `unsubscribe()`/`kill()` on unmount/destroy | RxJS, SurrealDB live queries, WebSocket |
+| Timer (interval/timeout) | `clearInterval()`/`clearTimeout()` | Polling loops, debounce timers |
+| File handle/stream | `close()`/`destroy()` | fs reads, HTTP response streams |
+| Worker thread | `terminate()` | Web Workers, Node Worker Threads |
+
+If any cleanup is missing, add it before proceeding. Run the Test Cmd after adding cleanup to verify tests still pass.
+
 ## 6. Validate
 
 Read `.agent/skills/verification-before-completion/SKILL.md` and apply its evidence-before-claims discipline.

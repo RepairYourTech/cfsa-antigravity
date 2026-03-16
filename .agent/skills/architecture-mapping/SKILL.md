@@ -102,13 +102,13 @@ Ideation sub-features:
 Split trigger: [none | review | mandatory-split]
 ```
 
-Read the relevant ideation domain files (use `ideation-index.md` Domain Documents table for correct paths — files may be in `domains/` or `surfaces/{name}/`) and the architecture design to build each record.
+Read the relevant ideation domain folders (use `ideation-index.md` Structure Map for correct paths — folders may be under `domains/` or `surfaces/{name}/`). For each domain, read the `*-index.md` for the children table, then each child feature file for sub-feature details. Use the architecture design as secondary context to build each record.
 
 ### Split Trigger Rules
 
 Apply all three rules to every domain:
 
-1. **80-line proxy** — If the ideation domain file for this domain exceeds ~80 lines of content (features, user stories, acceptance criteria combined), flag as `mandatory-split`.
+1. **Child-count proxy** — If the ideation domain folder contains ≥6 direct child feature files (or the fractal tree has depth ≥3 levels below this domain), flag as `mandatory-split`.
 
 2. **3-table rule** — If the domain's sub-features touch ≥3 independent database tables with no shared queries, flag as `mandatory-split`.
 
@@ -141,17 +141,17 @@ User must approve or reject each split before the table is locked.
 
 ### Purpose
 
-Run this protocol when beginning any architecture spec shard. The ideation domain files are the primary source of truth for sub-features — the architecture design is secondary context.
+Run this protocol when beginning any architecture spec shard. The ideation domain's feature files (within the fractal tree) are the primary source of truth for sub-features — the architecture design is secondary context.
 
 ### Sources to Read
 
-1. The relevant ideation domain file for this shard (path from `ideation-index.md` Domain Documents table)
+1. The relevant ideation domain folder for this shard (path from `ideation-index.md` Structure Map) — read the `*-index.md` then each child feature file
 2. The shard's `## Features` section
 3. `docs/plans/ideation/ideation-index.md` Must Have features for this domain
 
 ### Reconciliation Table
 
-| Sub-feature | Ideation domain file | Shard ## Features | Must Have? | Decision |
+| Sub-feature | Ideation domain tree | Shard ## Features | Must Have? | Decision |
 |-------------|-------------|-------------------|------------|----------|
 | [name] | ✅ Listed | ✅ Listed | Yes/No | Keep |
 | [name] | ✅ Listed | ❌ Missing | Yes | **Add to shard immediately** |
@@ -160,9 +160,9 @@ Run this protocol when beginning any architecture spec shard. The ideation domai
 
 ### Mismatch Handling Rules
 
-1. If a sub-feature appears in the ideation domain file but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding. Do not wait for user confirmation to add ideation-sourced sub-features.
+1. If a sub-feature appears in the ideation domain tree but not in the shard's `## Features` → **add it to the shard's `## Features` section immediately** before proceeding. Do not wait for user confirmation to add ideation-sourced sub-features.
 
-2. If a sub-feature appears in the shard's `## Features` but not in the ideation domain file → **keep it** but mark it with `[Architecture-only — not in ideation]` as an audit trail. These items need explicit user confirmation.
+2. If a sub-feature appears in the shard's `## Features` but not in the ideation domain tree → **keep it** but mark it with `[Architecture-only — not in ideation]` as an audit trail. These items need explicit user confirmation.
 
 ### Scope Confirmation Presentation Format
 
@@ -173,7 +173,7 @@ Present the reconciled scope to the user in the following format:
 > [bullet list of all sub-features, with `[Architecture-only]` markers where applicable]
 >
 > **[N] sub-features added from ideation** that were missing from the shard skeleton.
-> **[M] sub-features marked `[Architecture-only]`** — not found in ideation domain file, added during decomposition.
+> **[M] sub-features marked `[Architecture-only]`** — not found in ideation domain tree, added during decomposition.
 >
 > "Does this feature list match your intent for this domain? Any sub-features to add, remove, or re-scope?"
 

@@ -35,11 +35,12 @@ Read `docs/plans/ideation/ideation-index.md`.
 
 If the file doesn't exist, tell the user to run `/ideate` first. Do not proceed without approved ideation output.
 
-Use the **Document Map** in `ideation-index.md` to locate specific files:
+Use the **Structure Map** in `ideation-index.md` to locate specific files:
 - Constraints + surface classification → `meta/constraints.md`
 - Personas → `meta/personas.md`
-- Domain details → individual domain files in `domains/`
-- Cross-cutting concerns → `cross-cuts/cross-cut-ledger.md`
+- Domain details → fractal tree under `domains/` (or `surfaces/` for multi-product). Each domain is a **folder** containing `*-index.md` (children + Role Matrix), `*-cx.md` (cross-cuts), and child feature `.md` files. Walk the tree to the depth needed.
+- Cross-cutting concerns → `ideation-cx.md` (global cross-surface) + per-domain `*-cx.md` files within the fractal tree
+- Role coverage → Role Matrix in each domain index, Role Lens in each feature file (use for RBAC planning in security shard)
 
 Pay special attention to the **Project Surfaces** section in `meta/constraints.md` — it determines which tech stack axes apply.
 

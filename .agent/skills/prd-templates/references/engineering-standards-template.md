@@ -102,9 +102,11 @@ Use this template when creating `docs/plans/ENGINEERING-STANDARDS.md`. Fill in c
 
 ## Security
 - Dependency audit: [e.g., npm audit on every CI run]
+- Dependency audit enforcement: [e.g., Fail on HIGH/CRITICAL, Warn on MODERATE]
 - Secret scanning: [tool/approach]
 - CSP policy: [strict/relaxed + details] (web surfaces)
 - Code signing: [signing certificate strategy] (desktop/mobile surfaces)
+- Security testing tool: [e.g., OWASP ZAP for web, MobSF for mobile, or none] (surface-specific dynamic security scan)
 
 ## Code Quality
 - Max file length: [e.g., 300 lines]

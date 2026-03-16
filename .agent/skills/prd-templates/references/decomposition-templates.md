@@ -18,7 +18,7 @@ For each shard, create at `docs/plans/ia/[NN-domain-name].md`:
 [1-2 sentence description of this domain's scope]
 
 ## Features
-[Level-1 sub-features from the relevant ideation domain file for this domain. Check `ideation-index.md` Domain Documents table for the correct path — files may be in `domains/` or `surfaces/{name}/` depending on structural classification. NOT architecture-level headlines. See /decompose-architecture-structure Step 5 for seeding instructions.]
+[Level-1 sub-features from the relevant ideation domain folder for this domain. Check `ideation-index.md` Structure Map for the correct folder path — folders are under `domains/` or `surfaces/{name}/`. Read the folder's `*-index.md` for the children table, then each child feature file. NOT architecture-level headlines. See /decompose-architecture-structure Step 5 for seeding instructions.]
 
 ## User Interactions
 [To be filled during /write-architecture-spec]

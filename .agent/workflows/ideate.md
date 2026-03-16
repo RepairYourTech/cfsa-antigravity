@@ -29,7 +29,7 @@ shards: [ideate-extract, ideate-discover, ideate-validate]
 | One-liner / verbal | User describes idea in chat, no files | Interview (deep) — builds vision from scratch domain by domain |
 | Full exploration | Any input with 3+ domains | Full — Recursive breadth-before-depth with Deep Think protocol, cross-cut detection active throughout |
 
-**Quality guarantee**: All input types produce the **same output quality**. The ideation output that emerges from a one-liner is structurally and substantively identical to one produced from a rich document. Only the amount of interview work differs.
+**Quality guarantee**: All input types produce the **same output quality** using the same fractal structure. The ideation output from a one-liner is structurally identical to one from a rich document. Every node has an index, CX file, and children. Every feature has a Role Lens. Only the amount of interview work differs.
 
 Transform a raw idea into comprehensive, structured ideation output through exhaustive recursive exploration with the Deep Think protocol.
 
@@ -46,9 +46,9 @@ Transform a raw idea into comprehensive, structured ideation output through exha
 
 | # | Shard | What It Does |
 |---|-------|-------------|
-| 1 | [`ideate-extract`](.agent/workflows/ideate-extract.md) | Classifies input, creates `ideation/` folder structure, seeds domain files, runs user intent check, sets expansion mode, loads skills |
-| 2 | [`ideate-discover`](.agent/workflows/ideate-discover.md) | Recursive breadth-before-depth domain exploration with Deep Think — writes directly to domain files. Cross-cut detection + ledger active throughout. |
-| 3 | [`ideate-validate`](.agent/workflows/ideate-validate.md) | Constraints, metrics, competitive positioning, domain exhaustion check, vision summary compilation |
+| 1 | [`ideate-extract`](.agent/workflows/ideate-extract.md) | Classifies input, determines structural classification (4 shapes), creates fractal `ideation/` folder structure using Node Classification Gate, seeds domain folders, runs user intent check, sets expansion mode, loads skills |
+| 2 | [`ideate-discover`](.agent/workflows/ideate-discover.md) | Recursive breadth-before-depth exploration with Deep Think. Creates fractal nodes (folders with index + CX) and leaf feature files (with Role Lens). Hierarchical CX detection active throughout. |
+| 3 | [`ideate-validate`](.agent/workflows/ideate-validate.md) | Constraints, metrics, competitive positioning, leaf-node exhaustion check, fractal structure compliance, vision summary compilation |
 
 ---
 
@@ -56,15 +56,15 @@ Transform a raw idea into comprehensive, structured ideation output through exha
 
 ### Step 1 — Run `.agent/workflows/ideate-extract.md`
 
-Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), checks for an existing ideation folder (re-run check), creates the `docs/plans/ideation/` folder structure from the input, runs the universal user intent check to determine expansion mode, sets the expansion mode flag in `ideation-index.md`, and loads the idea-extraction and resolve-ambiguity skills.
+Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), determines structural classification (single-surface, multi-surface-shared, multi-product-hub, multi-product-peer), checks for existing ideation folder (re-run check), creates the fractal `docs/plans/ideation/` folder structure using the Node Classification Gate, runs user intent check to determine expansion mode, sets the expansion mode flag in `ideation-index.md`, and loads skills.
 
 ### Step 2 — Run `.agent/workflows/ideate-discover.md`
 
-Recursive breadth-before-depth exploration: Level 0 (global domain map) → Level 1 (domain breadth sweep) → Level 2+ (vertical drilling). Deep Think protocol active at every level. Writes directly to domain files. Cross-cut ledger accumulated continuously.
+Recursive breadth-before-depth exploration: Level 0 (global domain map) → Level 1 (domain breadth sweep with Node Classification Gate) → Level 2+ (vertical drilling with Reactive Depth and Promotion Protocol). Deep Think active at every level. Writes to fractal feature files with Role Lens. Hierarchical CX files accumulated at every level.
 
 ### Step 3 — Run `.agent/workflows/ideate-validate.md`
 
-Explores constraints, success metrics, and competitive positioning. Runs domain exhaustion check (all domains ≥ `[DEEP]`, Deep Think yields zero hypotheses, cross-cut ledger clean). Compiles `docs/plans/vision.md` as a human-readable executive summary.
+Explores constraints, success metrics, and competitive positioning. Runs leaf-node exhaustion check (all leaf features ≥ `[DEEP]`, Role Lens complete, Deep Think yields zero hypotheses, all CX files clean). Verifies fractal structure compliance. Compiles `docs/plans/vision.md` as a human-readable executive summary.
 
 ---
 

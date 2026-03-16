@@ -71,7 +71,7 @@ Check which layers have content by verifying the presence of key files:
 
 | Layer | Key Files to Check | Has Content If… |
 |-------|-------------------|-------------------|
-| Ideation | `docs/plans/ideation/ideation-index.md` | File exists and domains at `[DEEP]`+ |
+| Ideation | `docs/plans/ideation/ideation-index.md` | File exists, ≥1 domain folder under `domains/` (or `surfaces/`) with `*-index.md` + `*-cx.md`, and domains at `[DEEP]`+ in Structure Map |
 | Architecture | `docs/plans/*-architecture-design.md` | At least one dated file exists |
 | IA | `docs/plans/ia/index.md` | File exists with ≥1 shard listed |
 | BE | `docs/plans/be/index.md` | File exists with ≥1 spec listed |
@@ -80,6 +80,7 @@ Check which layers have content by verifying the presence of key files:
 For each layer with content, also note:
 - How many documents it contains (shards/specs count)
 - Whether any deep dive files exist (IA layer only)
+- For ideation: count of domain folders, total feature files, and CX files across the fractal tree
 
 ---
 

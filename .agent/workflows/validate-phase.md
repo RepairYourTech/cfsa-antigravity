@@ -8,6 +8,7 @@ pipeline:
   loop: true # one validate per phase
   skills: [adversarial-review, code-review-pro, deployment-procedures, security-scanning-security-hardening, testing-strategist, verification-before-completion]
   calls-bootstrap: false
+shards: [validate-phase-quality, validate-phase-readiness]
 ---
 
 // turbo-all
@@ -16,172 +17,36 @@ pipeline:
 
 Comprehensive validation of a completed implementation phase.
 
----
-
-## 0. Load validation skills
-
-Read these skills before running checks:
-1. `.agent/skills/testing-strategist/SKILL.md` — Coverage strategy and test quality
-2. `.agent/skills/code-review-pro/SKILL.md` — Review checklist for self-audit
-3. `.agent/skills/deployment-procedures/SKILL.md` — Build and release readiness
+**Input**: A completed phase with all slices implemented
+**Output**: Validation report with pass/fail verdict
 
 ---
 
-## 0.5. Parallel dispatch option
+## Shard Overview
 
-If the phase contains independent slices that don't share files, validation can run in parallel:
-
-1. **Identify independent slices** — slices that don't import from or export to each other
-2. **Dispatch parallel validation** — run Steps 1–5 concurrently for independent slices using the `parallel-agents` skill
-3. **Sequential for shared** — slices that share contracts or utilities must validate sequentially
-
-This is an optimization, not a requirement. Sequential validation is always correct.
-
-## 1. Run test suite
-
-Run the Test Cmd from `.agent/instructions/commands.md`. All tests must pass. Zero tolerance.
-
-## 2. Check coverage
-
-Run the Test Coverage Cmd from `.agent/instructions/commands.md`.
-
-Read `docs/plans/ENGINEERING-STANDARDS.md` and use the coverage thresholds defined in the "Test Coverage" section. If the file doesn't exist or thresholds aren't defined, fall back to these defaults:
-- Statements: 80%
-- Branches: 90% (critical paths: auth, payments, data mutations, permission checks), 75% (non-critical paths)
-- Functions: 80%
-- Lines: 80%
-
-Critical paths are defined as: auth flows, payment processing, data mutations, and permission/authorization checks.
-
-## 2.5. Mutation testing (critical paths)
-
-**Optional but recommended.** If the project's test tooling supports mutation testing (e.g., Stryker for JS/TS, mutmut for Python, cargo-mutants for Rust):
-
-1. Run the mutation testing tool against critical path modules only (auth, payments, data mutations, permission checks)
-2. **Required**: Mutation score ≥ 70% on critical paths — if below, the tests are passing but not actually catching bugs
-3. **Recommended**: Mutation score ≥ 50% on non-critical paths — log as a finding but don't block
-
-If mutation testing is not available in the project's tooling, skip and note in the validation report that mutation testing was not run.
-
-## 3. Lint
-
-Run the Lint Cmd from the surface stack map.
-
-Zero lint errors. Warnings should be reviewed and addressed.
-
-## 4. Type check
-
-Run the Type Check Cmd from the surface stack map.
-
-Zero type errors. Strict mode must be enabled.
-
-## 5. Build
-
-Run the Build Cmd from the surface stack map.
-
-Build must succeed with no errors.
+| # | Shard | What It Does |
+|---|-------|-------------|
+| 1 | [`validate-phase-quality`](.agent/workflows/validate-phase-quality.md) | Code quality gates: tests, coverage, mutation testing, lint, type-check, build, CI/CD, staging deploy, deployment strategy, migrations, spec coverage |
+| 2 | [`validate-phase-readiness`](.agent/workflows/validate-phase-readiness.md) | Production readiness gates: API doc sync, accessibility, performance budgets, security review, DAST, dependency audit, results documentation, next steps |
 
 ---
 
-## 5.5. CI/CD pipeline verification
+## Orchestration
 
-Verify the CI/CD pipeline is green for this phase's changes:
+### Step A — Run `.agent/workflows/validate-phase-quality.md`
 
-1. Check that a CI/CD configuration file exists (e.g., `.github/workflows/`, `.gitlab-ci.yml`)
-2. Verify the pipeline has run for the latest commit in this phase
-3. Verify ALL CI/CD jobs are passing (not just the test job — include lint, type-check, build, and any deployment jobs)
+Loads validation skills, runs all code quality checks (tests, coverage, mutation testing, lint, type-check, build), verifies CI/CD pipeline, deploys to staging, verifies deployment strategy compliance, checks migrations, and runs the spec coverage sweep.
 
-**If CI/CD is red** → red path: **STOP immediately.** Do not mark this phase as complete. List the failing jobs and their error output. Fix them and re-run `/validate-phase` after fixes.
+### Step B — Run `.agent/workflows/validate-phase-readiness.md`
 
-**Pass criteria**: CI/CD pipeline is green for the latest commit in this phase.
+Runs production readiness checks: API documentation sync, accessibility audit, performance budget enforcement, deep performance audit, security review (including surface-conditional DAST), dependency supply chain audit. Documents all results and presents the validation report with next steps.
 
 ---
 
-## 5.6. Staging deployment gate
+## Quality Gate
 
-1. Deploy to staging using `.agent/skills/deployment-procedures/SKILL.md`
-2. Verify deployment succeeded (no rollback triggered, no error logs in the deployment output)
-3. Run smoke tests against the staging environment:
-   - Health check endpoint returns 200
-   - At least one authenticated route works with a valid token
-   - At least one protected route returns 401/403 for unauthenticated requests
-4. **If smoke tests fail** → red path: Capture the failing test output, rollback the staging deployment, and fix the issue before re-running `/validate-phase`
-5. **If deployment fails** → red path: Do not mark this phase as complete — diagnose the deployment failure, fix it, and re-run `/validate-phase`
-
-**Pass criteria**: Staging deployment succeeds and all smoke tests pass.
-
----
-
-## 5.7. Migration verification
-
-1. Run the migration status command (e.g., `prisma migrate status`, `drizzle-kit status`, or equivalent)
-2. Verify there are no pending migrations and no failed migrations
-3. Verify the CI/CD pipeline ran migrations successfully as part of this phase's deployment
-4. Check that rollback scripts exist for each migration in this phase
-5. If migrations are pending or failed → red path: do not mark this phase as complete — run the pending migrations, verify they succeed, and re-run `/validate-phase`
-
-**Pass criteria**: Migration status is clean. All migrations from this phase ran successfully in the CI/CD environment. Rollback scripts are present.
-
----
-
-## 5.8. Spec coverage sweep
-
-Read `.agent/skills/prd-templates/references/spec-coverage-sweep.md` and follow its full procedure for FE spec, BE spec, and IA shard coverage. Apply its hard-stop rule for any uncovered items.
-
----
-
-## 6. Accessibility audit (if UI changes)
-
-Audit all new UI components in this phase for WCAG 2.1 AA compliance using the Accessibility skill(s) from the cross-cutting section.
-
-## 7. Performance check
-
-Check if the `performance-optimization` skill is installed (look for `.agent/skills/performance-optimization/SKILL.md`).
-
-**If installed**:
-1. Read `.agent/skills/performance-optimization/SKILL.md`
-2. Run the skill's audit protocol against the phase's changed pages/routes/endpoints
-3. Compare results to the targets in `docs/plans/ENGINEERING-STANDARDS.md` (response time budgets, bundle sizes, memory limits, or other surface-appropriate metrics)
-4. Report any metrics that exceed the defined thresholds
-
-**If not installed**:
-- Note: "No performance optimization skill installed. Skipping automated performance audit."
-- Manually verify that no obviously expensive operations were added (large synchronous imports, unoptimized assets, missing lazy loading, N+1 queries, unbounded loops)
-- If performance is critical for this project, recommend installing the skill via `find-skills`
-
-## 8. Security review
-
-Read .agent/skills/adversarial-review/SKILL.md and follow its structured methodology for generating attack scenarios, abuse cases, and race conditions against the phase's changes. Produce spec-level gap items for any identified risks. Feed these into the defense-in-depth audit below.
-
-Read .agent/skills/security-scanning-security-hardening/SKILL.md and run its full defense-in-depth audit protocol against the phase's changes (new endpoints, new data flows, new auth checks). Report findings with severity levels. Block the phase if any Critical or High severity issues are found.
-
-**Supplemental security checks (conditional)**: After the core audit completes, read the Security skill(s) from the cross-cutting section of the surface stack map. For each listed skill directory name, read `.agent/skills/[skill]/SKILL.md` and run its audit protocol as a supplement to the core audit.
-
-Report any additional findings from supplemental audits with the same severity classification.
-
-## 9. Document results
-
-**Note on report file**: `docs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
-
-- Test results and coverage
-- Lint and type-check status
-- Build status
-- Accessibility findings
-- Performance findings
-- Security review findings
-- CI/CD pipeline status
-- Staging deployment result
-- Migration verification status
-- Pass/fail verdict
-
-## 10. Present results and next steps
-
-Read .agent/skills/verification-before-completion/SKILL.md and follow its methodology.
-
-Use `notify_user` to present the validation report.
-
-### Proposed next steps
-
-- **If all checks pass**: "Phase N validation complete. Next: Run `/update-architecture-map` to ensure the project's living architecture document is up-to-date."
-- **If any checks fail**: "Fix the failures listed in the validation report and re-run `/validate-phase` for Phase N."
-- **If new requirements were discovered during validation** (scope gaps, missing features, behavioral corrections): Use `/evolve-feature` to add them at the correct entry point layer. Do not attempt to add them directly to specs — evolution must go through the classify → cascade flow to maintain layer consistency.
+You may not call `notify_user` until:
+- [ ] All code quality checks pass (Shard 1)
+- [ ] All production readiness checks pass (Shard 2)
+- [ ] Validation report written to `docs/audits/phase-N-validation.md`
+- [ ] Pass/fail verdict determined
