@@ -90,10 +90,20 @@ If this BE spec introduces a technology not already in the project's tech stack:
 
 ## 14. Request review and propose next steps
 
+> [!CAUTION]
+> **FORBIDDEN next steps from this workflow**: You may ONLY propose `/write-be-spec` (next shard) or `/write-fe-spec` as the next step. Proposing `/plan-phase` or `/implement-slice` from this workflow is **strictly forbidden** — those require completed FE specs. This applies to ALL project types including CLI tools, bash scripts, and API-only services.
+
 Read .agent/skills/verification-before-completion/SKILL.md and follow its methodology.
 
 Use `notify_user` presenting:
 1. **Spec created** (link)
 2. **Cross-reference verification**
 3. **Ambiguity Gate confirmation**
-4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose next step
+4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
+
+- **More BE specs remain** → "Next: Run `/write-be-spec` for shard [next-shard-number]"
+- **All BE specs complete** → "All BE specs complete and `/audit-ambiguity be` has already run (mandatory Step 12 above). If it scored 0%, proceed to `/write-fe-spec`. If it found gaps, resolve them and re-run `/audit-ambiguity be` before proceeding."
+- **Self-audit found unresolvable issues** → Present the issues for discussion before proposing next step
+
+> [!IMPORTANT]
+> **No other next steps are valid.** `/plan-phase` requires both BE AND FE specs to be complete. After all BE specs pass audit, the mandatory next workflow is `/write-fe-spec`.

@@ -83,7 +83,14 @@ Use `notify_user` presenting:
 1. **Spec created** (link)
 2. **Cross-reference verification**
 3. **Ambiguity Gate confirmation**
-4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose next step
+4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
+
+- **More FE specs remain** → "Next: Run `/write-fe-spec` for shard [next-shard-number]"
+- **All FE specs complete** → "All FE specs complete and `/audit-ambiguity fe` has already run (mandatory Step 11 above). If it scored 0% and the Navigation Completeness Check passes (Step 14 below), proceed to `/plan-phase`. If gaps remain, resolve them first."
+- **Self-audit found unresolvable issues** → Present the issues for discussion before proposing next step
+
+> [!IMPORTANT]
+> `/plan-phase` is valid ONLY from this workflow, and ONLY when all FE specs show ✅, `/audit-ambiguity fe` scores 0%, and the Navigation Completeness Check (Step 14) passes.
 
 ## 14. Navigation Completeness Check
 

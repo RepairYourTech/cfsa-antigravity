@@ -61,3 +61,10 @@ Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review dis
 - [ ] Access control covers all roles and all interaction types
 - [ ] Edge cases cover concurrent access, deletion cascades, and state conflicts
 - [ ] Cross-shard dependencies are bidirectional
+
+---
+
+## Post-Completion: Mandatory Next Step
+
+> [!CAUTION]
+> After completing all IA shards, the **only** valid next step is `/write-be-spec`. Do NOT propose `/plan-phase` or `/implement-slice` — those require completed BE and FE specs. This applies to ALL project types: web apps, CLI tools, bash scripts, APIs, desktop apps. No project skips the BE/FE spec layers.

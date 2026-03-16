@@ -122,18 +122,24 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
 
 ## 14. Request review and propose next steps
 
+> [!CAUTION]
+> **FORBIDDEN next steps from this workflow**: You may ONLY propose `/write-architecture-spec` (next shard) or `/write-be-spec` as the next step. Proposing `/plan-phase`, `/implement-slice`, or any workflow that comes after BE/FE specs is **strictly forbidden** from this point in the pipeline. The IA layer feeds into the BE and FE spec layers — those layers MUST be completed before planning or implementation can begin, regardless of project type (web app, CLI tool, bash script, API-only, etc.). Every project has backend contracts and interface specifications, even if the "frontend" is a terminal or a CLI `--help` output.
+
 You may only notify the user of completion if you have completed the Cross-Reference check, the Dependency Graph validation, and the Ambiguity gate.
 
 Use `notify_user` to present the completed IA shard for review. Your message MUST include:
 1. **The shard created** (link to the file)
 2. **Cross-reference verification** (confirmation that links are bidirectional)
 3. **Ambiguity Gate confirmation** (confirmation that no implementer would need to guess)
-4. **The Pipeline State** (propose the next task from the options below)
+4. **The Pipeline State** (propose the next task from the **ONLY** permitted options below)
 
 Do NOT proceed to the next step until the user sends a message explicitly approving this output. Proposing next steps is not the same as receiving approval. Wait for explicit approval before continuing.
 
 Read `.agent/progress/spec-pipeline.md` to determine the pipeline state, then propose the appropriate next step:
 
 - **More skeleton shards remain** → "Next: Run `/write-architecture-spec` for shard [next-shard-number]"
-- **All IA shards complete** → "All IA shards complete and /audit-ambiguity ia has already run (mandatory Step 13 above). If it scored 0%, proceed to /write-be-spec. If it found gaps, resolve them and re-run /audit-ambiguity ia as a fresh invocation before proceeding."
+- **All IA shards complete** → "All IA shards complete and /audit-ambiguity ia has already run (mandatory Step 13 above). If it scored 0%, proceed to `/write-be-spec`. If it found gaps, resolve them and re-run /audit-ambiguity ia as a fresh invocation before proceeding."
 - **Self-audit found unresolvable issues** → Present the issues for discussion before proposing next step
+
+> [!IMPORTANT]
+> **No other next steps are valid.** If you believe this project does not need BE or FE specs, you are wrong. Every project type maps to the pipeline's spec layers — CLI tools have command contracts (BE) and terminal output specs (FE), bash scripts have function contracts (BE) and usage/help specs (FE), API-only services have endpoint contracts (BE) and client SDK/docs specs (FE). The pipeline does not skip layers.

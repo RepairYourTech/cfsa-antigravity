@@ -1,5 +1,17 @@
 # cfsa-antigravity
 
+## 2.3.1
+
+### Patch Changes
+
+- Enforce sequential IA → BE → FE spec pipeline — prevent agents from skipping spec layers
+
+  - Added FORBIDDEN next-step gates to `write-architecture-spec-deepen.md` preventing agents from proposing `/plan-phase` or `/implement-slice` after IA completion
+  - Added explicit "all project types need BE/FE specs" language (CLI, bash, API-only) to close the reasoning loophole where agents skip layers for non-web projects
+  - Added next-step enforcement to `write-be-spec-write.md` directing to `/write-fe-spec` (not `/plan-phase`)
+  - Added explicit permitted next-step options to `write-fe-spec-write.md` clarifying `/plan-phase` is only valid from this final spec workflow
+  - Added post-completion CAUTION block to `write-architecture-spec.md` parent orchestrator
+
 ## 2.3.0
 
 ### Minor Changes
