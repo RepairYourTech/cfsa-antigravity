@@ -130,10 +130,7 @@ If `docs/plans/ideation/` doesn't exist, create the scaffold:
 ```
 docs/plans/ideation/
 ├── .gitkeep
-├── README.md          ← copy from upstream
-├── domains/.gitkeep
-├── meta/.gitkeep
-└── cross-cuts/.gitkeep
+└── README.md          ← copy from upstream
 ```
 
 ### 4.5c. Flag for re-ideation

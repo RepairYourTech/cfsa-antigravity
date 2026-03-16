@@ -59,7 +59,7 @@ Writes the FE spec to `docs/plans/fe/`, updates the FE index, runs cross-referen
 
 ## Quality Gate
 
-Before presenting to the user, verify:
+**BLOCKING GATE** — Do NOT call `notify_user` or proceed to the next step until ALL items pass:
 
 Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
 

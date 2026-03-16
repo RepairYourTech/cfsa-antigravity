@@ -191,6 +191,11 @@ The key question: **"Does this thing have its own internal features that interac
 | Creating a domain for every feature mentioned | Grouping related features under their parent domain/sub-domain |
 | Pre-creating 4 levels of empty folders | Creating depth reactively as complexity is discovered |
 | Putting a shared domain in `shared/` when hub-and-spoke is active | Putting it inside the hub surface, with CX references from spokes |
+| Using source document headings as the domain map | Extracting concepts from the content and classifying each through the gate |
+| Creating a domain folder for every heading in the source | Only creating domain folders for concepts that pass the gate as true domains |
+| Collapsing a rich multi-system area into a single domain | Recognizing 2+ interacting capabilities = sub-domain or promoted domain |
+| Creating "Data Architecture" or "Tech Stack" as product domains | Noting architectural concerns for `/create-prd` — they are not product domains |
+| Creating folders before presenting the classification to the user | Always presenting the classification table and getting user confirmation first |
 
 ---
 
@@ -268,16 +273,68 @@ Before starting, classify what the user has provided and select the right mode.
 
 **The job:** Don't lose information. Organize, validate, and fill gaps.
 
-**Process:**
+> **CRITICAL**: Extraction mode uses the SAME interview question framework as Interview mode.
+> The document is the interviewee. The only difference is that the document provides answers
+> silently (the agent reads them) instead of interactively (the agent asks the user). Every
+> answer extracted from the document must cite where in the document it came from. Every
+> question the document doesn't answer becomes a real interview question for the user in Phase 2.
+>
+> **The source document's organization is a hint, not the truth.** Headings, section numbers,
+> and document structure tell you where to LOOK for concepts. They do NOT tell you what those
+> concepts ARE (domain, sub-domain, feature, cross-cut, or not-a-product-domain). The Node
+> Classification Gate determines what each concept is. NEVER mirror source headings as domains.
+
+**Process — Phase 1: Interview the Document** (silent — no user interaction)
+
 1. Read/ingest every document provided
 2. **Run Structural Classification** — determine project shape before creating any files
-3. Identify natural domain boundaries in the content
-4. Create fractal folder structure — run the **Node Classification Gate** for each domain
-5. Seed each domain folder (index + CX + feature files) with content from the source
-6. Present the organized inventory: "Here's what I extracted, organized by domain"
-7. Identify gaps — domains/sub-topics not covered
-8. For each gap, switch to Interview Mode
-9. Run Deep Think: "Based on your content, I would also expect [X] and [Y]. Are those relevant?"
+3. **BLOCKING GATE — Extract concepts, not headings.** Read the entire document and identify every concept — a capability, system, feature, workflow, cross-cutting concern, or architectural note. For each concept, record:
+   - Concept name (what it is, in your words — not the source heading)
+   - Source location (line numbers or section reference — this is the citation)
+   - What the document says about it (summary of the content)
+   - How many distinct interacting capabilities it contains (the sub-domain test)
+   - Whether it is surface-exclusive, shared, or cross-cutting
+   Do NOT use source document headings as concept names unless they happen to be accurate after classification. The concept name must reflect what the thing actually IS after gate analysis.
+4. **BLOCKING GATE — Classify every concept.** Run the Node Classification Gate on EACH extracted concept individually. For each concept, answer the gate questions explicitly:
+   - "Does it belong to an EXISTING domain?" → if YES, it's a sub-domain or feature of that domain
+   - "Does it have 2+ distinct capabilities that interact with each other?" → if YES, it's a sub-domain (folder); if NO, it's a feature (file)
+   - "Is it surface-exclusive?" → determines placement
+   - "Is it an architectural concern, not a product domain?" → note for `/create-prd`, do NOT create a domain
+   - "Is it a cross-cutting concern?" → log in CX files, do NOT create a domain
+   Produce a **classification table**:
+
+   | Concept | Source Location | Gate Result | Reasoning |
+   |---------|----------------|-------------|----------|
+   | Inventory System | lines 982–1017 | Sub-domain of Shop Software | 4+ interacting capabilities (purgatory model, alerts, visibility, pre-auth billing) |
+   | In-Platform Messaging | lines 759–788 | Feature of Consumer Platform | Single capability with role-based routing, no internal sub-features |
+   | Data Architecture | lines 1261–1282 | NOT a product domain | Architectural concern — database selection, sync strategy → note for /create-prd |
+   | Analytics & Insights | lines 730–758 | Cross-cutting concern | Three tiers serving all domains, no exclusive features of its own |
+
+5. **BLOCKING GATE — Build proposed domain map.** From the classification table, group concepts into a proposed domain hierarchy:
+   - Only concepts classified as **domain** become domain folders
+   - Concepts classified as **sub-domain** nest inside their parent domain
+   - Concepts classified as **feature** become leaf files inside their parent
+   - Concepts classified as **cross-cut** go in the appropriate CX files
+   - Concepts classified as **not-a-product-domain** are noted in `meta/constraints.md` for `/create-prd`
+6. **Identify gaps** — interview questions the document doesn't answer. These become Phase 2 interview questions.
+
+**Process — Phase 2: Present and Interview the User**
+
+7. **BLOCKING GATE — Present classification and get confirmation.** Show the user:
+   - The classification table (every concept, its source, its gate result, and reasoning)
+   - The proposed domain map (the folder hierarchy that would be created)
+   - The gap list (questions the document didn't answer)
+   Ask: "Here's how I classified your content. Does this look right?" **Wait for user confirmation or corrections. Do NOT create any folders until the user confirms.**
+8. **Apply corrections** — if the user reclassifies any concept, update the table and domain map
+9. **Create fractal folder structure** from the CONFIRMED domain map and seed with content from the source document
+10. **Interview the user for gaps** — switch to Interview Mode for every gap identified in step 6. Use the same Deep Think questions, same exhaustion protocol, targeted at what the document didn't cover.
+11. Run Deep Think: "Based on your content, I would also expect [X] and [Y]. Are those relevant?"
+
+**Enforcement rules:**
+- Do NOT create any domain folders before Step 9 (after user confirmation in Step 7)
+- Do NOT mirror source document headings as domains — they are hints for finding concepts, not the classification itself
+- Every concept in the classification table MUST show which gate questions were asked and how they were answered
+- If a concept's classification is uncertain, present it to the user in Phase 2 with your best guess and reasoning — do not silently guess
 
 ### Expansion Mode — Thin Input
 

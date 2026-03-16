@@ -35,7 +35,7 @@ Write the BE spec(s) to `docs/plans/be/`, update indexes, run quality checks, an
 
 **Rule**: For every unspecced expected endpoint, either add it to the spec immediately or add an explicit `[Deferred to Phase N — reason]` note in the Notes column. An empty Notes column for an unspecced endpoint is a spec failure.
 
-**Gate**: Do not write the spec sections until every expected endpoint is either specced or explicitly deferred. This reconciliation table becomes the first section of the spec file after `## Classification`.
+**BLOCKING GATE**: Do NOT write the spec sections until every expected endpoint is either specced or explicitly deferred. This reconciliation table becomes the first section of the spec file after `## Classification`.
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 Read .agent/skills/spec-writing/SKILL.md and follow its completeness testing and cross-reference checking methodology.

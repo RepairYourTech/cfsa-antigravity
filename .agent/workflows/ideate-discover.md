@@ -19,7 +19,7 @@ pipeline:
 
 Explore domains through recursive breadth-before-depth with the Deep Think protocol. Write to the fractal folder structure — every node gets an index, CX file, and children.
 
-**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with the fractal folder structure seeded. If not, prompt the user to run `/ideate-extract` first.
+**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with the fractal folder structure seeded. If this file does not exist → **STOP**: "Extraction output missing — the fractal folder structure has not been seeded. Run `/ideate-extract` first before proceeding to discovery." Do not proceed without this output.
 
 ---
 

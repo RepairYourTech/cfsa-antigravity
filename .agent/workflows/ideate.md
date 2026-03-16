@@ -42,6 +42,23 @@ Transform a raw idea into comprehensive, structured ideation output through exha
 
 ---
 
+## 0. Prerequisite gate
+
+Check whether `docs/plans/ideation/ideation-index.md` already exists.
+
+- **If it does NOT exist** → This is a fresh ideation. Proceed to Shard 1.
+- **If it DOES exist** → **STOP**. Present to the user:
+
+> ⚠️ **Ideation output already exists** at `docs/plans/ideation/ideation-index.md`.
+>
+> Running `/ideate` again will overwrite the existing ideation output.
+>
+> **Overwrite** (start fresh) or **Abort**?
+
+**Do not proceed** to any shard until the user explicitly confirms "Overwrite." If the user says "Abort," end the workflow immediately.
+
+---
+
 ## Shard Overview
 
 | # | Shard | What It Does |

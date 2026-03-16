@@ -45,7 +45,7 @@ Executes the TDD cycle (RED: write failing tests → GREEN: implement → REFACT
 
 ## Quality Gate
 
-You may not call `notify_user` until:
+**BLOCKING GATE** — You may NOT call `notify_user` until ALL items pass:
 - [ ] All tests pass (Test Cmd from surface stack map)
 - [ ] Full validation passes (Validation Cmd from surface stack map)
 - [ ] All 4 progress tracking files updated (slice, phase, index, memory)

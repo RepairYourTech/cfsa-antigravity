@@ -45,7 +45,7 @@ Runs production readiness checks: API documentation sync, accessibility audit, p
 
 ## Quality Gate
 
-You may not call `notify_user` until:
+**BLOCKING GATE** — You may NOT call `notify_user` until ALL items pass:
 - [ ] All code quality checks pass (Shard 1)
 - [ ] All production readiness checks pass (Shard 2)
 - [ ] Validation report written to `docs/audits/phase-N-validation.md`

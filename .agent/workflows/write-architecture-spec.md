@@ -51,7 +51,7 @@ Runs multiple deepening passes (cross-section consistency, "what if" scenarios, 
 
 ## Quality Gate
 
-Before presenting to the user, verify:
+**BLOCKING GATE** — Do NOT call `notify_user` or proceed to the next step until ALL items pass:
 
 Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review discipline.
 

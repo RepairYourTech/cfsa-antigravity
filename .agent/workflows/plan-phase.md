@@ -21,6 +21,13 @@ Break a phase into TDD vertical slices, each spanning all four surfaces (contrac
 **Input**: Approved specs (IA + BE + FE) and the phasing section from architecture design
 **Output**: Phase plan with ordered slices and acceptance criteria
 
+**Prerequisite**: Approved specs across all three layers must exist. Verify:
+1. `docs/plans/ia/index.md` exists and all shards show ✅
+2. `docs/plans/be/index.md` exists and all specs show ✅
+3. `docs/plans/fe/index.md` exists and all specs show ✅
+
+If any index is missing or contains incomplete specs → **STOP**: "Spec layers are not complete. Run `/write-architecture-spec`, `/write-be-spec`, and/or `/write-fe-spec` to complete all specs before planning a phase."
+
 ---
 
 ## Shard 1: Pre-flight — `/plan-phase-preflight`
