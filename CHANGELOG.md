@@ -1,5 +1,32 @@
 # cfsa-antigravity
 
+## 2.4.0
+
+### Minor Changes
+
+- Auto-populate sync tracking on kit installation — eliminates full-audit first sync
+
+  - `build-template.sh` now generates `template/.agent/kit-sync.md` at build time with the current git HEAD commit hash, package version, and timestamp
+  - Every `npx cfsa-antigravity init` now auto-populates `.agent/kit-sync.md` — no manual tracking file creation needed
+  - `/sync-kit` workflow simplified: removed the full-diff first-sync path (Step 1b); every sync is now incremental from the install point
+  - `/sync-kit` now hard-stops if `kit-sync.md` is missing instead of falling back to a full audit
+  - `/sync-kit` now includes explicit upstream fetch instructions (shallow clone or GitHub MCP) so agents know HOW to access the upstream
+  - `check-template-integrity.sh` excludes `kit-sync.md` from drift detection (build-generated, intentionally different from source)
+
+## 2.3.2
+
+### Patch Changes
+
+- Fix sync-kit workflow: add explicit upstream clone mechanism
+
+  The `/sync-kit` workflow told agents to "run git log on the upstream" without providing any mechanism to access the upstream repo. Agents sitting in the project workspace had no way to compare files — upstream commit hashes don't exist in the project's git history, causing silent failures where the sync reports "no changes."
+
+  - Added Step 0.5 "Fetch the upstream repo" with explicit `git clone` to `/tmp/cfsa-upstream-sync`
+  - Added CAUTION block warning agents they are in the PROJECT repo, not the upstream
+  - Rewrote Step 1a with exact bash command scoped to the clone directory
+  - Added IMPORTANT fallback for rebased commit hashes
+  - Updated Steps 1b, 3a, 4, and 9 to reference the clone directory as the upstream source
+
 ## 2.3.1
 
 ### Patch Changes

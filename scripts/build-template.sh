@@ -68,6 +68,21 @@ if [[ -d "$TEMPLATE_DIR/docs/audits" ]]; then
         -delete 2>/dev/null || true
 fi
 
+# --- Generate kit-sync.md (sync tracking for installations) ---
+COMMIT_HASH=$(git rev-parse HEAD)
+KIT_VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
+BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+info "Generating .agent/kit-sync.md (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
+cat > "$TEMPLATE_DIR/.agent/kit-sync.md" << EOF
+# Kit Sync State
+
+upstream: https://github.com/RepairYourTech/cfsa-antigravity
+last_synced_commit: $COMMIT_HASH
+last_synced_at: $BUILD_TIMESTAMP
+kit_version: $KIT_VERSION
+EOF
+
 # --- Summary ---
 file_count=$(find "$TEMPLATE_DIR" -type f | wc -l | tr -d ' ')
 dir_count=$(find "$TEMPLATE_DIR" -type d | wc -l | tr -d ' ')

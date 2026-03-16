@@ -18,37 +18,37 @@ Pull improvements from the upstream [cfsa-antigravity](https://github.com/Repair
 
 Read `.agent/kit-sync.md` in the project root.
 
-- **File exists** → extract `last_synced_commit` and `upstream` values. Use **incremental mode** (Step 1a).
-- **File missing** → this is a **first sync**. Use **full diff mode** (Step 1b). The tracking file will be created in Step 9.
+- **File exists** → extract `last_synced_commit`, `upstream`, and `kit_version` values. Proceed to Step 1.
+- **File missing** → **HARD STOP**: "No sync tracking file found. This file is auto-generated during kit installation. To fix: run `npx cfsa-antigravity init --force` to reinstall the kit with sync tracking, or manually create `.agent/kit-sync.md` with the upstream URL and the commit hash of your last known kit version."
 
 ---
 
-## 1. Identify what changed
+## 1. Fetch upstream and identify changes
 
 // turbo
 
-### 1a. Incremental sync (commit-scoped)
+### 1a. Clone or fetch the upstream repo
 
-Run `git log <last_synced_commit>..HEAD --name-only` on the upstream to get only the changed files. Work only with those files in Steps 2–7.
+To compare against the upstream, you MUST fetch the actual upstream repository. Use one of these approaches:
 
-If the command returns no files: report "No changes since last sync (commit `<hash>`)" and skip to Step 8.5.
+1. **Preferred — shallow clone to /tmp** (fastest):
+   ```bash
+   git clone --depth=50 <upstream_url> /tmp/cfsa-upstream
+   cd /tmp/cfsa-upstream
+   ```
+2. **Alternative — GitHub MCP**: Use `list_commits` and `get_file_contents` from the `github-mcp-server` to compare files.
 
-### 1b. First sync (full comparison)
+### 1b. Diff from last synced commit
 
-Compare the **entire upstream repo** against the project. Scan at minimum:
+Using the cloned repo (or GitHub API), get the list of changed files since the last sync:
 
-| Upstream Path | What to Compare |
-|--------------|-----------------|
-| Root files | `AGENTS.md`, `GEMINI.md` |
-| `.agent/instructions/` | All 5 markdown files |
-| `.agent/rules/` | All 9 markdown files |
-| `.agent/workflows/` | All workflow files |
-| `.agent/skills/` | All skill directories (SKILL.md + sub-files) |
-| `.agent/skill-library/` | MANIFEST.md, README.md, subdirectories |
-| `.agent/progress/` | Directory structure |
-| `docs/` | README.md, kit-architecture.md, audits/, plans/ scaffolding (including `ideation/` folder structure) |
+```bash
+git log <last_synced_commit>..HEAD --name-only --pretty=format:""
+```
 
-Compare using SHA hashes or byte-level diff. Classify each file per Step 2.
+If the command returns no files (or the API shows no commits after `last_synced_commit`): report "No changes since last sync (commit `<hash>`, version `<kit_version>`)" and skip to Step 8.5.
+
+Work only with the changed files in Steps 2–7.
 
 ---
 
@@ -228,15 +228,15 @@ Scan these files for any literal `{{` characters:
 
 ## 9. Update sync state
 
-Write or update `.agent/kit-sync.md`:
+Read the upstream's `package.json` to get the current kit version. Write or update `.agent/kit-sync.md`:
 
 ```markdown
 # Kit Sync State
 
 upstream: https://github.com/RepairYourTech/cfsa-antigravity
-last_synced_commit: <current HEAD commit hash>
+last_synced_commit: <current upstream HEAD commit hash>
 last_synced_at: <ISO 8601 timestamp>
-kit_version: main
+kit_version: <version from upstream package.json, e.g. 2.3.1>
 ```
 
 This file is committed to the project repo — it records which kit version the project is on and serves as the baseline for the next sync.

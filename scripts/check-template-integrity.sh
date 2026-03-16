@@ -59,7 +59,8 @@ else
     drift_output=$(diff -rq "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent" 2>/dev/null \
         | grep -v "progress/memory" \
         | grep -v "progress/slices" \
-        | grep -v "progress/blockers" || true)
+        | grep -v "progress/blockers" \
+        | grep -v "kit-sync.md" || true)
 
     drift_count=$(echo "$drift_output" | grep -c . || true)
 
