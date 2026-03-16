@@ -1,5 +1,19 @@
 # cfsa-antigravity
 
+## 2.2.2
+
+### Patch Changes
+
+- ### Bug Fixes
+
+  - **Fix missing directories in npm package**: Added `.gitkeep` files to 5 empty directories that npm was stripping during packaging, causing them to be absent when running `npx cfsa-antigravity init`:
+    - `.agent/progress/` — session progress tracking
+    - `.agent/progress/memory/` — cross-session pattern memory
+    - `.agent/progress/sessions/` — session close logs
+    - `.agent/skills/skill-creator/references/` — skill reference scaffolding
+    - `.agent/skills/skill-creator/scripts/` — skill script scaffolding
+  - **Full kit audit**: Verified all 296 source directories match template, zero empty directories remain, all 16 `.gitkeep` files confirmed in `npm pack` output (434 total files)
+
 ## 2.2.0
 
 ### Minor Changes
