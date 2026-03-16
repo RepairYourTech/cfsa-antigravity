@@ -1,5 +1,27 @@
 # cfsa-antigravity
 
+## 2.3.0
+
+### Minor Changes
+
+- Enforce all pipeline workflow gates and harden ideation scaffold
+
+  **Pipeline Enforcement Audit** — 52 workflow files audited across 4 tiers.
+
+  ### Enforcement Fixes (7 files)
+
+  - Add prerequisite gate to `ideate.md` (overwrite protection)
+  - Harden `ideate-discover.md` prerequisite to explicit STOP
+  - Apply BLOCKING GATE pattern to quality gates in `write-architecture-spec.md`, `write-be-spec.md`, `write-fe-spec.md`, `implement-slice.md`, `write-be-spec-write.md`, `validate-phase.md`
+  - Add prerequisite verification to `plan-phase.md`
+
+  ### Ideation Scaffold (4 files)
+
+  - Remove pre-shipped subdirectories (`domains/`, `meta/`, `cross-cuts/`) from kit scaffold — `/ideate` creates these based on structural classification
+  - Fix `ideate-extract.md` Step 1.5: `ADDITIVE ONLY` instruction, kit files in tree diagram as `KIT-SHIPPED — do not touch`, post-seeding verification gate with STOP
+  - Update `sync-kit.md` scaffold reference to match
+  - Add Node Classification Gate and Structural Classification Protocol to `idea-extraction` skill
+
 ## 2.2.2
 
 ### Patch Changes
