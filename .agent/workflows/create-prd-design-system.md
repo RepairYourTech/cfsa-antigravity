@@ -29,9 +29,11 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 2. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → **stop** and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd-stack` first to establish the design direction before designing the system."_
 3. If all placeholders are filled → extract and store for this session: the confirmed `DESIGN_DIRECTION`, color palette, typography choices, motion philosophy, and anti-patterns.
 
----
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
 
-## 1. Read source documents
+**Tier behavior for design system decisions** (all 7 decisions are product decisions):
+- 🤖 **Auto**: Agent selects based on design direction + constraints via Deep Think. Writes reasoning. Marks `[AUTO-CONFIRMED]`. User reviews compiled `design-system.md` at Step 9.
+- 🤝 **Hybrid** / 💬 **Interactive**: Present options, wait for explicit confirmation per decision (current behavior).
 
 1. Read `docs/plans/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `docs/plans/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
 2. Read `.agent/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.

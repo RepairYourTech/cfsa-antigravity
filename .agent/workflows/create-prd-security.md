@@ -37,6 +37,12 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the f
 
 If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+
+**Tier behavior for security decisions:**
+- 🤖 **Auto**: Agent designs security model + attack surface + integrations via Deep Think. Writes reasoning. Marks `[AUTO-CONFIRMED]`. User reviews at end of shard.
+- 🤝 **Hybrid** / 💬 **Interactive**: Present each section, walk through, wait for user confirmation (current behavior).
+
 ---
 
 ## 6. Security model

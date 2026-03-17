@@ -36,6 +36,12 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the f
 
 If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+
+**Tier behavior for architecture decisions:**
+- 🤖 **Auto**: Agent designs system architecture + data strategy via Deep Think. Writes reasoning. Marks decisions `[AUTO-CONFIRMED]`. User reviews at end of shard.
+- 🤝 **Hybrid** / 💬 **Interactive**: Present each major section, walk through, wait for user confirmation (current behavior).
+
 ---
 
 ## 4. System architecture

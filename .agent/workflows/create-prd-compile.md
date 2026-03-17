@@ -38,6 +38,12 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the f
 
 If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
 
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+
+**Tier behavior for compile decisions:**
+- 🤖 **Auto**: Agent selects methodology, phasing, and performance budgets via Deep Think. Writes reasoning. Marks `[AUTO-CONFIRMED]`. User reviews compiled documents.
+- 🤝 **Hybrid** / 💬 **Interactive**: Present each decision, wait for user confirmation (current behavior).
+
 ---
 
 ## 8. Development methodology

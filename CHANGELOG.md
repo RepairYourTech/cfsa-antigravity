@@ -1,5 +1,17 @@
 # cfsa-antigravity
 
+## 2.7.0
+
+### Minor Changes
+
+- Add engagement tiers to /create-prd workflow (Auto, Hybrid, Interactive)
+
+  - All 6 create-prd workflow files now tier-aware
+  - Parent asks engagement tier (or inherits from ideation)
+  - Each shard reads tier and adapts gate behavior
+  - Auto: agent designs via Deep Think, marks [AUTO-CONFIRMED], user reviews compiled output
+  - Hybrid/Interactive: current behavior preserved (present options, wait for user)
+
 ## 2.6.0
 
 ### Minor Changes

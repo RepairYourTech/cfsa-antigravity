@@ -44,6 +44,17 @@ Use the **Structure Map** in `ideation-index.md` to locate specific files:
 
 Pay special attention to the **Project Surfaces** section in `meta/constraints.md` — it determines which tech stack axes apply.
 
+Also read `## Engagement Tier` from `ideation-index.md`. If not set during ideation, ask now:
+
+> **How involved do you want to be?**
+> 1. 🤖 **Auto** — I design the full architecture via Deep Think. You review the compiled output.
+> 2. 🤝 **Hybrid** *(recommended)* — Structural steps auto. Architecture/product decisions pause for you.
+> 3. 💬 **Interactive** — I pause at every step.
+
+**Wait for user answer.** If an ideation tier exists, present it as default. Write to `ideation-index.md` immediately.
+
+Each shard reads the tier and adapts gates: **Auto** = all gates auto-confirm with Deep Think reasoning. **Hybrid** = structural auto, architecture/product pause. **Interactive** = all pause.
+
 ---
 
 ## 2. Load skills
