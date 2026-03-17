@@ -124,9 +124,10 @@ When processing a document, scan for these signals before creating any domain fi
 
 When hub-and-spoke is identified:
 
-- **The hub surface owns shared domains.** Device History, Payments, Certification — these live INSIDE the hub surface's domain tree, not in a separate `shared/` folder.
+- **The hub surface owns shared API/data domains.** Device History, Payments, Certification — these live INSIDE the hub surface's domain tree, not in a separate `shared/` folder.
 - **Spoke surfaces reference hub domains via CX.** Desktop's CX files say "Feature X consumes web/domain/feature via API."
-- **The hub surface tends to be the largest.** This is expected and correct.
+- **Spoke surfaces own their operational domains.** A domain belongs on the surface where it is **primarily experienced and operated**, not where the data lives. POS is a desktop domain even though it calls the hub's Stripe API. Inventory is a desktop domain even though it syncs to the hub's database.
+- **Proportionality check**: The hub may have more domains than any single spoke, but spokes must reflect the FULL experience their users have. If a spoke user's daily workflow involves 10+ distinct capabilities, 2-3 domains is a red flag — re-examine whether concepts were incorrectly collapsed into the hub.
 
 ### Peer Mode Implications
 
@@ -159,18 +160,34 @@ Does it belong to an EXISTING domain or sub-domain?
      │            │
      │           NO ──► It's a FEATURE ──► create .md file inside existing parent
      │
-    NO ──► Is it surface-exclusive?
+    NO ──► (Surface Placement — two questions, not one)
               │
-             YES ──► It's a new DOMAIN ──► create domain folder in the correct surface
+              Q1: "Where is this PRIMARILY experienced/operated?"
+              │    (Which surface's user interacts with this most?)
               │
-             NO ──► Is there a hub surface that owns this kind of logic?
-                       │
-                      YES ──► It lives in the HUB surface ──► create domain in hub + CX from spokes
-                       │
-                      NO ──► It's a shared domain ──► create in shared/
+              Q2: "Which hub APIs does it consume?"
+              │    (What data/services does it call from the hub?)
+              │
+              ├── Primarily experienced on a SPOKE surface
+              │     ──► It's a SPOKE DOMAIN ──► create in that spoke surface
+              │     ──► Log hub API dependencies in CX (Q2 answer)
+              │
+              ├── Primarily experienced on the HUB surface
+              │     ──► It's a HUB DOMAIN ──► create in hub surface
+              │
+              ├── No primary surface (pure API/data layer, no direct user interaction)
+              │     ──► It's a HUB DOMAIN (infrastructure) ──► create in hub
+              │
+              └── Equally used across multiple surfaces (rare)
+                    ──► It's a shared domain ──► create in shared/ (peer) or hub (hub-and-spoke)
 
 **WHEN UNCERTAIN: Ask the user.** Never assume placement.
 ```
+
+> **Key principle**: A domain belongs where it is PRIMARILY USED, not where the data lives.
+> POS is a desktop domain even though payments go through the hub's Stripe API.
+> Inventory is a desktop domain even though stock data is in the hub's database.
+> The hub API dependency is logged as a CX reference, not as a classification signal.
 
 ### Sub-Domain vs Feature Test
 
@@ -187,7 +204,8 @@ The key question: **"Does this thing have its own internal features that interac
 
 | ❌ Wrong | ✅ Right |
 |----------|---------|
-| Creating "Supplier Integration" as a new domain | Recognizing it's a feature within AI Assistant, cross-cutting to web's Supplier Accounts |
+| Creating "Print Receipt" as a new domain | Recognizing it's a feature within POS/Payments |
+| Classifying POS as a hub domain because it calls Stripe | Classifying POS as a desktop domain because the shop tech primarily operates it there |
 | Creating a domain for every feature mentioned | Grouping related features under their parent domain/sub-domain |
 | Pre-creating 4 levels of empty folders | Creating depth reactively as complexity is discovered |
 | Putting a shared domain in `shared/` when hub-and-spoke is active | Putting it inside the hub surface, with CX references from spokes |
@@ -196,6 +214,7 @@ The key question: **"Does this thing have its own internal features that interac
 | Collapsing a rich multi-system area into a single domain | Recognizing 2+ interacting capabilities = sub-domain or promoted domain |
 | Creating "Data Architecture" or "Tech Stack" as product domains | Noting architectural concerns for `/create-prd` — they are not product domains |
 | Creating folders before presenting the classification to the user | Always presenting the classification table and getting user confirmation first |
+| Classifying everything that touches the hub API as a hub domain | Using the "primarily experienced" test — hub API usage = CX, not classification |
 
 ---
 
@@ -283,6 +302,12 @@ Before starting, classify what the user has provided and select the right mode.
 > and document structure tell you where to LOOK for concepts. They do NOT tell you what those
 > concepts ARE (domain, sub-domain, feature, cross-cut, or not-a-product-domain). The Node
 > Classification Gate determines what each concept is. NEVER mirror source headings as domains.
+>
+> **Document surface signals ARE classification input.** When a concept appears WITHIN a
+> surface-specific section of the document (e.g., "Shop Software", "Mobile App", "Desktop"),
+> that is a strong signal for surface placement. The section heading doesn't dictate the
+> domain NAME, but it DOES inform which surface the concept is primarily experienced on.
+> Use this as input to the "primarily experienced" question in the classification gate.
 
 **Process — Phase 1: Interview the Document** (silent — no user interaction)
 
@@ -293,22 +318,25 @@ Before starting, classify what the user has provided and select the right mode.
    - Source location (line numbers or section reference — this is the citation)
    - What the document says about it (summary of the content)
    - How many distinct interacting capabilities it contains (the sub-domain test)
-   - Whether it is surface-exclusive, shared, or cross-cutting
+   - Which surface section of the document it appeared in (if any) — this is a surface placement signal
+   - Whether it is cross-cutting (affects multiple domains regardless of surface)
    Do NOT use source document headings as concept names unless they happen to be accurate after classification. The concept name must reflect what the thing actually IS after gate analysis.
 4. **BLOCKING GATE — Classify every concept.** Run the Node Classification Gate on EACH extracted concept individually. For each concept, answer the gate questions explicitly:
    - "Does it belong to an EXISTING domain?" → if YES, it's a sub-domain or feature of that domain
    - "Does it have 2+ distinct capabilities that interact with each other?" → if YES, it's a sub-domain (folder); if NO, it's a feature (file)
-   - "Is it surface-exclusive?" → determines placement
+   - "Where is this PRIMARILY experienced/operated?" → determines surface placement
+   - "Which hub APIs does it consume?" → logged as CX, NOT as classification signal
    - "Is it an architectural concern, not a product domain?" → note for `/create-prd`, do NOT create a domain
    - "Is it a cross-cutting concern?" → log in CX files, do NOT create a domain
    Produce a **classification table**:
 
-   | Concept | Source Location | Gate Result | Reasoning |
-   |---------|----------------|-------------|----------|
-   | Inventory System | lines 982–1017 | Sub-domain of Shop Software | 4+ interacting capabilities (purgatory model, alerts, visibility, pre-auth billing) |
-   | In-Platform Messaging | lines 759–788 | Feature of Consumer Platform | Single capability with role-based routing, no internal sub-features |
-   | Data Architecture | lines 1261–1282 | NOT a product domain | Architectural concern — database selection, sync strategy → note for /create-prd |
-   | Analytics & Insights | lines 730–758 | Cross-cutting concern | Three tiers serving all domains, no exclusive features of its own |
+   | Concept | Source Location | Gate Result | Primary Surface | Also Used On | Reasoning |
+   |---------|----------------|-------------|----------------|-------------|----------|
+   | Inventory System | lines 982–1017 (§Shop Software) | Sub-domain of Shop Operations | Desktop | Web (read-only dashboard) | 4+ interacting capabilities, primarily operated by shop tech at the counter |
+   | POS / Payments | lines 1018–1050 (§Shop Software) | Domain in Desktop | Desktop | Hub (Stripe API) | Shop tech runs transactions at register; hub provides payment processing API |
+   | In-Platform Messaging | lines 759–788 | Feature of Consumer Platform | Web | Mobile | Single capability with role-based routing, no internal sub-features |
+   | Data Architecture | lines 1261–1282 | NOT a product domain | — | — | Architectural concern — database selection, sync strategy → note for /create-prd |
+   | Analytics & Insights | lines 730–758 | Cross-cutting concern | — | All surfaces | Three tiers serving all domains, no exclusive features of its own |
 
 5. **BLOCKING GATE — Build proposed domain map.** From the classification table, group concepts into a proposed domain hierarchy:
    - Only concepts classified as **domain** become domain folders
@@ -316,6 +344,21 @@ Before starting, classify what the user has provided and select the right mode.
    - Concepts classified as **feature** become leaf files inside their parent
    - Concepts classified as **cross-cut** go in the appropriate CX files
    - Concepts classified as **not-a-product-domain** are noted in `meta/constraints.md` for `/create-prd`
+
+5.5. **BLOCKING GATE — Surface Distribution Audit.** Before presenting to the user, verify the classification didn't starve any spoke:
+
+   For each spoke surface:
+   1. List all concepts the document describes within that surface's sections
+   2. Count how many were classified as spoke domains vs. hub domains
+   3. For each hub-classified concept that appeared in a spoke section: **re-run the "primarily experienced" test**. If the concept is primarily operated on the spoke, reclassify it as a spoke domain with hub CX
+   4. **Red flag**: If a spoke has fewer than 5 domains AND the document dedicates 100+ lines to that spoke → the classification is likely wrong. Re-examine every concept from that spoke section
+
+5.6. **Spoke Persona Walk-Through.** For each spoke surface, identify its primary persona(s) and mentally walk through their daily workflow:
+   - "If I'm a [persona] sitting at the [surface], what are ALL the things I do in a typical day?"
+   - Enumerate every distinct workflow: each workflow with 2+ interacting capabilities is a candidate spoke domain
+   - Cross-reference against the classification table: any daily workflow capability that was classified as hub is suspect
+   - Reclassify as needed — the walk-through is the final validation before presenting to user
+
 6. **Identify gaps** — interview questions the document doesn't answer. These become Phase 2 interview questions.
 
 **Process — Phase 2: Present and Interview the User**
