@@ -27,11 +27,12 @@ Build the decision constraints map from the ideation output, then walk through e
 
 Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**.
 
+- **If `meta/constraints.md` does not exist** → **STOP**: "Constraints file missing. Run `/ideate` to completion — constraint exploration is required before tech stack decisions."
+- **If it exists but has no `## Project Surfaces` section** → **STOP**: "Constraints file is missing Project Surfaces. Run `/ideate-validate` to complete constraint exploration."
+
 Also read `docs/plans/ideation/ideation-index.md` — specifically `## Structural Classification` (authoritative surface list and project shape) and `## Engagement Tier` (gate behavior for this session).
 
-**Tier behavior for tech stack decisions:**
-- 🤖 **Auto**: Agent uses constraints + Deep Think to select best-fit option per axis. Records reasoning. Writes decisions. User reviews all stack decisions at end of shard.
-- 🤝 **Hybrid** / 💬 **Interactive**: Present options, wait for user confirmation per axis (current behavior).
+Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for tech stack decisions.
 
 Build the constraints map:
 
@@ -58,8 +59,10 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 1. Ask the constraint questions for this axis
 2. Filter options based on answers
 3. Present the filtered option table with recommendation
-4. **Interactive/Hybrid**: Wait for user confirmation. **Auto**: Select highest-fit option via Deep Think, write reasoning to `architecture-draft.md`, mark as `[AUTO-CONFIRMED]`.
-5. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key
+4. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
+5. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
+   - **1st failure** → retry bootstrap once with the same key
+   - **2nd failure** → **STOP**: tell the user which key failed verification and ask: "Retry, skip this skill provisioning, or abort?"
 6. Move to next axis
 
 > **Note on backend axis bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct bootstrap keys and must each fire as a separate `/bootstrap-agents` call — do not combine them.
@@ -70,21 +73,27 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 
 Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. Use the brainstorming skill's approach — one decision at a time.
 
+**User indecision handling**: If the user expresses uncertainty ("I don't know", "not sure", "you pick") on any decision:
+- Present your recommendation with clear reasoning
+- If user accepts → proceed with it
+- If user remains uncertain → read `.agent/skills/resolve-ambiguity/SKILL.md` and apply its methodology to narrow the decision space
+- If after ambiguity resolution the user still can't decide → lock your recommendation with a note: "[Agent-recommended, user deferred]" — this can be revisited later via `/propagate-decision`
+
 > **Decision recording**: For each confirmed tech stack decision, read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Tech stack choices have high downstream impact (they constrain frameworks, skills, deployment, and testing). Record each decision to `memory/decisions.md` with upstream/downstream effects.
 
 ### Database: Persistence Map Interview
 
 Instead of a single DATABASE decision pass, use the following structured persistence map interview to identify all required stores.
 
-Read .agent/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store.
+Read .agent/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`) after each store is confirmed.
 
 ### Design Direction
 
-Read `.agent/skills/design-direction/SKILL.md` and follow its interview methodology to determine the project's visual direction. After confirmation, fire bootstrap with `DESIGN_DIRECTION=[confirmed direction]`.
+Read `.agent/skills/design-direction/SKILL.md` and follow its interview methodology to determine the project's visual direction. After confirmation, fire bootstrap with `DESIGN_DIRECTION=[confirmed direction]`. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
 ### Development tooling
 
-Read `.agent/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file.
+Read `.agent/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`) — verify every key.
 
 ### After each tech decision
 
@@ -94,8 +103,8 @@ Read each installed skill's SKILL.md before proceeding. Append the confirmed dec
 
 Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=create-prd` plus only the keys just decided. Bootstrap runs after **each confirmed decision**, not in a batch at the end. At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename.
 
-### Propose next step
+### Next step
 
-All tech stack decisions are locked. Next: Run `/create-prd-architecture` to design the system architecture and data strategy.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-architecture`.
 
-> If invoked standalone, surface via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

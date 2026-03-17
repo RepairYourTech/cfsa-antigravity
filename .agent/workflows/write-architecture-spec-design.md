@@ -80,10 +80,7 @@ If the sub-feature count is **< 10**, proceed directly to Step 1c.
 
 Read `.agent/skills/brainstorming/SKILL.md` and use it to explore any remaining ambiguous sub-features — those marked `[Architecture-only]` that the user hasn't explicitly confirmed, or any sub-feature whose scope boundary (what's in, what's out) is still unclear after 1b.
 
-> **Authoring pattern for Steps 2–7**: After designing each section, (1) present it to the user with the targeted review questions listed below, (2) refine based on their feedback, (3) write the completed section to `docs/plans/ia/[shard-name].md` immediately — do not batch writes until Step 8.
-
-> [!IMPORTANT]
-> **Write-as-you-go is mandatory.** Each section (Steps 2–7) must be written to `docs/plans/ia/[shard-name].md` immediately after user confirmation. If the conversation truncates, all confirmed sections must survive on disk. Never hold confirmed content in-memory waiting for a later write step.
+> **Authoring pattern for Steps 2–7**: (1) Present each section with review questions, (2) follow decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`), (3) write to `docs/plans/ia/[shard-name].md` immediately per write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Write-as-you-go is mandatory — never batch writes.
 
 ## 2. Map all interactions
 
@@ -93,9 +90,9 @@ For each feature in the shard, document:
 - What events are emitted
 - Error states and edge cases
 
-**Review questions**: "Does this capture all the ways a user touches this domain?" / "Are there admin/system-initiated actions I'm missing?" / "What happens in each failure case?"
+**Review questions**: "All ways a user touches this domain?" / "Admin/system-initiated actions missing?" / "What happens in each failure case?"
 
-Write the completed `## Interactions` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation.
+Write `## Interactions` to shard file immediately after confirmation. Follow write verification protocol.
 
 ## 3. Define contracts
 
@@ -107,9 +104,9 @@ For each interaction, define the contract shape:
 - Error shape (specific error codes)
 - Note: actual {{CONTRACT_LIBRARY}} schemas written in BE spec phase
 
-**Review questions**: "Are there fields I'm missing from these requests/responses?" / "Are these error codes specific enough?"
+**Review questions**: "Fields missing from requests/responses?" / "Error codes specific enough?"
 
-Write the completed `## Contracts` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation.
+Write `## Contracts` to shard file immediately after confirmation. Follow write verification protocol.
 
 ## 4. Design data models
 
@@ -120,9 +117,9 @@ Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and load
 
 Define for each entity: tables/collections, fields, types, relationships, indexes, constraints and validation rules.
 
-**Review questions**: "Does this schema capture everything this domain needs to store?" / "Are the relationships and cardinalities correct?" / "Are there derived/computed fields I should account for?"
+**Review questions**: "Schema captures everything?" / "Relationships and cardinalities correct?" / "Derived/computed fields to account for?"
 
-Write the completed `## Data Models` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation.
+Write `## Data Models` to shard file immediately after confirmation. Follow write verification protocol.
 
 > **Decision recording**: For non-trivial data model decisions (schema approach, denormalization trade-offs, index strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**.
 
@@ -136,9 +133,9 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and apply its a
 - Escalation paths (Guardian, Admin)
 - Admin-only operations
 
-**Review questions**: "Can you think of a scenario where a user should be blocked that this matrix allows?" / "Can you think of a scenario where a user should be allowed that this matrix blocks?"
+**Review questions**: "Scenario where a blocked user gets through?" / "Scenario where an allowed user is blocked?"
 
-Write the completed `## Access Control` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation.
+Write `## Access Control` to shard file immediately after confirmation. Follow write verification protocol.
 
 > **Decision recording**: For access control architecture decisions (role hierarchy, ownership model, escalation paths), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Record to `memory/decisions.md`.
 
@@ -150,7 +147,7 @@ Read `.agent/skills/accessibility/references/ia-spec-checklist.md` and follow it
 
 **If surfaces are `api`, `cli`, or `extension` only:** Write `"Not applicable — no visual surfaces"` in the `## Accessibility` section.
 
-Write the completed `## Accessibility` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation.
+Write `## Accessibility` to shard file immediately after confirmation. Follow write verification protocol.
 
 ## 6. Design event schemas (if applicable)
 
@@ -158,7 +155,7 @@ Write the completed `## Accessibility` section to `docs/plans/ia/[shard-name].md
 - Async vs sync processing
 - Retry semantics
 
-Write the completed `## Event Schemas` section to `docs/plans/ia/[shard-name].md` immediately after user confirmation (if applicable).
+Write `## Event Schemas` to shard file immediately after confirmation (if applicable). Follow write verification protocol.
 
 ## 7. Document edge cases
 

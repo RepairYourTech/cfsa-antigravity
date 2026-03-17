@@ -17,32 +17,32 @@ pipeline:
 
 Cascade the new content from the entry point through all downstream layers with existing content, assess implementation impact, run a consistency check, and write the evolution record.
 
-> **Prerequisite**: The entry point document must already contain the new content (written by `/evolve-feature-classify` Step 4). The cascade scope must be determined (Step 5 output).
+> **Prerequisite**: Entry point document must contain the new content (from `/evolve-feature-classify` Step 4). Cascade scope must be determined (Step 5 output).
+
+**Locked decision conflict check**: Before cascading, scan the new content against locked decisions in upstream layers:
+1. Read the architecture design document (`docs/plans/*-architecture-design.md`) for locked constraints
+2. Compare each element of the new feature against: tech stack decisions, data placement strategy, security model, performance budgets
+3. **If conflict detected** → **STOP**: "New feature '[name]' conflicts with locked decision: [decision]. Options: (1) Modify the feature to work within the constraint, (2) Use `/propagate-decision` to change the locked decision first, then re-run `/evolve-feature`."
+4. **If no conflicts** → proceed to Step 1.
 
 ---
 
 ## 1. Cascade through each downstream layer
 
-Read .agent/skills/technical-writer/SKILL.md and apply its writing standards to all spec additions and the evolution record.
+Read `.agent/skills/technical-writer/SKILL.md` for writing standards.
+
+Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Cascade Layer Guidance** table.
 
 For each downstream layer with existing content (in order: architecture → IA → BE → FE → phase plan):
 
-1. **Read existing documents** in the layer
-2. **Determine what the new feature means for this layer** — what sections need additions, what contracts change, what new components are needed
-3. **Write the additions** — new sections, new entries in existing tables, new acceptance criteria, new contracts. Write at the same depth and quality as the existing content in the layer.
-4. **Present additions to user** — show exactly what was added and where
+1. Read existing documents in the layer
+2. Determine what the new feature means for this layer — consult the guidance table for what to add
+3. Write the additions at the same depth and quality as existing content
+4. Present additions to user
 
-**STOP at each layer** — do not cascade to the next layer until the user approves the current layer's additions.
+**STOP at each layer** — do not cascade to next until user approves.
 
-Layer-specific guidance:
-
-- **Architecture layer**: Add new components, update system diagrams references, add NFRs, update integration points
-- **IA layer**: Add new domain interactions, update contracts, add data model changes, update access control
-- **BE layer**: Add new API endpoints, update schemas, add middleware requirements, update validation rules
-- **FE layer**: Add new components, update state management, add new routes, update accessibility requirements
-- **Phase plan**: Add new slices or update existing slice acceptance criteria (see Step 2)
-
-> After writing additions to any spec document in this step, append a row to that spec's `## Changelog` table recording: today's date, `'Evolution: [brief description of what was added]'`, this workflow (`/evolve-feature-cascade`), and the sections of the spec that were updated. If the spec does not yet have a `## Changelog` section, add one following the template in `.agent/skills/prd-templates/references/be-spec-template.md` (for BE specs) or the equivalent FE/IA template before appending the row.
+> After writing to any spec document, append a `## Changelog` row: date, `'Evolution: [description]'`, workflow, updated sections. If no `## Changelog` exists, add one from the template in `.agent/skills/prd-templates/references/be-spec-template.md`.
 
 ---
 
@@ -50,91 +50,47 @@ Layer-specific guidance:
 
 If `docs/plans/phases/` exists and contains phase plans:
 
-1. **Check in-progress slices** — do any currently in-progress slices need their acceptance criteria updated? List the affected criteria.
-2. **Check completed slices** — do any completed slices that may need revisiting? (This is a red flag — document it clearly with regression risk assessment)
-3. **Determine if new slices are needed** — does the new feature require new implementation slices in the current phase? If yes, draft the slice names and acceptance criteria.
-4. **Determine if phase plan update is required** — does the scope require changes to the phase plan structure?
+1. Check in-progress slices for affected acceptance criteria
+2. Check completed slices that may need revisiting (flag regression risk)
+3. Determine if new slices are needed
+4. Determine if phase plan update is required
 
-Present the impact assessment:
+Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Impact Assessment Format** and use it to present.
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Implementation Impact
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-In-progress slices affected:              [list or "none"]
-Completed slices that may need revisiting: [list or "none"]
-New slices needed:                        [list or "none"]
-Phase plan update required:               [yes/no]
-
-Recommended action: [specific next step]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-```
-
-If no phase plans exist, skip this step and note: "No phase plans exist yet — implementation impact will be assessed during `/plan-phase`."
+If no phase plans exist: "No phase plans yet — impact assessed during `/plan-phase`."
 
 ---
 
 ## 3. Run consistency check
 
-Read .agent/skills/resolve-ambiguity/SKILL.md and follow its methodology.
+Read `.agent/skills/resolve-ambiguity/SKILL.md` and follow its methodology.
 
-For every document that received additions in Step 1:
+For every document that received additions:
+1. Re-read full document — verify additions integrate correctly
+2. Check for internal contradictions
+3. Check cross-references between changed documents
+4. Check against locked decisions
 
-1. **Re-read the full document** — verify the additions integrate correctly with existing content
-2. **Check for internal contradictions** — do the additions conflict with anything else in the same document?
-3. **Check cross-references between changed documents** — if multiple documents were updated, verify they are consistent with each other
-4. **Check against locked decisions** — do the additions contradict any locked architectural decisions?
-
-Report any issues found. **Do not auto-fix** — present them to the user for review.
+Report issues. **Do not auto-fix** — present to user.
 
 ---
 
 ## 4. Write evolution record
 
-Write `docs/audits/evolve-feature-[name]-[date].md` recording:
-
-- **Feature name** — short identifier for the evolution
-- **Change type** — classification from Step 2 of `/evolve-feature-classify`
-- **Entry point** — which document received the initial content
-- **New content written** — summary of what was added at the entry point
-- **Layers updated** — list of downstream layers that received additions
-- **Per-layer additions** — what was added at each layer (summary, not full content)
-- **Implementation impact** — assessment from Step 2 (if applicable)
-- **Consistency check results** — pass/fail with details
-- **Timestamp** of the evolution run
+Write `docs/audits/evolve-feature-[name]-[date].md` recording: feature name, change type, entry point, new content summary, layers updated, per-layer additions, implementation impact, consistency check results, timestamp.
 
 ---
 
 ## 4.5. Bootstrap gate — new dependency check
 
-Before closing the cascade, scan every document that was updated in Step 1 for any technology, library, or service referenced in the new content that does not have a corresponding installed skill directory in `.agent/skills/`.
+Scan updated documents for technologies without corresponding skill directories.
 
-For each missing skill:
-1. Identify the technology (e.g., WebSocket, S3 storage, Stripe, Redis)
-2. Read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents NEW_DEPENDENCY=[technology]`
-3. Confirm the matching skill is installed before proceeding to Step 5
-
-If no new unregistered technologies were introduced, skip and proceed to Step 5.
+For each missing skill: read `.agent/workflows/bootstrap-agents.md` and invoke. **HARD GATE**: follow bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
 ---
 
 ## 5. Propose next steps
 
-Display the completion summary:
+Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Completion Summary Format** and present.
 
-```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Feature Evolution Complete
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Entry point:       [document]
-Layers updated:    [list]
-New content:       [summary]
-Implementation:    [impact summary]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-❗ **Mandatory next step — do not skip**: The evolution just added or modified content across [N] layers. Evolution bypasses the normal deepening phase — the audit is the quality gate that replaces it.
-
-Run `/audit-ambiguity` on the affected layers before any implementation work touches these documents. The affected layers are: [list the layers that were updated during the cascade — populated from Step 1's output].
-
-This is not optional. Under-specified evolution content is the single most common source of spec drift. The audit catches what the inline micro check may have missed at a cross-document level.
-```
+❗ **Mandatory next step**: Run `/audit-ambiguity` on affected layers before any implementation work. List the layers updated during Step 1.

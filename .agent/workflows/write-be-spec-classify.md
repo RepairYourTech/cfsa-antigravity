@@ -11,7 +11,7 @@ pipeline:
   successors: [write-be-spec-write]
   skills: [api-design-principles, database-schema-design, error-handling-patterns, find-skills, logging-best-practices, migration-management, prd-templates, resolve-ambiguity, testing-strategist, workflow-automation]
   calls-bootstrap: false
-requires_placeholders: [LANGUAGE_SKILL, DATABASE_SKILLS, AUTH_SKILL, BACKEND_FRAMEWORK_SKILL, ORM_SKILL, UNIT_TESTING_SKILL]
+requires_placeholders: [DATABASE_SKILLS, SECURITY_SKILLS, SURFACES]
 ---
 
 // turbo-all
@@ -20,152 +20,74 @@ requires_placeholders: [LANGUAGE_SKILL, DATABASE_SKILLS, AUTH_SKILL, BACKEND_FRA
 
 Identify the target IA shard, classify it, load skills, and read all source material including cross-references and deep dives.
 
-**Prerequisite**: IA shard must be complete (status ✅ in `docs/plans/ia/index.md`). If not, tell the user to run `/write-architecture-spec` first.
+**Prerequisite**: IA shard must be complete (status ✅ in `docs/plans/ia/index.md`). If not → **STOP**: run `/write-architecture-spec` first.
 
 ---
 
 ## 1. Verify IA layer is complete, then identify the target shard
 
-Before identifying the target shard, verify the entire IA layer is ready:
-
 1. Read `docs/plans/ia/index.md`
 2. Check every shard's status column
-3. **Hard stop** if any shard is not ✅:
-
-> ❌ **Cannot write BE spec — IA layer is incomplete.**
-> The following shards are not yet complete:
-> - [shard-name]: [status]
->
-> Run `/write-architecture-spec` for each incomplete shard before proceeding to `/write-be-spec`.
-
-**Why**: BE specs resolve cross-shard IA references. If referenced shards are still skeletons, the BE spec will contain gaps or guesses that cascade into FE specs and implementation. The cost of waiting for IA completion is hours; the cost of writing BE specs against incomplete IA is days of rework.
-
----
+3. If any shard is not ✅ → **STOP**: list incomplete shards and redirect to `/write-architecture-spec`
 
 Determine which IA shard to process. Read it in full before proceeding.
 
 ## 2. Classify the shard
 
-Not every IA shard produces the same output. Before writing anything, classify the shard:
+Read `.agent/skills/prd-templates/references/be-spec-classification.md` — follow the classification types, multi-domain split heuristic, and detection criteria.
 
-| Classification | Description | BE Spec Output | How to Detect |
-|---------------|-------------|----------------|---------------|
-| **Feature domain** | Defines user interactions, data models, and API-facing behavior for a single cohesive domain | 1 BE spec | Has data model + user flows + access model that imply API endpoints |
-| **Multi-domain** | Covers multiple distinct backend sub-systems that share a product surface but have independent APIs | N BE specs (split along sub-feature boundaries) | Section headers map to independent API surfaces; data models don't overlap between sections; could be developed by different teams |
-| **Cross-cutting** | Defines shared patterns consumed by all feature specs (auth, API conventions, error handling) | 1 cross-cutting BE spec (`00-*`) | Content is about "how all endpoints work" not "what this feature does" |
-| **Structural reference** | Maps structure, naming, or routing without defining API behavior | 0 BE specs | No data model, no user flows, no endpoints — just reference tables |
-| **Composite** | Contains both a structural reference section AND feature behavior (e.g., URL mapping + vanity URL lifecycle) | Depends — feature portion may belong in another shard's BE spec | Look for cross-references pointing the feature content to its owning domain |
+Present the classification to the user before proceeding. Include: classification type + reasoning, expected BE spec count, split boundaries (if multi-domain), Referenced Material Inventory.
 
-**Multi-domain split heuristic — sub-feature endpoint inventory:**
-
-Before classifying a shard as multi-domain, build a **sub-feature endpoint inventory**:
-
-| Sub-feature | Expected endpoints | Data model(s) | Independent? |
-|-------------|-------------------|---------------|-------------|
-| [sub-feature] | `POST /api/...`, `GET /api/...` | [table/collection names] | [Yes/No] |
-| [sub-feature] | `PUT /api/...`, `DELETE /api/...` | [table/collection names] | [Yes/No] |
-
-**Split criterion**: Two or more independent groups each have their own data model and could be assigned to a different developer without coordination → split into separate BE specs. Section header count alone is **NOT** the criterion — independence of data models and API surfaces is.
-
-**Present the classification to the user before proceeding.** Include:
-- The classification and reasoning
-- How many BE specs will be produced
-- For multi-domain: the proposed split boundaries
-- For structural reference: confirmation that no BE spec is needed
+**STOP** — do NOT proceed until the user explicitly confirms the classification.
 
 ## 2.5. Verify surface stack map is populated
 
-Read the surface stack map from `.agent/instructions/tech-stack.md`. Determine this shard's surface from its directory path:
-- `docs/plans/shared/be/` or `docs/plans/be/` → surface `shared`
-- `docs/plans/web/be/` → surface `web`
-- `docs/plans/desktop/be/` → surface `desktop`
-- etc.
+Read the surface stack map from `.agent/instructions/tech-stack.md`. Determine this shard's surface from its directory path.
 
-Check that the following map cells have filled values for this shard's surface:
-- **Languages** (per-surface)
-- **Databases** (per-surface)
-- **BE Frameworks** (per-surface)
-- **ORMs** (per-surface)
-- **Unit Tests** (per-surface)
-- **Auth** (cross-cutting)
+Required map cells: Languages, Databases, BE Frameworks, ORMs, Unit Tests (all per-surface), Auth (cross-cutting).
 
-If any required cells are empty → **stop** and tell the user: *"Surface stack map is not fully populated for the `{surface}` surface. Run `/create-prd` first to make tech stack decisions and trigger bootstrap provisioning, then return to `/write-be-spec`."*
-
-Only proceed to Step 3 when all required map cells are filled.
+If any required cells are empty → **STOP**: run `/create-prd` first.
 
 ## 3. Load skill bundle
 
-Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-be-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
-- `.agent/skills/api-design-principles/SKILL.md`
-- `.agent/skills/error-handling-patterns/SKILL.md`
-- `.agent/skills/database-schema-design/SKILL.md`
-- `.agent/skills/migration-management/SKILL.md`
-- `.agent/skills/testing-strategist/SKILL.md`
-- `.agent/skills/logging-best-practices/SKILL.md`
+Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the Skill Loading Protocol for `write-be-spec-classify`.
 
-**Async/background processing (conditional)**: If the IA shard includes background processing, async operations, event-driven workflows, or queue-based processing, also read `.agent/skills/workflow-automation/SKILL.md`.
+Also read bundled skills: `api-design-principles`, `error-handling-patterns`, `database-schema-design`, `migration-management`, `testing-strategist`, `logging-best-practices`.
 
-### Ambiguity resolution
+**Conditional**: If IA shard includes async/background/queue processing → also read `workflow-automation`.
 
-When writing the BE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA specs, **do not guess**. Load and follow `.agent/skills/resolve-ambiguity/SKILL.md` to resolve it first.
+When any requirement is unresolvable → load and follow `.agent/skills/resolve-ambiguity/SKILL.md`.
 
 ## 4. Read reference documents
 
-Read the file at `docs/plans/be/index.md` (conventions template) and the file at `docs/plans/index.md` (master index, tech stack).
-
-Also read `docs/plans/data-placement-strategy.md` if it exists — this document specifies which entities live in which store and defines PII boundaries. Every BE spec must place data consistently with this strategy.
+Read `docs/plans/be/index.md` (conventions), `docs/plans/index.md` (master index), and `docs/plans/data-placement-strategy.md` (entity placement + PII boundaries).
 
 ## 5. Read the IA source material
 
-This is the most critical step. Read **all** of the following:
-
 ### 5a. Primary shard
-Read the file at `docs/plans/ia/[NN-shard-name].md` (the full IA shard).
+Read `docs/plans/ia/[NN-shard-name].md` in full.
 
 ### 5b. Resolve cross-shard references
-Scan the primary shard for all cross-references to other shards (look for `See [shard NN](...)`, `defined in [shard NN](...)`, or `Related shards:` headers). For each reference:
-1. Read the referenced section (not the entire shard — just the relevant section)
-2. Note what content is being borrowed (data model? access rules? edge cases?)
-3. Record the reference as: `Source: [shard-file.md] § [section-name] (lines N–M)`
+Scan for cross-references. For each: read the referenced section, note borrowed content, record as: `Source: [file] § [section] (lines N–M)`.
 
-Build a **Referenced Material Inventory**:
-```
-Primary: 09-playground.md (full shard)
-Cross-refs:
-  - 02-account-architecture.md § Junior Account Controls (lines 680–706)
-  - 03-rbac-policies.md § Permission Taxonomy: playground.* (lines 45–52)
-  - 12-resources-settings.md § Credentials Management (lines 93–174)
-```
+Build a **Referenced Material Inventory**.
 
 ### 5c. Read deep dives
-List the files in `docs/plans/ia/deep-dives/`.
-Identify which deep dives are referenced by the primary shard. **Read each referenced deep dive in full** — these contain architectural decisions (technology choices, protocol designs, phasing strategies) that the BE spec must implement. Extract and record:
-- Key decisions (what was decided and why)
-- Architectural constraints (what the BE spec must conform to)
-- Data schemas or contracts defined in the deep dive
+List `docs/plans/ia/deep-dives/`. Read each referenced deep dive in full. Extract key decisions, architectural constraints, data schemas.
 
-### 5d. Read the IA shard's testability section
-If the shard has a testability/acceptance criteria section, read it — these become the BE spec's performance targets and test requirements.
+### 5d. Read testability section
+If the shard has testability/acceptance criteria → read for performance targets and test requirements.
 
 ## 6. Check cross-cutting specs
 
-Read any completed cross-cutting specs — feature specs must follow their patterns. List the files matching `docs/plans/be/00-*.md` (cross-cutting specs).
+Read any completed cross-cutting specs at `docs/plans/be/00-*.md`.
 
 ## 7. Present classification and request approval
 
-Include the expected endpoint inventory in the classification presentation. The user must verify split boundaries align with the actual API surface before approving.
+Use `notify_user` presenting: classification, expected spec count, Referenced Material Inventory, split boundaries (if applicable).
 
-Call `notify_user` presenting:
-- The classification type and reasoning (from Step 2)
-- The number of BE specs to be produced
-- The Referenced Material Inventory (from Step 5)
-- For multi-domain splits: the proposed split boundaries
+**STOP** — do NOT proceed until the user confirms.
 
-> **Do NOT proceed to `/write-be-spec-write` until the user confirms the classification is correct. For multi-domain splits, the user must confirm the split boundaries.**
+After approval: read `.agent/skills/prd-templates/references/be-spec-template.md` → create spec file stub at `docs/plans/be/[NN-feature-name].md`.
 
-Once approved, run `/write-be-spec-write`.
-
-> **Seed the spec file**: After classification is approved, read `.agent/skills/prd-templates/references/be-spec-template.md` for the **BE Spec Seed Stub** template. Create the spec file at `docs/plans/be/[NN-feature-name].md` using the stub, filling in the classification details and Referenced Material Inventory from above.
-
-For structural reference classification (0 BE specs): confirm no write shard is needed and propose moving to the next IA shard instead.
-
+For structural reference (0 BE specs): confirm no write shard needed, propose next IA shard.

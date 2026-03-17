@@ -19,7 +19,9 @@ pipeline:
 
 Run iterative deepening passes, write the completed spec, update indexes, run the ambiguity gate, and present for review.
 
-**Prerequisite**: Read the shard file at `docs/plans/ia/[shard-name].md`. Sections should be filled in from the design shard (not skeleton placeholders). If sections are still skeleton placeholders, the design shard has not completed — run `/write-architecture-spec-design` first before running this shard.
+**Prerequisite**: Read the shard file at `docs/plans/ia/[shard-name].md`. Sections should be filled in from the design shard (not skeleton placeholders).
+
+**Skeleton detection**: If the file contains `<!-- TODO -->` markers, `[TBD]` placeholders, or sections with only a heading and no body text → the design shard has not completed. **STOP**: run `/write-architecture-spec-design` first.
 
 ---
 
@@ -73,6 +75,10 @@ Add any new security edge cases or access rules. Present findings to the user.
 If any pass produces significant new content, do another pass — the new content
 may reveal further edge cases. Stop when a pass produces no meaningful additions.
 
+**Pass loop guard**: Track total pass count.
+- Passes 4-5 → normal. Continue if producing meaningful additions.
+- **After pass 5** → **STOP**: "5 deepening passes completed. Still producing new content. Present remaining gaps to user: continue deepening or accept current spec depth?"
+
 ## 9. Write the spec to `docs/plans/ia/[shard-name].md`
 
 Read .agent/skills/technical-writer/SKILL.md for the spec writing step.
@@ -91,7 +97,7 @@ to mark this shard's IA column as complete in `.agent/progress/spec-pipeline.md`
 ## 11.5. Bootstrap Tech Stack Skills (if applicable)
 
 If the shard you just completed is `00-architecture-design.md` (which definitively chooses the project's tech stack):
-Read `.agent/workflows/bootstrap-agents.md` and execute its utility instructions immediately to fill placeholders and provision skills based on the finalized tech stack.
+Read `.agent/workflows/bootstrap-agents.md` and execute its utility instructions immediately to fill placeholders and provision skills based on the finalized tech stack. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm all tech stack placeholders are filled and all triggered skills are installed before proceeding.
 
 ## 12. Ambiguity gate
 

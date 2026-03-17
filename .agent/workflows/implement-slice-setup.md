@@ -17,7 +17,7 @@ pipeline:
 
 Check progress state, load skills, read the slice, detect parallel mode, and write the contract.
 
-**Prerequisite**: Phase plan must exist with slice acceptance criteria. If not, tell the user to run `/plan-phase` first.
+**Prerequisite**: Phase plan must exist with slice acceptance criteria. If the phase plan file does not exist → **STOP**: tell the user to run `/plan-phase` first.
 
 ---
 
@@ -64,13 +64,23 @@ Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and load
 
 Use `find-skills` to discover a test framework skill if needed.
 
-If this slice introduces a new dependency, read `.agent/workflows/bootstrap-agents.md` and execute with the new value.
+If this slice introduces a new dependency, read `.agent/workflows/bootstrap-agents.md` and execute with the new value. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
 ---
 
 ## 1. Read the slice
 
 Read the slice's acceptance criteria from the phase plan.
+
+## 1.25. Load spec context
+
+For each acceptance criterion, trace its spec citation (e.g., `[BE §3.2]`, `[FE §LoginForm]`) back to the source spec:
+
+1. Read the full §section from every cited BE spec — not just the contract shape, but the error handling, edge cases, access control rules, rate limits, and concurrency notes
+2. Read the full §section from every cited FE spec — component props, states, interactions, responsive behavior, accessibility rules
+3. Read any IA shard sections cited by the BE spec's Source Map — especially `## Edge Cases` and `## Access Control`
+
+This context persists throughout the TDD cycle. The acceptance criteria define WHAT to test; the spec context defines HOW DEEP to test it.
 
 ## 1.5. Check for parallel mode
 
@@ -108,8 +118,8 @@ Load the Languages skill(s) from this slice's surface row per the skill loading 
 
 Define request/response shapes as {{CONTRACT_LIBRARY}} schemas in the contracts directory (see `.agent/instructions/structure.md`). This is the source of truth.
 
-### Propose next step
+### Next step
 
-Contract written. Next: `/implement-slice-tdd` for the Red→Green→Refactor cycle.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/implement-slice-tdd`.
 
-> If invoked standalone, surface via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

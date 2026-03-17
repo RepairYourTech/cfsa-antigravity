@@ -33,22 +33,7 @@ shards: [ideate-extract, ideate-discover, ideate-validate]
 
 After input classification, the user chooses how much involvement they want. All tiers are available for all input types — the pipeline recommends a default but the user picks.
 
-| Tier | Gate behavior | Default for |
-|------|---------------|-------------|
-| 🤖 **Auto** | Pipeline uses Deep Think to self-interview at every gate. User reviews compiled output at the end. | — |
-| 🤝 **Hybrid** | Structural/mechanical gates auto-confirm. Product decisions (personas, MoSCoW, competitive positioning, constraints) pause for user. | Rich doc, thin doc, chat transcript |
-| 💬 **Interactive** | Every gate pauses for explicit user confirmation. | Verbal / one-liner |
-
-**Full matrix — Input × Tier:**
-
-| Input Type | 🤖 Auto | 🤝 Hybrid | 💬 Interactive |
-|---|---|---|---|
-| Rich document | AI extracts + self-interviews gaps | AI extracts, pauses for product calls | AI extracts, pauses at every gate |
-| Thin document | AI expands all domains independently | AI expands, pauses for product calls | AI expands with user at every step |
-| Chat transcript | AI filters noise + self-interviews | AI filters, pauses for product calls | AI filters with user validation |
-| Verbal / one-liner | AI generates vision from scratch via Deep Think | AI generates, pauses for product calls | Full traditional interview |
-
-**Quality guarantee**: All input types and engagement tiers produce the **same output quality** using the same fractal structure. The ideation output from an Auto one-liner is structurally identical to an Interactive rich document. Every node has an index, CX file, and children. Every feature has a Role Lens. Only the amount of human involvement differs.
+Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for ideation decisions. The user chooses their tier after input classification. All tiers produce the **same output quality** using the same fractal structure — only the amount of human involvement differs.
 
 Transform a raw idea into comprehensive, structured ideation output through exhaustive recursive exploration with the Deep Think protocol.
 
@@ -66,7 +51,32 @@ Transform a raw idea into comprehensive, structured ideation output through exha
 Check whether `docs/plans/ideation/ideation-index.md` already exists.
 
 - **If it does NOT exist** → This is a fresh ideation. Proceed to Shard 1.
-- **If it DOES exist** → **STOP**. Present to the user:
+- **If it exists but is corrupt** (file size < 100 bytes OR missing `## Structural Classification` section) → Treat as fresh. Warn: "Found a corrupt ideation-index.md — treating as a fresh start." Delete the corrupt file and proceed to Shard 1.
+- **If it DOES exist and is valid** → Check for downstream artifacts before offering overwrite:
+
+### 0.1. Downstream cascade check
+
+Scan for downstream pipeline output:
+- `docs/plans/*-architecture-design.md`
+- `docs/plans/ia/` (any `.md` files besides `index.md`)
+- `docs/plans/be/` (any `.md` files besides `index.md`)
+- `docs/plans/fe/` (any `.md` files besides `index.md`)
+
+**If downstream artifacts exist** → **STOP**. Present:
+
+> ⚠️ **Ideation output AND downstream specs exist.**
+>
+> Re-running `/ideate` will invalidate **all** downstream work:
+> - Architecture design document
+> - IA specs (N shards)
+> - BE specs (N specs)
+> - FE specs (N specs)
+>
+> You would need to re-run the entire pipeline from `/create-prd` forward.
+>
+> **Overwrite** (start fresh, accept cascade invalidation) or **Abort**?
+
+**If no downstream artifacts exist** → Present the standard overwrite prompt:
 
 > ⚠️ **Ideation output already exists** at `docs/plans/ideation/ideation-index.md`.
 >
@@ -109,7 +119,10 @@ Explores constraints, success metrics, and competitive positioning. Runs leaf-no
 > The quality self-check and review request are handled by `ideate-validate.md` (Step 12).
 > The parent does not duplicate shard-level quality gates.
 
-### Proposed next steps
+### Next step
 
-**Mandatory next step**: Run `/audit-ambiguity ideation` for all inputs, regardless of input type. Even a rich document can have gaps the agent missed. The audit is cheap; the cost of a gap propagating to architecture is high. Do not propose `/create-prd` until `/audit-ambiguity ideation` has run.
+**STOP** — do NOT propose `/create-prd` or any other pipeline workflow. The only valid next step is:
 
+- `/audit-ambiguity ideation` — mandatory coverage verification before `/create-prd` can begin.
+
+> If the user wants to pause, save progress and note where to resume. When resuming, the next step remains `/audit-ambiguity ideation`.

@@ -61,6 +61,11 @@ Document all consumers:
 - Test files
 - Other contracts that reference this one
 
+**Zero-consumer path**: If no consumers are found (only the schema definition itself):
+- Confirm with user: "Contract [name] has zero consumers. It can be modified directly without migration safeguards. Proceed with simple edit?"
+- If confirmed → skip Steps 3-5, apply the schema change directly, run validation (Step 6), then proceed to Step 6.5.
+- If user declines → proceed normally (the contract may have planned but not-yet-implemented consumers).
+
 ### 2.5. API versioning check (conditional)
 
 If any consumer is a **public-facing API endpoint** (i.e., called by external clients, not just internal frontend):
@@ -96,9 +101,9 @@ Modify the {{CONTRACT_LIBRARY}} schema. For breaking changes:
 
 ## 4.5. New dependency check
 
-If the contract change introduces a dependency not currently in the skill set — for example, a new validation library plugin, a schema extension, a binary serialization library, or a new validation pattern — read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents NEW_DEPENDENCY=[package]` before updating consumers in Step 5.
+If the contract change introduces a dependency not currently in the skill set — for example, a new validation library plugin, a schema extension, a binary serialization library, or a new validation pattern — read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents NEW_DEPENDENCY=[package]` before updating consumers in Step 5. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
-Confirm the matching skill is installed (or no new dependency was introduced) before proceeding to Step 5.
+If no new dependency was introduced, proceed directly to Step 5.
 
 ## 5. Update all consumers
 

@@ -17,102 +17,48 @@ pipeline:
 
 # Ideate — Discover
 
-Explore domains through recursive breadth-before-depth with the Deep Think protocol. Write to the fractal folder structure — every node gets an index, CX file, and children.
+Explore domains through recursive breadth-before-depth with the Deep Think protocol. Write to the fractal folder structure.
 
-**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with the fractal folder structure seeded. If this file does not exist → **STOP**: "Extraction output missing — the fractal folder structure has not been seeded. Run `/ideate-extract` first before proceeding to discovery." Do not proceed without this output.
+**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with the fractal folder structure seeded. If missing → **STOP**: "Run `/ideate-extract` first."
 
 ---
 
-## 3. Domain Exploration — Recursive Model
+## 2.4. Mid-shard resumption check
 
-Read `.agent/skills/idea-extraction/SKILL.md` — follow the Recursive Domain Exhaustion Protocol, Deep Think Protocol, Node Classification Gate, and Reactive Depth Protocol.
+Scan `docs/plans/ideation/` for existing domain folders and feature files.
 
-Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ideation/ideation-index.md`.
+- **If 0 domain folders exist** → fresh exploration. Proceed to Step 2.5.
+- **If domain folders exist but ideation-index.md `## Domain Map` is incomplete** (some domains listed but not all have `[DEEP]`/`[EXHAUSTED]`) → this is a resumed session. Log: "Resuming exploration. [N] of [M] domains already explored." Skip already-completed domains and continue from the first incomplete one.
+- **If all domains are marked `[DEEP]` or `[EXHAUSTED]`** → exploration is complete. Skip to Step 4 (problem exploration) if not yet done, otherwise skip to `/ideate-validate`.
 
 ## 2.5. Read Engagement Tier
 
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`. Apply gate behavior rules for this session:
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
 
-| Tier | Structural gates (domain maps, classification, sub-domain structure) | Product gates (personas, MoSCoW, feature scope, competitive positioning) |
-|------|----------------------------------------------------------------------|-------------------------------------------------------------------------|
-| 🤖 **Auto** | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed |
-| 🤝 **Hybrid** | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed | **Pause for user**: present findings, wait for explicit confirmation |
-| 💬 **Interactive** | **Pause for user**: present findings, wait for explicit confirmation | **Pause for user**: present findings, wait for explicit confirmation |
+- **If the section exists** → apply the specified tier.
+- **If the section is missing** → default to **Hybrid** tier. Warn: "Engagement tier not found in ideation-index.md. Defaulting to Hybrid. Override now or continue?"
+- **If the value is not one of Auto/Hybrid/Interactive** → **STOP**: "Invalid engagement tier '[value]' in ideation-index.md. Expected: Auto, Hybrid, or Interactive."
+
+Read `.agent/skills/prd-templates/references/engagement-tier-protocol.md` — apply the tier's gate behavior for structural gates and product gates throughout this shard.
 
 > [!IMPORTANT]
-> **Auto-confirmed gates must still write.** When a gate is auto-confirmed, the agent writes the Deep Think reasoning and decision to the relevant file immediately — just as if the user had confirmed it. The file trail must be identical regardless of tier. This ensures the Auto tier review checkpoint in `ideate-validate` has full traceability.
+> **Auto-confirmed gates must still write.** When a gate is auto-confirmed, the agent writes the Deep Think reasoning and decision to the relevant file immediately. The file trail must be identical regardless of tier.
 
-### Full Mode (recommended for 3+ domains)
+## 3. Domain Exploration — Recursive Model
 
-#### Level 0 — Global Domain Map
+Read `.agent/skills/idea-extraction/SKILL.md` — follow the **Recursive Domain Exhaustion Protocol**, **Deep Think Protocol**, **Node Classification Gate**, and **Reactive Depth Protocol**.
 
-1. Read `ideation-index.md` for currently identified domains and structural classification
-2. Apply Deep Think: "What domains would I expect for this product type?"
-3. For each confirmed domain, run the **Node Classification Gate** (from skill):
-   - Determine placement (surface folder, hub, shared, or top-level)
-   - Create domain folder: `{NN}-{slug}/` + `{slug}-index.md` + `{slug}-cx.md`
-4. Note preliminary cross-cuts:
-   - In the relevant parent's CX file (surface CX or global CX)
-   - In `ideation-cx.md` if cross-surface
-5. Update `ideation-index.md` structure map with paths
-6. **Gate** *(structural)*: Present domain map. **Interactive/Hybrid**: User confirms before Level 1. **Auto**: Auto-confirm with Deep Think reasoning written to `ideation-index.md`.
+Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ideation/ideation-index.md`.
 
-#### Level 1 — Domain Breadth Sweep
+Route to the correct exploration mode based on what was selected in `ideate-extract` Step 1.6.5:
 
-For each domain (dependency order — foundational first):
-
-1. List all sub-areas/capabilities within the domain
-2. **Deep Think**: "What sub-areas would an expert expect?"
-3. Run **Node Classification Gate** for each:
-   - 2+ interacting capabilities → **sub-domain** (create folder + index + CX)
-   - Single capability → **feature** (create `.md` file from `fractal-feature-template.md`)
-4. Update domain index (Children table + **Role Matrix**)
-5. Note cross-cuts in the domain's CX file
-6. **NEW DOMAINS DISCOVERED?** → Classify, create, update index, loop to Level 0
-7. Mark domain status as `[BREADTH]`
-8. **Gate** *(structural)*: Pause after EACH domain. **Interactive/Hybrid**: "Here's what I mapped for [Domain]. Missing anything?" After ALL: "All domains at BREADTH. Ready to drill?" **Auto**: Auto-confirm with Deep Think reasoning written to domain index.
-
-#### Level 2+ — Vertical Drilling
-
-For each domain (dependency order), for each child:
-
-1. Apply Exhaustion Questions (entity, feature, user, integration)
-2. **Deep Think** per child — edge cases, interactions, failure modes
-3. For **feature files**: fill all sections (Behavior, Edge Cases, States, **Role Lens**)
-4. For **sub-domains**: drill their child features recursively
-5. Record Deep Think outcomes in each feature file's Deep Think Annotations table
-6. Cross-cuts with evidence → add to parent's CX file with synthesis questions
-7. **Feature reveals 2+ interacting capabilities?** → Run **Promotion Protocol** (convert .md to folder)
-8. **NEW DOMAINS DISCOVERED?** → Loop to Level 0
-9. When Deep Think yields zero hypotheses AND user confirms (or auto-confirms for Auto tier) → mark `[EXHAUSTED]`
-10. Status propagation: all children `[EXHAUSTED]` → node is `[EXHAUSTED]`
-11. **Gate** *(product)*: Pause after each domain is drilled. **Interactive**: Full review. **Hybrid**: Pause for review. **Auto**: Auto-confirm with Deep Think reasoning written to domain index.
-
-#### Cross-Cut Synthesis (Continuous)
-
-Cross-cuts are identified continuously, but after all domains reach `[DEEP]`, do a final review:
-
-1. Read ALL CX files at every level (global, surface, domain, sub-domain)
-2. For any entries at Medium/Low confidence, ask the five synthesis questions (per `fractal-cx-template.md`)
-3. Document confirmed interactions with role scoping
-4. Record rejected pairs with reasoning
-5. Check second-order cross-cuts: "Do any CONFIRMED pairs cross-cut each other?"
-
-### Vertical Mode
-
-Identify shallowest leaf nodes. Drive to `[DEEP]`/`[EXHAUSTED]` with Deep Think. Fill Role Lens in all feature files. Cross-cut watch active — log to appropriate CX files. Do not introduce new domains unless user requests.
-
-### Horizontal Mode
-
-Audit for missing domains with Deep Think. Create domain folders (with Classification Gate) for confirmed new domains. Level 1 breadth sweep on each. Offer vertical drilling after.
-
-### Cross-cutting Mode (standalone)
-
-Read all CX files + feature files' cross-cut notes. Identify interaction points. Run synthesis questions on unresolved pairs. Document in appropriate CX files.
-
-### Combination / As-is Mode
-
-Combination: user specifies sequence. As-is: skip expansion, run exhaustion check, but still scan for obvious CX candidates.
+- **Full exploration** → Run Level 0 → Level 1 → Level 2+ as defined in `idea-extraction/SKILL.md` → `## Recursive Domain Exhaustion Protocol`. Apply tier-appropriate gate behavior at each level.
+- **Vertical** → Identify shallowest leaf nodes. Drive to `[DEEP]`/`[EXHAUSTED]` with Deep Think. Do not introduce new domains unless user requests.
+- **Horizontal** → Audit for missing domains with Deep Think. Create domain folders (with Classification Gate). Level 1 breadth sweep on each. Offer vertical drilling after.
+- **Cross-cutting** → Read all CX files + feature files. Identify interaction points. Run synthesis questions on unresolved pairs.
+- **Combination** → User specifies sequence.
+- **As-is** → Skip expansion, run exhaustion check, but still scan for obvious CX candidates.
+- **Audit ambiguity first** → Run inline ambiguity check, then select expansion mode based on results.
 
 ---
 
@@ -125,15 +71,7 @@ Read `.agent/skills/brainstorming/SKILL.md` and follow its methodology.
 3. **How are they solving it today?** → Write to `meta/competitive-landscape.md`
 4. **Why now?** → Write to `meta/problem-statement.md` under "Why Now"
 
-**Persona completeness gate (Ideation Rubric Dimension 2):** For each persona, verify all 6 fields:
-1. Name + specific role
-2. Specific pain point
-3. Current workaround
-4. Success criteria
-5. Switching trigger
-6. At least one edge case or constraint unique to this persona
-
-If any field absent → probe before proceeding. Reference: `.agent/skills/pipeline-rubrics/references/ideation-rubric.md` Dimension 2.
+**Persona completeness gate**: Read `.agent/skills/prd-templates/references/persona-completeness-gate.md`. Verify all 6 fields for every persona. If any field absent → probe before proceeding.
 
 ---
 
@@ -141,30 +79,81 @@ If any field absent → probe before proceeding. Reference: `.agent/skills/pipel
 
 ### 5a. Feature collection (MoSCoW)
 
-Read `.agent/skills/brainstorming/SKILL.md`.
+Read `.agent/skills/brainstorming/SKILL.md`. For each persona, brainstorm features across all 4 MoSCoW tiers. **Deep Think** for missing Must Haves.
 
-For each persona, brainstorm features across all 4 MoSCoW tiers. **Deep Think** for missing Must Haves.
+Write MoSCoW matrix to `ideation-index.md`. Each feature references its fractal path and links to its feature file.
 
-Write MoSCoW matrix to `ideation-index.md`. Each feature references its **fractal path** (e.g., `web/01.02.03`) and links to its feature file.
+**0 Must Haves guard**: If the MoSCoW matrix contains 0 Must Have features → **STOP**: "No Must Have features identified. This indicates the problem statement or personas need refinement. Return to Step 4 and re-examine 'What problem are we solving?' with deeper probing before continuing."
+
+### 5a.5. Adjacent Feature Analysis (gap surfacing)
+
+After the MoSCoW matrix is populated, reason about what's **conspicuously absent** given everything known about the product:
+
+1. **Domain reasoning**: Given the product type (e.g., e-commerce, SaaS, marketplace), enumerate the standard feature categories expected in this space. Compare against the MoSCoW matrix. List any standard categories with zero features.
+2. **Persona reasoning**: For each persona, ask: "What does this persona need to accomplish their goal that isn't covered by any feature?" List unmet persona needs.
+3. **Workflow reasoning**: Trace each persona's end-to-end workflow. Identify any step where the user would need to leave the product to accomplish something — each gap is a potential missing feature.
+4. **Competitive reasoning**: Read `meta/competitive-landscape.md`. For each competitor capability listed, verify a corresponding feature exists. List competitive gaps.
+
+**Present findings as suggestions, not mandates**:
+
+> 🔍 **Features you might not have thought of:**
+>
+> Based on [product type] and your personas:
+> - [Feature A] — [why it fits: persona X needs this for workflow step Y]
+> - [Feature B] — [why it fits: standard in this space, competitors X and Y have it]
+> - [Feature C] — [why it fits: gap in persona Z's end-to-end workflow]
+>
+> Want to add any of these? They'd enter the MoSCoW matrix for prioritization.
+
+**STOP** — wait for user response. For each accepted feature:
+1. Add to the MoSCoW matrix at the user's chosen priority
+2. Create a feature file in the appropriate domain folder
+3. Continue to Step 5b with the expanded feature set
+
+For rejected features: note in `ideation-index.md` under a `## Considered & Rejected` section with the reason, so future sessions don't re-suggest them.
 
 ### 5b. Feature deepening — Must Haves
 
-For each Must Have feature, use the recursive model:
+For each Must Have feature, use the recursive model from `idea-extraction/SKILL.md`:
+1. **Level 1**: Sub-features. Run Classification Gate — sub-domain or feature?
+2. **Level 2**: Edge cases and failure modes. Fill feature file sections per `fractal-feature-template.md`.
+3. **Level 3** (complex features): Cross-cuts with evidence → parent CX file.
 
-1. **Level 1: Sub-features.** Component parts. Run Classification Gate — sub-domain or feature?
-2. **Level 2: Edge cases and failure modes.** Fill feature file sections: Behavior (happy path, edge cases, states), **Role Lens**.
-3. **Level 3 (complex features): Interactions.** Cross-cuts with evidence → parent CX file.
-
-**Deep Think at each level.** Write results to feature files using `fractal-feature-template.md`.
+**Deep Think at each level.** Write results to feature files.
 
 ### 5c. Feature deepening — Should Haves (lighter touch)
 
 Level 1 (sub-features) only with Deep Think. Full treatment deferred to `/create-prd`.
 
+### 5d. Cross-Cut Synthesis Sweep (mandatory)
+
+After all features are deepened, systematically identify emergent capabilities that arise when features **combine**:
+
+1. **Build a feature interaction matrix**: List all Must Have and Should Have features on both axes. For each pair, ask: "When a user has both of these, does something new become possible that neither feature provides alone?"
+2. **Identify emergent capabilities**: For each interesting pair (or triplet), describe the emergent capability.
+   - Example: Feature "AI diagnostics" + Feature "Supplier catalog" → emergent: "AI-recommended parts ordering" — the diagnostic identifies the failed part AND the catalog knows who sells it, enabling one-click ordering.
+3. **Classify each emergent capability**:
+   - **Already captured** → a feature or sub-feature already covers this. Note the link.
+   - **New cross-cut** → write to the parent domain's CX file. Flag for user review.
+   - **New feature entirely** → present to user for MoSCoW placement.
+4. **Present all findings**:
+
+> 🔗 **Cross-cutting opportunities discovered:**
+>
+> | Features Combined | Emergent Capability | Status |
+> |---|---|---|
+> | [A] + [B] | [What becomes possible] | New cross-cut / New feature / Already captured |
+>
+> These emerged from how your features interact — they're capabilities you get "for free" if you build them with this interaction in mind.
+
+**STOP** — wait for user response. Write accepted cross-cuts to CX files immediately. Add accepted new features to MoSCoW matrix.
+
+> **Minimum coverage**: The sweep must evaluate at least every Must Have × Must Have pair and every Must Have × Should Have pair. Should Have × Should Have pairs are optional but recommended for complex products.
+
 ---
 
-### Propose next step
+### Next step
 
-Proceed to `/ideate-validate` for exhaustion check, constraint exploration, and vision compilation.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/ideate-validate`.
 
-> If standalone, surface via `notify_user`. If from parent `/ideate`, natural handoff.
+> If invoked standalone, surface this via `notify_user` and wait for user confirmation before running `/ideate-validate`.

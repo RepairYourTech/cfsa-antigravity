@@ -19,7 +19,7 @@ pipeline:
 
 Run all production readiness checks for a completed implementation phase.
 
-**Prerequisite**: Code quality gates (from `/validate-phase-quality` or equivalent) must pass first.
+**Prerequisite**: Code quality gates (from `/validate-phase-quality` or equivalent) must pass first. If quality gate results do not exist or any check failed → **STOP**: run `/validate-phase-quality` first.
 
 ---
 

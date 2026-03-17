@@ -21,6 +21,10 @@ Write the BE spec(s) to `docs/plans/be/`, update indexes, run quality checks, an
 
 **Prerequisite**: Read the spec file at `docs/plans/be/[NN-feature-name].md`. The `## Classification` section and Referenced Material Inventory should be present from the classify shard. If the file does not exist or lacks a `## Classification` section, run `/write-be-spec-classify` first.
 
+**Re-run detection**: If the spec file already has content beyond the classification stub (filled endpoint sections, schema definitions, middleware rules):
+- Present current state and ask: "This BE spec has existing content. **Continue** (skip filled sections) or **redo specific sections** (which ones)?"
+- Wait for user response before proceeding.
+
 ---
 
 ## 7. Write the spec to `docs/plans/be/[NN-feature-name].md`
@@ -55,6 +59,45 @@ If a shard was classified as **structural reference** with 0 BE specs, add a row
 
 Read `.agent/skills/session-continuity/protocols/08-spec-pipeline-update.md` and follow the **Spec Pipeline Update Protocol** to mark this shard's BE column as complete in `.agent/progress/spec-pipeline.md`.
 
+## 9.5. Iterative deepening passes
+
+Re-read the complete BE spec draft and run the following passes. Each pass may produce new content that reveals further gaps — repeat until a pass produces no meaningful additions.
+
+### Pass 1: Cross-endpoint consistency
+
+Read all endpoints in this spec together as a set:
+- Do endpoints touching the same entity use consistent field names, casing, and types?
+- Do error codes follow the same pattern across all endpoints? (e.g., if `POST` returns `409` for duplicates, does `PUT` also?)
+- Do paginated endpoints use the same pagination shape (cursor vs offset, page size defaults)?
+- Do all endpoints that create/update the same entity validate the same required fields?
+
+Fix every inconsistency found.
+
+### Pass 2: Sequencing and concurrency scenarios
+
+For each write endpoint (POST, PUT, PATCH, DELETE):
+- What happens if a client calls this endpoint twice in rapid succession with the same payload?
+- What happens if two different users call this endpoint simultaneously for the same resource?
+- What happens if a client calls endpoint A then endpoint B before A's response returns?
+- What happens if the resource is deleted between when the client last read it and when they submit an update?
+
+Add any new error codes, race condition handling, or idempotency requirements discovered.
+
+### Pass 3: Failure cascade analysis
+
+For each endpoint that mutates data:
+- If this endpoint fails mid-transaction, what state is the database left in?
+- Which other endpoints return stale or inconsistent data after this failure?
+- Does the spec define rollback behavior or is it assumed?
+- If this endpoint creates a resource that other endpoints depend on, what happens to those endpoints if creation fails silently?
+
+Add any new transaction boundary requirements, rollback specifications, or consistency guarantees.
+
+**Pass loop guard**: Track total pass count.
+- Passes 1-3 → mandatory.
+- Pass 4-5 → optional, run if prior pass produced significant additions.
+- **After pass 5** → **STOP**: "5 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
+
 ## 10. Cross-reference check
 
 Verify:
@@ -84,9 +127,12 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run:
 ## 13. Check for new dependencies
 
 If this BE spec introduces a technology not already in the project's tech stack:
-1. Identify the stack category (e.g., QUEUE, CACHE, SEARCH, STORAGE)
-2. Read `.agent/workflows/bootstrap-agents.md` and fire bootstrap with `PIPELINE_STAGE=write-be-spec` + the key-value pair
-3. Confirm matching skill installed
+1. Identify the technology (e.g., WebSocket, S3 storage, Stripe, Redis)
+2. Read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents PIPELINE_STAGE=write-be-spec` + the new dependency key
+3. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap fails:
+   - **1st failure** → retry once
+   - **2nd failure** → **STOP**: tell the user which dependency failed and ask: "Install manually, skip, or abort?"
+4. Confirm the matching skill is installed before proceeding.
 
 ## 14. Request review and propose next steps
 

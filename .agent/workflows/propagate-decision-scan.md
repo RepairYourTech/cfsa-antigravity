@@ -17,131 +17,60 @@ pipeline:
 
 Pre-scan all 6 decision types for downstream contradictions, present a selection menu, run a full scan on the selected types, and write the impact report.
 
-> **Prerequisite**: At least one instruction file must be filled (not `{{PLACEHOLDER}}`). If all instruction files are still template placeholders, there are no locked decisions to propagate — run `/bootstrap-agents` first.
+> **Prerequisite**: At least one instruction file must be filled (not `{{PLACEHOLDER}}`). If all are still placeholders → **STOP**: run `/bootstrap-agents` first.
 
 ---
 
 ## 1. Pre-scan all decision types
 
-Read all six decision sources and do a quick surface scan of downstream documents:
-
-| Decision Type | Source Document | Downstream Scope |
-|--------------|-----------------|-------------------|
-| **structure** | `.agent/instructions/structure.md` | All IA shards, BE specs, FE specs |
-| **tech-stack** | `.agent/instructions/tech-stack.md` + architecture doc | All IA shards, BE specs, FE specs |
-| **auth-model** | Architecture doc (auth/security section) | All BE specs with middleware, all FE specs with auth flows |
-| **data-placement** | `docs/plans/data-placement-strategy.md` | All IA shards with data models, all BE specs with storage |
-| **patterns** | `.agent/instructions/patterns.md` | All IA shards, BE specs with implementation patterns, FE specs with component patterns |
-| **error-architecture** | Architecture doc `## Error Architecture` section — all 5 sub-sections (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`) — located at `docs/plans/*-architecture-design.md` | All BE specs (`docs/plans/be/`) — error envelope conformance, propagation chain rules. All FE specs (`docs/plans/fe/`) — client fallback contract per surface, error boundary placement. |
+Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Decision Type Sources** table.
 
 For each decision type:
 1. Read the source document to extract the current locked value
-2. Quick-scan downstream documents for any reference to that decision topic
-3. Note the count of downstream references found (matches + mismatches — the full scan in Step 3 will determine which are conflicts)
+2. Quick-scan downstream documents for references to that decision topic
+3. Note count of downstream references found
 
 ---
 
 ## 2. Present selection menu
 
-Show the pre-scan findings per decision type:
+Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Selection Menu Format**. Present with actual counts from Step 1.
 
-```
-Decision propagation pre-scan:
+If `[A]` selected → run full scan on all 6 types, filter to those with findings.
 
-[1] structure — structure.md — inconsistencies detected in X documents
-[2] tech-stack — tech-stack.md — inconsistencies detected in X documents
-[3] auth-model — architecture doc — inconsistencies detected in X documents
-[4] data-placement — data-placement-strategy.md — inconsistencies detected in X documents
-[5] patterns — patterns.md — inconsistencies detected in X documents
-[6] error-architecture — architecture doc ## Error Architecture — inconsistencies detected in X documents
+If called with specific argument (e.g., `/propagate-decision structure`) → skip menu, proceed directly.
 
-[A] All with inconsistencies
-[Q] Quit — no propagation needed
-```
+**STOP** — do not proceed until the user selects.
 
-If the user selects `[A]`, run the full scan (Step 3) on all 6 types first, then filter to only those with at least one explicit contradiction or implicit assumption.
-
-If called with a specific argument (e.g., `/propagate-decision structure`), skip the menu and proceed directly with that decision type.
-
-**Do not proceed until the user selects.**
+**Zero-findings shortcut**: If the pre-scan in Step 1 found zero downstream references across ALL decision types → skip the menu entirely: "No downstream references found for any decision type. All pipeline documents are consistent with locked decisions. No propagation needed." Exit workflow.
 
 ---
 
 ## 3. Full scan on selected types
 
-For each selected decision type, scan every downstream document in the scope defined by the table in Step 1:
+For each selected decision type, scan every downstream document in the scope (per Decision Type Sources table):
 
-1. **Read the locked value** from the source document
-2. **Search each downstream document** for references to the decision topic
-3. **For each reference found**, record the line number and classify it as one of:
-   - **Explicit contradiction** — The document states a value that directly conflicts with the locked decision (e.g., document says "PostgreSQL" but tech stack locks "MySQL")
-   - **Implicit assumption** — The document references the topic but uses vague or underspecified language that neither confirms nor contradicts the locked decision (e.g., says "the database" without naming it)
-   - **Consistent** — The document correctly uses the locked value
+1. Read the locked value from source
+2. Search each downstream document for references
+3. Classify each reference as: **explicit contradiction** / **implicit assumption** / **consistent**
+4. Record: document path, line number, current text, locked value
 
-Record all explicit contradictions and implicit assumptions with their document path, line number, current text, and the locked value they should reflect.
-
-### error-architecture scan
-
-**Source extraction:**
-- Locate `docs/plans/*-architecture-design.md` using the glob (not a hardcoded path).
-- Read the `## Error Architecture` section and extract the locked decisions from all five sub-sections, in particular the canonical field names from `### Global Error Envelope` (e.g., `code`, `message`, `details`, `request_id`).
-
-**BE spec conformance** — scan every file in `docs/plans/be/`:
-- Check whether the spec references the global error envelope by its locked name and uses the canonical field names exactly as locked in `### Global Error Envelope`.
-- Check whether the spec references the propagation chain rules — which layer catches, logs, and surfaces errors — as defined in `### Error Propagation Chain`.
-- Classify findings:
-  - **Explicit contradiction** — spec defines its own error shape with field names or structure that directly conflicts with the locked envelope.
-  - **Implicit assumption** — spec mentions "error handling" or "error response" without naming the canonical envelope shape or field names.
-  - **Consistent** — spec correctly names and uses the locked envelope.
-
-**FE spec conformance** — scan every file in `docs/plans/fe/`:
-- Check whether the spec references the client fallback contract appropriate for its surface type, as defined in `### Client Fallback Contract`.
-- Check whether the spec references error boundary placement per `### Error Boundary Strategy`.
-- Apply the same three-way classification (explicit contradiction / implicit assumption / consistent).
-
-All findings are recorded in the standard format (document path, line number, current text, locked value) for inclusion in the impact report built in Step 4.
+For **error-architecture** type: read `.agent/skills/prd-templates/references/decision-propagation.md` → **Error-Architecture Scan Procedure** and follow it.
 
 ---
 
 ## 4. Build and write impact report
 
-Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
+Read `.agent/skills/technical-writer/SKILL.md` for writing standards.
 
-Write `docs/audits/propagation-scan-[date].md` with:
+Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Impact Report Format**.
 
-### Explicit Contradictions
-
-| Document | Line | Current Text | Locked Value | Decision Type |
-|----------|------|--------------|--------------|---------------|
-| `src/auth/tokens.ts` | 47 | `jwt.sign(payload, secret)` | Supabase Auth (no custom JWT) | auth-model |
-| ... | ... | ... | ... | ... |
-
-### Implicit Assumptions
-
-| Document | Line | Current Text | Concern | Decision Type |
-|----------|------|--------------|---------|---------------|
-| `docs/plans/be/auth-spec.md` | 23 | "the auth provider" | Does not name the locked auth provider | auth-model |
-| ... | ... | ... | ... | ... |
-
-### Summary
-
-- **Explicit contradictions**: X items across Y documents
-- **Implicit assumptions**: X items across Y documents
-- **Consistent references**: X items (no action needed)
+Write `docs/audits/propagation-scan-[date].md` using the format.
 
 ---
 
 ## 5. Present summary and confirm
 
-Present the summary counts to the user:
+Present summary counts. Reference the full report path.
 
-> **Propagation scan complete.**
->
-> - **X explicit contradictions** found — these directly conflict with locked decisions and should be fixed
-> - **Y implicit assumptions** found — these are vague references that could be flagged for `/resolve-ambiguity`
->
-> Review the full report at `docs/audits/propagation-scan-[date].md`.
->
-> Run `/propagate-decision-apply` to review and apply fixes one at a time.
-
-**STOP — do not proceed to apply until the user explicitly confirms.**
+**STOP** — do not proceed to apply until user confirms.

@@ -19,7 +19,10 @@ pipeline:
 
 Create directory structure, shard skeleton files, and all layer indexes.
 
-**Prerequisite**: Read the approved domain boundaries from `docs/plans/ia/decomposition-plan.md`. If this file does not exist, the boundaries have not been approved — tell the user to run `/decompose-architecture` Steps 3-4.5 first.
+**Prerequisite**: Read the approved domain boundaries from `docs/plans/ia/decomposition-plan.md`.
+
+- If this file does not exist → **STOP**: "Decomposition plan missing. Run `/decompose-architecture` Steps 3-4.5 first."
+- If the file exists but contains no `## Domain Boundary Table` → **STOP**: "Decomposition plan is incomplete — no domain boundary table found. Run `/decompose-architecture` Step 3 to generate domain boundaries."
 
 ---
 
@@ -55,6 +58,13 @@ Read `.agent/skills/prd-templates/SKILL.md` and follow its Shard Seeding Procedu
 
 Fallback for domains not covered in the ideation domain folders is defined in the skill's Shard Seeding Procedure.
 
+**Post-creation verification**: After all skeletons are created, list the `docs/plans/ia/` directory. Verify:
+- Every shard in the decomposition plan has a corresponding `.md` file
+- `00-infrastructure.md` exists regardless of domain decomposition
+- No empty files (0 bytes)
+
+If any skeleton is missing → create it now. Do not proceed to index creation with missing skeletons.
+
 ## 6. Create IA index
 
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **IA Index** template. Create `docs/plans/ia/index.md` using the template, populating the shards table with all shards created in Step 5.
@@ -73,8 +83,8 @@ Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the
 
 For multi-surface projects, each surface's own `index.md` contains the standard three-layer table (IA/BE/FE) scoped to that surface, following the same format as the single-surface master index.
 
-### Propose next step
+### Next step
 
-Directory structure, shard skeletons, and all layer indexes are created. Next: Run `/decompose-architecture-validate` to identify deep dive candidates, annotate shard types, validate the dependency graph, and generate the spec pipeline tracker.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/decompose-architecture-validate`.
 
-> If this shard was invoked standalone (not from `/decompose-architecture`), surface this via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

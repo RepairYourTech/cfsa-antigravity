@@ -43,8 +43,35 @@ The resulting list of slices is derived from the spec, not estimated from featur
 
 Estimate complexity (S/M/L) per derived slice. Flag any slice estimated L — these are candidates for further splitting before ordering begins.
 
+**L-slice enforcement**: Any slice marked **L** MUST be reviewed for splitting before Step 3. Present L slices to user: "These slices are estimated Large. Split each into 2-3 smaller slices, or confirm L is acceptable?" Wait for confirmation. Do not proceed to ordering with unreviewed L slices.
+
+**Slice count sanity check**: After splitting, count total slices.
+- **1-15 slices** → normal.
+- **16-25 slices** → warn: "Phase has [N] slices. Consider splitting into two phases if unrelated domains are grouped together."
+- **>25 slices** → **STOP**: "Phase has [N] slices — this is too many for one phase. Split into Phase N and Phase N+1, keeping dependency order intact."
+
 **Good slice**: "User can submit an entity claim form" (one named user flow from the FE interaction spec)
 **Bad slice**: "Implement entity management" (domain name, not a spec-derived user flow)
+
+## 2.5. Spec coverage verification
+
+After all slices are identified, verify that the slices collectively cover ALL spec content for this phase:
+
+1. **BE endpoint coverage**: List every endpoint in every BE spec included in this phase's scope. For each endpoint, identify which slice covers it. Build a table:
+
+| BE Endpoint | Slice | Status |
+|---|---|---|
+| `POST /api/entities` | Slice 3: Create entity | ✅ Covered |
+| `GET /api/entities/:id` | — | ❌ Uncovered |
+
+2. **FE component coverage**: List every named component in every FE spec included in this phase's scope. For each, identify which slice covers it.
+
+3. **Resolution**: For each uncovered item:
+   - Add it to an existing slice (if it's a natural fit)
+   - Create a new slice for it
+   - Document it as explicitly deferred to Phase N+1 with reason
+
+**BLOCKING GATE**: Do NOT proceed to Step 3 until every BE endpoint and FE component is either assigned to a slice or explicitly deferred.
 
 ## 3. Order by dependency
 
@@ -72,6 +99,8 @@ fully specified, and production-ready.
 ## 4. Write acceptance criteria
 
 Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Slice Acceptance Criteria** template. For each slice, use the template to define testable acceptance criteria with surface tags:
+
+**Spec citation requirement**: Every acceptance criterion MUST include a spec source citation. Format: `[BE §section.subsection]`, `[FE §ComponentName]`, or `[IA §NN.EdgeCase.N]`. This ensures no criterion is invented without a traceable spec source. If a criterion cannot be traced to a spec → either the spec is incomplete (fix the spec first) or the criterion is speculative (remove it).
 
 > **Write as you go**: After completing acceptance criteria for each slice, immediately append that slice's entry to `docs/plans/phases/phase-N-draft.md` (create the file if it doesn't exist). Do not accumulate all slices in context and write them all at once in Step 5.
 
@@ -107,4 +136,4 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Verify all 
 
 Use `notify_user` to request review of the phase plan and generated progress files.
 
-**Proposed next step**: Once approved, run `/implement-slice` for the first slice in the phase plan. Read `.agent/progress/` to identify which slice to start with.
+**STOP** — do NOT proceed until the user explicitly approves the phase plan. The only valid next step after approval is `/implement-slice` for the first slice. Read `.agent/progress/` to identify which slice to start with.

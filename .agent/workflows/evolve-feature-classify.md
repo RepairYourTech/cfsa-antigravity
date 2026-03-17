@@ -17,7 +17,7 @@ pipeline:
 
 Capture the user's new feature, requirement, or constraint. Classify it, identify the correct entry point document, write the new content at proper spec depth, and determine which downstream layers need updating.
 
-> **Prerequisite**: At least `docs/plans/ideation/ideation-index.md` must exist. If the pipeline hasn't started, run `/ideate` first — there's nothing to evolve yet.
+> **Prerequisite**: `docs/plans/ideation/ideation-index.md` must exist. If not → **STOP**: run `/ideate` first.
 
 ---
 
@@ -25,100 +25,66 @@ Capture the user's new feature, requirement, or constraint. Classify it, identif
 
 Ask the user to describe what they want to add. Accept free-form input or `@file`.
 
-If the user provides an `@file` reference, read the file and extract the key additions. If free-form, engage briefly to ensure the addition is clear — but this is NOT a full `/ideate` interview. The goal is to understand what's being added, not to explore the entire problem space.
+If `@file` → read and extract key additions. If free-form → brief clarifying questions only (NOT a full `/ideate` interview).
 
 ---
 
 ## 2. Classify the change
 
-Read .agent/skills/brainstorming/SKILL.md and follow its methodology.
+Read `.agent/skills/brainstorming/SKILL.md` and follow its methodology.
 
 Present the classification menu:
 
 ```
 What type of change is this?
 
-[1] New feature — an entirely new capability that doesn't exist in the current specs
-[2] New requirement on an existing feature — additional constraint, behavior, or acceptance criteria for something already specified
-[3] New technical constraint — a non-functional requirement that affects architecture (performance, compliance, infrastructure)
-[4] Scope correction — something was misunderstood or underspecified in existing specs and needs to be fixed
+[1] New feature — entirely new capability
+[2] New requirement on existing feature — additional constraint/behavior/criteria
+[3] New technical constraint — non-functional requirement affecting architecture
+[4] Scope correction — misunderstanding or underspecification that needs fixing
 ```
 
-**Do not proceed until the user selects.**
+**STOP** — do not proceed until the user selects.
 
 ---
 
 ## 3. Identify the entry point document
 
-Based on the classification, determine where the new content enters the pipeline:
-
-| Classification | Entry Point Document | Rationale |
-|---------------|---------------------|-----------|
-| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + fractal tree placement (see Step 4) | New features start at the ideation layer — placed in the correct domain folder via Classification Gate |
-| **[2] New requirement** | The IA shard that owns the affected domain | Requirements on existing features enter at the domain interaction level |
-| **[3] New technical constraint** | `docs/plans/[dated]-architecture-design.md` | Technical constraints affect the architecture and everything below it |
-| **[4] Scope correction** | Ask the user which document contains the misunderstanding | Corrections enter wherever the original misunderstanding lives |
-
-For classification [2], identify which IA shard owns the affected domain by reading `docs/plans/ia/index.md` and matching the feature to a domain.
+| Classification | Entry Point Document |
+|---------------|---------------------|
+| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + fractal tree placement (Step 4) |
+| **[2] New requirement** | The IA shard that owns the affected domain (read `docs/plans/ia/index.md` to find it) |
+| **[3] New technical constraint** | `docs/plans/[dated]-architecture-design.md` |
+| **[4] Scope correction** | Ask the user which document contains the misunderstanding |
 
 ---
 
 ## 4. Write new content at the entry point
 
-Read .agent/skills/technical-writer/SKILL.md and follow its clarity standards for all new spec content.
+Read `.agent/skills/technical-writer/SKILL.md` for clarity standards.
 
-This is a real spec-writing step — not a placeholder. Write the new content at the appropriate depth for the entry point layer:
+Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Entry Point Writing Depth** section for the entry point layer. Follow its writing checklist for the identified layer.
 
-**If entry point is ideation layer** (`docs/plans/ideation/`):
-
-1. **Placement**: Read `ideation-index.md` Structure Map. Identify the domain folder where this feature belongs. If no suitable domain exists, create one.
-2. **Classification Gate**: Apply the Node Classification Gate from `.agent/skills/idea-extraction/SKILL.md` — determine if the feature is a leaf feature file or complex enough to warrant a sub-domain folder.
-3. **Write the feature**: Use `.agent/skills/prd-templates/references/fractal-feature-template.md` as the template. Include:
-   - Feature description (what it does, why it matters)
-   - Affected personas (who uses this)
-   - Success criteria (how we know it works)
-   - Constraints (what limits apply)
-   - **Role Lens** — which personas interact with this feature and how
-4. **Update parent index**: Add the new feature to the parent domain's `*-index.md` children table
-5. **Update CX files**: If the feature has cross-domain interactions, update the parent domain's `*-cx.md` and/or `ideation-cx.md` (global)
-6. **Update `ideation-index.md`**: Add the feature to the MoSCoW Summary at the appropriate priority level
-
-**If entry point is architecture layer** (`architecture-design.md`):
-- Technical constraint description
-- Affected components (which parts of the system this touches)
-- Non-functional requirements (performance, scalability, compliance)
-- Integration points (how this relates to existing architecture decisions)
-
-**If entry point is IA layer** (specific IA shard):
-- Domain interactions (new user flows or modifications to existing flows)
-- Contracts (new or modified API contracts)
-- Data models (new entities, fields, or relationships)
-- Access control (RBAC implications)
-
-**Inline ambiguity check**: Before presenting this content to the user for approval, apply the Micro Ambiguity Check from `.agent/skills/session-continuity/SKILL.md` (Ambiguity Gates section). Walk each individual element of the new content and ask: "Would an implementer need to guess about this?" For every element where the answer is yes — fix it now. Add the missing detail, type, behavior, or constraint. Only present the content to the user once it passes the micro check.
+**Inline ambiguity check**: Before presenting to user, apply Micro Ambiguity Check from `.agent/skills/session-continuity/SKILL.md` — walk each element, fix any gaps where an implementer would need to guess.
 
 Present the written content to the user.
 
-**STOP — do not proceed until the user approves the new content.**
+**STOP** — do not proceed until the user approves.
 
 ---
 
 ## 5. Determine cascade scope
 
-Based on the entry point, determine which downstream layers have existing content that needs updating:
-
 | Entry Point | Cascade Layers (in order) |
 |-------------|---------------------------|
 | Vision | Architecture → IA → BE → FE → Phase plan |
 | Architecture | IA → BE → FE → Phase plan |
-| IA shard | BE spec for that shard → FE spec for that shard → Phase plan |
+| IA shard | BE spec → FE spec → Phase plan |
 | BE spec | FE → Phase plan |
-| Scope correction | Depends on the document — all layers below the corrected document |
+| Scope correction | All layers below the corrected document |
 
-**Important**: When the entry point is an IA shard, the downstream cascade remains scoped to the affected domain shard's corresponding BE and FE specs. Do not cascade into unrelated domain shards unless the user explicitly broadens scope.
-
-For each downstream layer, check whether content exists (using the same file checks as `/remediate-pipeline-assess` Step 1). Only layers with existing content need updating — layers that haven't been started yet will naturally incorporate the new content when they are written.
+Check each downstream layer for existing content. Only layers with existing content need updating.
 
 Report: "These layers have existing content that will need updating: [list]."
 
-If no downstream layers have content, report: "No downstream layers have existing content — the new content will be incorporated when those layers are written. Evolution complete."
+If no downstream layers have content: "No downstream layers have existing content — incorporated when written. Evolution complete."

@@ -102,7 +102,12 @@ Read `.agent/skills/resolve-ambiguity/SKILL.md` for the resolution methodology.
 2. Apply approved mechanical fixes.
 3. Apply user-resolved judgment calls. Re-check if mechanical fixes changed.
 
-Add summary to report. If >70% of docs scored ❌ on majority of dimensions, recommend rewriting layer from scratch.
+Add summary to report.
+
+**Layer restart threshold**: If >70% of documents scored ❌ on majority of dimensions:
+- Calculate the exact percentage and present: "Layer [name]: [X]% of documents scored ❌ on [Y]% of dimensions. This exceeds the 70% restart threshold."
+- Present options: "(1) Restart this layer from scratch using the upstream layer as input, (2) Continue remediating document by document despite low baseline."
+- **STOP** — wait for user decision before proceeding.
 
 ### Persist fix metadata
 

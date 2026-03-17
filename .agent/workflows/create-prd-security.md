@@ -26,22 +26,16 @@ Define the security model with full compliance escalation, and document all inte
 
 ## 0. Map guard
 
-Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the following cross-cutting categories for filled values:
+Follow the map guard protocol (`.agent/skills/prd-templates/references/map-guard-protocol.md`). Required cells for this shard:
 
-| Map Location | Category | Recovery | Why this matters |
-|---|---|---|---|
-| Cross-Cutting | Security | Run `/create-prd-stack` to confirm security framework, then bootstrap. | Security model (Step 6) needs stack-specific threat analysis patterns. |
-| Cross-Cutting | Auth | Run `/create-prd-stack` to confirm auth provider, then bootstrap. | Authentication design (Step 6.1) needs provider-specific auth flow patterns. |
+| Map Location | Category | Why this matters |
+|---|---|---|
+| Cross-Cutting | Security | Security model (Step 6) needs stack-specific threat analysis patterns. |
+| Cross-Cutting | Auth | Authentication design (Step 6.1) needs provider-specific auth flow patterns. |
 
-> **Timing fallback**: During `/create-prd`, the map may be partially populated. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
+**HARD GATE** — If ANY required cell is empty → STOP. No timing fallbacks. No conversation-confirmed values. See map guard protocol for recovery.
 
-If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
-
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
-
-**Tier behavior for security decisions:**
-- 🤖 **Auto**: Agent designs security model + attack surface + integrations via Deep Think. Writes reasoning. Marks `[AUTO-CONFIRMED]`. User reviews at end of shard.
-- 🤝 **Hybrid** / 💬 **Interactive**: Present each section, walk through, wait for user confirmation (current behavior).
+Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for security decisions.
 
 ---
 
@@ -52,6 +46,9 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its 
 Load the Auth and Security skill(s) from the cross-cutting section per the skill loading protocol (`.agent/skills/prd-templates/references/skill-loading-protocol.md`).
 
 1. **Authentication** — How do users prove identity?
+
+**No-auth project detection**: If the ideation output indicates no user accounts, no login, and no personalized data (e.g., a static content site, CLI tool, or public API) → skip items 1-2 and 5. Write a `## Security Model` section that documents WHY auth is not needed, and cover only items 3-4 and 6-8. If the project has partial auth (e.g., admin-only auth, API keys but no user accounts), scope items 1-2 to the applicable auth surface only.
+
 2. **Authorization** — RBAC vs ABAC? Permission model?
 3. **Data protection** — PII handling, encryption at rest/transit
 4. **Input validation** — Where and how? (Zod recommended for TypeScript)
@@ -76,13 +73,13 @@ Read .agent/skills/resolve-ambiguity/SKILL.md and follow its methodology.
 - "Can you think of a way to bypass any of these controls?"
 - "Are there edge cases in the age/payment/compliance flows I haven't covered?"
 
-Refine based on discussion before proceeding.
+Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
 **Bootstrap fire — security decision confirmed**
 
-If the security model confirmed a specific security framework or compliance approach (e.g., crypto patterns, custom HSM approach), read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents SECURITY=[confirmed value]` to provision additional skills. Note: surface-triggered security skills (`owasp-web-security`, `csp-cors-headers`, `input-sanitization`, `api-security-checklist`, `dependency-auditing`, `desktop-security-sandboxing`) are provisioned automatically by bootstrap when surfaces are confirmed in `/create-prd-stack` — no manual fire needed for those.
+If the security model confirmed a specific security framework or compliance approach (e.g., crypto patterns, custom HSM approach), read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents SECURITY=[confirmed value]` to provision additional skills. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Note: surface-triggered security skills (`owasp-web-security`, `csp-cors-headers`, `input-sanitization`, `api-security-checklist`, `dependency-auditing`, `desktop-security-sandboxing`) are provisioned automatically by bootstrap when surfaces are confirmed in `/create-prd-stack` — no manual fire needed for those.
 
-Write the completed `## Security Model` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Do not wait for later steps.
+Write the completed `## Security Model` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Do not wait for later steps.
 
 ## 6.5. Attack Surface Review
 
@@ -92,9 +89,11 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its 
 - "Are there any attack vectors I've missed for your specific domain?"
 - "Do the OWASP mechanisms look correct, or are any of them actually handled differently?"
 
-Write the completed `## Security — Attack Surface` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
+Write the completed `## Security — Attack Surface` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 7. Integration points
+
+**0-integrations check**: Scan the ideation output and architecture for external service dependencies. If there are genuinely 0 external integrations (no auth provider, no email service, no payment processor, no analytics, no CDN) → write a brief `## Integration Points` section stating: "No external service integrations identified. All functionality is self-contained." Skip the per-service framework below.
 
 For each external service:
 
@@ -103,21 +102,20 @@ For each external service:
 3. **Fallback strategy** — Graceful degradation plan
 4. **Cost model** — Pricing tier, expected usage
 
-Write the completed `## Integration Points` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
+Write the completed `## Integration Points` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 7.5. Observability Architecture
 
-Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability Architecture Interview — all 5 decisions (logging, tracing, alerting, dashboards, retention) must be confirmed. Fire bootstrap per the skill's instructions for each confirmed tool.
+Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability Architecture Interview — all 5 decisions (logging, tracing, alerting, dashboards, retention) must be confirmed. Fire bootstrap per the skill's instructions for each confirmed tool. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
 **Present to user**: Show the observability architecture decisions. Ask:
 - "Are these logging levels and PII exclusions correct for your compliance requirements?"
 - "Are the alerting thresholds appropriate for your expected traffic?"
 
-Write the completed `## Observability Architecture` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
+Write the completed `## Observability Architecture` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
-### Propose next step
+### Next step
 
-Security model and integration points are defined. Next: Run `/create-prd-compile` to document the development methodology, phasing strategy, and compile the final architecture design document and Engineering Standards.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-compile`.
 
-> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
-
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

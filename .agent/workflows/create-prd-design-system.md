@@ -31,9 +31,7 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 
 Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
 
-**Tier behavior for design system decisions** (all 7 decisions are product decisions):
-- 🤖 **Auto**: Agent selects based on design direction + constraints via Deep Think. Writes reasoning. Marks `[AUTO-CONFIRMED]`. User reviews compiled `design-system.md` at Step 9.
-- 🤝 **Hybrid** / 💬 **Interactive**: Present options, wait for explicit confirmation per decision (current behavior).
+Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for design system decisions (all 7 decisions are product decisions).
 
 1. Read `docs/plans/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `docs/plans/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
 2. Read `.agent/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
@@ -50,9 +48,13 @@ Present surface-appropriate options from the **Navigation Paradigm Options** sec
 
 > **Decision prompt**: "Which navigation pattern fits your app's usage pattern and audience?"
 
-**Wait for explicit user confirmation before proceeding.**
+**Tier-aware confirmation** *(applies to all 7 decisions in this shard)*:
+- **Interactive/Hybrid** → "Wait for explicit user confirmation" means present and wait.
+- **Auto** → auto-confirm with Deep Think reasoning. Write the decision with `[AUTO-CONFIRMED]` tag. The Auto Tier Review Checkpoint in `/ideate-validate` or the review in Step 9 is where the user can override.
 
-On confirmation, write the `## Navigation Paradigm` section to `docs/plans/design-system.md` immediately.
+**Wait for explicit user confirmation before proceeding** *(Interactive/Hybrid)* or auto-confirm with Deep Think *(Auto)*.
+
+On confirmation, write the `## Navigation Paradigm` section to `docs/plans/design-system.md` immediately. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -67,7 +69,7 @@ Provide a **default recommendation** based on the confirmed design direction:
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Layout Grid` table to `docs/plans/design-system.md`.
+On confirmation, write the `## Layout Grid` table to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -77,7 +79,7 @@ Based on the feature inventory from `ideation-index.md`, propose a named archety
 
 Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Page Archetypes` section to `docs/plans/design-system.md`.
+On confirmation, write the `## Page Archetypes` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -89,7 +91,7 @@ Present the derived list. Ask: (1) Are any components missing? (2) Should any be
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global Component Inventory` section to `docs/plans/design-system.md`. This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
+On confirmation, write the `## Global Component Inventory` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
 
 ---
 
@@ -97,7 +99,7 @@ On confirmation, write the `## Global Component Inventory` section to `docs/plan
 
 Present the options from the **Motion Language Options** in `design-system-decisions.md`. Present a recommendation based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Motion Language` section to `docs/plans/design-system.md`.
+On confirmation, write the `## Motion Language` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -105,7 +107,7 @@ On confirmation, write the `## Motion Language` section to `docs/plans/design-sy
 
 Present the options from the **Data Density Options** in `design-system-decisions.md`. If **Hybrid** is selected, ask the user to define per-archetype density rules. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Data Density Philosophy` section to `docs/plans/design-system.md`.
+On confirmation, write the `## Data Density Philosophy` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -113,7 +115,7 @@ On confirmation, write the `## Data Density Philosophy` section to `docs/plans/d
 
 Two-part decision. Present the loading state, error state, and empty state options from the **Global State Design Language Options** in `design-system-decisions.md`. Present recommendations based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global State Design Language` section to `docs/plans/design-system.md`.
+On confirmation, write the `## Global State Design Language` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -128,10 +130,12 @@ Verify:
 
 If any section is incomplete, loop back to the relevant decision step and resolve with the user.
 
+**Completeness loop guard**: If the same section fails completeness 2 times → **STOP**: present the incomplete section to the user with what's missing and ask: "Provide the missing content directly, or accept this section as-is with a note?"
+
 ---
 
-### Propose next step
+### Next step
 
-Design system decisions are locked. Next: Run `/create-prd-architecture` to design the system architecture and data strategy.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-architecture`.
 
-> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

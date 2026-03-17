@@ -19,6 +19,12 @@ pipeline:
 
 Run all code quality checks for a completed implementation phase.
 
+**Prerequisite**: All slices in the phase must be complete.
+1. Read `.agent/progress/phases/phase-N.md`
+2. Verify every slice shows `complete` status
+3. If any slice is not complete → **STOP**: "Phase N has incomplete slices: [list]. Complete them via `/implement-slice` before running validation."
+
+
 ---
 
 ## 0. Load validation skills
@@ -43,6 +49,11 @@ This is an optimization, not a requirement. Sequential validation is always corr
 ## 1. Run test suite
 
 Run the Test Cmd from `.agent/instructions/commands.md`. All tests must pass. Zero tolerance.
+
+**Test failure early-exit**: If tests fail, do NOT proceed to steps 2-5. Instead:
+1. Capture the failing test output
+2. Identify which slice(s) the failing tests belong to
+3. **STOP**: "Validation blocked — [N] tests failing in slice(s) [names]. Fix via `/implement-slice` and re-run `/validate-phase`."
 
 ## 2. Check coverage
 
@@ -148,8 +159,8 @@ Read `.agent/skills/prd-templates/references/spec-coverage-sweep.md` and follow 
 
 ---
 
-### Propose next step
+### Next step
 
-Code quality gates complete. Next: Run `.agent/workflows/validate-phase-readiness.md` for production readiness checks.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/validate-phase-readiness`.
 
-> If this shard was invoked standalone (not from `/validate-phase`), surface this via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

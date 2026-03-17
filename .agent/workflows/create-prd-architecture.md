@@ -24,23 +24,17 @@ Design the high-level system architecture and data strategy. Create the data pla
 
 ## 0. Map guard
 
-Read the surface stack map from `.agent/instructions/tech-stack.md`. Check the following columns/categories for filled values:
+Follow the map guard protocol (`.agent/skills/prd-templates/references/map-guard-protocol.md`). Required cells for this shard:
 
-| Map Location | Column/Category | Recovery | Why this matters |
-|---|---|---|---|
-| Cross-Cutting | Hosting | Run `/create-prd-stack` to confirm hosting provider, then bootstrap. | Deployment topology (Step 4.3) needs hosting-specific conventions. |
-| Per-Surface (shared) | ORMs | Run `/create-prd-stack` to confirm ORM, then bootstrap. | Migration strategy (Step 5.4) needs ORM-specific schema conventions. |
-| Per-Surface (shared) | Databases | Run `/create-prd-stack` to confirm database(s), then bootstrap. | Data strategy (Step 5) needs database-specific schema design patterns. |
+| Map Location | Column/Category | Why this matters |
+|---|---|---|
+| Cross-Cutting | Hosting | Deployment topology (Step 4.3) needs hosting-specific conventions. |
+| Per-Surface (shared) | ORMs | Migration strategy (Step 5.4) needs ORM-specific schema conventions. |
+| Per-Surface (shared) | Databases | Data strategy (Step 5) needs database-specific schema design patterns. |
 
-> **Timing fallback**: During `/create-prd`, the map may be partially populated. If a cell is empty but the value was just confirmed in the current conversation (from `/create-prd-stack`), proceed using the conversation-confirmed value. Bootstrap will fill the map after `/create-prd` completes.
+**HARD GATE** — If ANY required cell is empty → STOP. No timing fallbacks. No conversation-confirmed values. See map guard protocol for recovery.
 
-If cells are empty AND the value hasn't been confirmed in conversation → **HARD STOP**: tell the user to run `/create-prd-stack` first.
-
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
-
-**Tier behavior for architecture decisions:**
-- 🤖 **Auto**: Agent designs system architecture + data strategy via Deep Think. Writes reasoning. Marks decisions `[AUTO-CONFIRMED]`. User reviews at end of shard.
-- 🤝 **Hybrid** / 💬 **Interactive**: Present each major section, walk through, wait for user confirmation (current behavior).
+Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for architecture decisions.
 
 ---
 
@@ -76,9 +70,9 @@ For each component, also define:
 - "Are there failure modes I haven't accounted for?"
 - For multi-surface: "What happens if the sync layer goes down? Can each surface degrade gracefully?"
 
-Refine based on discussion before proceeding.
+Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
-Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user.
+Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 > **Decision recording**: For each non-trivial architecture decision (technology choices, deployment topology, API style, failure handling strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Architecture decisions have the highest downstream impact in the pipeline — record them to `memory/decisions.md` with the Philosopher + Devil's Advocate deliberation.
 
@@ -88,7 +82,7 @@ Write the completed `## System Architecture` section to `docs/plans/architecture
 
 Read `.agent/skills/error-handling-patterns/SKILL.md` and follow its Error Architecture Interview methodology. All 5 decisions must receive explicit user confirmation before proceeding to Data Strategy. This step is a hard gate — do not proceed until all five decisions are confirmed.
 
-Write the completed decisions to `docs/plans/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`.
+Write the completed decisions to `docs/plans/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 5. Data strategy
 
@@ -111,22 +105,22 @@ For multi-surface projects, additionally define:
 - "Does every entity have a clear owner?"
 - "Are there query patterns I'm missing that could become hot paths?"
 
-Refine based on discussion before proceeding.
+Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
-Write the completed `## Data Strategy` section to `docs/plans/architecture-draft.md`.
+Write the completed `## Data Strategy` section to `docs/plans/architecture-draft.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ### 5.5. Cross-Store Entity Consistency
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its Cross-Store Entity Consistency Protocol for every entity that spans more than one store.
 
-Write the completed cross-store consistency table to `docs/plans/architecture-draft.md` as part of the `## Data Strategy` section.
+Write the completed cross-store consistency table to `docs/plans/architecture-draft.md` as part of the `## Data Strategy` section. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ### Data placement strategy document
 
 Read `.agent/skills/prd-templates/references/data-placement-template.md` for the template structure. Create `docs/plans/data-placement-strategy.md` using the template, filling each section with the data decisions confirmed above.
 
-### Propose next step
+### Next step
 
-System architecture and data placement strategy are complete. Next: Run `/create-prd-security` to define the security model, compliance escalation, and integration points.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-security`.
 
-> If this shard was invoked standalone (not from `/create-prd`), surface this via `notify_user`.
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

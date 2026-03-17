@@ -21,6 +21,10 @@ Write the FE spec to `docs/plans/fe/`, update indexes, run quality checks, and p
 
 **Prerequisite**: Read the spec file at `docs/plans/fe/[NN-feature-name].md`. The `## Classification` section, Referenced Material Inventory, and Design Requirements should be present from the classify shard. If the file lacks a `## Classification` section, run `/write-fe-spec-classify` first.
 
+**Re-run detection**: If the spec file already has content beyond the classification stub (filled component sections, state definitions, routing rules):
+- Present current state and ask: "This FE spec has existing content. **Continue** (skip filled sections) or **redo specific sections** (which ones)?"
+- Wait for user response before proceeding.
+
 ---
 
 ## 6. Write the spec to `docs/plans/fe/[NN-feature-name].md`
@@ -41,6 +45,55 @@ Change the spec's status from 🔲 to ✅ in `docs/plans/fe/index.md`.
 ## 8. Update spec pipeline
 
 Read `.agent/skills/session-continuity/protocols/08-spec-pipeline-update.md` and follow the **Spec Pipeline Update Protocol** (skip for cross-cutting specs).
+
+## 8.5. Iterative deepening passes
+
+Re-read the complete FE spec draft and run the following passes. Each pass may produce new content — repeat until a pass produces no meaningful additions.
+
+### Pass 1: State synchronization
+
+For each component that consumes data from an API:
+- When the underlying data changes (via another component, another tab, or another user), how does this component learn about it? Polling? WebSocket? Manual refresh?
+- If component A mutates data that component B displays, is the update path defined? Does B re-fetch, or does A broadcast?
+- If multiple components share the same data, is the source of truth defined? (Global store? Prop drilling? Context?)
+- After a mutation fails, does the component roll back optimistic updates? Is the rollback state defined?
+
+Add any new state management rules, re-fetch triggers, or optimistic update rollback specifications.
+
+### Pass 2: Degraded network behavior
+
+For each data-fetching view:
+- What does the component show when the API returns in 3+ seconds? (Loading state is specced — but is the threshold defined?)
+- What does the component show when the API returns a network error vs a 500 vs a 4xx?
+- What happens to in-progress form submissions if the network drops mid-request?
+- Are there any retry behaviors? If so, how many retries, at what interval, with what user feedback?
+
+Add any new loading thresholds, retry specifications, or network error differentiation.
+
+### Pass 3: User flow sequencing
+
+Trace each multi-step user flow across pages/views:
+- Can a user navigate backward mid-flow (browser back button, breadcrumbs)? What state is preserved?
+- Can a user open the same flow in two browser tabs? What happens on submission in both?
+- Can a user bookmark or deep-link to a mid-flow page? What happens on direct navigation?
+- If the user leaves a form and returns, is the data persisted? In local storage? Session storage? Not at all?
+
+Add any new navigation guard rules, state persistence decisions, or deep-link handling.
+
+### Pass 4: Responsive interaction gaps
+
+For each component with responsive breakpoints defined:
+- At mobile breakpoint, do hover-dependent interactions have touch equivalents?
+- At tablet breakpoint, do side-by-side layouts still allow sufficient touch target sizing?
+- Do modal/dialog components have appropriate mobile behavior (full-screen vs overlay)?
+- Are swipe gestures defined for mobile where drag-and-drop exists on desktop?
+
+Add any new touch interaction specs or mobile-specific behavior.
+
+**Pass loop guard**: Track total pass count.
+- Passes 1-4 → mandatory.
+- Pass 5 → optional, run if prior pass produced significant additions.
+- **After pass 5** → **STOP**: "5 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
 
 ## 9. Cross-reference check
 
@@ -71,9 +124,9 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run:
 ## 12. Check for new dependencies
 
 If this FE spec introduces a new technology:
-1. Identify the stack category (e.g., CHARTS, ANIMATION)
-2. Read `.agent/workflows/bootstrap-agents.md` and fire bootstrap with `PIPELINE_STAGE=write-fe-spec` + the key-value pair
-3. Confirm matching skill installed
+1. Identify the technology (e.g., chart library, map SDK, i18n framework)
+2. Read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents PIPELINE_STAGE=write-fe-spec` + the new dependency key
+3. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding.
 
 ## 13. Request review and propose next steps
 
@@ -100,3 +153,9 @@ Use `notify_user` presenting:
 2. Verify each is reachable from at least one navigation element
 3. Verify navigation structure itself is specced
 4. Flag orphan routes (specced but unreachable) — these block `/plan-phase`
+
+**Orphan route resolution**: If orphan routes are found:
+- List each orphan route with its spec source
+- For each, ask: "Add to navigation (where?), remove from spec, or defer to a later phase?"
+- Update the relevant FE spec immediately based on user decision
+- Re-run the completeness check until 0 orphans remain

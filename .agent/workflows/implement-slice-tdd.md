@@ -43,6 +43,10 @@ Read `.agent/skills/prd-templates/references/tdd-testing-policy.md` and apply it
 
 Run the Test Cmd from this slice's surface row in the surface stack map to verify tests fail.
 
+**RED test count validation**: Count the failing tests. Compare against the acceptance criteria count from the phase plan.
+- If failing tests **< acceptance criteria count** → missing coverage. Review which criteria lack tests and add them before proceeding to GREEN.
+- If failing tests **= 0** → **STOP**: "No tests are failing. Either tests were not written or they are incorrectly passing. Review test logic."
+
 ## 4. Implement (GREEN)
 
 Load the Languages skill(s) from this slice's surface row per the skill loading protocol.
@@ -71,16 +75,20 @@ Read `.agent/skills/systematic-debugging/SKILL.md` and follow its ACH methodolog
 2. Contract mismatch → re-read BE spec — contract wrong or implementation?
 3. Logic error → ACH per debugging skill
 4. Integration issue → check cross-surface wiring, env vars, service connectivity
-5. Maximum 3 iterations before escalating to user
+5. Maximum 3 iterations before escalating to user with:
+   - Summary of each iteration's hypothesis and result
+   - Current failing test output
+   - Files modified during debug attempts
+   - Recommended next steps (e.g., "may need manual env inspection" or "possible spec error in BE spec §X")
 
 Run the Test Cmd after each iteration.
 
 ## 4.5. New dependency check
 
 After GREEN, scan new imports. If any package lacks a corresponding skill directory in `.agent/skills/`:
-1. Identify the stack category (e.g., `QUEUE`, `CACHE`, `SEARCH`)
-2. Read `.agent/workflows/bootstrap-agents.md` and fire bootstrap with `PIPELINE_STAGE=implement-slice` + the key-value pair
-3. Confirm skill installed before proceeding to REFACTOR
+1. Identify the technology or library
+2. Read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents PIPELINE_STAGE=implement-slice` + the new dependency key
+3. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding to REFACTOR.
 
 No new unregistered dependencies → skip to Step 5.
 
@@ -90,7 +98,15 @@ With tests green, improve code quality: extract shared logic, improve naming, re
 
 Read `.agent/skills/code-review-pro/SKILL.md` and apply its adversarial review: "How would a senior engineer reject this in a PR review?"
 
-**Spec traceability check**: Re-read the BE spec and IA shard for this slice. Verify every contract field maps to a BE spec field and every `// IA-EDGE:` test's edge case is covered by the implementation. Fix spec drift before proceeding.
+**Structured spec completeness check**: Re-read the full BE spec section and FE spec section for this slice (loaded in setup Step 1.25). For each element, verify implementation coverage:
+
+1. **Field coverage**: For every field in the BE spec's request/response schemas, verify it appears in the implementation. Flag any spec field with no corresponding code.
+2. **Validation coverage**: For every validation rule in the BE spec (required fields, format constraints, range limits), verify it's enforced in the implementation. Flag any unimplemented validation.
+3. **Error code coverage**: For every error code specified, verify the implementation can produce it and the test suite asserts it.
+4. **Edge case coverage**: For every `// IA-EDGE:` test, verify the implementation handles it (not just that the test passes — the handling must be correct per the spec).
+5. **Access control coverage**: For every role mentioned in the spec's access control, verify the implementation enforces it.
+
+For any gap found: fix the implementation (not the spec). If the gap suggests the spec is wrong, flag it: "Spec may need update: [what was found]. Fix implementation to match spec, or update spec via `/propagate-decision`?"
 
 Run the Test Cmd to verify tests still pass.
 
