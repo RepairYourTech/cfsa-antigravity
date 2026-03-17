@@ -160,10 +160,19 @@ Does it belong to an EXISTING domain or sub-domain?
      │            │
      │           NO ──► It's a FEATURE ──► create .md file inside existing parent
      │
-    NO ──► (Surface Placement — two questions, not one)
+    NO ──► (Surface Placement — three questions)
               │
               Q1: "Where is this PRIMARILY experienced/operated?"
               │    (Which surface's user interacts with this most?)
+              │
+              Q1a: "Does this concept have a DIFFERENT primary surface
+              │     for initial setup vs. day-to-day operation?"
+              │     (e.g., discovered on web, used daily on mobile)
+              │     │
+              │     YES ──► SPLIT: setup surface owns data/API domain,
+              │     │        daily-operation surface gets its own operational domain
+              │     │        Both are real domains — connect via CX
+              │     NO  ──► proceed with single primary surface from Q1
               │
               Q2: "Which hub APIs does it consume?"
               │    (What data/services does it call from the hub?)
@@ -177,6 +186,11 @@ Does it belong to an EXISTING domain or sub-domain?
               │
               ├── No primary surface (pure API/data layer, no direct user interaction)
               │     ──► It's a HUB DOMAIN (infrastructure) ──► create in hub
+              │
+              ├── Setup and daily-operation on DIFFERENT surfaces
+              │     ──► BOTH surfaces get domains ──► connect via CX
+              │     (e.g., Consumer Accounts: web owns signup/config,
+              │      mobile owns daily device management/messaging)
               │
               └── Equally used across multiple surfaces (rare)
                     ──► It's a shared domain ──► create in shared/ (peer) or hub (hub-and-spoke)
@@ -350,8 +364,8 @@ Before starting, classify what the user has provided and select the right mode.
    For each spoke surface:
    1. List all concepts the document describes within that surface's sections
    2. Count how many were classified as spoke domains vs. hub domains
-   3. For each hub-classified concept that appeared in a spoke section: **re-run the "primarily experienced" test**. If the concept is primarily operated on the spoke, reclassify it as a spoke domain with hub CX
-   4. **Red flag**: If a spoke has fewer than 5 domains AND the document dedicates 100+ lines to that spoke → the classification is likely wrong. Re-examine every concept from that spoke section
+   3. For each hub-classified concept that appeared in a spoke section: **re-run the "primarily experienced" test** including Q1a (setup vs daily-operation). If the concept is primarily operated on the spoke — or daily-operated on the spoke even if set up elsewhere — reclassify it as a spoke domain with hub CX
+   4. **HARD GATE — not advisory**: If a spoke has fewer than 5 domains AND the document dedicates 100+ lines to that spoke → **STOP. The classification IS wrong.** You MUST re-run the daily-operation test (Q1 + Q1a) on EVERY hub-classified concept from that spoke's sections before proceeding. You may NOT write "PROPORTIONAL ✅" and continue — the gate condition is met, re-examination is mandatory. Only after re-examination may you proceed, and you must document which concepts were re-examined and why each retained or changed its classification
 
 5.6. **Spoke Persona Walk-Through.** For each spoke surface, identify its primary persona(s) and mentally walk through their daily workflow:
    - "If I'm a [persona] sitting at the [surface], what are ALL the things I do in a typical day?"
