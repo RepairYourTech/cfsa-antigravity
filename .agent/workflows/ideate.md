@@ -29,7 +29,26 @@ shards: [ideate-extract, ideate-discover, ideate-validate]
 | One-liner / verbal | User describes idea in chat, no files | Interview (deep) — builds vision from scratch domain by domain |
 | Full exploration | Any input with 3+ domains | Full — Recursive breadth-before-depth with Deep Think protocol, cross-cut detection active throughout |
 
-**Quality guarantee**: All input types produce the **same output quality** using the same fractal structure. The ideation output from a one-liner is structurally identical to one from a rich document. Every node has an index, CX file, and children. Every feature has a Role Lens. Only the amount of interview work differs.
+### Engagement Tiers
+
+After input classification, the user chooses how much involvement they want. All tiers are available for all input types — the pipeline recommends a default but the user picks.
+
+| Tier | Gate behavior | Default for |
+|------|---------------|-------------|
+| 🤖 **Auto** | Pipeline uses Deep Think to self-interview at every gate. User reviews compiled output at the end. | — |
+| 🤝 **Hybrid** | Structural/mechanical gates auto-confirm. Product decisions (personas, MoSCoW, competitive positioning, constraints) pause for user. | Rich doc, thin doc, chat transcript |
+| 💬 **Interactive** | Every gate pauses for explicit user confirmation. | Verbal / one-liner |
+
+**Full matrix — Input × Tier:**
+
+| Input Type | 🤖 Auto | 🤝 Hybrid | 💬 Interactive |
+|---|---|---|---|
+| Rich document | AI extracts + self-interviews gaps | AI extracts, pauses for product calls | AI extracts, pauses at every gate |
+| Thin document | AI expands all domains independently | AI expands, pauses for product calls | AI expands with user at every step |
+| Chat transcript | AI filters noise + self-interviews | AI filters, pauses for product calls | AI filters with user validation |
+| Verbal / one-liner | AI generates vision from scratch via Deep Think | AI generates, pauses for product calls | Full traditional interview |
+
+**Quality guarantee**: All input types and engagement tiers produce the **same output quality** using the same fractal structure. The ideation output from an Auto one-liner is structurally identical to an Interactive rich document. Every node has an index, CX file, and children. Every feature has a Role Lens. Only the amount of human involvement differs.
 
 Transform a raw idea into comprehensive, structured ideation output through exhaustive recursive exploration with the Deep Think protocol.
 
@@ -63,9 +82,9 @@ Check whether `docs/plans/ideation/ideation-index.md` already exists.
 
 | # | Shard | What It Does |
 |---|-------|-------------|
-| 1 | [`ideate-extract`](.agent/workflows/ideate-extract.md) | Classifies input, determines structural classification (4 shapes), creates fractal `ideation/` folder structure using Node Classification Gate, seeds domain folders, runs user intent check, sets expansion mode, loads skills |
-| 2 | [`ideate-discover`](.agent/workflows/ideate-discover.md) | Recursive breadth-before-depth exploration with Deep Think. Creates fractal nodes (folders with index + CX) and leaf feature files (with Role Lens). Hierarchical CX detection active throughout. |
-| 3 | [`ideate-validate`](.agent/workflows/ideate-validate.md) | Constraints, metrics, competitive positioning, leaf-node exhaustion check, fractal structure compliance, vision summary compilation |
+| 1 | [`ideate-extract`](.agent/workflows/ideate-extract.md) | Classifies input, determines structural classification (4 shapes), creates fractal `ideation/` folder structure using Node Classification Gate, seeds domain folders, asks engagement tier + expansion mode, loads skills |
+| 2 | [`ideate-discover`](.agent/workflows/ideate-discover.md) | Recursive breadth-before-depth exploration with Deep Think. Gate behavior controlled by engagement tier. Creates fractal nodes (folders with index + CX) and leaf feature files (with Role Lens). Hierarchical CX detection active throughout. |
+| 3 | [`ideate-validate`](.agent/workflows/ideate-validate.md) | Constraints, metrics, competitive positioning, leaf-node exhaustion check, fractal structure compliance, vision summary compilation. Auto tier gets a review checkpoint before compilation. |
 
 ---
 
@@ -73,7 +92,7 @@ Check whether `docs/plans/ideation/ideation-index.md` already exists.
 
 ### Step 1 — Run `.agent/workflows/ideate-extract.md`
 
-Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), determines structural classification (single-surface, multi-surface-shared, multi-product-hub, multi-product-peer), checks for existing ideation folder (re-run check), creates the fractal `docs/plans/ideation/` folder structure using the Node Classification Gate, runs user intent check to determine expansion mode, sets the expansion mode flag in `ideation-index.md`, and loads skills.
+Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), determines structural classification (single-surface, multi-surface-shared, multi-product-hub, multi-product-peer), checks for existing ideation folder (re-run check), creates the fractal `docs/plans/ideation/` folder structure using the Node Classification Gate, asks user to choose engagement tier (Auto/Hybrid/Interactive) and expansion mode, writes both to `ideation-index.md` immediately, and loads skills.
 
 ### Step 2 — Run `.agent/workflows/ideate-discover.md`
 

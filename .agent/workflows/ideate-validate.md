@@ -23,6 +23,14 @@ Explore constraints, verify domain exhaustion, and compile the vision summary.
 
 ---
 
+## 7.5. Read Engagement Tier
+
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`. Apply to gates in this shard:
+
+- **Auto**: Steps 8 (constraints, metrics, competitive positioning) → agent self-interviews using Deep Think, writes answers to files. Step 10.5 (below) provides a review checkpoint before compilation.
+- **Hybrid**: Steps 8 product decisions → pause for user. Structural checks → auto.
+- **Interactive**: All steps pause for user confirmation.
+
 ## 8. Constraints and metrics
 
 Read `.agent/skills/idea-extraction/SKILL.md` and follow its Deep Think Protocol.
@@ -40,7 +48,11 @@ Explore constraints with the user. Write to `docs/plans/ideation/meta/constraint
 
 **Deep Think**: "Based on the product type and user personas, what constraints would I expect that haven't been mentioned? For example, does this product handle payments (PCI)? Does it serve minors (COPPA)? Does it store health data (HIPAA)?"
 
-Write constraints to `meta/constraints.md`. If the surface classification changed, update `ideation-index.md` `## Structural Classification` section.
+**Interactive/Hybrid**: Present each constraint question to user, wait for answers. Write each confirmed constraint to `meta/constraints.md` immediately.
+
+**Auto**: Self-interview using Deep Think. Write all answers with reasoning to `meta/constraints.md` immediately. Mark each answer as `[AUTO-CONFIRMED]` for traceability.
+
+If the surface classification changed, update `ideation-index.md` `## Structural Classification` section.
 
 ### Success metrics
 
@@ -110,6 +122,19 @@ After the exhaustion check, verify proportionality:
 - **All inputs**: Each domain with `[DEEP]` or `[EXHAUSTED]` status should have at least 3 sub-areas drilled with edge cases.
 
 If proportionality fails, return to `/ideate-discover` for the under-explored areas.
+
+---
+
+## 10.5. Auto Tier Review Checkpoint (Auto tier only)
+
+If engagement tier is **Auto**, present a comprehensive review before compilation:
+
+1. **List all auto-confirmed decisions** with their Deep Think reasoning — from domain classification, feature drilling, constraints, personas, competitive positioning
+2. **Highlight any `[AUTO-CONFIRMED]` entries** in `meta/constraints.md`, `meta/personas.md`, and `meta/competitive-landscape.md`
+3. **Present for review**: "I explored your idea independently. Here's everything I decided and why. Override anything before I compile the vision."
+4. **Wait for user response.** Apply any overrides. Write corrections to files immediately.
+
+For **Hybrid** and **Interactive** tiers, skip this step — the user already confirmed during exploration.
 
 ---
 

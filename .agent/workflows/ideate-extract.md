@@ -19,7 +19,7 @@ pipeline:
 
 Classify the user's input, create the fractal `ideation/` folder structure, and load skills.
 
-**Prerequisite**: If invoked standalone (not from `/ideate`), verify the user has provided input — either an `@file` reference or a verbal description. If no input is provided, prompt: "What would you like to build? Describe your idea, or provide a file with `/ideate-extract @path/to/file.md`."
+**Prerequisite**: If standalone, verify user provided input via `@file` or verbal. If none, prompt: \"What would you like to build? Provide a file or describe your idea.\"
 
 ---
 
@@ -170,27 +170,30 @@ For each concept classified as **domain** in the confirmed table:
 - **Thin document**: Create domain folders with depth markers on feature files.
 - **Verbal / one-liner**: Create domain folders with scaffolding. Feature files are `[SURFACE]`.
 
-## 1.6. User Intent Check (ALL input types)
+## 1.6. Engagement Tier Selection (ALL input types)
 
-Read `.agent/skills/brainstorming/SKILL.md` and follow its methodology.
+All three tiers are available for all input types. Present with the recommended default for this input type (Rich/Thin/Chat → Hybrid, Verbal → Interactive):
 
-After seeding, present a summary and ask how the user wants to proceed. Present all options:
+> **How involved do you want to be?**
+> 1. 🤖 **Auto** — I explore independently via Deep Think. You review at the end.
+> 2. 🤝 **Hybrid** *(recommended)* — Structural stuff auto, product decisions pause for you.
+> 3. 💬 **Interactive** — I pause at every gate. Full interview mode.
 
-1. **Full exploration** *(recommended for 3+ domains)* — Recursive breadth-before-depth with Deep Think
-2. **Process as-is** — Proceed with what's captured; fill gaps as they arise
+**Wait for user answer.** Write the engagement tier to `ideation-index.md` under `## Engagement Tier` immediately.
+
+## 1.6.5. Expansion Mode Selection (ALL input types)
+
+Present expansion mode options:
+
+1. **Full exploration** *(recommended for 3+ domains)* — Breadth-before-depth with Deep Think
+2. **Process as-is** — Proceed with what's captured
 3. **Expand vertically** — Drill deeper into existing features
-4. **Expand horizontally** — Add new feature domains not yet covered
-5. **Explore cross-cutting concerns** — Map how existing features interact
+4. **Expand horizontally** — Add new domains
+5. **Cross-cutting concerns** — Map feature interactions
 6. **Combination** — User specifies dimensions and order
-7. **Audit ambiguity first** — Run inline check before deciding
+7. **Audit ambiguity first** — Inline check before deciding
 
-**Wait for user answer — do not assume.**
-
-## 1.7. Expansion Mode Routing
-
-Write the expansion mode to `ideation-index.md` per the super-index template.
-
-This flag is read by `ideate-discover.md` to shape exploration behavior.
+**Wait for user answer.** Write expansion mode to `ideation-index.md` under `## Expansion Mode` immediately.
 
 ## 2. Load skills
 

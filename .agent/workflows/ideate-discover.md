@@ -29,6 +29,19 @@ Read `.agent/skills/idea-extraction/SKILL.md` — follow the Recursive Domain Ex
 
 Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ideation/ideation-index.md`.
 
+## 2.5. Read Engagement Tier
+
+Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`. Apply gate behavior rules for this session:
+
+| Tier | Structural gates (domain maps, classification, sub-domain structure) | Product gates (personas, MoSCoW, feature scope, competitive positioning) |
+|------|----------------------------------------------------------------------|-------------------------------------------------------------------------|
+| 🤖 **Auto** | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed |
+| 🤝 **Hybrid** | Auto-confirm: apply Deep Think, write reasoning to feature files, proceed | **Pause for user**: present findings, wait for explicit confirmation |
+| 💬 **Interactive** | **Pause for user**: present findings, wait for explicit confirmation | **Pause for user**: present findings, wait for explicit confirmation |
+
+> [!IMPORTANT]
+> **Auto-confirmed gates must still write.** When a gate is auto-confirmed, the agent writes the Deep Think reasoning and decision to the relevant file immediately — just as if the user had confirmed it. The file trail must be identical regardless of tier. This ensures the Auto tier review checkpoint in `ideate-validate` has full traceability.
+
 ### Full Mode (recommended for 3+ domains)
 
 #### Level 0 — Global Domain Map
@@ -42,7 +55,7 @@ Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ide
    - In the relevant parent's CX file (surface CX or global CX)
    - In `ideation-cx.md` if cross-surface
 5. Update `ideation-index.md` structure map with paths
-6. **Gate**: Present domain map. User confirms before Level 1.
+6. **Gate** *(structural)*: Present domain map. **Interactive/Hybrid**: User confirms before Level 1. **Auto**: Auto-confirm with Deep Think reasoning written to `ideation-index.md`.
 
 #### Level 1 — Domain Breadth Sweep
 
@@ -57,7 +70,7 @@ For each domain (dependency order — foundational first):
 5. Note cross-cuts in the domain's CX file
 6. **NEW DOMAINS DISCOVERED?** → Classify, create, update index, loop to Level 0
 7. Mark domain status as `[BREADTH]`
-8. **Gate**: Pause after EACH domain. "Here's what I mapped for [Domain]. Missing anything?" After ALL: "All domains at BREADTH. Ready to drill?"
+8. **Gate** *(structural)*: Pause after EACH domain. **Interactive/Hybrid**: "Here's what I mapped for [Domain]. Missing anything?" After ALL: "All domains at BREADTH. Ready to drill?" **Auto**: Auto-confirm with Deep Think reasoning written to domain index.
 
 #### Level 2+ — Vertical Drilling
 
@@ -71,9 +84,9 @@ For each domain (dependency order), for each child:
 6. Cross-cuts with evidence → add to parent's CX file with synthesis questions
 7. **Feature reveals 2+ interacting capabilities?** → Run **Promotion Protocol** (convert .md to folder)
 8. **NEW DOMAINS DISCOVERED?** → Loop to Level 0
-9. When Deep Think yields zero hypotheses AND user confirms → mark `[EXHAUSTED]`
+9. When Deep Think yields zero hypotheses AND user confirms (or auto-confirms for Auto tier) → mark `[EXHAUSTED]`
 10. Status propagation: all children `[EXHAUSTED]` → node is `[EXHAUSTED]`
-11. **Gate**: Pause after each domain is drilled.
+11. **Gate** *(product)*: Pause after each domain is drilled. **Interactive**: Full review. **Hybrid**: Pause for review. **Auto**: Auto-confirm with Deep Think reasoning written to domain index.
 
 #### Cross-Cut Synthesis (Continuous)
 

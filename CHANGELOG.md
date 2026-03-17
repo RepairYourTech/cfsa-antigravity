@@ -1,5 +1,19 @@
 # cfsa-antigravity
 
+## 2.6.0
+
+### Minor Changes
+
+- Add tiered engagement modes to /ideate workflow (Auto, Hybrid, Interactive)
+
+  - All three tiers available for all input types — no restrictions
+  - Auto: pipeline self-interviews via Deep Think, user reviews compiled output
+  - Hybrid (default for docs): structural gates auto, product decisions pause for user
+  - Interactive (default for verbal): every gate pauses — full interview mode
+  - Tier stored in ideation-index.md immediately (per principle #6)
+  - ideate-discover reads tier and adapts gate behavior at all levels
+  - ideate-validate adds Auto tier review checkpoint (Step 10.5) before compilation
+
 ## 2.5.0
 
 ### Minor Changes
