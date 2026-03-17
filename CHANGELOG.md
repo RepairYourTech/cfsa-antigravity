@@ -1,5 +1,17 @@
 # cfsa-antigravity
 
+## 2.5.0
+
+### Minor Changes
+
+- Enforce incremental decision persistence across all pipeline workflows
+
+  - Added Key Principle #6: "Write decisions to disk immediately" — never batch in-memory
+  - `create-prd-security.md`: Split batched end-of-file write paragraph into per-step immediate writes (Security Model, Attack Surface, Integration Points, Observability)
+  - `create-prd-compile.md`: Added immediate write instructions for Development Methodology (Step 8) and Phasing Strategy (Step 9)
+  - `write-architecture-spec-design.md`: Promoted write-as-you-go from buried blockquote to IMPORTANT alert; added explicit write-after-confirm to all 7 design steps (Interactions, Contracts, Data Models, Access Control, Accessibility, Event Schemas, Edge Cases)
+  - Updated `GEMINI.md` and `AGENTS.md` with the new global principle
+
 ## 2.4.0
 
 ### Minor Changes

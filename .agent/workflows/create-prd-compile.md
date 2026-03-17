@@ -53,6 +53,8 @@ Document the agreed approach:
 4. **Spec layers** — IA → BE → FE pipeline
 5. **Quality gates** — What must pass before merge
 
+Write the completed `## Development Methodology` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
+
 ## 9. Phasing strategy
 
 Load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol.
@@ -76,6 +78,8 @@ Each phase should have a rough timeline estimate and must pass the full validati
 - "Is the Phase 1 scope achievable without cutting quality?"
 
 Refine based on discussion before proceeding.
+
+Write the completed `## Phasing Strategy` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
 
 ## 9.5. Lock project directory structure
 

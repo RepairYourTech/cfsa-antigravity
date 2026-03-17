@@ -76,6 +76,8 @@ Refine based on discussion before proceeding.
 
 If the security model confirmed a specific security framework or compliance approach (e.g., crypto patterns, custom HSM approach), read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents SECURITY=[confirmed value]` to provision additional skills. Note: surface-triggered security skills (`owasp-web-security`, `csp-cors-headers`, `input-sanitization`, `api-security-checklist`, `dependency-auditing`, `desktop-security-sandboxing`) are provisioned automatically by bootstrap when surfaces are confirmed in `/create-prd-stack` — no manual fire needed for those.
 
+Write the completed `## Security Model` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Do not wait for later steps.
+
 ## 6.5. Attack Surface Review
 
 Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its Attack Surface Review Protocol for each surface confirmed in /create-prd-stack. Apply Universal checks to all projects, then surface-specific checks conditionally.
@@ -83,6 +85,8 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its 
 **Present to user**: Show the attack surface review findings. Ask:
 - "Are there any attack vectors I've missed for your specific domain?"
 - "Do the OWASP mechanisms look correct, or are any of them actually handled differently?"
+
+Write the completed `## Security — Attack Surface` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
 
 ## 7. Integration points
 
@@ -93,6 +97,8 @@ For each external service:
 3. **Fallback strategy** — Graceful degradation plan
 4. **Cost model** — Pricing tier, expected usage
 
+Write the completed `## Integration Points` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
+
 ## 7.5. Observability Architecture
 
 Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability Architecture Interview — all 5 decisions (logging, tracing, alerting, dashboards, retention) must be confirmed. Fire bootstrap per the skill's instructions for each confirmed tool.
@@ -101,7 +107,7 @@ Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability 
 - "Are these logging levels and PII exclusions correct for your compliance requirements?"
 - "Are the alerting thresholds appropriate for your expected traffic?"
 
-After the security model (Step 6) is completed and confirmed, write the `## Security Model` section to `docs/plans/architecture-draft.md`. After the attack surface review (Step 6.5) is completed and confirmed, write the `## Security — Attack Surface` section to `docs/plans/architecture-draft.md`. After the integration points (Step 7) are completed and confirmed, write the `## Integration Points` section to `docs/plans/architecture-draft.md`. After the observability architecture (Step 7.5) is completed and confirmed, write the `## Observability Architecture` section to `docs/plans/architecture-draft.md`. Do not wait until the end — write each section as it is completed.
+Write the completed `## Observability Architecture` section to `docs/plans/architecture-draft.md` immediately after user confirmation.
 
 ### Propose next step
 
