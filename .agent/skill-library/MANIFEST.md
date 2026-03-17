@@ -55,6 +55,7 @@ When a stack key matches a value pattern (case-insensitive), install the listed 
 | `FRONTEND_FRAMEWORK` | `*astro*` | `stack/frameworks/astro-framework` | `astro-framework` |
 | `FRONTEND_FRAMEWORK` | `*next*` | `stack/frameworks/nextjs` | `nextjs` |
 | `FRONTEND_FRAMEWORK` | `*svelte*` OR `*sveltekit*` | `stack/frameworks/sveltekit` | `sveltekit` |
+| `FRONTEND_FRAMEWORK` | `*svelte*` OR `*sveltekit*` | `stack/frameworks/svelte5` | `svelte5` |
 | `FRONTEND_FRAMEWORK` | `*nuxt*` | `stack/frameworks/nuxt` | `nuxt` |
 | `BACKEND_FRAMEWORK` | `*hono*` | `stack/frameworks/hono` | `hono` |
 | `BACKEND_FRAMEWORK` | `*fastapi*` | `stack/frameworks/fastapi` | `fastapi` |
@@ -94,6 +95,7 @@ When a stack key matches a value pattern (case-insensitive), install the listed 
 | `CSS_FRAMEWORK` | `*sass*` OR `*scss*` | `stack/css/sass-scss` | `sass-scss` |
 | `UI_LIBRARY` | `*shadcn*` | `stack/ui/shadcn-ui` | `shadcn-ui` |
 | `UI_LIBRARY` | `*react-flow*` OR `*xyflow*` | `stack/ui/react-flow` | `react-flow` |
+| `UI_LIBRARY` | `*svelte-flow*` OR `*svelteflow*` OR `*xyflow*` | `stack/ui/svelte-flow` | `svelte-flow` |
 | `FRONTEND_FRAMEWORK` | `*react*` | `stack/ui/react-best-practices` | `react-best-practices` |
 | `FRONTEND_FRAMEWORK` | `*react*` | `stack/ui/react-composition-patterns` | `react-composition-patterns` |
 | `DESIGN_DIRECTION` | `*` (any confirmed value) | Fills `{{PLACEHOLDER}}`s in `.agent/skills/brand-guidelines/SKILL.md` in-place | `brand-guidelines` (in-place fill, not copy) |
