@@ -1,35 +1,23 @@
 # CFSA Antigravity — Constraint-First Specification Architecture
 
-This is a **Constraint-First Specification Architecture (CFSA)** pipeline. It turns a raw idea into exhaustively specified, test-driven, production-quality code through a series of progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Every line of code, every spec, every test is production-grade from the moment it's written. Phases control scope, never quality. There is no "fix it later."
+**CFSA pipeline** — raw idea → exhaustive specs → test-driven production code. Stack/agent-agnostic. Phases control scope, never quality. No "fix it later."
 
 ### Entry Point
-
-Start the pipeline with:
 
 ```
 /ideate                              # From scratch — deep interview
 /ideate @path/to/your-idea.md        # From existing document
 ```
 
-The `@file` pattern is natively supported by `/ideate` (with full multi-mode input classification) and as a simple document-read input by `/evolve-feature`, `/resolve-ambiguity`, and `/propagate-decision`. Other pipeline commands accept direct invocation; `@file` can be passed to them but no automatic input classification is applied — the workflow reads the file and treats it as inline context.
+`@file` is natively supported by `/ideate` (with multi-mode input classification) and as simple document-read by `/evolve-feature`, `/resolve-ambiguity`, `/propagate-decision`.
 
 ### Progressive Decision Lock
 
-Decisions in this pipeline are **progressively locked**. Each pipeline stage builds on the locked decisions of previous stages:
+Decisions are **progressively locked**: `/ideate` → vision, `/create-prd` → architecture, `/decompose-architecture` → domain boundaries, `/write-architecture-spec` → interaction specs, `/write-be-spec` → backend contracts, `/write-fe-spec` → frontend specs, `/plan-phase` → implementation order, `/verify-infrastructure` → operational foundation, `/implement-slice` → code.
 
-1. `/ideate` locks the **vision** — problem, personas, features, constraints
-2. `/create-prd` locks the **architecture** — tech stack, system design, security model
-3. `/decompose-architecture` locks the **domain boundaries** — shard structure, dependencies
-4. `/write-architecture-spec` locks the **interaction specs** — per-shard contracts, data models
-5. `/write-be-spec` locks the **backend contracts** — API endpoints, schemas, middleware
-6. `/write-fe-spec` locks the **frontend specs** — components, state, interactions
-7. `/plan-phase` locks the **implementation order** — dependency-ordered TDD slices
-7.5. `/verify-infrastructure` locks the **operational foundation** — CI/CD green, staging live, migrations clean, auth working
-8. `/implement-slice` locks the **code** — tests → implementation → validation
+Once locked, downstream stages may not contradict. To change a locked decision, re-run the originating stage and cascade.
 
-Once a stage is locked, downstream stages may not contradict it. To change a locked decision, re-run the originating stage and cascade changes downstream.
-
-<!-- Pipeline table maintained by: (1) bootstrap-agents-fill.md Step 4 for project-config sections, (2) kit maintainer checklist for workflow rows — see docs/kit-architecture.md Kit Maintenance Checklist -->
+<!-- Maintained by bootstrap-agents-fill.md Step 4 + kit maintainer checklist -->
 ### Pipeline Workflow Table
 
 | # | Command | Input | Output | Stage |
@@ -40,15 +28,11 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (human summary compiled from ideation folder) | Discovery |
 | 2 | `/create-prd` | `ideation-index.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
 
-> **Persistent intermediary**: `docs/plans/ideation/` folder — kept permanently as the pipeline's source of truth for the ideation phase.
-
 | ↳ | `/create-prd-stack` | `ideation/meta/constraints.md` | Tech stack decisions | Design |
 | ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
 | ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |
-
-> **Progressive working artifact**: `docs/plans/architecture-draft.md` — written incrementally by shards 1–3, read by shard 4 to compile the final `architecture-design.md`.
 
 | 3 | `/decompose-architecture` | `architecture-design.md` | IA shards + layer indexes | Design |
 | ↳ | `/decompose-architecture-structure` | Approved domains | Directory structure + shard skeletons + indexes | Design |
@@ -88,17 +72,13 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | 11 | `/evolve-contract` | Changed `{{CONTRACT_LIBRARY}}` schema | Safe schema migration | Maintenance |
 
 
-> **Note**: Rows marked with ↳ are independently-invocable sub-workflows (shards)
-> of their parent command. The parent orchestrates them in sequence, but each shard
-> can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
-> sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
-> `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, and `/evolve-feature` are utility commands callable from any stage — they are not sequential pipeline steps.
+> **Note**: ↳ rows are independently-invocable shards. Utility commands (`/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`) are callable from any stage.
 
 > [!WARNING]
 > If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
 
 > [!WARNING]
-> If `{{PLACEHOLDER}}` values appear anywhere in this file, bootstrap has not run — do not attempt implementation work.
+> If `{{PLACEHOLDER}}` values appear in this file: check the current pipeline phase (see below). Pre-PRD → placeholders are expected, they fill at `/create-prd`. Post-PRD → run `/bootstrap-agents-fill`.
 
 ---
 
@@ -122,11 +102,11 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 
 | Guide | Description |
 |-------|-------------|
-| 🛠️ [Workflow](.agent/instructions/workflow.md) | Execution sequence & principles |
-| 💻 [Tech Stack](.agent/instructions/tech-stack.md) | Technology decisions & skill mappings |
-| 📐 [Patterns](.agent/instructions/patterns.md) | Code conventions & architecture patterns |
-| 📁 [Structure](.agent/instructions/structure.md) | Directory layout & protected files |
-| ⌨️ [Commands](.agent/instructions/commands.md) | Dev, test, lint, build commands |
+| 🛠️ [Workflow](.agent/instructions/workflow.md) | Execution sequence |
+| 💻 [Tech Stack](.agent/instructions/tech-stack.md) | Technology decisions |
+| 📐 [Patterns](.agent/instructions/patterns.md) | Code conventions |
+| 📁 [Structure](.agent/instructions/structure.md) | Directory layout |
+| ⌨️ [Commands](.agent/instructions/commands.md) | Dev, test, lint, build |
 
 ### Agent Rules
 
@@ -143,6 +123,10 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 | 🗣️ [question-vs-command](.agent/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
 | 🎯 [decision-classification](.agent/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
 | ✅ [completion-checklist](.agent/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
+| 🧠 [memory-capture](.agent/rules/memory-capture.md) | Patterns, decisions, blockers written every conversation |
+| 🔢 [single-question](.agent/rules/single-question.md) | One question at a time, options + pros/cons + recommendation |
+| 🐛 [debug-by-test](.agent/rules/debug-by-test.md) | Failing test before any fix — reproduce first, fix second |
+| 🔍 [skill-mcp-first](.agent/rules/skill-mcp-first.md) | Check skills and MCPs before reasoning on your own |
 
 ### Installed Skills
 
@@ -156,27 +140,43 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 4. **TDD: failing test before code** — Red → Green → Refactor, every slice, every surface
 5. **Security-first** — PII never leaks, inputs validated, secrets server-side only
 6. **Write decisions to disk immediately** — Every confirmed decision is written to its output file the moment the user confirms it. Never batch decisions in-memory across a long conversation. If the conversation truncates, all confirmed work must survive on disk.
+7. **Write to memory every conversation** — Before ending any workflow or conversation, write patterns to `memory/patterns.md`, decisions to `memory/decisions.md`, blockers to `memory/blockers.md`. See rule: `memory-capture`.
+
+### Pipeline Phase Detection
+
+Before acting on any task, detect the current pipeline phase from filesystem markers:
+
+| Phase | Marker | Valid Actions |
+|-------|--------|---------------|
+| Pre-ideation | No `docs/plans/ideation/ideation-index.md` | Only `/ideate` |
+| Ideating | `ideation/` has content, no `vision.md` | Ideation workflows only |
+| Ideation complete | `ideation-index.md` + `vision.md` exist | `/audit-ambiguity` → `/create-prd` |
+| PRD in progress | `architecture-draft.md` exists | PRD workflows only |
+| PRD complete | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | `/decompose-architecture` |
+| Decomposition done | IA shards in `docs/plans/ia/` | `/write-architecture-spec` |
+| Spec writing | BE/FE specs exist | `/write-be-spec`, `/write-fe-spec` |
+| Planning | Phase plan in `docs/plans/phases/` | `/plan-phase` |
+| Implementation | `.agent/progress/` has content | `/implement-slice` |
+
+**Use this table to gate every action.** If a user runs a command that doesn't match their current phase, explain what phase they're in and what to run instead.
 
 ### Decision Tree
 
 ```mermaid
 graph TD
-    A[Task Received] --> B{Pipeline complete?}
-    B -->|No - ideation-index.md missing| C[Run /ideate first]
-    B -->|No - placeholders unfilled| D[Run /create-prd first]
-    B -->|Yes| E[Read Rules]
-    E --> F[Read Instructions]
-    F --> G{Scan Skills}
+    A[Task Received] --> P{Detect Phase}
+    P --> B{Task matches phase?}
+    B -->|No| F[STOP: explain phase + valid actions]
+    B -->|Yes| E[Read Rules + Instructions]
+    E --> G{Scan Skills}
     G -->|Found| H[Load Skill]
-    G -->|None| I{Scan MCP}
-    I -->|Found| J[Use MCP Tools]
-    I -->|None| K[Plan: Contract → Test → Implement]
-    K --> L[Execute]
-    L --> M[MANDATORY: Run Validation]
+    G -->|None| K[Execute Task]
+    K --> L[MANDATORY: Run Validation]
+    L --> M[MANDATORY: Write Memory]
     M --> N[Update Progress Tracking]
     N --> O[Complete]
 ```
 
 ### Mandatory Validation
 
-**CRITICAL:** Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.
+Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.

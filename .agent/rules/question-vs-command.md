@@ -79,3 +79,13 @@ interesting", hedging language ("maybe", "possibly", "sort of")
 
 5. **Never mistake frustration for instruction.** "This API is a mess" is not an
    instruction to refactor the API. It might be — but ask first.
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| Editing code because user asked "is this right?" | ❌ Rejected. That's a question — discuss. |
+| Refactoring because user said "this is messy" | ❌ Rejected. Frustration ≠ instruction — ask first. |
+| Switching approach because user asked "what about X?" | ❌ Rejected. They're exploring — discuss trade-offs. |
+| Question → discussion → user commands → action | ✅ Correct. |
+| Ambiguous input → clarification request | ✅ Correct. |

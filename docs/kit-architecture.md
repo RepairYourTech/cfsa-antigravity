@@ -23,7 +23,7 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 ### Core Components
 
 *   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, `commands.md`) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
-*   **Rules:** Preemptively loaded constraints that apply to *every* task. Includes security best practices (`security-first.md`), TDD mandates (`tdd-contract-first.md`), and vertical-slice enforcement (`vertical-slices.md`).
+*   **Rules:** Preemptively loaded constraints that apply to *every* task. Covers security, TDD, vertical slices, debugging discipline, memory capture, questioning style, and more. See `GEMINI.md` → Agent Rules table for the full list.
 *   **Skill Library:** (`.agent/skill-library/`) Installable skill packages organized by category (e.g., `stack/databases/`, `stack/frontend-frameworks/`). Skills are provisioned from here into `.agent/skills/` by the bootstrap system when tech decisions are confirmed. Contains `MANIFEST.md` with the full taxonomy.
 *   **Skills:** Modular capabilities (e.g., `technical-writer`, `brainstorming`). Agents load these explicitly when a task requires them, preventing context bloat.
 *   **Workflows:** Step-by-step markdown checklists invoked via `/slash-commands` (e.g., `/create-prd`, `/implement-slice`). They chain skills together to achieve complex, multi-stage goals.
@@ -366,6 +366,11 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 - [ ] If the workflow introduces a new system component or new convention, update the relevant section of `docs/kit-architecture.md`
 - [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
 - [ ] If the workflow introduces a new skill, add it to `.agent/skill-library/MANIFEST.md`
+
+**When a new rule is added to `.agent/rules/`:**
+
+- [ ] Add a row to the `GEMINI.md` Agent Rules table
+- [ ] If the rule uses `{{PLACEHOLDER}}` values, follow the placeholder checklist below
 
 **When adding a `{{PLACEHOLDER}}` to any `.agent/rules/*.md`**
 

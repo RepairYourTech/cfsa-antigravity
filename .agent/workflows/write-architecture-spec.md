@@ -68,3 +68,12 @@ Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review dis
 
 > [!CAUTION]
 > After completing all IA shards, the **only** valid next step is `/write-be-spec`. Do NOT propose `/plan-phase` or `/implement-slice` — those require completed BE and FE specs. This applies to ALL project types: web apps, CLI tools, bash scripts, APIs, desktop apps. No project skips the BE/FE spec layers.
+
+## Completion Gate (MANDATORY)
+
+Before reporting completion to the user:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+

@@ -33,10 +33,13 @@ A feature slice is complete when:
 - [ ] Auth gates: every route that requires auth has the auth gate implemented (not stubbed)
 - [ ] The feature is reachable from the app's entry point via normal user navigation
 
-## Anti-Patterns
+## What Gets Flagged
 
-| Don't | Do |
-|-------|-----|
-| "I'll add the admin panel later" | Include admin CRUD in the slice |
-| "The API works, frontend next sprint" | Ship them together or not at all |
-| "Database is set up, just need endpoints" | That's not a slice, that's a layer |
+| Pattern | Verdict |
+|---------|---------|
+| "I'll add the admin panel later" | ❌ Rejected. Include admin CRUD in the slice. |
+| "The API works, frontend next sprint" | ❌ Rejected. Ship them together or not at all. |
+| "Database is set up, just need endpoints" | ❌ Rejected. That's a layer, not a slice. |
+| Route without navigation link from existing UI | ❌ Rejected. Must be reachable. |
+| Auth-required route without auth gate | ❌ Rejected. Implement the gate. |
+| All 4 layers + tests + navigation + auth gates | ✅ Correct. |

@@ -52,3 +52,13 @@ Specs must go **deep enough** that an implementer needs zero clarification.
 3. Every API call has loading, success, and error UI states
 4. Every responsive breakpoint has layout behavior specified
 5. Every interaction has keyboard, mouse, and touch behavior defined
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| "Fast response times" in a spec | ❌ Rejected. Specify P95 latency threshold. |
+| "Handle errors gracefully" | ❌ Rejected. Specify error codes and response shapes. |
+| Endpoint without typed request/response schema | ❌ Rejected. Add full schema. |
+| Form spec without per-field validation rules | ❌ Rejected. Specify each field. |
+| "P95 < 200ms", "returns 409 with `{error, code}`" | ✅ Correct. Testable and specific. |

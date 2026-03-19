@@ -55,3 +55,13 @@ Red → Green → Refactor
 - Test file lives next to source: `foo.ts` → `foo.test.ts`
 - No `any` in test files — type your mocks
 - Coverage minimum: 80% lines, 90% branches on critical paths
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| Implementation code written before schema | ❌ Rejected. Schema first. |
+| Tests written after implementation | ❌ Rejected. Red → Green → Refactor. |
+| `any` type in test file | ❌ Rejected. Type your mocks. |
+| Endpoint without contract validation test | ❌ Rejected. Add contract test. |
+| Schema → failing test → implementation → green | ✅ Correct. |

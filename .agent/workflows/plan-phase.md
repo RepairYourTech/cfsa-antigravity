@@ -43,3 +43,12 @@ Run `.agent/workflows/plan-phase-preflight.md`.
 Slice identification, dependency ordering, acceptance criteria, progress file generation, and bootstrap completeness gate.
 
 Run `.agent/workflows/plan-phase-write.md`.
+
+## Completion Gate (MANDATORY)
+
+Before reporting completion to the user:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+

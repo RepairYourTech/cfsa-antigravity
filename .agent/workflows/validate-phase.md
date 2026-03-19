@@ -50,3 +50,12 @@ Runs production readiness checks: API documentation sync, accessibility audit, p
 - [ ] All production readiness checks pass (Shard 2)
 - [ ] Validation report written to `docs/audits/phase-N-validation.md`
 - [ ] Pass/fail verdict determined
+
+## Completion Gate (MANDATORY)
+
+Before reporting completion to the user:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+

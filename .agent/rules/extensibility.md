@@ -13,10 +13,10 @@ trigger: always_on
 
 | File Type | Max Lines | Reasoning |
 |-----------|-----------|-----------|
-| Components (`.tsx`) | 200 | Extract sub-components if larger |
-| Utilities / lib (`.ts`) | 300 | Split into focused modules |
-| Schema files (`.schema.ts`) | 150 | One domain per schema file |
-| Test files (`.test.ts`) | 400 | Group by feature, split if needed |
+| Components | 200 | Extract sub-components if larger |
+| Utilities / lib | 300 | Split into focused modules |
+| Schema files | 150 | One domain per schema file |
+| Test files | 400 | Group by feature, split if needed |
 | Config files | 100 | Keep flat and readable |
 
 ## Directory Documentation
@@ -30,13 +30,7 @@ trigger: always_on
 
 ## Naming Conventions
 
-| Element | Convention | Example |
-|---------|-----------|---------|
-| Schema files | `[feature].schema.ts` | `model-config.schema.ts` |
-| Components | PascalCase directory + `index.tsx` | `ModelSelector/index.tsx` |
-| Utilities | `[feature].ts` in `lib/` | `lib/rate-limiter.ts` |
-| API routes | `[resource]/[action].ts` | `api/models/list.ts` |
-| Test files | `[source-file].test.ts(x)` | `ModelSelector.test.tsx` |
+Follow the project's established conventions in `.agent/instructions/patterns.md`. When no convention exists yet, use the stack's community standard.
 
 ## Anti-Spaghetti Rules
 
@@ -45,3 +39,14 @@ trigger: always_on
 - No business logic in components — components render, lib/ computes
 - No copy-paste patterns — if you wrote it twice, extract it
 - Same pattern everywhere — if existing code does X one way, new code does X the same way
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| Component file over 200 lines | ❌ Rejected. Extract sub-components. |
+| Directory with 3+ files and no README.md | ❌ Rejected. Add one. |
+| Circular import detected | ❌ Rejected. Restructure dependencies. |
+| Copy-pasted logic in two files | ❌ Rejected. Extract to shared module. |
+| New code uses different pattern than existing code for same thing | ❌ Rejected. Match existing conventions. |
+| Clean, focused modules with README documentation | ✅ Correct. |

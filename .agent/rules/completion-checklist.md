@@ -37,10 +37,11 @@ A unit of work is only DONE when:
    - Phase progress fractions updated (e.g., `3/10` → `4/10`)
    - Overall progress fractions updated
 4. **The Locks**: All task claims (`[!]` flags and `files:` blocks) are removed.
-5. **The Memory**: Blockers and patterns are logged to `.agent/progress/memory/`.
-   - Follow `.agent/skills/session-continuity/protocols/04-pattern-extraction.md` — reflect on what worked, what didn't, classify, and write to `memory/patterns.md`
-   - Log any new blockers or resolutions to `memory/blockers.md`
-   - If decisions were made using Protocol 6 (Decision Effect Analysis), verify they're recorded in `memory/decisions.md`
+5. **The Memory**: All three memory files in `.agent/progress/memory/` are checked:
+   - `patterns.md` — Any patterns observed (what worked, what failed) logged per Protocol 04. **User corrections are logged as anti-patterns.**
+   - `decisions.md` — Any non-trivial decisions logged per Protocol 06
+   - `blockers.md` — Any blockers hit logged with status and impact
+   - See rule: `memory-capture` for triggers and format
 6. **The Session Log**: A session close log exists in `.agent/progress/sessions/`.
    - Follow `.agent/skills/session-continuity/protocols/05-session-close.md` — write what was accomplished, deferred, and where the next session should start
 

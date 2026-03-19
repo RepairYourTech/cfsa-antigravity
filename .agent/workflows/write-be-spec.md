@@ -74,3 +74,12 @@ Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review dis
 - [ ] Every deep dive key decision is reflected in the spec
 - [ ] Every cross-shard reference has been resolved
 - [ ] IA Source Map is complete — no BE spec section lacks a traceable IA source
+
+## Completion Gate (MANDATORY)
+
+Before reporting completion to the user:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+

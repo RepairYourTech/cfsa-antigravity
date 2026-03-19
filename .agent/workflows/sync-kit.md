@@ -214,7 +214,12 @@ Scan these files for any literal `{{` characters:
 6. `.agent/instructions/patterns.md`
 7. `.agent/instructions/tech-stack.md`
 
-**If unfilled patterns found** — list each with remediation:
+**If unfilled patterns found** — check the current pipeline phase before recommending remediation:
+
+1. **Detect phase**: Check filesystem markers per `GEMINI.md` → Pipeline Phase Detection table.
+2. **If phase is Pre-PRD** (no `architecture-design.md` exists) → report:
+   > "Placeholders remain unfilled — this is **expected** at the current pipeline phase (`<detected_phase>`). They will be filled when `/create-prd` → `/bootstrap-agents-fill` runs after ideation completes."
+3. **If phase is Post-PRD** (`architecture-design.md` exists) → show remediation table:
 
 | File(s) | Remediation |
 |---------|-------------|

@@ -41,3 +41,14 @@ Every response includes:
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `Strict-Transport-Security` — HSTS with long max-age
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| PII field in AI model request payload | ❌ Rejected. Strip before sending. |
+| API key hardcoded in source file | ❌ Rejected. Use environment variable. |
+| User input rendered as raw HTML | ❌ Rejected. Always escape. |
+| Public endpoint without rate limiting | ❌ Rejected. Add rate limiter. |
+| API endpoint without input validation | ❌ Rejected. Add {{CONTRACT_LIBRARY}} schema. |
+| Encrypted PII, parameterized queries, server-side secrets | ✅ Correct. |

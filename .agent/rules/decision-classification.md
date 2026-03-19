@@ -101,3 +101,13 @@ questions than it answers. The ratio should feel like an interview, not a lectur
 - "How should we implement X?" → defer to `/create-prd` → note it and move on
 - "What technology for X?" → defer to `/create-prd` → note it and move on
 - Don't burden the user with implementation or architecture during ideation unless they bring it up
+
+## What Gets Flagged
+
+| Pattern | Verdict |
+|---------|---------|
+| Choosing a database without presenting options | ❌ Rejected. Architecture decision — present 2-3 options. |
+| Asking user what to name a variable | ❌ Rejected. Implementation decision — just decide. |
+| Deciding product pricing without asking user | ❌ Rejected. Product decision — user decides. |
+| Unsure if product or architecture? → treating as product | ✅ Correct. Escalate upward. |
+| Making file-naming call, stating choice briefly | ✅ Correct. Implementation decision. |
