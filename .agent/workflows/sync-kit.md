@@ -228,15 +228,19 @@ Scan these files for any literal `{{` characters:
 
 ## 9. Update sync state
 
-Read the upstream's `package.json` to get the current kit version. Write or update `.agent/kit-sync.md`:
+Read the upstream repository's `package.json` file and extract the `"version"` field — this is a **semver string** like `"2.10.0"`. Do NOT use the branch name (e.g., `main`), tag prefix, or any other identifier. The value must match the pattern `X.Y.Z`.
+
+**Validation gate**: Before writing, verify the extracted version matches `/^\d+\.\d+\.\d+$/`. If it doesn't (e.g., it's `main`, `latest`, or empty) → **STOP**: "Could not extract a valid semver version from the upstream package.json. Found: `[value]`. Check that the upstream URL is correct and the package.json has a valid `version` field."
+
+Write or update `.agent/kit-sync.md`:
 
 ```markdown
 # Kit Sync State
 
 upstream: https://github.com/RepairYourTech/cfsa-antigravity
-last_synced_commit: <current upstream HEAD commit hash>
-last_synced_at: <ISO 8601 timestamp>
-kit_version: <version from upstream package.json, e.g. 2.3.1>
+last_synced_commit: <current upstream HEAD commit hash — full 40-char SHA>
+last_synced_at: <ISO 8601 timestamp, e.g. 2026-03-17T16:04:40Z>
+kit_version: <semver from upstream package.json "version" field, e.g. 2.10.0>
 ```
 
 This file is committed to the project repo — it records which kit version the project is on and serves as the baseline for the next sync.
