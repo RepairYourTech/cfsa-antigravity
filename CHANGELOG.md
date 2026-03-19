@@ -1,5 +1,32 @@
 # cfsa-antigravity
 
+## 2.11.0
+
+### Minor Changes
+
+- Enforce structural consistency across all 13 agent rules
+
+  ### New Rules
+
+  - **memory-capture**: Patterns, decisions, and blockers written to memory every conversation
+  - **single-question**: One question at a time with options, pros/cons, and recommendation
+  - **debug-by-test**: Failing test before any fix — reproduce first, fix second
+  - **skill-mcp-first**: Check skills and MCPs before reasoning on your own
+
+  ### Rule Improvements
+
+  - Added YAML frontmatter (`description` + `trigger: always_on`) to all 4 new rules
+  - Added "What Gets Flagged" tables with ❌/✅ verdicts to 7 original rules: `security-first`, `specificity-standards`, `tdd-contract-first`, `decision-classification`, `question-vs-command`, `extensibility`, `vertical-slices`
+  - Made `extensibility.md` stack-agnostic (removed hardcoded `.tsx`/`.ts` extensions)
+
+  ### Pipeline Enforcement
+
+  - Added mandatory completion gates to all 10 parent workflows
+  - Added phase detection table and phase-aware decision tree to GEMINI.md
+  - Made `sync-kit.md` Step 8.5 phase-aware
+  - Added new-rule registration checklist to `kit-architecture.md` Section 6
+  - Initialized memory files with PAT-001 through PAT-004 and DEC-001
+
 ## 2.7.0
 
 ### Minor Changes
