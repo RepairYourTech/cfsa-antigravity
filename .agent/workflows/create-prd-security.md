@@ -114,6 +114,16 @@ Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability 
 
 Write the completed `## Observability Architecture` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
+## Completion Gate (MANDATORY)
+
+Before reporting completion or proceeding to next shard:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. Security model decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+
+---
+
 ### Next step
 
 **STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-compile`.

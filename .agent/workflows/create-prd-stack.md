@@ -103,6 +103,16 @@ Read each installed skill's SKILL.md before proceeding. Append the confirmed dec
 
 Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=create-prd` plus only the keys just decided. Bootstrap runs after **each confirmed decision**, not in a batch at the end. At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename.
 
+## Completion Gate (MANDATORY)
+
+Before reporting completion or proceeding to next shard:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. Tech stack decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+
+---
+
 ### Next step
 
 **STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-architecture`.

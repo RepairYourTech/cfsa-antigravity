@@ -134,6 +134,16 @@ If any section is incomplete, loop back to the relevant decision step and resolv
 
 ---
 
+## Completion Gate (MANDATORY)
+
+Before reporting completion or proceeding to next shard:
+
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. All 7 design system decisions should be reviewed for `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
+2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+
+---
+
 ### Next step
 
 **STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-architecture`.
