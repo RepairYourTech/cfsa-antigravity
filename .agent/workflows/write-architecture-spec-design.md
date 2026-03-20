@@ -185,6 +185,17 @@ For each referenced deep dive:
 
 ## 8. Present all sections and request approval
 
+**Section completeness gate**: Before requesting approval, verify the spec file at `docs/plans/ia/[shard-name].md` contains ALL of the following sections with non-empty content (not just headers or `<!-- TODO -->` markers):
+- `## Interactions`
+- `## Contracts`
+- `## Data Models`
+- `## Access Control`
+- `## Accessibility`
+- `## Edge Cases`
+- `## Event Schemas` (may be marked N/A — that's valid, but the section must exist with an explicit statement)
+
+If any required section is missing or contains only headers → **STOP**: "Section `[name]` is empty or missing in the spec file. Complete all sections before requesting user approval."
+
 All sections are now written to `docs/plans/ia/[shard-name].md`. Please review the file directly and confirm it's ready for deepening passes.
 
 > **Do NOT proceed to `/write-architecture-spec-deepen` until the user approves all sections. Proposing next steps is not the same as receiving approval.**

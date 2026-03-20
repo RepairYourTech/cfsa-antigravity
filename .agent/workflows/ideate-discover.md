@@ -76,6 +76,13 @@ Read `.agent/skills/brainstorming/SKILL.md` and follow its methodology.
 
 **Persona completeness gate**: Read `.agent/skills/prd-templates/references/persona-completeness-gate.md`. Verify all 6 fields for every persona. If any field absent → probe before proceeding.
 
+**Meta files gate**: After completing problem exploration, verify ALL of the following files exist and are non-empty:
+- `docs/plans/ideation/meta/problem-statement.md` (must contain a "Why Now" section)
+- `docs/plans/ideation/meta/personas.md`
+- `docs/plans/ideation/meta/competitive-landscape.md`
+
+If ANY file is missing or empty → **STOP**: "Meta file `[filename]` was not written during problem exploration. Write it now before proceeding to feature inventory."
+
 ---
 
 ## 5. Feature inventory — deep exploration
@@ -152,6 +159,8 @@ After all features are deepened, systematically identify emergent capabilities t
 **STOP** — wait for user response. Write accepted cross-cuts to CX files immediately. Add accepted new features to MoSCoW matrix.
 
 > **Minimum coverage**: The sweep must evaluate at least every Must Have × Must Have pair and every Must Have × Should Have pair. Should Have × Should Have pairs are optional but recommended for complex products.
+
+**CX coverage check**: Count the total CX entries across all domain CX files (`*-cx.md`). If the total is **0** and there are **2 or more domains** with Must Have features → **STOP**: "Zero CX entries found despite multiple active domains. This indicates the CX Decision Gate was not applied during exploration. Review each domain pair for cross-cutting concerns before proceeding."
 
 ---
 

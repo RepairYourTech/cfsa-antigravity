@@ -48,6 +48,8 @@ Wait for user decision. If pivot → update problem statement and loop back to r
 
 If the surface classification changed during constraint exploration, update `ideation-index.md` `## Structural Classification` section.
 
+**Constraint file gate**: Verify `docs/plans/ideation/meta/constraints.md` exists and contains at least one constraint entry (technical, regulatory, business, or accepted risk). If empty or missing → **STOP**: "Constraint file not written. Constraints are required input for `/create-prd-stack`. Complete constraint exploration before proceeding."
+
 ---
 
 ## 9. Domain exhaustion check
