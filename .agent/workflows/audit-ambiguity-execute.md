@@ -40,20 +40,24 @@ Read `docs/audits/audit-scope.md` and look for a `## Gaps Fixed` section.
 
 ---
 
+## 2.5. Coverage Counter
+
+Read `docs/audits/audit-scope.md`. Extract the `## Document Count` value and the full list from `## Documents to Audit`. State: **"This audit covers N documents. Every document will be processed through 3a→3b→3c. Documents processed: 0/N."**
+
+---
+
 ## 3a. Implementer Simulation
 
 Read .agent/skills/verification-before-completion/SKILL.md and follow its methodology.
 
-**CRITICAL ANTI-HALLUCINATION RULE**: You MUST NOT read all documents at once. You must process one document at a time through 3a → 3b → 3c before moving to the next document. Failure to follow this one-by-one sequence guarantees hallucinated citations and audit failure.
-
-*This is the most important step. It forces the agent to encounter the spec the way an implementer would, not the way a reviewer would.*
+**CRITICAL**: You MUST NOT read all documents at once. Process one document at a time through 3a→3b→3c. Do NOT skip documents because they seem redundant, because rubric dimensions "map" to other files, or because you can "derive" their content from synthesized documents. EVERY document in the scope list gets the full 3a→3b→3c treatment. After each document, state: **"Documents processed: X/N."**
 
 For each document:
 
-1. **Read** — Use a file reading tool to read the entire document end-to-end. Do not score yet.
-2. **Stub** — Attempt to write a stub implementation of each feature/endpoint/component using only what's in the spec — no external context or prior project knowledge.
-3. **Enumerate gaps** — List every decision you had to make that isn't explicitly specified: enum values, defaults, timeouts, error messages, retry counts, field types, HTTP status codes, validation rules, rate limit numbers, role permission lists, etc.
-4. **Write unconditionally** — Write each such decision immediately to `docs/audits/[layer]-ambiguity-report.md` as a punch list item with severity ❌.
+1. **Read** — Read the entire document end-to-end. Do not score yet.
+2. **Stub** — Write a stub implementation using only what's in the spec.
+3. **Enumerate gaps** — List every unspecified decision: enum values, defaults, timeouts, error messages, retry counts, field types, HTTP status codes, validation rules, rate limit numbers, role permission lists, etc.
+4. **Write unconditionally** — Write each gap immediately to `docs/audits/[layer]-ambiguity-report.md` as a punch list item with severity ❌.
 
 These gaps are **unconditional** — the rubric in 3b cannot override them.
 
@@ -80,6 +84,14 @@ After scoring all dimensions for a document:
 1. For each ✅, ask: *"What would a junior developer get wrong about this?"* and *"What would a malicious implementer exploit in this?"*
 2. If either question reveals a gap → downgrade to ⚠️ and add the gap to the punch list.
 3. Document the devil's advocate finding alongside the score in the report.
+
+---
+
+## 3d. Coverage Completeness Gate
+
+> **BLOCKING GATE — do not proceed until this passes.**
+
+Compare documents processed (from 3a counter) against documents listed in `audit-scope.md`. If `processed < listed`, list the skipped documents and STOP. Do NOT proceed to Step 3.5 or Step 4 with incomplete coverage.
 
 ---
 

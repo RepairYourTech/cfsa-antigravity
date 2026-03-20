@@ -19,9 +19,13 @@ Write all cross-layer findings to a `## Cross-Layer Consistency` section in the 
 
 ## Document-to-Layer Mapping
 
+> **MANDATORY**: EVERY file matching these patterns MUST be individually audited through the full 3a→3b→3c cycle. Do NOT skip documents because rubric dimensions can be "mapped" to synthesized files. Do NOT read only "key documents" or "representative samples." The audit scope is EVERY file listed — no exceptions, no optimizations, no shortcuts.
+
+Use filesystem tools (`find_by_name`, `list_dir`) to discover ALL matching files. Write every discovered path to `audit-scope.md`.
+
 | Layer | Documents to load |
 |-------|-------------------|
-| Ideation | `docs/plans/ideation/ideation-index.md` + `ideation-cx.md` + all `*-index.md`, `*-cx.md`, and feature `.md` files recursively under `domains/` (and `surfaces/` for multi-product projects) |
+| Ideation | Use filesystem tools to recursively list ALL `.md` files under `docs/plans/ideation/`. Include every `*-index.md`, `*-cx.md`, feature `.md`, and `meta/*.md` file. For multi-surface projects, scan `surfaces/` subdirectories too. Every file found is audited — no selection, no sampling. |
 | Architecture | `docs/plans/*-architecture-design.md`, `docs/plans/ENGINEERING-STANDARDS.md` |
 | IA | `docs/plans/ia/index.md` + each shard listed + `docs/plans/ia/deep-dives/*.md` (list directory; include all files present) |
 | BE | `docs/plans/be/index.md` + each spec listed |

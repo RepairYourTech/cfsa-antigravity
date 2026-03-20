@@ -31,13 +31,27 @@ Ask the user:
 - `fe` — Audit FE specs only
 - `all` — Full cascade (Vision → Architecture → IA → BE → FE)
 
-## 2. Load source documents
+## 2. Enumerate source documents
 
-Read `.agent/skills/pipeline-rubrics/references/scoring.md` for the document-to-layer mapping table. Load all documents for each layer being audited.
+Read `.agent/skills/pipeline-rubrics/references/scoring.md` for the document-to-layer mapping table.
 
-## 2.5. Persist audit scope
+**MANDATORY filesystem discovery**: Use file system tools (`find_by_name`, `list_dir`) to recursively discover ALL files matching the layer's patterns from `scoring.md`. Do NOT build the document list from memory or from reading an index file — the filesystem is the source of truth.
 
-Write `docs/audits/audit-scope.md` with the determined scope and document list:
+## 2a. Document Enumeration Gate
+
+> **BLOCKING GATE — do not proceed until this passes.**
+
+1. Count the total documents discovered by filesystem tools.
+2. State: **"Enumerated N documents for [layer] audit."**
+3. **Minimum counts** — if below these thresholds, re-scan:
+   - Ideation: count ALL `.md` files recursively under `docs/plans/ideation/` (expect 20+ for any real project)
+   - Architecture: ≥2 (`architecture-design.md` + `ENGINEERING-STANDARDS.md`)
+   - IA/BE/FE: ≥2 (index + at least one shard/spec)
+4. If re-scan still yields fewer than threshold, state why and proceed with the actual count.
+
+## 2b. Persist audit scope
+
+Write `docs/audits/audit-scope.md` with the determined scope and the **complete** document list from Step 2a:
 
 ```markdown
 # Audit Scope
@@ -48,7 +62,10 @@ Write `docs/audits/audit-scope.md` with the determined scope and document list:
 [list of selected layers]
 
 ## Documents to Audit
-[for each layer, list the exact file paths that will be audited]
+[for each layer, list EVERY file path discovered in Step 2a — no omissions]
+
+## Document Count
+[layer]: [N] documents
 
 ## Rubric Files
 [for each layer being audited, list the exact path of the rubric file]
@@ -62,7 +79,7 @@ Write `docs/audits/audit-scope.md` with the determined scope and document list:
 in-progress
 ```
 
-(Only include the rubric file entries for the layers actually being audited — not all five every time. This mirrors the conditional behaviour already applied to `## Documents to Audit`.)
+(Only include the rubric file entries for the layers actually being audited.)
 
 This file is read by `/audit-ambiguity-execute` as its prerequisite.
 
