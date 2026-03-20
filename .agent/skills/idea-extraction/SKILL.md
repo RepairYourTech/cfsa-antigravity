@@ -555,6 +555,38 @@ When a cross-cut is identified, log it to the appropriate CX file:
 | During breadth sweep | Domain CX file | Medium |
 | During drilling | Sub-domain CX file or feature's cross-cut notes | High |
 
+### CX Decision Gate (Mandatory — NOT skippable)
+
+> **This is the enforcement mechanism for the Cross-Cut Watch Protocol.**
+> "Always-on" means there is a hard gate, not a suggestion.
+
+**After ANY of these trigger events, STOP and run this gate before moving to the next item:**
+
+| Trigger Event | Example |
+|---------------|---------|
+| Open question (OQ) resolved | User decides hiring fee model = shop pays |
+| Deep Think hypothesis confirmed | Agent proposed AI parts ordering, user confirmed |
+| User makes any product decision | User chooses freemium over paid-only |
+| Feature deepened reveals dependency | Certification tracking needs data from Training domain |
+| Edge case identified with cross-domain impact | Payment failure in domain A must notify domain B |
+
+**Gate questions** (answer all three):
+
+1. **New dependency?** — Does this decision create a dependency on another domain?
+2. **Modified cross-cut?** — Does it change an existing CX entry?
+3. **Cross-domain state/permissions/triggers?** — Does it affect state, permissions, or trigger chains in another domain?
+
+**If YES to any** → update the relevant CX file(s) **immediately**, before moving to the next item. Write the CX entry with:
+- Source domain and feature
+- Target domain(s) affected
+- Nature of the cross-cut (data dependency, trigger chain, permission, state)
+- Confidence level based on discovery context
+
+**If NO to all** → proceed. No logging needed for clean passes.
+
+> [!CAUTION]
+> **The gate is the point.** The most common failure mode is resolving an OQ, writing the decision to the feature file, and moving on without checking CX. The hiring fee model affects Payments, Supplier Integration, Analytics, and Consumer Platform visibility — 6 cross-domain connections that would be silently lost without this gate.
+
 ### Cross-Cut Synthesis Questions
 
 For each confirmed cross-cut (CX entry with High confidence), answer all five synthesis questions per the `fractal-cx-template.md`:

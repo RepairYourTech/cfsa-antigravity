@@ -46,7 +46,10 @@ Read `.agent/skills/prd-templates/references/engagement-tier-protocol.md` — ap
 
 ## 3. Domain Exploration — Recursive Model
 
-Read `.agent/skills/idea-extraction/SKILL.md` — follow the **Recursive Domain Exhaustion Protocol**, **Deep Think Protocol**, **Node Classification Gate**, and **Reactive Depth Protocol**.
+Read `.agent/skills/idea-extraction/SKILL.md` — follow the **Recursive Domain Exhaustion Protocol**, **Deep Think Protocol**, **Node Classification Gate**, **Reactive Depth Protocol**, and **CX Decision Gate**.
+
+> [!IMPORTANT]
+> **CX Decision Gate is mandatory at every level.** After resolving ANY open question, confirming ANY Deep Think hypothesis, or receiving ANY product decision from the user → STOP and run the CX Decision Gate from `idea-extraction/SKILL.md` before proceeding. This is the #1 enforcement gap — decisions silently drop cross-domain connections without this gate.
 
 Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ideation/ideation-index.md`.
 
@@ -117,9 +120,9 @@ For rejected features: note in `ideation-index.md` under a `## Considered & Reje
 For each Must Have feature, use the recursive model from `idea-extraction/SKILL.md`:
 1. **Level 1**: Sub-features. Run Classification Gate — sub-domain or feature?
 2. **Level 2**: Edge cases and failure modes. Fill feature file sections per `fractal-feature-template.md`.
-3. **Level 3** (complex features): Cross-cuts with evidence → parent CX file.
+3. **Level 3** (complex features): Full cross-cut synthesis per `fractal-cx-template.md`.
 
-**Deep Think at each level.** Write results to feature files.
+**At EVERY level**: Deep Think + **CX Decision Gate**. After each decision, OQ resolution, or confirmed hypothesis → run CX Decision Gate → write CX entries immediately → then proceed.
 
 ### 5c. Feature deepening — Should Haves (lighter touch)
 

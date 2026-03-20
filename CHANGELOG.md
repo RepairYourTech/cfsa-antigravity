@@ -1,5 +1,20 @@
 # cfsa-antigravity
 
+## 2.12.0
+
+### Minor Changes
+
+- Add mandatory CX Decision Gate to ideation workflow
+
+  ### Problem
+
+  During `/ideate-discover` drilling, resolving open questions (OQs) and confirming Deep Think hypotheses would write decisions to feature files but silently skip cross-cut (CX) map updates. Cross-domain connections were lost unless the user manually caught and forced CX writes.
+
+  ### Fix
+
+  - **`idea-extraction/SKILL.md`**: Added **CX Decision Gate** — a mandatory, non-skippable gate triggered by 5 event types (OQ resolved, hypothesis confirmed, product decision made, dependency revealed, cross-domain edge case). Three gate questions enforce CX file updates before proceeding.
+  - **`ideate-discover.md`**: Added `[!IMPORTANT]` callout at Step 3 (domain exploration) requiring CX Decision Gate at every level. Updated Step 5b feature deepening to run CX at every level, not just Level 3 complex features.
+
 ## 2.11.0
 
 ### Minor Changes
