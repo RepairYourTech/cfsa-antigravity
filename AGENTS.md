@@ -148,6 +148,7 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 | 🗣️ [question-vs-command](.agent/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
 | 🎯 [decision-classification](.agent/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
 | ✅ [completion-checklist](.agent/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
+| 📖 [source-before-ask](.agent/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
 
 ### Installed Skills
 

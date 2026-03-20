@@ -132,6 +132,7 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 | 🔢 [single-question](.agent/rules/single-question.md) | One question at a time, options + pros/cons + recommendation |
 | 🐛 [debug-by-test](.agent/rules/debug-by-test.md) | Failing test before any fix — reproduce first, fix second |
 | 🔍 [skill-mcp-first](.agent/rules/skill-mcp-first.md) | Check skills and MCPs before reasoning on your own |
+| 📖 [source-before-ask](.agent/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
 
 ### Installed Skills
 

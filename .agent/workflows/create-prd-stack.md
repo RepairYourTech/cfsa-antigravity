@@ -71,14 +71,15 @@ Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constrain
 Score Fit from 1–5 based on how well the option matches the constraints map. If constraints eliminate all but 1-2 options, present only those with a note explaining why others were eliminated.
 
 **Per-axis flow**:
-1. Ask the constraint questions for this axis
-2. Filter options based on answers
-3. Present the filtered option table with recommendation
-4. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
-5. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
+1. **Apply rule `source-before-ask`**: Before this axis, reason about which ideation domains, deep dives, and CX files are relevant to THIS specific technology decision. Read those files now. Do NOT proceed to the constraint questions until you have read the relevant source material and can cite specific architectural details from the ideation output.
+2. Ask the constraint questions for this axis
+3. Filter options based on answers
+4. Present the filtered option table with recommendation — **citing specific ideation details** that informed your recommendation (e.g., "Based on the diagnostics deep dive's multi-agent coordination pattern, you need X")
+5. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
+6. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
    - **1st failure** → retry bootstrap once with the same key
    - **2nd failure** → **STOP**: tell the user which key failed verification and ask: "Retry, skip this skill provisioning, or abort?"
-6. Move to next axis
+7. Move to next axis
 
 > **Note on backend axis bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct bootstrap keys and must each fire as a separate `/bootstrap-agents` call — do not combine them.
 > - `BACKEND_FRAMEWORK` (e.g., `Hono`, `FastAPI`, `NestJS`) → provisions the backend framework skill
