@@ -120,6 +120,16 @@ Collect all mismatches into a consistency report. If any exist → **hard stop**
 
 ---
 
+## 0.7. Feature ledger verification
+
+If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow the **Verification Gate** procedure.
+
+Count features by completeness (✅ complete, ⚠️ partial, ❌ orphaned). If any features show `❌ missing` in the IA Status, BE Status, or FE Status columns → **BLOCKING GATE**: present the orphaned features and require resolution before proceeding to slice planning.
+
+If the ledger does not exist, skip this step.
+
+---
+
 ## 0.8. Draft continuity check
 
 Check whether `docs/plans/phases/phase-N-draft.md` already exists (where N is the current phase number).

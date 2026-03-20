@@ -61,7 +61,10 @@ Write the completed `## Development Methodology` section to `docs/plans/architec
 
 Load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol.
 
-Break the feature inventory from `docs/plans/ideation/ideation-index.md` (MoSCoW Summary) into dependency-ordered phases.
+Break the feature inventory into dependency-ordered phases. Use **two sources**:
+
+1. **MoSCoW priorities** from `docs/plans/ideation/ideation-index.md` (MoSCoW Summary) — determines Must/Should/Could classification
+2. **Domain Digest** from `docs/plans/architecture-draft.md` (`## Ideation Digest`) — if it exists, use its per-domain feature counts, sub-domain counts, and cross-domain dependencies to inform phase complexity sizing and dependency ordering. A domain with 15 features and 3 sub-domains requires more phase capacity than one with 4 features.
 
 > **This kit does not build MVPs.** Every phase ships production-grade code —
 > fully tested, fully specified, fully accessible. Phases exist to manage

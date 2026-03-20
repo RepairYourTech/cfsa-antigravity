@@ -80,6 +80,16 @@ For each acceptance criterion, trace its spec citation (e.g., `[BE §3.2]`, `[FE
 2. Read the full §section from every cited FE spec — component props, states, interactions, responsive behavior, accessibility rules
 3. Read any IA shard sections cited by the BE spec's Source Map — especially `## Edge Cases` and `## Access Control`
 
+### Companion spec discovery (split-awareness)
+
+After loading the cited specs, check each spec filename for a letter suffix (e.g., `09a-`, `09b-`). If found:
+
+1. Check the spec for a `## Split Group` section. If it lists **Companion specs**, read the `## Split Group` section from each companion to load shared entity definitions
+2. If no `## Split Group` section exists, fall back to directory scan: list all files in the same `docs/plans/be/` or `docs/plans/fe/` directory with the same number prefix (e.g., all `09*` files). Read the header block of each match to identify siblings
+3. Load any **Shared entities** into context — these data models are used across companions and may affect contracts, validation, or state management in the current slice
+
+> **Why**: A split shard divides a domain for spec-writing manageability, but the underlying data models and access patterns remain shared. Without loading companion context, the implementation may miss cross-cutting validation rules or produce incompatible data shapes.
+
 This context persists throughout the TDD cycle. The acceptance criteria define WHAT to test; the spec context defines HOW DEEP to test it.
 
 ## 1.5. Check for parallel mode

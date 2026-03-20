@@ -43,6 +43,7 @@ Re-read the complete draft (interactions + contracts + data model + access contr
 - Access rules that don't cover all interaction types
 - Edge cases that imply missing error codes in contracts
 - Event schemas that carry fields not in the data model
+- **Event consumer cross-references**: For each event's listed consumers, verify the consumer shard exists in `docs/plans/ia/index.md` and its `## Interactions` or `## Event Schemas` section references this event. If a consumer shard doesn't reference the event → add a cross-reference link in both directions. If a consumer shard doesn't exist → **STOP**.
 
 Fix every inconsistency found. Present findings to the user.
 
@@ -85,6 +86,26 @@ Read .agent/skills/technical-writer/SKILL.md for the spec writing step.
 
 Replace the skeleton sections in `docs/plans/ia/[shard-name].md` with the full content from all passes. Ensure all cross-shard dependencies are bidirectional.
 
+### 9.5. Spec complexity gate
+
+Count the total lines in the written spec file.
+
+| Lines | Action |
+|-------|--------|
+| **≤ 400** | ✅ Pass — proceed to Step 10 |
+| **401–500** | ⚠️ Warning — present to user: "This IA spec is [N] lines. Downstream BE/FE specs will expand further. Consider splitting if sections are independently testable." Proceed after acknowledgment. |
+| **> 500** | 🛑 **Hard stop** — "This IA spec is [N] lines and will likely exceed agent context capacity during BE/FE spec writing. Split this shard into two IA specs via `/decompose-architecture-validate` before proceeding." Present the largest sections with their line counts as split candidates. |
+
+> **Why these thresholds**: A 500-line IA spec typically expands to 800-1200 lines per BE/FE spec (contracts, schemas, validation rules, component details). Agent context windows degrade at > 1000 lines of spec content plus the workflow instructions.
+
+### 9.1. Post-write verification
+
+Re-read `docs/plans/ia/[shard-name].md` and verify:
+1. All required sections contain non-empty content (not just headers or `<!-- TODO -->` markers)
+2. File size is > 0 bytes
+3. No `<!-- TODO -->` markers remain (outside of intentional `[N/A]` sections)
+4. If any check fails → the write was incomplete. Retry the write operation.
+
 ## 10. Update IA index
 
 Change the shard's status from 🔲 to ✅ in `docs/plans/ia/index.md`.
@@ -125,6 +146,18 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
 > **Why**: Catching ambiguity across the full IA layer costs minutes. Discovering it during BE spec writing — or worse, during implementation — costs days of rework across multiple specs and slices.
 
 **Hard gate**: Do NOT propose `/write-be-spec` until `/audit-ambiguity ia` scores 0% ambiguity.
+
+## 13.5. Completion Gate (MANDATORY)
+
+1. Update `.agent/progress/spec-pipeline.md` — mark IA column for this shard as complete
+2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 14. Request review and propose next steps
 

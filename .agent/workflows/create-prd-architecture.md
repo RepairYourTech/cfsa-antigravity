@@ -88,6 +88,8 @@ Write the completed decisions to `docs/plans/architecture-draft.md` under a new 
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its schema design methodology.
 
+**Digest-aware entity identification**: If `## Ideation Digest` exists in `docs/plans/architecture-draft.md`, use its Key Entities column and Cross-Domain Dependencies table as the primary source for entity identification in sub-steps below. Cross-reference the digest's per-domain feature lists to ensure no entity is missed. If the digest does not exist, derive entities from the architecture sections written above.
+
 Load the Databases skill(s) from the `shared` surface row per the skill loading protocol. Each sub-item must be explored to field-level depth:
 
 1. **Data placement** — What lives in the database vs cache vs object storage vs external service vs local device storage? For each entity: which service owns it and why

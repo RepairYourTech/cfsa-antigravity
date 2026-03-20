@@ -73,6 +73,21 @@ After all slices are identified, verify that the slices collectively cover ALL s
 
 **BLOCKING GATE**: Do NOT proceed to Step 3 until every BE endpoint and FE component is either assigned to a slice or explicitly deferred.
 
+**Feature ledger update**: If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 5 — Slice Assignment**. Map each slice to its Feature IDs and populate the Phase and Slice columns.
+
+### 2.75. Split companion cross-reference
+
+For each spec in the phase scope, check if its filename contains a letter suffix (e.g., `09a-`, `09b-`):
+
+1. If a letter suffix is found, read the spec's `## Split Group` section to identify companion specs
+2. If any companion spec is ALSO in the current phase scope, verify that slices which reference entities shared across the split are annotated with companion citations. Example:
+   - Slice "Create message thread" cites `[BE §3.2 09a-chat-api]` and uses the `Thread` entity
+   - `Thread` is listed as a shared entity with `09b-agent-flow-api`
+   - → Add companion context note: "**Companion context**: `Thread` entity shared with `09b-agent-flow-api.md` — load `§ Database Schema` from companion during implementation"
+3. If a companion spec is NOT in the current phase scope, add a note to the slice: "**Cross-phase dependency**: Companion `09b-agent-flow-api.md` is in Phase N+1 — shared entity `Thread` must remain backward-compatible"
+
+This step prevents implementation from producing incompatible data shapes across split domain boundaries.
+
 ## 3. Order by dependency
 
 Read .agent/skills/concise-planning/SKILL.md and follow its methodology.

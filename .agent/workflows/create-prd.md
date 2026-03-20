@@ -46,6 +46,24 @@ Read `.agent/skills/prd-templates/references/engagement-tier-protocol.md` — ea
 
 ---
 
+## 1.5. Deep ideation loading (scale-aware)
+
+Read the `## Progress Summary` table in `ideation-index.md`. Check these thresholds:
+
+| Metric | Threshold |
+|--------|-----------|
+| Total domains | ≥ 6 |
+| Total leaf features | ≥ 50 |
+| Total surfaces | ≥ 2 (multi-product projects) |
+
+**If ANY threshold is met** → read `.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md` and follow its full procedure. This produces a **Domain Digest Table** written to `docs/plans/architecture-draft.md` as `## Ideation Digest`.
+
+**If no threshold is met** → skip this step. The standard `ideation-index.md` read from Step 1 is sufficient.
+
+> **Why**: For large ideation outputs (50+ features across 6+ domains), the Structure Map and MoSCoW Summary in `ideation-index.md` are insufficient for accurate architecture decisions. The digest reads every domain-level `*-index.md` to capture the full feature inventory, role coverage, and cross-domain dependencies without needing to load hundreds of leaf files.
+
+---
+
 ## 2. Load skills
 
 Read each skill SKILL.md listed in the frontmatter `skills` array.
@@ -75,6 +93,11 @@ Check `.agent/skills/` for stack-specific skills. Read `.agent/skills/find-skill
 ### Step B — Run `.agent/workflows/create-prd-architecture.md`
 ### Step C — Run `.agent/workflows/create-prd-security.md`
 ### Step D — Run `.agent/workflows/create-prd-compile.md`
+
+**Shard failure recovery**: If any shard (A through D) fails mid-execution:
+1. Check `docs/plans/architecture-draft.md` for the last completed section
+2. Present the current state to the user: "Shard [N] failed at [step]. Draft contains sections [list]. Resume from failure point or restart the shard?"
+3. Do NOT proceed to the next shard until the current shard completes cleanly
 
 ---
 

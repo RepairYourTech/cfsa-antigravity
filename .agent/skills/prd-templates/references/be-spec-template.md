@@ -9,6 +9,12 @@ Use this template when writing BE specs to `docs/plans/be/[NN-feature-name].md`.
 > **Deep Dives**: [links to consumed deep dives, if any]
 > **Status**: Draft | Review | Complete
 
+## Split Group _(include only if this spec resulted from a split)_
+
+> **Split origin**: [IA shard that was split, e.g., `09-messaging`]
+> **Companion specs**: [sibling BE spec files, e.g., `09b-agent-flow-api.md`]
+> **Shared entities**: [data models shared across companions, e.g., `Message`, `Thread`]
+
 ## IA Source Map
 
 [Which IA shard sections, deep dives, and cross-shard references

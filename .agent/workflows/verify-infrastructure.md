@@ -194,6 +194,17 @@ Read `docs/plans/*-architecture-design.md` section `## Observability Architectur
 
 ---
 
+## 6.7. Spec pipeline integrity check
+
+1. Read `.agent/progress/spec-pipeline.md` — verify all IA/BE/FE columns show ✅ for all shards included in the current phase
+2. If `docs/plans/feature-ledger.md` exists:
+   - Read the ledger and verify no **Must Have** features have gaps in IA/BE/FE coverage
+   - If any Must Have feature has an empty column → **STOP**: "Feature `[ID: name]` is missing `[column]` coverage. Complete the spec before proceeding to implementation."
+
+> This is a lightweight check — it does not re-audit specs, just confirms the tracking is intact.
+
+---
+
 ## 7-8. Finalize report
 
 Finalize the report using the **Final Report** template from `.agent/skills/prd-templates/references/infrastructure-report-template.md`. Update the Verdict field to `✅ PASS` or `❌ FAIL` and fill in Failures and Next Steps sections.
@@ -201,6 +212,17 @@ Finalize the report using the **Final Report** template from `.agent/skills/prd-
 The final report must include all eight gate checks: 0 (placeholder audit), 1 (CI/CD config), 2 (CI/CD green), 3 (environment audit), 4 (migration check), 5 (staging deployment), 6 (auth smoke test), 6.5 (logging gate), 6.6 (error tracking gate).
 
 ---
+
+## 8.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+3. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 9. Present results
 

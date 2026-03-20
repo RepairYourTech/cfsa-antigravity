@@ -47,7 +47,21 @@ Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 
 **Naming convention**: Use the same number prefix as the IA shard that sources it, followed by a kebab-case feature name. For multi-domain splits from the same shard, append a letter suffix (e.g., `09a-chat-api.md`, `09b-agent-flow-api.md`). For cross-cutting specs, use the `00-` prefix (e.g., `00-api-conventions.md`).
 
+**Split group tracking**: If this spec results from a split shard (letter suffix in filename), populate the `## Split Group` section in the spec with the split origin shard, companion spec filenames, and shared entity names. This is mandatory for split specs — it enables downstream implementation to discover sibling context.
+
 Read `.agent/skills/prd-templates/references/be-spec-template.md` for the document structure and quality gates checklist. Follow the conventions template from `be/index.md`.
+
+Write decision to disk. Continue below.
+
+### 7.5. Spec complexity gate
+
+Count the total lines in the written BE spec file.
+
+| Lines | Action |
+|-------|--------|
+| **≤ 600** | ✅ Pass |
+| **601–800** | ⚠️ Warning — "This BE spec is [N] lines. Consider splitting if endpoint groups are independently testable." Proceed after acknowledgment. |
+| **> 800** | 🛑 **Hard stop** — "This BE spec is [N] lines and will degrade implementation quality. Split the parent IA shard or separate endpoint groups into distinct BE specs." Present the largest sections with line counts. |
 
 ## 8. Update the BE index
 
@@ -133,6 +147,22 @@ If this BE spec introduces a technology not already in the project's tech stack:
    - **1st failure** → retry once
    - **2nd failure** → **STOP**: tell the user which dependency failed and ask: "Install manually, skip, or abort?"
 4. Confirm the matching skill is installed before proceeding.
+
+## 13.5. Update feature tracking ledger
+
+If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 3 — BE Coverage**. Match the endpoints in this spec to Feature IDs and populate the BE Spec and BE Status columns.
+
+## 13.7. Completion Gate (MANDATORY)
+
+1. Update `.agent/progress/spec-pipeline.md` — mark BE column for this shard as complete
+2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 14. Request review and propose next steps
 

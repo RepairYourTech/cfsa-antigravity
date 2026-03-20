@@ -9,6 +9,12 @@ Use this template when writing FE specs to `docs/plans/fe/[NN-feature-name].md`.
 > **IA Source**: [link to IA shard, or N/A for cross-cutting]
 > **Status**: Draft | Review | Complete
 
+## Split Group _(include only if this spec resulted from a split)_
+
+> **Split origin**: [IA shard that was split, e.g., `09-messaging`]
+> **Companion specs**: [sibling FE spec files, e.g., `09b-agent-flow-ui.md`]
+> **Shared entities**: [data models shared across companions, e.g., `Message`, `Thread`]
+
 ## Source Map
 
 | FE Spec Section | Source | Section/Lines |

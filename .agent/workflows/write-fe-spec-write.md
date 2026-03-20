@@ -36,7 +36,21 @@ Read .agent/skills/testing-strategist/SKILL.md and follow its methodology.
 
 **Naming convention**: Numbered prefix matching feature position + kebab-case name (e.g., `01-auth-ui.md`). Cross-cutting: `00-` prefix.
 
+**Split group tracking**: If this spec results from a split shard (letter suffix in filename), populate the `## Split Group` section in the spec with the split origin shard, companion spec filenames, and shared entity names. This is mandatory for split specs — it enables downstream implementation to discover sibling context.
+
 Read `.agent/skills/prd-templates/references/fe-spec-template.md` for the document structure and quality gates checklist. Follow the conventions from `fe/index.md`.
+
+Write decision to disk. Continue below.
+
+### 6.5. Spec complexity gate
+
+Count the total lines in the written FE spec file.
+
+| Lines | Action |
+|-------|--------|
+| **≤ 600** | ✅ Pass |
+| **601–800** | ⚠️ Warning — "This FE spec is [N] lines. Consider splitting if component groups are independently testable." Proceed after acknowledgment. |
+| **> 800** | 🛑 **Hard stop** — "This FE spec is [N] lines and will degrade implementation quality. Split into separate FE specs per component group or page." Present the largest sections with line counts. |
 
 ## 7. Update the FE index
 
@@ -127,6 +141,22 @@ If this FE spec introduces a new technology:
 1. Identify the technology (e.g., chart library, map SDK, i18n framework)
 2. Read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents PIPELINE_STAGE=write-fe-spec` + the new dependency key
 3. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding.
+
+## 12.5. Update feature tracking ledger
+
+If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 4 — FE Coverage**. Match the components in this spec to Feature IDs and populate the FE Spec and FE Status columns.
+
+## 12.7. Completion Gate (MANDATORY)
+
+1. Update `.agent/progress/spec-pipeline.md` — mark FE column for this shard as complete
+2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 13. Request review and propose next steps
 

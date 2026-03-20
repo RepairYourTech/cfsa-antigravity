@@ -23,6 +23,15 @@ Initialize the project, create the directory structure, install dependencies, an
 
 ---
 
+## 0.5. Feature ledger pre-flight
+
+If `docs/plans/feature-ledger.md` exists:
+1. Read the ledger and the current phase plan
+2. Verify every **Must Have** feature has a non-empty entry in the **Phase** column
+3. If any Must Have feature has no phase assignment → **STOP**: "Must Have feature `[ID: name]` has no phase assignment. Assign it via `/plan-phase` before scaffolding."
+
+---
+
 ## 1. Read architecture pattern
 
 Read `docs/plans/*-architecture-design.md` and determine:
@@ -154,4 +163,16 @@ Run the dev server command from `.agent/instructions/commands.md`:
 
 **Pass criteria**: Dev server starts, serves a response, and shuts down cleanly.
 
+## 9.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
+
 > Present result to user: "✅ Scaffold complete. Dev server starts cleanly. Proceeding to CI/CD setup." or "❌ Dev server failed: [error]. Fix required before continuing."
+
+> ❌ **NEXT STEP RESTRICTION**: The next workflow is `/setup-workspace-cicd`. Do NOT proceed to `/implement-slice` or any implementation work until all four setup-workspace shards (scaffold → cicd → hosting → data) have completed. Skipping setup shards will cause infrastructure failures during implementation.

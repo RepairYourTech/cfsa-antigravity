@@ -116,6 +116,16 @@ Verify every domain in `ideation-index.md` appears in `vision.md`. Nothing dropp
 
 ---
 
+## 11.5. Create feature tracking ledger
+
+Read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 1 — Ledger Creation**.
+
+Enumerate every leaf feature from the ideation fractal tree and write `docs/plans/feature-ledger.md` with Feature ID, Feature Name, Domain, and MoSCoW columns populated. All downstream columns start as `—`.
+
+> **This step is non-optional.** The ledger is the only global tracking mechanism that follows features from ideation through implementation. Without it, features can be silently dropped at stage boundaries.
+
+---
+
 ## 12. Request review
 
 ### Self-check against Ideation rubric

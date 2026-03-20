@@ -70,9 +70,27 @@ Verify structural integrity:
 - [ ] BE/FE indexes exist with conventions templates
 - [ ] Multi-surface: shared shards have lower numbers; cross-surface deps point to shared/
 
+## 12.5. Update feature tracking ledger
+
+If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 2 — IA Assignment**.
+
+For each IA shard skeleton, match its features to ledger rows and populate the IA Shard and IA Status columns. Run the orphan check — any ideation feature with no IA shard assignment is flagged as `❌ missing`. Present orphans to the user for resolution before proceeding.
+
+If the ledger does not exist, skip this step (ideation was run before the ledger protocol existed).
+
 ## 13. Generate spec pipeline tracker
 
 Read `.agent/skills/session-continuity/protocols/07-spec-pipeline-generation.md` and follow the Spec Pipeline Generation Protocol.
+
+## 13.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 14. Request review and propose next steps
 

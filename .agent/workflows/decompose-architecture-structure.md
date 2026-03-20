@@ -62,8 +62,15 @@ Fallback for domains not covered in the ideation domain folders is defined in th
 - Every shard in the decomposition plan has a corresponding `.md` file
 - `00-infrastructure.md` exists regardless of domain decomposition
 - No empty files (0 bytes)
+- **Total shard count** is within acceptable range — read `.agent/skills/prd-templates/references/shard-boundary-analysis.md` → "Total Count Thresholds" and apply the ≤20/21-25/>25 gate
 
 If any skeleton is missing → create it now. Do not proceed to index creation with missing skeletons.
+
+### Domain coverage check
+
+Read `docs/plans/ideation/ideation-index.md` → Domain Map. For each domain marked as having **Must Have** features:
+- Verify at least one shard skeleton references this domain
+- If a domain has no corresponding shard → **STOP**: "Ideation domain `[name]` with Must Have features has no IA shard. Add it to the decomposition plan or explain why it's excluded."
 
 ## 6. Create IA index
 
@@ -82,6 +89,16 @@ Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **Master Index** template (single-surface or multi-surface variant as appropriate). Create or update `docs/plans/index.md` using the template.
 
 For multi-surface projects, each surface's own `index.md` contains the standard three-layer table (IA/BE/FE) scoped to that surface, following the same format as the single-surface master index.
+
+## 9.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ### Next step
 

@@ -74,3 +74,30 @@ Split rationale: [why these groups are independent]
 ```
 
 **After any split**: Update `docs/plans/ia/decomposition-plan.md` with the revised table and re-run the Must Have coverage gate.
+
+**Companion spec tracking**: When writing BE or FE specs for split shards, populate the `## Split Group` section in each spec file (see `be-spec-template.md` / `fe-spec-template.md`). This enables downstream discovery of sibling specs during implementation.
+
+## Total Shard Count Guidance
+
+The decomposition should produce a shard count proportional to the ideation depth. Too few shards compress complex domains and lose detail. Too many create coordination overhead that exceeds agent context capacity.
+
+### Expected Range by Ideation Scale
+
+| Ideation Scale | Domains | Expected Shards (incl. `00-infrastructure`) | Notes |
+|----------------|---------|---------------------------------------------|-------|
+| **Small** | 3–5 | 4–8 | Most domains map 1:1 to shards |
+| **Medium** | 6–8 | 7–14 | Some multi-domain splits expected |
+| **Large** | 9–12 | 12–20 | Cross-cutting shards multiply; enforce sub-feature limits aggressively |
+| **Deep** | 13+ | 16–25 | Maximum recommended. Beyond 25 → consider surface-level decomposition or domain grouping |
+
+### Total Count Thresholds (Post-Skeleton Check)
+
+After all shard skeletons are created in Step 5, count the total:
+
+| Total Shards | Action |
+|--------------|--------|
+| **≤ 20** | ✅ Proceed |
+| **21–25** | ⚠️ Warning — "Decomposition produced [N] shards. This will require [N × 3] spec documents (IA + BE + FE) and proportional phase planning. Confirm this is the intended scope or consider grouping related domains." |
+| **> 25** | 🛑 **Hard stop** — "Decomposition produced [N] shards. This exceeds the recommended maximum for sequential agent processing. Present a domain grouping proposal that reduces shard count to ≤ 25." |
+
+> **Why 25 max**: Each shard produces ~3 spec documents (IA + BE + FE). At 25 shards, that's 75 spec documents. Beyond this, cross-layer consistency checks become unreliable and phase planning produces impractical slice counts.

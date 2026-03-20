@@ -138,6 +138,16 @@ any that contain FE-relevant decisions.
 
 Read any completed cross-cutting FE specs — feature specs must follow their patterns. List the files matching `docs/plans/fe/00-*.md` (cross-cutting specs).
 
+## 5.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
+
 ## 6. Present classification and request approval
 
 Call `notify_user` presenting:

@@ -136,7 +136,28 @@ If the `dependency-auditing` skill is installed (`.agent/skills/dependency-audit
 
 **Pass criteria**: Zero HIGH/CRITICAL vulnerabilities in production dependencies.
 
+## 8.7. Feature ledger reconciliation
+
+If `docs/plans/feature-ledger.md` exists:
+1. Read the ledger and the current phase plan
+2. For each **Must Have** feature assigned to this phase:
+   - Verify the `Implemented` column is marked complete
+   - Verify the slice(s) that implement it are marked complete in `.agent/progress/phases/phase-N.md`
+3. If any Must Have feature assigned to this phase is not implemented → **STOP**: "Phase N has unimplemented Must Have features: [list]. Complete them via `/implement-slice` before marking the phase as validated."
+
+## 8.8. Boundary stub audit
+
+Grep the codebase for `BOUNDARY:` comments:
+1. If **0 results** → ✅ Pass — no active boundary stubs
+2. If results found → for each:
+   - Verify a linked tracking issue exists and is open
+   - Verify a sentinel test exists
+   - Verify the boundary is for a spec that genuinely doesn't exist yet
+   - If any boundary stub lacks a tracking issue OR the referenced spec now exists → **STOP**: "Active boundary stub at `[file:line]` — the referenced spec now exists. Replace the stub with a full implementation before marking this phase as validated."
+
 ## 9. Document results
+
+**Pre-append verification**: Before appending, verify `docs/audits/phase-N-validation.md` exists and contains a `## Spec Coverage` section from Step 5.8 (quality shard). If the file does not exist or the section is missing → **STOP**: "Spec coverage sweep did not complete. Re-run `/validate-phase-quality` Step 5.8 before appending readiness results."
 
 **Note on report file**: `docs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
 
@@ -153,6 +174,18 @@ If the `dependency-auditing` skill is installed (`.agent/skills/dependency-audit
 - Staging deployment result
 - Migration verification status
 - Pass/fail verdict
+
+## 9.5. Completion Gate (MANDATORY)
+
+1. Update `.agent/progress/` — mark phase as validated
+2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 10. Present results and next steps
 

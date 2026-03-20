@@ -75,12 +75,26 @@ Build a **Referenced Material Inventory**.
 ### 5c. Read deep dives
 List `docs/plans/ia/deep-dives/`. Read each referenced deep dive in full. Extract key decisions, architectural constraints, data schemas.
 
+**Deep dive completeness check**: For each deep dive file referenced by the IA shard:
+- If the file contains `<!-- TODO -->`, `[TBD]`, or sections with only headers and no content → **STOP**: "Deep dive `[filename]` is still a skeleton. Run `/write-architecture-spec-design` Step 7.5 to fill it before proceeding with BE spec writing."
+- If the file does not exist → **STOP**: "Deep dive `[filename]` is referenced but missing. Create it via `/write-architecture-spec-design` Step 7.5."
+
 ### 5d. Read testability section
 If the shard has testability/acceptance criteria → read for performance targets and test requirements.
 
 ## 6. Check cross-cutting specs
 
 Read any completed cross-cutting specs at `docs/plans/be/00-*.md`.
+
+## 6.5. Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 
 ## 7. Present classification and request approval
 
@@ -91,3 +105,5 @@ Use `notify_user` presenting: classification, expected spec count, Referenced Ma
 After approval: read `.agent/skills/prd-templates/references/be-spec-template.md` → create spec file stub at `docs/plans/be/[NN-feature-name].md`.
 
 For structural reference (0 BE specs): confirm no write shard needed, propose next IA shard.
+
+> ❌ **NEXT STEP RESTRICTION**: Do NOT begin writing the BE spec (`/write-be-spec-write`) until the user has explicitly approved the classification and material inventory. If deep dive completeness issues were flagged in Step 5c, they must be resolved before proceeding.

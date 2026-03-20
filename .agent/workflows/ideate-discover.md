@@ -164,6 +164,26 @@ After all features are deepened, systematically identify emergent capabilities t
 
 ---
 
+## Post-Discovery Verification
+
+Before completing discovery, count and verify the ideation output:
+1. List all files in `docs/plans/ideation/` recursively
+2. Verify each domain in the ideation-index has its corresponding folder with at minimum:
+   - `{slug}-index.md` (domain index)
+   - `{slug}-cx.md` (cross-cutting concerns file)
+3. Verify `ideation-index.md` exists and has a populated Domain Map
+4. If any domain folder is missing its required files → create them now before proceeding
+
+## Completion Gate (MANDATORY)
+
+1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+   - Patterns observed → write to `memory/patterns.md`
+   - Non-trivial decisions made → write to `memory/decisions.md`
+   - Blockers hit → write to `memory/blockers.md`
+2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+
+> **This step is not skippable.** Do not call `notify_user` until all items above are complete.
+
 ### Next step
 
 **STOP** — do NOT proceed to any other workflow. The only valid next step is `/ideate-validate`.

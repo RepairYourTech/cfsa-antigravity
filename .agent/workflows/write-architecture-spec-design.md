@@ -121,7 +121,7 @@ Define for each entity: tables/collections, fields, types, relationships, indexe
 
 Write `## Data Models` to shard file immediately after confirmation. Follow write verification protocol.
 
-> **Decision recording**: For non-trivial data model decisions (schema approach, denormalization trade-offs, index strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**.
+> **Decision recording**: For non-trivial data model or access control decisions, follow `.agent/skills/session-continuity/protocols/06-decision-analysis.md`.
 
 ## 5. Design access control
 
@@ -136,8 +136,6 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and apply its a
 **Review questions**: "Scenario where a blocked user gets through?" / "Scenario where an allowed user is blocked?"
 
 Write `## Access Control` to shard file immediately after confirmation. Follow write verification protocol.
-
-> **Decision recording**: For access control architecture decisions (role hierarchy, ownership model, escalation paths), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Record to `memory/decisions.md`.
 
 ## 5.5. Accessibility specifications
 
@@ -156,6 +154,10 @@ Write `## Accessibility` to shard file immediately after confirmation. Follow wr
 - Retry semantics
 
 Write `## Event Schemas` to shard file immediately after confirmation (if applicable). Follow write verification protocol.
+
+### 6b. Event consumer cross-reference (if events defined)
+
+For each event's listed consumers: verify consumer shard exists in `docs/plans/ia/index.md` and references this event. If consumer shard missing → **STOP**. Full cross-ref verification runs in the deepen shard.
 
 ## 7. Document edge cases
 
@@ -182,6 +184,10 @@ For each referenced deep dive:
 1. Read `docs/plans/ia/deep-dives/[feature-name].md` — if already has full content, skip.
 2. If still a skeleton → write exhaustive subsystem detail: algorithms/state machines, technology choices with rationale, phasing strategy, data schemas, failure modes, integration contracts, performance, and security.
 3. Write immediately — do not wait until Step 8. The parent shard's summary + link is sufficient; the deep dive file IS the content.
+
+## 7.7. Completion Gate (MANDATORY)
+
+Scan for memory-capture triggers (rule: `memory-capture`). Write patterns/decisions/blockers to `memory/`. If none → confirm "No new entries." **Not skippable** — complete before `notify_user`.
 
 ## 8. Present all sections and request approval
 
