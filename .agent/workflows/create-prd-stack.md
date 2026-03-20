@@ -44,6 +44,21 @@ Present the constraints map to the user before starting tech decisions *(Interac
 
 Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for the per-axis constraint questions to ask before presenting options.
 
+## 2.7. Domain context loading for tech decisions
+
+> **This step is mandatory.** Reading `ideation-index.md` + `constraints.md` gives feature names, not feature architecture. Tech stack decisions require understanding *what the features actually do*.
+
+Before starting tech decisions, load domain context:
+
+1. Read the `## Structure Map` in `ideation-index.md` — identify all domain folders
+2. For each **Must Have domain**: read `{domain}/{domain}-index.md` to extract the Children table (sub-features, depth, complexity)
+3. For domains with **deep dives** (status `[DEEP]` or `[EXHAUSTED]`): read the deep dive files. These contain the architectural detail (multi-agent patterns, graph engines, sync protocols, embedded databases) that determines which tech stack is appropriate
+4. Read CX files (`ideation-cx.md` + domain CX files) — extract cross-domain dependencies that affect framework choices (e.g., shared AI orchestration across surfaces)
+
+**Per-axis context rule**: Before presenting tech options for any axis, identify which domain deep dives are relevant to that axis and confirm you have read them. Example: before an AI/ML framework decision, you must have read every domain file that describes AI-powered features — not just the MoSCoW bullet saying "AI diagnostics."
+
+> ❌ If a tech axis involves features with deep dives that you haven't read → **STOP** and read them before presenting options. A MoSCoW summary line is never sufficient context for a tech stack decision.
+
 ## 3. Tech stack decisions
 
 Read the **Project Surfaces** section from `docs/plans/ideation/meta/constraints.md` to determine which decision axes apply.

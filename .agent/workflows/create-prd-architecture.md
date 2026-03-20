@@ -38,6 +38,25 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ---
 
+## 0.5. Ideation context reload
+
+> **This step is mandatory.** Shards run in separate conversations — ideation context from the orchestrator is lost. Reload it here.
+
+1. Read `docs/plans/ideation/ideation-index.md` — extract: Structure Map (domain list + paths), MoSCoW Summary (full feature inventory), Engagement Tier, persona list
+2. Read `docs/plans/ideation/meta/constraints.md` — extract: Project Surfaces, compliance constraints, hard/soft constraints
+3. Read `docs/plans/ideation/ideation-cx.md` (global cross-cuts) — extract: cross-domain data dependencies, trigger chains, shared entity ownership. Then read each domain-level `{domain}-cx.md` listed in the Structure Map
+4. If `## Ideation Digest` exists in `docs/plans/architecture-draft.md` → use it as the structured feature inventory. Otherwise, read domain index files (`{domain}/{domain}-index.md`) directly per the deep ideation loading protocol (`.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md`)
+
+**How this context feeds downstream steps:**
+- Component diagram (4.1) ← domain boundaries from domain indexes, trigger chains from CX files
+- Data flow (4.2) ← cross-domain dependencies from CX files, persona access from role matrices
+- Data strategy (5) ← key entities from domain children tables, shared entities from CX
+- Data placement (5.1) ← surface constraints from constraints.md
+
+> ❌ Do NOT proceed to Step 4 until all ideation context is loaded. Do NOT rely solely on architecture-draft.md — it is the agent's prior output, not the user's ideation.
+
+---
+
 ## 4. System architecture
 
 Read `.agent/skills/api-design-principles/SKILL.md` for API surface design.

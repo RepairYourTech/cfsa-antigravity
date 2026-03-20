@@ -40,6 +40,14 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 5. Read `.agent/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `docs/plans/design-system.md`.
 6. Note which surfaces are in scope from `## Project Surfaces`.
 
+### Ideation workflow context
+
+> **Mandatory.** Navigation paradigms and page archetypes must be driven by actual user workflows, not abstract feature lists.
+
+7. Read the `## Structure Map` in `ideation-index.md` — identify the **3 heaviest domains** (highest feature count / deepest nesting)
+8. For each heavy domain: read `{domain}/{domain}-index.md` — extract the Children table to understand the user-facing workflows (what screens exist, what data users interact with, what actions they take)
+9. If any heavy domain has deep dives → read them for workflow complexity that affects navigation and archetype decisions
+
 ---
 
 ## 2. Decision 1 — Navigation paradigm

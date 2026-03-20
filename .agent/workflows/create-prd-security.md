@@ -39,6 +39,25 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ---
 
+## 0.5. Ideation context reload
+
+> **This step is mandatory.** Shards run in separate conversations — ideation context from the orchestrator is lost.
+
+1. Read `docs/plans/ideation/ideation-index.md` — extract: persona list (all roles), MoSCoW Summary, Engagement Tier
+2. Read `docs/plans/ideation/meta/constraints.md` — extract: compliance constraints (COPPA/PCI/HIPAA triggers), regulatory requirements, age-related constraints
+3. Read domain-level index files for **every domain that has Must Have features** — extract the **Role Matrix** from each. The role matrix shows which personas access which domain at which permission level (Full / Config / Read-only / None). This is the primary input for access control design in Step 6.
+4. Read CX files (`ideation-cx.md` + domain-level `{domain}-cx.md`) — extract trust boundaries: which domains share data across different permission levels, cross-domain escalation paths
+
+**How this context feeds downstream steps:**
+- Auth design (6.1-2) ← persona list + role matrices determine RBAC scope
+- Compliance escalation (6) ← constraints.md compliance flags trigger mandatory sections
+- Trust boundaries (6.5) ← CX cross-domain dependencies reveal attack surface
+- Integration security (7) ← ideation integration references inform threat model
+
+> ❌ Do NOT proceed to Step 6 until ideation context is loaded. "Scan the ideation output" is NOT sufficient — read the specific files listed above.
+
+---
+
 ## 6. Security model
 
 Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its defense-in-depth methodology.

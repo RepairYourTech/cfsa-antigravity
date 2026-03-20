@@ -57,6 +57,16 @@ Document the agreed approach:
 
 Write the completed `## Development Methodology` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
+## 8.5. Ideation context reload for phasing
+
+> **Mandatory.** Phase complexity sizing from the digest alone loses depth information. A "12-feature domain" could be 12 flat features or 12 features with 3 levels of sub-domain nesting — very different phase capacity.
+
+1. Read `docs/plans/ideation/ideation-index.md` — extract: full MoSCoW Summary with per-domain feature counts, Structure Map with domain depths
+2. For each **Must Have domain**: read `{domain}/{domain}-index.md` — extract Children table depth, sub-domain count, and dependency markers
+3. Read CX files — extract cross-domain dependencies that constrain phase ordering (e.g., domain A must be implemented before domain B if B depends on A's data)
+
+Use this context alongside the Ideation Digest (if it exists in architecture-draft.md) when sizing phases below.
+
 ## 9. Phasing strategy
 
 Load the CI/CD skill(s) from the cross-cutting section per the skill loading protocol.
