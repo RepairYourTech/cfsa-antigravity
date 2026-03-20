@@ -1,5 +1,38 @@
 # cfsa-antigravity
 
+## 2.13.0
+
+### Minor Changes
+
+- feat: add /setup-workspace workflow with 4 operational shards
+
+  ## Problem
+
+  Operational setup tasks (CI/CD, hosting, database provisioning, project scaffolding)
+  were being forced into the `00-infrastructure` TDD slice, which is inappropriate.
+  These operational tasks don't follow Red→Green→Refactor — they're provision-and-verify.
+
+  ## Fix
+
+  New pipeline stage 8.5 (`/setup-workspace`) between `/plan-phase` and `/implement-slice`
+  with 4 independently-invocable shards:
+
+  1. **`/setup-workspace-scaffold`** — Project init, deps, configs, git setup
+  2. **`/setup-workspace-cicd`** — CI/CD pipeline config, secrets, matrix builds
+  3. **`/setup-workspace-hosting`** — Platform provisioning, domains, first staging deploy
+  4. **`/setup-workspace-data`** — Database provisioning, migrations, connections
+
+  Each shard has a verification gate. All support multi-domain architectures
+  (monolith, monorepo, multi-repo, hub-and-spoke).
+
+  ## Downstream changes
+
+  - `plan-phase-write.md`: `00-infrastructure` reduced to TDD-able code only
+  - `verify-infrastructure.md`: added `workspace` trigger
+  - Pipeline tables: setup-workspace rows in GEMINI.md + AGENTS.md
+  - Phase detection: workspace setup phase added
+  - Skill-loading-protocol: 4 new workflow categories
+
 ## 2.12.0
 
 ### Minor Changes
