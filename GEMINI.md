@@ -13,7 +13,7 @@
 
 ### Progressive Decision Lock
 
-Decisions are **progressively locked**: `/ideate` → vision, `/create-prd` → architecture, `/decompose-architecture` → domain boundaries, `/write-architecture-spec` → interaction specs, `/write-be-spec` → backend contracts, `/write-fe-spec` → frontend specs, `/plan-phase` → implementation order, `/verify-infrastructure` → operational foundation, `/implement-slice` → code.
+Decisions are **progressively locked**: `/ideate` → vision, `/create-prd` → architecture, `/decompose-architecture` → domain boundaries, `/write-architecture-spec` → interaction specs, `/write-be-spec` → backend contracts, `/write-fe-spec` → frontend specs, `/plan-phase` → implementation order, `/setup-workspace` → operational foundation, `/verify-infrastructure` → infrastructure verification, `/implement-slice` → code.
 
 Once locked, downstream stages may not contradict. To change a locked decision, re-run the originating stage and cascade.
 
@@ -62,10 +62,15 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
 | ↳ | `/plan-phase-preflight` | Approved specs | Phase gate + completeness audit + consistency check | Planning |
 | ↳ | `/plan-phase-write` | Preflight pass | Slices + acceptance criteria + progress files | Planning |
+| 8.5 | `/setup-workspace` | Architecture + phase plan | Scaffolded project + CI/CD + staging + database | Setup |
+| ↳ | `/setup-workspace-scaffold` | Architecture + structure | Project init + deps + configs + git | Setup |
+| ↳ | `/setup-workspace-cicd` | Scaffolded project | CI/CD pipeline config + secrets | Setup |
+| ↳ | `/setup-workspace-hosting` | CI/CD configured | Hosting + domains + first staging deploy | Setup |
+| ↳ | `/setup-workspace-data` | Hosting configured | Database + migrations + connections | Setup |
 | 9 | `/implement-slice` | Slice acceptance criteria | Working code via Red→Green→Refactor | Implementation |
 | ↳ | `/implement-slice-setup` | Slice from phase plan | Progress check + skills + contracts + parallel mode | Implementation |
 | ↳ | `/implement-slice-tdd` | Contract + tests | Red→Green→Refactor + validation + progress tracking | Implementation |
-| 7.5 | `/verify-infrastructure` | Implemented infra or auth slice | Operational verification report | Verification |
+| 9.5 | `/verify-infrastructure` | Workspace, infra slice, or auth slice | Operational verification report | Verification |
 | 10 | `/validate-phase` | Completed phase | Full validation gate | Verification |
 | ↳ | `/validate-phase-quality` | Completed phase | Code quality gates — tests, coverage, lint, type-check, build, CI/CD, staging, migrations, spec coverage | Verification |
 | ↳ | `/validate-phase-readiness` | Quality gates passed | Production readiness gates — API docs, accessibility, performance, security, dependency audit, results | Verification |
@@ -156,6 +161,7 @@ Before acting on any task, detect the current pipeline phase from filesystem mar
 | Decomposition done | IA shards in `docs/plans/ia/` | `/write-architecture-spec` |
 | Spec writing | BE/FE specs exist | `/write-be-spec`, `/write-fe-spec` |
 | Planning | Phase plan in `docs/plans/phases/` | `/plan-phase` |
+| Workspace setup | Phase plan exists, no `.agent/progress/` content | `/setup-workspace` → `/verify-infrastructure` |
 | Implementation | `.agent/progress/` has content | `/implement-slice` |
 
 **Use this table to gate every action.** If a user runs a command that doesn't match their current phase, explain what phase they're in and what to run instead.

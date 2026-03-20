@@ -27,3 +27,10 @@
 - **Context**: Any workflow or interaction that involves questions — ideation, PRD, ambiguity resolution
 - **Pattern**: NEVER ask multiple questions at once. One question at a time, with options, pros/cons, and a recommendation. This applies to both user-facing AND internal reasoning.
 - **Source**: User correction — "batch questioning is not allowed, always ask questions one at a time"
+
+### PAT-005: Decisions during ideation drilling silently drop CX connections (2026-03-19)
+- **Type**: anti-pattern
+- **Confidence**: 0.9 (user caught critical failure, verified by audit)
+- **Context**: `/ideate-discover` drilling — when OQs are resolved or Deep Think hypotheses confirmed
+- **Pattern**: After resolving an OQ or confirming a hypothesis, agents write the decision to the feature file and move on without checking cross-domain (CX) impact. The CX file never gets updated. The fix is the CX Decision Gate — a mandatory stop-and-check after every decision event.
+- **Source**: User caught hiring fee model decision (W13) that affected 6 cross-domain connections but none were written to CX. Agent had to retroactively fix the gap.

@@ -24,6 +24,10 @@ Standard procedure for loading skills from the surface stack map before beginnin
 | `write-be-spec-classify` | Languages, Databases, Auth, BE Frameworks, ORMs, Unit Tests |
 | `write-fe-spec-classify` | Languages, FE Frameworks, FE Design, Accessibility, State Mgmt |
 | `write-architecture-spec-design` | Databases, Security, API Design |
+| `setup-workspace-scaffold` | Languages, BE Frameworks, FE Frameworks |
+| `setup-workspace-cicd` | CI/CD, Languages |
+| `setup-workspace-hosting` | Hosting, CI/CD |
+| `setup-workspace-data` | Databases, ORMs |
 | `implement-slice-tdd` | Languages, Unit Tests, E2E Tests |
 | `validate-phase` | Unit Tests, E2E Tests, CI/CD, Hosting, Accessibility, Security |
 

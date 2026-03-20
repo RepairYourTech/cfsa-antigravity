@@ -35,12 +35,13 @@ Scan the surface stack map (`.agent/instructions/tech-stack.md`) for completenes
 
 ## 0.5. Determine trigger
 
-Read the current phase plan (e.g., `docs/plans/phases/phase-1.md`) to identify which slice just completed.
+Read the current phase plan (e.g., `docs/plans/phases/phase-1.md`) to identify what just completed.
 
+- **If `/setup-workspace` was just completed** → trigger is `workspace`, report suffix is `-workspace`
 - **If the `00-infrastructure` slice was just completed** → trigger is `infrastructure`, report suffix is empty
 - **If the auth slice was just completed** → trigger is `auth`, report suffix is `-auth`
 
-Set the report filename now: `docs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-auth].md`.
+Set the report filename now: `docs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-workspace|-auth].md`.
 
 **Re-run detection**: Check if a previous verification report exists for this trigger (search `docs/audits/` for `verify-infrastructure-*[-auth].md`).\n- If a previous report exists and shows `✅ PASS` → ask: \"A passing verification report already exists (`[filename]`). Re-run all checks or skip?\"\n- If a previous report exists and shows `❌ FAIL` → proceed automatically (re-verification needed).\n- If no previous report exists → proceed normally.
 

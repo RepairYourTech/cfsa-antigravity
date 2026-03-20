@@ -82,10 +82,14 @@ Sort slices so each builds on the last:
 
 **Phase 1 special rule**: Before applying this rule, read the surface stack map from `.agent/instructions/tech-stack.md` and verify that the **CI/CD** and **Hosting** cross-cutting categories have filled values. If empty, emit a **HARD STOP**: these are filled by `/create-prd-stack` — run it first.
 
-The `00-infrastructure` shard is always the first slice. Verify it covers: (1) CI/CD pipeline setup — read the CI/CD skill(s) from the cross-cutting section of the surface stack map, (2) environment configuration (`.env.example`), (3) deployment pipeline — read the Hosting skill(s) from the cross-cutting section of the surface stack map, (4) project scaffolding from `.agent/instructions/structure.md` (directories, `README.md` files, base configs), (5) database initialization. Add missing items before proceeding.
+The `00-infrastructure` shard is always the first slice. It covers only **TDD-able application code**: (1) health check endpoint, (2) error handling middleware with structured error responses, (3) logging middleware, (4) structured response envelope, (5) auth middleware stubs (BOUNDARY if auth spec not yet written). Operational setup (CI/CD, hosting, database provisioning, project scaffolding) is handled by `/setup-workspace` which runs before any `/implement-slice`.
+
+> [!IMPORTANT]
+> `/setup-workspace` MUST be run and pass `/verify-infrastructure` BEFORE the first `/implement-slice`. If the workspace has not been set up, emit a **HARD STOP**: "Run `/setup-workspace` first — operational infrastructure must be in place before any TDD slice."
 
 **Verification gates** (hard gates — add explicitly to the phase plan):
-- `/verify-infrastructure` MUST pass after the infrastructure slice, before any feature slice.
+- `/verify-infrastructure` MUST pass after `/setup-workspace`, before any implementation slice.
+- `/verify-infrastructure` MUST pass after the infrastructure code slice, before any feature slice.
 - `/verify-infrastructure` MUST pass again after the auth slice (with auth smoke test), before any auth-dependent feature slice.
 
 - Core entity CRUD second
