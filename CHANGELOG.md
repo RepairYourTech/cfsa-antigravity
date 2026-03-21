@@ -1,5 +1,16 @@
 # cfsa-antigravity
 
+## 2.17.0
+
+### Minor Changes
+
+- Upgrade i18n-localization skill from cheat sheet to production-grade
+
+  - **SKILL.md**: Rewritten with SCAN→EXTRACT→VERIFY→PRESENT workflow, scope management (component/feature/app-wide), output requirements, translator context guidance, expanded library examples (React, Next.js, Python, Vue), anti-patterns table, and comprehensive pre-ship checklist.
+  - **references/icu-message-format.md**: ICU MessageFormat patterns — plurals (CLDR categories), gender select, ordinals, nested patterns, key naming conventions, rich text tags, common mistakes.
+  - **references/intl-api-patterns.md**: All 7 Intl formatters with concrete examples — DateTimeFormat, NumberFormat, RelativeTimeFormat, ListFormat, PluralRules, DisplayNames, Segmenter.
+  - **references/rtl-support.md**: Full CSS logical properties mapping, component-level RTL patterns (icons, progress bars, nav, forms, tables), dir attribute usage, bidirectional text handling (bdi/bdo/Unicode), RTL testing checklist.
+
 ## 2.16.0
 
 ### Minor Changes
