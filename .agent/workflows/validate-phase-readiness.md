@@ -23,26 +23,40 @@ Run all production readiness checks for a completed implementation phase.
 
 ---
 
-## 5.9. API documentation sync (surfaces with API endpoints)
+## 5.85. Gate Applicability Check (MANDATORY first step)
 
-Read the surface stack map from `.agent/instructions/tech-stack.md`. **Skip this step** if the project has no API surface and no BE endpoints exposed to external consumers.
+Before running any readiness gate, determine which gates apply to THIS phase based on what changed.
 
-1. Read `docs/plans/ENGINEERING-STANDARDS.md` → `## Code Quality` → `Required documentation` field
-2. If API documentation is required or the project exposes public API endpoints:
-   - Verify an OpenAPI spec file exists (e.g., `openapi.yaml`, `openapi.json`, or a generated equivalent)
-   - If the project uses a schema-first or code-first generation approach (documented in architecture-design.md), verify the generation tool produces output matching the implemented endpoints
-   - For each new endpoint in this phase, verify it appears in the OpenAPI spec with:
-     - Request body schema matching the {{CONTRACT_LIBRARY}} contract
-     - Response schema matching the contract
-     - All error codes documented
-   - Run OpenAPI linter if configured (e.g., the tool named in ENGINEERING-STANDARDS.md or the project's `lint` scripts)
-3. If API documentation is not required and no public API surface exists → skip
+1. Read `.agent/skills/prd-templates/references/gate-applicability.md`
+2. Classify this phase's content using the Content Classification Table
+3. Build the gate applicability table using the template
+4. Apply the always-on vs content-triggered rules
+5. If any gate is deferred, follow the deferred gate rules (hard deadline, single-deferral limit)
 
-**Pass criteria**: OpenAPI spec exists and is in sync with implemented contracts for this phase's endpoints, or API documentation is not applicable.
+The gate applicability table produced here is referenced by every subsequent step and included in the final validation report (Step 9).
 
 ---
 
-## 6. Accessibility audit (if UI changes)
+## 5.9. API documentation sync (content-triggered)
+
+**Applicability**: Check gate applicability table (Step 5.85). If "No" → log skip and proceed. If "Deferred" → log with deadline and proceed.
+
+Read the surface stack map from `.agent/instructions/tech-stack.md`.
+
+1. Read `docs/plans/ENGINEERING-STANDARDS.md` → `## Code Quality` → `Required documentation`
+2. If API documentation is required or public API endpoints exist:
+   - Verify OpenAPI spec file exists and matches implemented endpoints
+   - For each new endpoint, verify request/response schemas match {{CONTRACT_LIBRARY}} contracts and all error codes are documented
+   - Run OpenAPI linter if configured
+3. If no API documentation required and no public API surface → skip
+
+**Pass criteria**: OpenAPI spec in sync with this phase's endpoint contracts, or not applicable.
+
+---
+
+## 6. Accessibility audit (content-triggered)
+
+**Applicability**: Check gate applicability table (Step 5.85). If "No" → log skip and proceed. If "Deferred" → log with deadline and proceed.
 
 Audit all new UI components in this phase for WCAG 2.1 AA compliance using the Accessibility skill(s) from the cross-cutting section.
 
@@ -74,43 +88,30 @@ Read `docs/plans/ENGINEERING-STANDARDS.md` section `## Performance Budgets`.
 
 ### 7b. Deep performance audit (optional)
 
-Check if the `performance-optimization` skill is installed (look for `.agent/skills/performance-optimization/SKILL.md`).
+Check if `performance-optimization` skill is installed (`.agent/skills/performance-optimization/SKILL.md`).
 
-**If installed**:
-1. Read `.agent/skills/performance-optimization/SKILL.md`
-2. Run the skill's audit protocol against the phase's changed pages/routes/endpoints
-3. Compare results to the targets in `docs/plans/ENGINEERING-STANDARDS.md` (response time budgets, bundle sizes, memory limits, or other surface-appropriate metrics)
-4. Report any metrics that exceed the defined thresholds
+**If installed**: Read the skill, run its audit against changed pages/routes/endpoints, compare to ENGINEERING-STANDARDS.md targets, report threshold violations.
 
-**If not installed**:
-- Manually verify that no obviously expensive operations were added (large synchronous imports, unoptimized assets, missing lazy loading, N+1 queries, unbounded loops)
-- If performance is critical for this project, recommend installing the skill via `find-skills`
+**If not installed**: Manually verify no obvious perf regressions (large synchronous imports, unoptimized assets, N+1 queries, unbounded loops). Recommend skill installation if performance is critical.
 
 ## 8. Security review
 
-Read .agent/skills/adversarial-review/SKILL.md and follow its structured methodology for generating attack scenarios, abuse cases, and race conditions against the phase's changes. Produce spec-level gap items for any identified risks. Feed these into the defense-in-depth audit below.
+Read `.agent/skills/adversarial-review/SKILL.md` — generate attack scenarios, abuse cases, and race conditions against this phase's changes. Produce spec-level gap items.
 
-Read .agent/skills/security-scanning-security-hardening/SKILL.md and run its full defense-in-depth audit protocol against the phase's changes (new endpoints, new data flows, new auth checks). Report findings with severity levels. Block the phase if any Critical or High severity issues are found.
+Read `.agent/skills/security-scanning-security-hardening/SKILL.md` — run full defense-in-depth audit (new endpoints, data flows, auth checks). Block on Critical/High severity findings.
 
-**Supplemental security checks (conditional)**: After the core audit completes, read the Security skill(s) from the cross-cutting section of the surface stack map. For each listed skill directory name, read `.agent/skills/[skill]/SKILL.md` and run its audit protocol as a supplement to the core audit.
+**Supplemental checks**: Read Security skill(s) from cross-cutting section of surface stack map. Run each skill's audit protocol. Report with same severity classification.
 
-Report any additional findings from supplemental audits with the same severity classification.
-
-**Surface-conditional DAST scan (if applicable)**: Read `docs/plans/ENGINEERING-STANDARDS.md` → `## Security` → `Security testing tool` field. If a DAST or security scanning tool is defined:
-1. Run it against the staging deployment from Step 5.6
-2. Report findings with severity levels consistent with the core audit
-3. Block the phase if any Critical or High severity findings are discovered
-
-If no security testing tool is defined in ENGINEERING-STANDARDS → skip and log: "No DAST/security testing tool configured."
+**DAST scan (if applicable)**: Read `ENGINEERING-STANDARDS.md` → `## Security` → `Security testing tool`. If defined, run against staging. Block on Critical/High. If not defined → log and proceed.
 
 ## 8.5. Dependency audit
 
-### Core audit (mandatory — no skill required)
+### Core audit (mandatory)
 
-Run the package manager's built-in vulnerability audit tool. Use the appropriate command for the project's language/package manager:
+Run the package manager's built-in vulnerability audit:
 
-| Package Manager | Audit Command |
-|----------------|---------------|
+| PM | Command |
+|----|--------|
 | npm | `npm audit --audit-level=high` |
 | pnpm | `pnpm audit --audit-level=high` |
 | yarn | `yarn npm audit --severity high` |
@@ -120,19 +121,11 @@ Run the package manager's built-in vulnerability audit tool. Use the appropriate
 | bundler | `bundle audit check` |
 | composer | `composer audit` |
 
-If the project uses a package manager not listed above, check its documentation for a built-in vulnerability audit command.
-
-**If any HIGH or CRITICAL vulnerabilities are found in production dependencies** → **STOP.** Mark step 8.5 as `❌`. List affected packages and recommended fixes (upgrade version, patch, or replace).
-
-**If only LOW or MODERATE vulnerabilities are found** → Log as findings, do not block.
-
-**If the audit tool is not available** (e.g., language has no built-in audit) → Log: "No built-in dependency audit available for [language]. Recommend installing a dependency auditing tool." Do not block.
+**HIGH/CRITICAL in prod deps** → **STOP.** List affected packages + fixes. **LOW/MODERATE** → log, don't block. **Tool unavailable** → log, don't block.
 
 ### Supplemental audit (conditional)
 
-If the `dependency-auditing` skill is installed (`.agent/skills/dependency-auditing/SKILL.md`):
-1. Read the skill and run its full audit protocol (Snyk, Socket.dev, SBOM generation, lockfile integrity)
-2. Report any additional findings with severity levels
+If `dependency-auditing` skill is installed → read and run its full protocol (Snyk, Socket.dev, SBOM, lockfile integrity).
 
 **Pass criteria**: Zero HIGH/CRITICAL vulnerabilities in production dependencies.
 
@@ -161,19 +154,7 @@ Grep the codebase for `BOUNDARY:` comments:
 
 **Note on report file**: `docs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
 
-- Test results and coverage
-- Lint and type-check status
-- Build status
-- Accessibility findings
-- Performance budget results (7a) and deep audit findings (7b)
-- Security review findings (including DAST results if applicable)
-- Dependency audit results
-- API documentation sync status (if applicable)
-- Deployment strategy compliance (if applicable)
-- CI/CD pipeline status
-- Staging deployment result
-- Migration verification status
-- Pass/fail verdict
+Follow the **Validation Report Structure** in `.agent/skills/prd-templates/references/gate-applicability.md` to structure the report with: Gate Applicability Summary, Applied Gate Results, Deferred Gates (if any), and Verdict.
 
 ## 9.5. Completion Gate (MANDATORY)
 
