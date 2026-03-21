@@ -1,5 +1,15 @@
 # cfsa-antigravity
 
+## 2.16.0
+
+### Minor Changes
+
+- Add surface scope to vertical-slices rule and content-triggered gates to validate-phase
+
+  - **vertical-slices.md**: Slices must now declare target surfaces during `/plan-phase`. The 4-layer checklist applies within each declared surface, not globally. Added surface-first strategy for phased multi-surface rollouts.
+  - **validate-phase-readiness.md**: Added Step 5.85 Gate Applicability Check. Gates 5.9 (API docs) and 6 (accessibility) are content-triggered — skipped when phase has no relevant content. Deferred gates require hard deadlines with single-deferral limit.
+  - **gate-applicability.md**: New reference file with content classification tables, always-on vs content-triggered gate rules, and validation report template.
+
 ## 2.15.0
 
 ### Minor Changes
