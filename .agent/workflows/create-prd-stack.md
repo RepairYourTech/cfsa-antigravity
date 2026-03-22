@@ -44,20 +44,34 @@ Present the constraints map to the user before starting tech decisions *(Interac
 
 Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for the per-axis constraint questions to ask before presenting options.
 
-## 2.7. Domain context loading for tech decisions
+## 2.7. Build Ideation Relevance Index
 
-> **This step is mandatory.** Reading `ideation-index.md` + `constraints.md` gives feature names, not feature architecture. Tech stack decisions require understanding *what the features actually do*.
+> **This step is mandatory.** Reading `ideation-index.md` + `constraints.md` gives feature names, not feature architecture. Tech stack decisions require understanding *what the features actually do*. A MoSCoW summary line is **never** sufficient context for a tech stack decision.
 
-Before starting tech decisions, load domain context:
+Create directory `docs/plans/prd-working/` if it does not exist.
 
-1. Read the `## Structure Map` in `ideation-index.md` — identify all domain folders
-2. For each **Must Have domain**: read `{domain}/{domain}-index.md` to extract the Children table (sub-features, depth, complexity)
-3. For domains with **deep dives** (status `[DEEP]` or `[EXHAUSTED]`): read the deep dive files. These contain the architectural detail (multi-agent patterns, graph engines, sync protocols, embedded databases) that determines which tech stack is appropriate
-4. Read CX files (`ideation-cx.md` + domain CX files) — extract cross-domain dependencies that affect framework choices (e.g., shared AI orchestration across surfaces)
+Build an **Ideation Relevance Index** — a lookup table mapping each decision axis to the specific ideation files that inform it. This index is consulted PER-AXIS to guarantee no axis skips its relevant source material.
 
-**Per-axis context rule**: Before presenting tech options for any axis, identify which domain deep dives are relevant to that axis and confirm you have read them. Example: before an AI/ML framework decision, you must have read every domain file that describes AI-powered features — not just the MoSCoW bullet saying "AI diagnostics."
+**Write the completed index to `docs/plans/prd-working/ideation-relevance-index.md`.**
 
-> ❌ If a tech axis involves features with deep dives that you haven't read → **STOP** and read them before presenting options. A MoSCoW summary line is never sufficient context for a tech stack decision.
+### How to build the index
+
+1. Read the `## Structure Map` in `ideation-index.md` — identify all domain folders and their statuses (`[DEEP]`, `[EXHAUSTED]`, etc.)
+2. For each **Must Have domain**: read `{domain}/{domain}-index.md` — extract: Children table (sub-features, depth), key entity types, technology-relevant patterns (AI, real-time, search, graph, offline)
+3. For domains with deep dives (`[DEEP]` or `[EXHAUSTED]`): read EVERY deep dive file — extract architectural detail (multi-agent patterns, graph engines, sync protocols, embedded databases, complex query patterns)
+4. Read CX files (`ideation-cx.md` + domain-level CX files) — extract: cross-domain data dependencies, trigger chains, shared entity ownership, trust boundaries
+
+### Index structure
+
+For each applicable tech decision axis, record a row:
+
+| Axis | Relevant Domain Files | Key Findings (summary) |
+|------|----------------------|------------------------|
+| {axis} | [every file read for this axis] | [1-line summary per file] |
+
+> ❌ **STOP gate**: If any axis has **zero** relevant domain files listed, you have not read deeply enough. Go back and read the domain indexes and deep dives — every axis is informed by at least one domain.
+
+This index is your working checklist. Before each axis, consult it and read the listed files if you haven't already. Context evaporates between axes — **re-read** when needed.
 
 ## 3. Tech stack decisions
 
@@ -71,29 +85,23 @@ Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constrain
 Score Fit from 1–5 based on how well the option matches the constraints map. If constraints eliminate all but 1-2 options, present only those with a note explaining why others were eliminated.
 
 **Per-axis flow**:
-1. **Apply rule `source-before-ask`**: Before this axis, reason about which ideation domains, deep dives, and CX files are relevant to THIS specific technology decision. Read those files now. Do NOT proceed to the constraint questions until you have read the relevant source material and can cite specific architectural details from the ideation output.
-2. Ask the constraint questions for this axis
-3. Filter options based on answers
-4. Present the filtered option table with recommendation — **citing specific ideation details** that informed your recommendation (e.g., "Based on the diagnostics deep dive's multi-agent coordination pattern, you need X")
-5. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
-6. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
+1. **Consult Ideation Relevance Index**: Look up this axis in the index built in Step 2.7. Read EVERY file listed for this axis — not optional, not "skim", not "check if relevant". Read them.
+2. **Read constraint questions**: Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for this axis. Answer all **Tier 1 (self-answer from ideation)** questions using what you just read. These are questions YOU answer — do not ask the user.
+3. **Write Ideation Synthesis**: Before talking to the user, write a 3-5 bullet synthesis of project-specific findings relevant to this axis. Each bullet must cite a specific file (e.g., "From `diagnostics/diagnostics-deep-dive.md`: multi-agent orchestration with persistent task queues requires..."). **Append this synthesis as a `## {Axis Name}` section to `docs/plans/prd-working/stack-synthesis.md`.**
+4. **Cite-or-Stop Gate**: Your Ideation Synthesis must contain **≥ 2 project-specific findings with file citations**. If you cannot produce 2 citations → you have not read deeply enough → **STOP** and re-read the deep dives and CX files listed in the index. Generic findings like "the app needs a database" do not count.
+5. **Ask Tier 2 questions**: Now ask the user the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis. Present your Ideation Synthesis alongside the questions so the user sees you've done your homework.
+6. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk in the table must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to a specific ideation finding.
+7. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
+8. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
    - **1st failure** → retry bootstrap once with the same key
    - **2nd failure** → **STOP**: tell the user which key failed verification and ask: "Retry, skip this skill provisioning, or abort?"
-7. Move to next axis
+9. Move to next axis
 
-> **Note on backend axis bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct bootstrap keys and must each fire as a separate `/bootstrap-agents` call — do not combine them.
-> - `BACKEND_FRAMEWORK` (e.g., `Hono`, `FastAPI`, `NestJS`) → provisions the backend framework skill
-> - `API_LAYER` (e.g., `tRPC`, `GraphQL`) → provisions the API layer skill
->
-> These are independent MANIFEST entries. Firing bootstrap with `BACKEND_FRAMEWORK=Hono` does **not** provision the tRPC skill — `API_LAYER=tRPC` must be fired separately. Similarly, skipping the `Database` axis (handled by the Persistence Map Interview) does not affect backend framework or API layer keys — those must still fire individually.
+> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each as a separate `/bootstrap-agents` call. `BACKEND_FRAMEWORK=Hono` does NOT provision tRPC; `API_LAYER=tRPC` must fire separately. Database axis (Persistence Map Interview) is also independent.
 
 Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. Use the brainstorming skill's approach — one decision at a time.
 
-**User indecision handling**: If the user expresses uncertainty ("I don't know", "not sure", "you pick") on any decision:
-- Present your recommendation with clear reasoning
-- If user accepts → proceed with it
-- If user remains uncertain → read `.agent/skills/resolve-ambiguity/SKILL.md` and apply its methodology to narrow the decision space
-- If after ambiguity resolution the user still can't decide → lock your recommendation with a note: "[Agent-recommended, user deferred]" — this can be revisited later via `/propagate-decision`
+**User indecision handling**: If the user is uncertain → present your recommendation with reasoning. If still uncertain → apply `.agent/skills/resolve-ambiguity/SKILL.md`. If still undecided → lock your recommendation noted as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
 
 > **Decision recording**: For each confirmed tech stack decision, read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Tech stack choices have high downstream impact (they constrain frameworks, skills, deployment, and testing). Record each decision to `memory/decisions.md` with upstream/downstream effects.
 

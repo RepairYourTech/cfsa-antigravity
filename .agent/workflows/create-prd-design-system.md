@@ -46,7 +46,16 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 7. Read the `## Structure Map` in `ideation-index.md` — identify the **3 heaviest domains** (highest feature count / deepest nesting)
 8. For each heavy domain: read `{domain}/{domain}-index.md` — extract the Children table to understand the user-facing workflows (what screens exist, what data users interact with, what actions they take)
-9. If any heavy domain has deep dives → read them for workflow complexity that affects navigation and archetype decisions
+9. If any heavy domain has deep dives → read EVERY deep dive file — extract workflow complexity, interaction patterns, data density, real-time requirements, and multi-step user flows that affect navigation and archetype decisions
+10. Read CX files (`ideation-cx.md` + domain CX) — extract cross-domain navigation patterns, shared UI components, and workflow transitions between domains
+
+> ❌ **STOP gate**: If you have not read at least one deep dive file or domain index beyond `ideation-index.md`, you are not ready to make design system decisions. `ideation-index.md` gives you feature names — the domain files give you the workflows those features represent.
+
+### Per-decision Ideation Synthesis requirement
+
+Before presenting **each** of the 7 design system decisions below, write a brief **Ideation Synthesis** (2-4 bullets) explaining how the ideation content informs THIS specific decision. Each bullet must cite a specific file. **Append each synthesis as a `## {Decision Name}` section to `docs/plans/prd-working/design-system-synthesis.md`.**
+
+**Cite-or-Stop Gate**: Your synthesis must contain ≥ 1 project-specific finding with a file citation per decision.  Generic reasoning like "this is a complex app, so sidebar navigation" without citing which domains/workflows make it complex → **STOP** and re-read the heavy domain files.
 
 ---
 

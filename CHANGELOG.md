@@ -1,5 +1,20 @@
 # cfsa-antigravity
 
+## 2.17.1
+
+### Patch Changes
+
+- fix: enforce deep ideation research in /create-prd axis discussions
+
+  **Problem**: PRD tech stack and design system discussions were shallow and generic — agents skimmed ideation documents (or skipped them entirely), producing inaccurate recommendations disconnected from the project's actual architecture.
+
+  **Fix**:
+
+  - **`constraint-questions.md`**: Rewritten with two-tier question structure — Tier 1 (self-answer from ideation docs) and Tier 2 (ask the user). Added per-axis "Required Reads" mapping to ideation file types and Cite-or-Stop Gate requiring ≥2 project-specific citations before presenting options.
+  - **`create-prd-stack.md`**: Step 2.7 now builds a structured Ideation Relevance Index mapping each axis to specific domain files, deep dives, and CX entries (written to `docs/plans/prd-working/ideation-relevance-index.md`). Per-axis flow replaced with 9-step procedure: consult index → read files → write Ideation Synthesis (appended to `docs/plans/prd-working/stack-synthesis.md`) → pass Cite-or-Stop Gate → ask Tier 2 questions → filter options → confirm → bootstrap → next axis.
+  - **`create-prd-design-system.md`**: Added per-decision Ideation Synthesis requirement before each of the 7 design system decisions (appended to `docs/plans/prd-working/design-system-synthesis.md`). Cite-or-Stop Gate requires ≥1 citation per decision. Strengthened deep dive and CX file reading mandates.
+  - **New `docs/plans/prd-working/` directory**: Intermediate synthesis artifacts provide audit trail without polluting ideation documents.
+
 ## 2.17.0
 
 ### Minor Changes
