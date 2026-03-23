@@ -1,5 +1,19 @@
 # cfsa-antigravity
 
+## 2.17.3
+
+### Patch Changes
+
+- fix: map guard auto-recovery + bootstrap provisioning enforcement
+
+  **Problem**: Bootstrap never runs unless the map guard fires, and even then it only hard-stops instead of recovering. The fill shard completes without running provisioning because the gate was conditional on invocation mode.
+
+  **Fix**:
+
+  - **`map-guard-protocol.md`**: Auto-recoverable cells (Languages, Frameworks, Databases, ORMs, Auth, CI/CD, Hosting, Commands, patterns) now auto-invoke `/bootstrap-agents` silently using confirmed values from `architecture-draft.md`. Hard stops reserved for genuinely unrecoverable cells.
+  - **`bootstrap-agents.md`**: Hard gate between Step A (fill) and Step B (provision) — provision is mandatory after every fill invocation.
+  - **`bootstrap-agents-fill.md`**: Step 6 changed from conditional ("if standalone → provision, if inline → return") to mandatory ("provision runs next, always, regardless of invocation mode").
+
 ## 2.17.2
 
 ### Patch Changes

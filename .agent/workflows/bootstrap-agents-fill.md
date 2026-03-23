@@ -130,7 +130,7 @@ Also scan `.agent/rules/*.md`: `{{CONTRACT_LIBRARY}}` in `tdd-contract-first.md`
 
 ---
 
-## 6. Report and proceed
+## 6. Proceed to provisioning (MANDATORY)
 
 Report:
 - Which map cells were filled (and their values)
@@ -138,6 +138,6 @@ Report:
 - Which instruction template placeholders were filled
 - Any errors encountered
 
-If invoked standalone, the next step is `/bootstrap-agents-provision` to provision skills using the 4-tier resolution chain.
-
-If invoked by another workflow (e.g., `/create-prd`), return this report to the calling workflow.
+> **HARD GATE**: Do NOT return to the calling workflow. Do NOT stop here. You MUST now read and execute `.agent/workflows/bootstrap-agents-provision.md`. Fill without provision is an incomplete bootstrap — the skill library remains unresolved, map cells reference skills that don't exist, and downstream map guard checks will fail.
+>
+> This is not conditional. This is not "if invoked standalone." This applies to EVERY invocation of fill — whether standalone or called by a parent workflow. Provision runs next. Always.

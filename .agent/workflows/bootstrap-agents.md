@@ -52,9 +52,13 @@ Bootstrap does two things:
 
 Receives template values from the calling workflow and fills `{{PLACEHOLDER}}` values across instruction templates, rule templates, skill templates, and `AGENTS.md`.
 
+> **MANDATORY**: After fill completes, you MUST proceed to Step B. Do NOT return to the calling workflow after Step A alone. Fill without provision is an incomplete bootstrap — the skill library remains unresolved, map cells reference skills that don't exist, and downstream workflows will fail on missing skills.
+
 ### Step B — Run `.agent/workflows/bootstrap-agents-provision.md`
 
 Reads the skill library manifest, provisions matching skills based on stack/surface triggers, updates the installed skills list, fills workflow command/skill placeholders, and reports results.
+
+> **HARD GATE**: Step B is NOT optional. Every bootstrap invocation MUST run both Step A and Step B in sequence. Only after BOTH shards complete does bootstrap return to the calling workflow. If you are about to return to the caller and Step B has not run — STOP and run it now.
 
 ---
 
