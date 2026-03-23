@@ -38,6 +38,14 @@ For each shard, create at `docs/plans/ia/[NN-domain-name].md`:
 ## Edge Cases
 [To be filled during /write-architecture-spec]
 
+## Surface Applicability
+<!-- Populated during decomposition from architecture design's Project Surfaces -->
+| Surface | Applicable | Notes |
+|---------|-----------|-------|
+| [populated from architecture design] | | |
+
+> `all` shorthand: If the shard applies to every surface, write `Surfaces: all` instead of the table.
+
 ## Cross-Shard Dependencies
 [List which other shards this one depends on or is depended upon by]
 
@@ -68,11 +76,11 @@ Read cross-cutting shards first, then feature shards in numerical order.
 
 ## Shards
 
-| # | Shard | Status | Deep Dives |
-|---|-------|--------|------------|
-| 00 | [00-shard-name.md](00-shard-name.md) | 🔲 | — |
-| 01 | [01-shard-name.md](01-shard-name.md) | 🔲 | — |
-| ... | ... | ... | ... |
+| # | Shard | Surfaces | Status | Deep Dives |
+|---|-------|----------|--------|------------|
+| 00 | [00-shard-name.md](00-shard-name.md) | all | 🔲 | — |
+| 01 | [01-shard-name.md](01-shard-name.md) | web, mobile | 🔲 | — |
+| ... | ... | ... | ... | ... |
 
 ## Conventions
 
@@ -191,21 +199,28 @@ Create or update `docs/plans/index.md`:
 | [Ideation](ideation/ideation-index.md) | Problem, personas, features, constraints, domain map | ✅ |
 | [Architecture Design](YYYY-MM-DD-architecture-design.md) | Tech stack, system design, security | ✅ |
 
-## Surfaces
+## IA Layer (shared across all surfaces)
 
-| Surface | Index | Description | Shards |
-|---------|-------|-------------|--------|
-| **Shared** | [shared/index.md](shared/index.md) | Cross-surface domain models, sync protocol, shared contracts | N |
-| **[Surface 1]** | [surface-1/index.md](surface-1/index.md) | [Surface 1 description] | N |
-| **[Surface 2]** | [surface-2/index.md](surface-2/index.md) | [Surface 2 description] | N |
+| Layer | Index | Purpose | Shards |
+|-------|-------|---------|--------|
+| **IA** | [ia/index.md](ia/index.md) | Features, interactions, data models, access control | N shards |
 
-## Pipeline (per surface)
+> IA shards are domain-based, not surface-based. Each shard declares its surface applicability.
 
-Each surface follows the same spec pipeline independently:
-IA shards → BE specs → FE specs → audit → plan → implement → validate
+## Per-Surface Layers
 
-Shared surface specs must be completed first — other surfaces depend on them.
+| Surface | BE Index | FE Index | Description |
+|---------|----------|----------|-------------|
+| **Shared** | [shared/be/index.md](shared/be/index.md) | — | Cross-surface contracts |
+| **[Surface 1]** | [surface-1/be/index.md](surface-1/be/index.md) | [surface-1/fe/index.md](surface-1/fe/index.md) | [description] |
+| **[Surface 2]** | [surface-2/be/index.md](surface-2/be/index.md) | [surface-2/fe/index.md](surface-2/fe/index.md) | [description] |
+
+## Pipeline
+
+IA shards (shared) → per-surface BE specs → per-surface FE specs → audit → plan → implement → validate
+
+Shared BE specs must be completed first — surface-specific specs depend on them.
 ```
 
-Each surface's own `index.md` contains the standard three-layer table (IA/BE/FE)
-scoped to that surface, following the same format as the single-surface master index.
+Each surface's own `index.md` contains BE/FE tables scoped to that surface.
+IA shards are referenced from the shared `ia/index.md` — filtered by the shard's Surface Applicability.

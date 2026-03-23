@@ -32,9 +32,11 @@ Create directory structure, shard skeleton files, and all layer indexes.
 
 ### Multi-surface projects
 
-For each surface identified in the architecture design, plus a `shared/` surface, create the per-surface subdirectories (e.g., `docs/plans/shared/ia/deep-dives/`, `docs/plans/desktop/fe/`, `docs/plans/web/be/`, etc.). Each new directory must include a `.gitkeep` file and a `README.md`.
+IA shards are **shared across all surfaces** — they live in the flat `docs/plans/ia/` directory regardless of project type. IA describes domains, not surfaces.
 
-Each surface gets its own independent spec pipeline. The `shared/` surface contains cross-surface domain models and API contracts that both surfaces depend on.
+For each surface identified in the architecture design, plus a `shared/` surface, create per-surface BE and FE subdirectories only (e.g., `docs/plans/shared/be/`, `docs/plans/web/be/`, `docs/plans/web/fe/`, `docs/plans/mobile/fe/`, etc.). Each new directory must include a `.gitkeep` file and a `README.md`.
+
+Per-surface BE/FE directories hold surface-specific backend and frontend specs. The `shared/` surface contains cross-surface contracts that multiple surfaces depend on.
 
 ### Mandatory: 00-infrastructure shard (all project types)
 
@@ -88,7 +90,7 @@ Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the
 
 Read `.agent/skills/prd-templates/references/decomposition-templates.md` for the **Master Index** template (single-surface or multi-surface variant as appropriate). Create or update `docs/plans/index.md` using the template.
 
-For multi-surface projects, each surface's own `index.md` contains the standard three-layer table (IA/BE/FE) scoped to that surface, following the same format as the single-surface master index.
+For multi-surface projects, each surface's own `index.md` contains BE/FE tables scoped to that surface. IA shards are referenced from the shared `ia/index.md` — filtered by Surface Applicability.
 
 ## 9.5. Completion Gate (MANDATORY)
 

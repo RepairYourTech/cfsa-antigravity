@@ -1,5 +1,18 @@
 # cfsa-antigravity
 
+## 2.17.4
+
+### Patch Changes
+
+- fix: multi-surface directory structure — shared IA, per-surface BE/FE
+
+  **Problem**: `decompose-architecture-structure` had conflicting instructions. Line 35 told agents to create per-surface `ia/` directories (`docs/plans/web/ia/`, `docs/plans/desktop/ia/`), but lines 55/61 and all templates put shards in flat `docs/plans/ia/`. Agents produced a chaotic mix of both structures.
+
+  **Fix**:
+
+  - **`decompose-architecture-structure.md`**: IA stays flat in `docs/plans/ia/` (shared across all surfaces). Multi-surface projects only create per-surface `be/` and `fe/` directories. Step 9 updated to match.
+  - **`decomposition-templates.md`**: Added Surface Applicability section to shard skeleton template. Added Surfaces column to IA index. Rewrote multi-surface master index to show shared IA layer with per-surface BE/FE tables.
+
 ## 2.17.3
 
 ### Patch Changes
