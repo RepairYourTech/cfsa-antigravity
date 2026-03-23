@@ -21,6 +21,10 @@ Build the decision constraints map from the ideation output, then walk through e
 
 **Prerequisite**: `docs/plans/ideation/ideation-index.md` must exist. If it does not, tell the user to run `/ideate` first.
 
+## 2.4. Checkpoint resumption
+
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure in the protocol (re-read this workflow, skip completed items, resume from `next_action`). If it does not exist → initialize a fresh checkpoint for this shard.
+
 ---
 
 ## 2.5. Constraint-first discovery
@@ -37,7 +41,7 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 Build the constraints map:
 
 1. **Hard constraints** — decisions already locked by compliance, team, or budget
-2. **Surface constraints** — the project surfaces (from structural classification) constrain framework choices. For multi-product projects, some axes may need separate decisions per surface (e.g., different frontend frameworks for web vs desktop vs mobile).
+2. **Surface constraints** — the project surfaces (from structural classification) constrain framework choices. For multi-product projects, some axes may need separate decisions per surface.
 3. **Soft constraints** — preferences that should bias decisions but aren't hard rules
 
 Present the constraints map to the user before starting tech decisions *(Interactive/Hybrid)* or auto-confirm with Deep Think reasoning *(Auto)*. Constraints narrow the option space — some decisions may be obvious. Skip those with a brief rationale.
@@ -80,7 +84,7 @@ Read the **Project Surfaces** section from `docs/plans/ideation/meta/constraints
 Read `.agent/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.agent/skills/tech-stack-catalog/SKILL.md`.
 Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.
 
-> ⚠️ **Skip the `Database` axis** from the surface decision tables during this generic per-axis loop. All persistence decisions (primary, vector, graph, cache, time-series) are handled exclusively by the **Database: Persistence Map Interview** section below. Do not present a single DATABASE option here — this avoids duplicate/conflicting bootstrap calls.
+> ⚠️ **Skip the `Database` axis** from the surface decision tables during this generic per-axis loop. All persistence decisions are handled exclusively by the **Database: Persistence Map Interview** section below.
 
 Score Fit from 1–5 based on how well the option matches the constraints map. If constraints eliminate all but 1-2 options, present only those with a note explaining why others were eliminated.
 
@@ -89,21 +93,20 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 2. **Read constraint questions**: Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for this axis. Answer all **Tier 1 (self-answer from ideation)** questions using what you just read. These are questions YOU answer — do not ask the user.
 3. **Write Ideation Synthesis**: Before talking to the user, write a 3-5 bullet synthesis of project-specific findings relevant to this axis. Each bullet must cite a specific file (e.g., "From `diagnostics/diagnostics-deep-dive.md`: multi-agent orchestration with persistent task queues requires..."). **Append this synthesis as a `## {Axis Name}` section to `docs/plans/prd-working/stack-synthesis.md`.**
 4. **Cite-or-Stop Gate**: Your Ideation Synthesis must contain **≥ 2 project-specific findings with file citations**. If you cannot produce 2 citations → you have not read deeply enough → **STOP** and re-read the deep dives and CX files listed in the index. Generic findings like "the app needs a database" do not count.
-5. **Ask Tier 2 questions**: Now ask the user the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis. Present your Ideation Synthesis alongside the questions so the user sees you've done your homework.
-6. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk in the table must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to a specific ideation finding.
-7. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
-8. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails:
-   - **1st failure** → retry bootstrap once with the same key
-   - **2nd failure** → **STOP**: tell the user which key failed verification and ask: "Retry, skip this skill provisioning, or abort?"
-9. Move to next axis
+5. **Synthesis verification gate (HARD)**: Read `docs/plans/prd-working/workflow-state.md` and verify `synthesis_written: true` for this axis. If `false` → **STOP** — you skipped step 3. Write synthesis first.
+6. **Ask Tier 2 questions**: Present your Ideation Synthesis alongside the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis.
+7. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to an ideation finding.
+8. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
+9. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
+10. **Update checkpoint**: Write current progress to `docs/plans/prd-working/workflow-state.md` — mark this axis complete, set next axis, reset `synthesis_written: false`, populate `pending_reads` from the Ideation Relevance Index for the next axis. Move to next axis.
 
-> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each as a separate `/bootstrap-agents` call. `BACKEND_FRAMEWORK=Hono` does NOT provision tRPC; `API_LAYER=tRPC` must fire separately. Database axis (Persistence Map Interview) is also independent.
+> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each separately. Database axis (Persistence Map Interview) is also independent.
 
-Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. Use the brainstorming skill's approach — one decision at a time.
+Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. One decision at a time.
 
-**User indecision handling**: If the user is uncertain → present your recommendation with reasoning. If still uncertain → apply `.agent/skills/resolve-ambiguity/SKILL.md`. If still undecided → lock your recommendation noted as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
+**User indecision**: Uncertain → present recommendation with reasoning. Still uncertain → apply `.agent/skills/resolve-ambiguity/SKILL.md`. Still undecided → lock as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
 
-> **Decision recording**: For each confirmed tech stack decision, read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Tech stack choices have high downstream impact (they constrain frameworks, skills, deployment, and testing). Record each decision to `memory/decisions.md` with upstream/downstream effects.
+> **Decision recording**: For each confirmed decision, follow `.agent/skills/session-continuity/protocols/06-decision-analysis.md` — record to `memory/decisions.md` with upstream/downstream effects.
 
 ### Database: Persistence Map Interview
 

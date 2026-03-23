@@ -51,6 +51,10 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 > ❌ **STOP gate**: If you have not read at least one deep dive file or domain index beyond `ideation-index.md`, you are not ready to make design system decisions. `ideation-index.md` gives you feature names — the domain files give you the workflows those features represent.
 
+### Checkpoint resumption
+
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
+
 ### Per-decision Ideation Synthesis requirement
 
 Before presenting **each** of the 7 design system decisions below, write a brief **Ideation Synthesis** (2-4 bullets) explaining how the ideation content informs THIS specific decision. Each bullet must cite a specific file. **Append each synthesis as a `## {Decision Name}` section to `docs/plans/prd-working/design-system-synthesis.md`.**
@@ -155,9 +159,10 @@ If any section is incomplete, loop back to the relevant decision step and resolv
 
 Before reporting completion or proceeding to next shard:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. All 7 design system decisions should be reviewed for `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
-2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+1. **Update checkpoint** — Write final state to `docs/plans/prd-working/workflow-state.md`: mark all 7 decisions complete, set `current_step: completion`.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.agent/progress/memory/`. All 7 design system decisions should have `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
+3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+4. **Session log** — Write session entry to `.agent/progress/sessions/`.
 
 ---
 

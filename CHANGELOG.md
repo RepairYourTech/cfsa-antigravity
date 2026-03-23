@@ -1,5 +1,23 @@
 # cfsa-antigravity
 
+## 2.17.2
+
+### Patch Changes
+
+- fix: add workflow state tracking to survive context truncation in /create-prd
+
+  **Problem**: Context truncation during `/create-prd` destroys process memory — the agent knows what was decided but not where it is in the workflow or what to do next. Synthesis steps get silently skipped and `source-before-ask` has no enforcement gate.
+
+  **Fix**:
+
+  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`docs/plans/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
+  - **`create-prd.md`**: Parent orchestrator initializes checkpoint directory, reads checkpoint during shard failure recovery, cleans up after quality gate.
+  - **`create-prd-stack.md`**: Step 2.4 (checkpoint resumption), step 5 (synthesis verification gate), step 10 (checkpoint update per axis).
+  - **`create-prd-design-system.md`**: Checkpoint resumption + completion update for all 7 decisions.
+  - **`create-prd-architecture.md`**: Checkpoint resumption + completion update.
+  - **`create-prd-security.md`**: Checkpoint resumption + completion update.
+  - **`create-prd-compile.md`**: Checkpoint resumption + pre-output update.
+
 ## 2.17.1
 
 ### Patch Changes

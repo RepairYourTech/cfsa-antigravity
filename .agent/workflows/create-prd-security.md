@@ -56,6 +56,10 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 > ❌ Do NOT proceed to Step 6 until ideation context is loaded. "Scan the ideation output" is NOT sufficient — read the specific files listed above.
 
+### Checkpoint resumption
+
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
+
 ---
 
 ## 6. Security model
@@ -137,9 +141,10 @@ Write the completed `## Observability Architecture` section to `docs/plans/archi
 
 Before reporting completion or proceeding to next shard:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. Security model decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
-2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+1. **Update checkpoint** — Write final state to `docs/plans/prd-working/workflow-state.md`: mark all security sections complete.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.agent/progress/memory/`. Security model decisions are high-impact — every confirmed decision should have `DEC-NNN` entry.
+3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
+4. **Session log** — Write session entry to `.agent/progress/sessions/`.
 
 ---
 

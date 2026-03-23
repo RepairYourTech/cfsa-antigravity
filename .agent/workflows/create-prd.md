@@ -88,6 +88,8 @@ Check `.agent/skills/` for stack-specific skills. Read `.agent/skills/find-skill
 
 ## Orchestration
 
+Create `docs/plans/prd-working/` directory if it does not exist. Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md` — all shards use this checkpoint system.
+
 ### Step A — Run `.agent/workflows/create-prd-stack.md`
 ### Step A.5 — Run `.agent/workflows/create-prd-design-system.md`
 ### Step B — Run `.agent/workflows/create-prd-architecture.md`
@@ -95,9 +97,10 @@ Check `.agent/skills/` for stack-specific skills. Read `.agent/skills/find-skill
 ### Step D — Run `.agent/workflows/create-prd-compile.md`
 
 **Shard failure recovery**: If any shard (A through D) fails mid-execution:
-1. Check `docs/plans/architecture-draft.md` for the last completed section
-2. Present the current state to the user: "Shard [N] failed at [step]. Draft contains sections [list]. Resume from failure point or restart the shard?"
-3. Do NOT proceed to the next shard until the current shard completes cleanly
+1. Check `docs/plans/prd-working/workflow-state.md` for the checkpoint — it shows exact step, item, and next action
+2. Check `docs/plans/architecture-draft.md` for the last completed section
+3. Present the current state to the user: "Shard [N] failed at `{current_item}` (step `{current_step}`). Resume from failure point or restart the shard?"
+4. Do NOT proceed to the next shard until the current shard completes cleanly
 
 ---
 
@@ -114,6 +117,8 @@ For any dimension that scores ⚠️ or ❌ → resolve it NOW. Loop back to the
 **Remediation loop guard**: Track remediation attempts per dimension. After **3 failed attempts** on the same dimension → **STOP**: present the dimension to the user as a known gap with context on what was tried. Include it in the review presentation as an unresolved item for user decision.
 
 > ❌ STOP — do not call notify_user until all dimensions score ✅ and all checklist items pass.
+
+**Checkpoint cleanup**: After quality gate passes, delete `docs/plans/prd-working/workflow-state.md` — process tracking is no longer needed. Keep synthesis files (`stack-synthesis.md`, `design-system-synthesis.md`) as audit trail.
 
 ### Depth audit
 

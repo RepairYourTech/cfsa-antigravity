@@ -40,6 +40,10 @@ Follow the map guard protocol (`.agent/skills/prd-templates/references/map-guard
 
 Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for compile decisions.
 
+### Checkpoint resumption
+
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
+
 ---
 
 ## 8. Development methodology
@@ -153,6 +157,8 @@ Read `.agent/skills/pipeline-rubrics/SKILL.md` and follow its pre-flight self-ch
 Run a pre-flight self-check before presenting. Read `.agent/skills/pipeline-rubrics/references/architecture-rubric.md` and apply each of the 15 dimensions as a self-check.
 
 > ❌ **STOP** — If any dimension scores ⚠️ or ❌, do not call `notify_user`. Fix the gap now and re-run the self-check until all 15 dimensions are ✅.
+
+**Update checkpoint**: Write final state to `docs/plans/prd-working/workflow-state.md`: mark all compile sections complete, set `current_step: output`.
 
 Call `notify_user` presenting:
 - `docs/plans/YYYY-MM-DD-architecture-design.md` (use the actual dated filename)
