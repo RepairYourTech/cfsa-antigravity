@@ -1,6 +1,6 @@
 {
   "name": "cfsa-antigravity",
-  "version": "2.18.2",
+  "version": "2.18.3",
   "description": "CFSA Pipeline — Constraint-First Specification Architecture for AI agents. Production-grade from line one.",
   "scripts": {
     "changeset": "changeset",

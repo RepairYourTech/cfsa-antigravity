@@ -72,7 +72,7 @@ Not every FE spec maps 1:1 to a BE feature spec. Before writing anything, classi
 - For feature specs: the BE spec(s) and IA shard it maps to
 - For cross-cutting specs: confirmation that BE spec/IA shard mapping is skipped
 
-Determine this shard's surface from its directory path (e.g., `docs/plans/web/fe/` → surface `web`; flat `docs/plans/fe/` → surface `shared` or the project's single surface).
+Determine this shard's surface from its directory path (e.g., `docs/plans/fe/web/` → surface `web`; flat `docs/plans/fe/` → surface `shared` or the project's single surface).
 
 Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-fe-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
 - `.agent/skills/error-handling-patterns/SKILL.md`

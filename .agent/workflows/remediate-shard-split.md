@@ -77,7 +77,7 @@ Grep `docs/plans/` recursively for all references to the parent shard number. Th
 | Parenthetical inline refs | `(see shard 00)` |
 | Cross-shard links | `[00-infrastructure.md]` |
 
-**Scope**: All directories under `docs/plans/` — `ia/`, `be/`, `fe/`, and any per-surface BE/FE directories (e.g., `shared/be/`, `web/fe/`, `desktop/be/`).
+**Scope**: All directories under `docs/plans/` — `ia/`, `be/`, `fe/`, and any per-surface subdirectories within `be/` and `fe/` (e.g., `be/web/`, `fe/desktop/`, `be/mobile/`).
 
 **Exclusion**: Skip the parent stub file itself (it's already marked SPLIT).
 

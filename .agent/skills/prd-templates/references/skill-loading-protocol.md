@@ -4,7 +4,7 @@ Standard procedure for loading skills from the surface stack map before beginnin
 
 ## How to Load Skills from the Surface Stack Map
 
-1. **Determine the surface**: Identify which surface this work belongs to from the directory path or phase plan (e.g., `docs/plans/web/be/` → surface `web`; flat `docs/plans/be/` → surface `shared`).
+1. **Determine the surface**: Identify which surface this work belongs to from the directory path or phase plan (e.g., `docs/plans/be/web/` → surface `web`; flat `docs/plans/be/` → surface `shared`).
 
 2. **Read the surface stack map**: Open `.agent/instructions/tech-stack.md` and locate this surface's row.
 

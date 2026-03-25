@@ -100,8 +100,8 @@ docs/plans/ia/
 ├── 01-operations.md         ← ## Features seeded from ideation/surfaces/desktop/01-operations/ (index + feature files)
 ├── 02-device-history.md     ← ## Features seeded from ideation/domains/02-device-history/ (index + feature files)
 
-docs/plans/desktop/be/       ← per-surface BE specs
-docs/plans/desktop/fe/       ← per-surface FE specs
+docs/plans/be/desktop/       ← per-surface BE specs (inside be/)
+docs/plans/fe/desktop/       ← per-surface FE specs (inside fe/)
 docs/plans/be/               ← shared BE specs (pre-scaffolded, serves as shared surface)
 docs/plans/fe/               ← shared FE specs (pre-scaffolded, serves as shared surface)
 ```

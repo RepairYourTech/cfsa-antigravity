@@ -212,8 +212,8 @@ Create or update `docs/plans/index.md`:
 | Surface | BE Index | FE Index | Description |
 |---------|----------|----------|-------------|
 | **Shared** | [be/index.md](be/index.md) | [fe/index.md](fe/index.md) | Cross-surface contracts (pre-scaffolded dirs) |
-| **[Surface 1]** | [surface-1/be/index.md](surface-1/be/index.md) | [surface-1/fe/index.md](surface-1/fe/index.md) | [description] |
-| **[Surface 2]** | [surface-2/be/index.md](surface-2/be/index.md) | [surface-2/fe/index.md](surface-2/fe/index.md) | [description] |
+| **[Surface 1]** | [be/surface-1/index.md](be/surface-1/index.md) | [fe/surface-1/index.md](fe/surface-1/index.md) | [description] |
+| **[Surface 2]** | [be/surface-2/index.md](be/surface-2/index.md) | [fe/surface-2/index.md](fe/surface-2/index.md) | [description] |
 
 ## Pipeline
 
