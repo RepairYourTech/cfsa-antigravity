@@ -23,7 +23,7 @@ This installs the `.agent/` folder, `docs/` structure, and agent config files in
 | `cfsa-antigravity init --path ./dir` | Install into specific directory |
 
 ### ⚠️ Important Note on `.gitignore`
-If you are using AI-powered editors like **Cursor** or **Windsurf**, adding the `.agent/` folder to your `.gitignore` may prevent the IDE from indexing the workflows. This results in slash commands (like `/plan`, `/debug`) not appearing in the chat suggestion dropdown.
+If you are using AI-powered editors like **Cursor** or **Windsurf**, adding the `.agent/` folder to your `.gitignore` may prevent the IDE from indexing the workflows. This results in slash commands (like `/ideate`, `/create-prd`) not appearing in the chat suggestion dropdown.
 
 **Recommended Solution:**
 To keep the `.agent/` folder local (not tracked by Git) while maintaining AI functionality:
