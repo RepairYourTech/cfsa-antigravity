@@ -34,9 +34,9 @@ Create directory structure, shard skeleton files, and all layer indexes.
 
 IA shards are **shared across all surfaces** — they live in the flat `docs/plans/ia/` directory regardless of project type. IA describes domains, not surfaces.
 
-For each surface identified in the architecture design, plus a `shared/` surface, create per-surface BE and FE subdirectories only (e.g., `docs/plans/shared/be/`, `docs/plans/web/be/`, `docs/plans/web/fe/`, `docs/plans/mobile/fe/`, etc.). Each new directory must include a `.gitkeep` file and a `README.md`.
+For each surface identified in the architecture design, create per-surface BE and FE subdirectories only (e.g., `docs/plans/web/be/`, `docs/plans/web/fe/`, `docs/plans/mobile/fe/`, etc.). Each new directory must include a `.gitkeep` file and a `README.md`. **Do NOT create `shared/be/` or `shared/fe/`** — the pre-scaffolded `docs/plans/be/` and `docs/plans/fe/` directories serve as the shared surface for cross-surface contracts.
 
-Per-surface BE/FE directories hold surface-specific backend and frontend specs. The `shared/` surface contains cross-surface contracts that multiple surfaces depend on.
+Per-surface BE/FE directories hold surface-specific backend and frontend specs. The pre-scaffolded `docs/plans/be/` and `docs/plans/fe/` hold shared cross-surface contracts (downstream workflows already resolve flat `docs/plans/be/` as surface `shared`).
 
 ### Mandatory: 00-infrastructure shard (all project types)
 

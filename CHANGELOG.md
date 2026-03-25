@@ -1,5 +1,23 @@
 # cfsa-antigravity
 
+## 2.18.2
+
+### Patch Changes
+
+- fix: establish pre-scaffolded be/fe dirs as shared surface for multi-surface projects
+
+  Removed creation of redundant `docs/plans/shared/be/` and `docs/plans/shared/fe/` directories
+  during `/decompose-architecture-structure`. The pre-scaffolded `docs/plans/be/` and
+  `docs/plans/fe/` directories now explicitly serve as the shared surface for cross-surface
+  contracts, matching how all downstream workflows already resolve these paths.
+
+  Files changed:
+
+  - `.agent/workflows/decompose-architecture-structure.md` — removed `shared/` surface creation
+  - `.agent/skills/prd-templates/SKILL.md` — fixed multi-product directory example
+  - `.agent/skills/prd-templates/references/decomposition-templates.md` — fixed multi-surface master index
+  - `.agent/skills/prd-templates/references/shard-split-remediation.md` — removed stale scope rows
+
 ## 2.18.1
 
 ### Patch Changes

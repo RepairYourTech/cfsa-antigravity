@@ -102,6 +102,6 @@ docs/plans/ia/
 
 docs/plans/desktop/be/       ← per-surface BE specs
 docs/plans/desktop/fe/       ← per-surface FE specs
-docs/plans/shared/be/        ← shared BE specs
-docs/plans/shared/fe/        ← shared FE specs
+docs/plans/be/               ← shared BE specs (pre-scaffolded, serves as shared surface)
+docs/plans/fe/               ← shared FE specs (pre-scaffolded, serves as shared surface)
 ```
