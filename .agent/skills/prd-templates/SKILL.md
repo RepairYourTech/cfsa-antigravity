@@ -82,7 +82,7 @@ At the validation step, the user must confirm whether to:
 
 ### Directory Example
 
-Seeded skeletons live in the `docs/plans/ia/` directory (or per-surface directories for multi-product):
+Seeded skeletons always live in the flat `docs/plans/ia/` directory — IA is shared across all surfaces. Multi-product projects add per-surface BE and FE directories only:
 
 **Single-surface:**
 ```
@@ -93,13 +93,15 @@ docs/plans/ia/
 ├── ...
 ```
 
-**Multi-product:**
+**Multi-product** (IA stays flat — only BE/FE get per-surface directories):
 ```
-docs/plans/desktop/ia/
+docs/plans/ia/
 ├── 00-infrastructure.md
 ├── 01-operations.md         ← ## Features seeded from ideation/surfaces/desktop/01-operations/ (index + feature files)
-├── 02-inventory.md          ← ## Features seeded from ideation/surfaces/desktop/02-inventory/ (index + feature files)
+├── 02-device-history.md     ← ## Features seeded from ideation/domains/02-device-history/ (index + feature files)
 
-docs/plans/shared/ia/
-├── 01-device-history.md     ← ## Features seeded from ideation/domains/01-device-history/ (index + feature files)
+docs/plans/desktop/be/       ← per-surface BE specs
+docs/plans/desktop/fe/       ← per-surface FE specs
+docs/plans/shared/be/        ← shared BE specs
+docs/plans/shared/fe/        ← shared FE specs
 ```

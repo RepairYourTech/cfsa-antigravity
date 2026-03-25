@@ -1,5 +1,15 @@
 # cfsa-antigravity
 
+## 2.18.1
+
+### Patch Changes
+
+- fix: remove invalid per-surface IA directories — IA is always flat in docs/plans/ia/
+
+  - `prd-templates/SKILL.md`: Fixed multi-product directory example that showed `desktop/ia/` and `shared/ia/` — now correctly shows IA as flat with only per-surface BE/FE directories.
+  - `shard-split-remediation.md`: Removed `shared/ia/`, `web/ia/`, `desktop/ia/`, `mobile/ia/` from scan scope table.
+  - `remediate-shard-split.md`: Removed per-surface IA paths from scope line.
+
 ## 2.18.0
 
 ### Minor Changes

@@ -43,10 +43,6 @@ Grep the entire `docs/plans/` tree for the parent shard number using these patte
 | Directory | Required |
 |-----------|----------|
 | `docs/plans/ia/` | Always |
-| `docs/plans/shared/ia/` | If exists |
-| `docs/plans/web/ia/` | If exists |
-| `docs/plans/desktop/ia/` | If exists |
-| `docs/plans/mobile/ia/` | If exists |
 | `docs/plans/be/` | If exists |
 | `docs/plans/fe/` | If exists |
 | `docs/plans/shared/be/` | If exists |
