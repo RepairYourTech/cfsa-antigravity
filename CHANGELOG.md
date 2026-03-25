@@ -1,5 +1,47 @@
 # cfsa-antigravity
 
+## 2.18.0
+
+### Minor Changes
+
+- feat: add /remediate-shard-split workflow for post-split cross-reference remediation
+
+  - New workflow: `.agent/workflows/remediate-shard-split.md` — context-aware cross-reference updates after parent shard splits into sub-shards. Uses keyword-based matching heuristics instead of simple find-and-replace.
+  - New reference: `.agent/skills/prd-templates/references/shard-split-remediation.md` — scan patterns, matching algorithm, display formats, and remediation record template.
+  - Mandatory blocking gates added at all split trigger points:
+    - `decompose-architecture-validate.md` Step 12
+    - `write-architecture-spec-design.md` Step 1b
+    - `architecture-mapping/SKILL.md` Sub-Feature Complexity Split Protocol
+    - `shard-boundary-analysis.md` post-split section
+  - Pipeline tables updated in `AGENTS.md` and `GEMINI.md` — `/remediate-shard-split` registered as utility command.
+
+### Patch Changes
+
+- 14a45b9: fix: map guard auto-recovery + bootstrap provisioning enforcement
+
+  - `map-guard-protocol.md`: Auto-recoverable cells now auto-invoke `/bootstrap-agents` silently instead of hard-stopping. Hard stops reserved for genuinely unrecoverable cells.
+  - `bootstrap-agents.md`: Hard gate between fill (Step A) and provision (Step B) — provision is mandatory.
+  - `bootstrap-agents-fill.md`: Step 6 changed from conditional to mandatory — provision runs next, always.
+
+- c7b0717: fix: multi-surface directory structure — shared IA, per-surface BE/FE
+
+  - `decompose-architecture-structure.md`: IA stays flat in `docs/plans/ia/` (shared). Multi-surface only creates per-surface `be/` and `fe/` directories.
+  - `decomposition-templates.md`: Added Surface Applicability to shard skeleton. Added Surfaces column to IA index. Rewrote multi-surface master index for shared IA model.
+
+- 92f024a: fix: add workflow state tracking to survive context truncation in /create-prd
+
+  **Problem**: Context truncation during `/create-prd` destroys process memory — the agent knows what was decided but not where it is in the workflow or what to do next. Synthesis steps get silently skipped and `source-before-ask` has no enforcement gate.
+
+  **Fix**:
+
+  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`docs/plans/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
+  - **`create-prd.md`**: Parent orchestrator now initializes checkpoint directory, reads checkpoint state during shard failure recovery (showing exact step/item/action), and cleans up the checkpoint file after the quality gate passes.
+  - **`create-prd-stack.md`**: Added Step 2.4 (checkpoint resumption on entry), step 5 (synthesis verification gate — hard stop if `synthesis_written: false`), and step 10 (checkpoint update per completed axis with next-axis pending reads).
+  - **`create-prd-design-system.md`**: Checkpoint resumption after ideation context loading, checkpoint update at shard completion marking all 7 decisions.
+  - **`create-prd-architecture.md`**: Checkpoint resumption after ideation context reload, checkpoint update at shard completion.
+  - **`create-prd-security.md`**: Checkpoint resumption after ideation context reload, checkpoint update at shard completion.
+  - **`create-prd-compile.md`**: Checkpoint resumption after map guard, checkpoint update before final output presentation.
+
 ## 2.17.4
 
 ### Patch Changes

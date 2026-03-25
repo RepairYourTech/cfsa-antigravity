@@ -72,7 +72,7 @@ Present the reconciled `## Features` list to the user, including a count of newl
 
 **Wait for explicit user confirmation before proceeding.** If the user modifies the list, update the shard's `## Features` section in `docs/plans/ia/[shard-name].md` immediately.
 
-**Post-reconciliation calibration check**: Count the total confirmed sub-features. If the count is **≥ 10**, follow the **Sub-Feature Complexity Split Protocol** in `.agent/skills/architecture-mapping/SKILL.md` — present the split proposal, wait for approval, and redirect to `/decompose-architecture-validate` before continuing. Do NOT proceed to Step 2 with an oversized shard.
+**Post-reconciliation calibration check**: Count confirmed sub-features. If **≥ 10**, follow the **Sub-Feature Complexity Split Protocol** in `.agent/skills/architecture-mapping/SKILL.md` — present the split proposal, wait for approval, redirect to `/decompose-architecture-validate`. Do NOT proceed to Step 2 with an oversized shard. **After any split**: run `/remediate-shard-split` — do NOT restart spec writing until zero stale parent references remain.
 
 If the sub-feature count is **< 10**, proceed directly to Step 1c.
 

@@ -55,7 +55,7 @@ Read `.agent/skills/prd-templates/references/shard-boundary-analysis.md` → **S
 
 - **Shard load calibration gate**: Count sub-features in each shard using the bullet/named-item rule (defined in the analysis reference). If Step 9.5 pre-flagged shards, review first. Apply the thresholds. For ≥10, use the split proposal format from the reference.
 
-  **After any split**: Update `docs/plans/ia/decomposition-plan.md` and re-run Must Have coverage gate.
+  **After any split**: Update `docs/plans/ia/decomposition-plan.md`, re-run Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed to Step 13 until zero stale parent references remain.**
 
   **Split loop guard**: Track how many times the same shard has been split.
   - **1st split** → normal. Apply the split.

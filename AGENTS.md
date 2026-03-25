@@ -76,6 +76,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 | | `/evolve-feature` | New feature/requirement description | Updated specs across all affected layers | Evolution |
 | ↳ | `/evolve-feature-classify` | Feature description | Classified change + new content at entry point | Evolution |
 | ↳ | `/evolve-feature-cascade` | Classified change + entry point | Layer-by-layer additions + implementation impact | Evolution |
+| | `/remediate-shard-split` | Split parent + sub-shard mapping | Updated cross-references + remediation record | Correction |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
 | ↳ | `/plan-phase-preflight` | Approved specs | Phase gate + completeness audit + consistency check | Planning |
 | ↳ | `/plan-phase-write` | Preflight pass | Slices + acceptance criteria + progress files | Planning |
@@ -97,7 +98,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > of their parent command. The parent orchestrates them in sequence, but each shard
 > can also be run standalone with its own prerequisites. `/bootstrap-agents` is also
 > sharded into `/bootstrap-agents-fill` and `/bootstrap-agents-provision`.
-> `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, and `/evolve-feature` are utility commands callable from any stage — they are not sequential pipeline steps.
+> `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`, and `/remediate-shard-split` are utility commands callable from any stage — they are not sequential pipeline steps.
 
 > [!WARNING]
 > If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.

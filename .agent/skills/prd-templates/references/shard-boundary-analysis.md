@@ -73,7 +73,7 @@ Proposed split:
 Split rationale: [why these groups are independent]
 ```
 
-**After any split**: Update `docs/plans/ia/decomposition-plan.md` with the revised table and re-run the Must Have coverage gate.
+**After any split**: Update `docs/plans/ia/decomposition-plan.md` with the revised table, re-run the Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed until zero stale parent references remain.** See `.agent/skills/prd-templates/references/shard-split-remediation.md` for scan patterns and matching heuristics.
 
 **Companion spec tracking**: When writing BE or FE specs for split shards, populate the `## Split Group` section in each spec file (see `be-spec-template.md` / `fe-spec-template.md`). This enables downstream discovery of sibling specs during implementation.
 

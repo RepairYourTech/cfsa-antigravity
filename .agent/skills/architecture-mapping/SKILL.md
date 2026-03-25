@@ -216,4 +216,4 @@ Does this split make sense, or would you prefer a different boundary?
 
 **Wait for explicit user approval of the split before proceeding.** Do NOT continue spec writing with an oversized shard.
 
-If the user approves: stop the current workflow and run `/decompose-architecture-validate` to formally register the new shards (it will re-run the Must Have coverage gate and update the decomposition plan). Then restart the spec workflow for each new shard individually.
+If the user approves: stop the current workflow and run `/decompose-architecture-validate` to formally register the new shards (it will re-run the Must Have coverage gate and update the decomposition plan). Then run `/remediate-shard-split` to update all downstream cross-references — do NOT restart spec work until zero stale parent references remain. Then restart the spec workflow for each new shard individually.

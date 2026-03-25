@@ -59,6 +59,7 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 | | `/evolve-feature` | New feature/requirement description | Updated specs across all affected layers | Evolution |
 | ↳ | `/evolve-feature-classify` | Feature description | Classified change + new content at entry point | Evolution |
 | ↳ | `/evolve-feature-cascade` | Classified change + entry point | Layer-by-layer additions + implementation impact | Evolution |
+| | `/remediate-shard-split` | Split parent + sub-shard mapping | Updated cross-references + remediation record | Correction |
 | 8 | `/plan-phase` | Architecture + specs | Dependency-ordered TDD slices | Planning |
 | ↳ | `/plan-phase-preflight` | Approved specs | Phase gate + completeness audit + consistency check | Planning |
 | ↳ | `/plan-phase-write` | Preflight pass | Slices + acceptance criteria + progress files | Planning |
@@ -77,7 +78,7 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 | 11 | `/evolve-contract` | Changed `{{CONTRACT_LIBRARY}}` schema | Safe schema migration | Maintenance |
 
 
-> **Note**: ↳ rows are independently-invocable shards. Utility commands (`/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`) are callable from any stage.
+> **Note**: ↳ rows are independently-invocable shards. Utility commands (`/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`, `/remediate-shard-split`) are callable from any stage.
 
 > [!WARNING]
 > If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
