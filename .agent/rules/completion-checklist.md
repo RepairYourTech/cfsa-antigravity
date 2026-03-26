@@ -44,6 +44,11 @@ A unit of work is only DONE when:
    - See rule: `memory-capture` for triggers and format
 6. **The Session Log**: A session close log exists in `.agent/progress/sessions/`.
    - Follow `.agent/skills/session-continuity/protocols/05-session-close.md` — write what was accomplished, deferred, and where the next session should start
+7. **The Next Step**: The user is told what comes next in the pipeline.
+   - Read the pipeline progress file (`.agent/progress/spec-pipeline.md` or equivalent)
+   - Propose the next valid pipeline command based on current state
+   - If multiple options exist, present them as a numbered list with brief context
+   - If the pipeline stage is complete, say so explicitly
 
 ## Enforcement
 

@@ -43,6 +43,18 @@ After completing a workflow or substantial task:
 > These steps are **not optional**. They are what differentiate a pipeline that gets
 > smarter over time from one that repeats the same mistakes.
 
+## 6. Recommend Next Step (MANDATORY)
+
+Before reporting completion via `notify_user`:
+- Check the pipeline progress state (`.agent/progress/spec-pipeline.md` or equivalent)
+- Propose the next valid pipeline command to the user
+- If multiple valid next steps exist, list them with brief context
+- Never end a conversation without telling the user what to do next
+
+> This closes the gap where individual workflow files include "next step" sections,
+> but agents don't read those files at session start. This step ensures the
+> recommendation happens regardless.
+
 ## Principles
 
 - **Ask before assuming** — Clarify ambiguous requirements
