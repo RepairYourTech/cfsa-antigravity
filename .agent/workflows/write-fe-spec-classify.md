@@ -24,17 +24,30 @@ Identify the target FE spec, classify it, load skills, and read all source mater
 
 ---
 
-## 0. Placeholder guard
+## 0. Pipeline State Check
 
-Before any skill reads, verify that the five placeholder values listed in `requires_placeholders` frontmatter have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 0.5.
-
-For the hard stop message format and recovery instructions, see `.agent/skills/prd-templates/references/placeholder-guard-template.md`. For placeholder-to-recovery mappings specific to this workflow, see `.agent/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
-
-Only proceed to Step 0.5 when all five placeholders report no literal `{{` characters.
+1. Read `.agent/progress/spec-pipeline.md`.
+   - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
+2. Identify all shards where the FE column = `not-started` AND the BE column = `complete`.
+   - If no shards have BE `complete` → **STOP**: "BE layer not complete — run `/write-be-spec` first."
+   - If all eligible shards already have FE `complete` → **STOP**: "All FE specs are complete. Next step: `/plan-phase`."
+3. Auto-select the lowest-numbered eligible shard.
+4. Present: "Pipeline tracker shows **shard [NN — name]** is the next shard needing an FE spec. Proceeding. Say 'override' to pick a different one."
+5. Use the selected shard as the target for all subsequent steps.
 
 ---
 
-## 0.5. Brand-guidelines prerequisite check
+## 0.1. Placeholder guard
+
+Before any skill reads, verify that the five placeholder values listed in `requires_placeholders` frontmatter have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 0.6.
+
+For the hard stop message format and recovery instructions, see `.agent/skills/prd-templates/references/placeholder-guard-template.md`. For placeholder-to-recovery mappings specific to this workflow, see `.agent/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
+
+Only proceed to Step 0.6 when all five placeholders report no literal `{{` characters.
+
+---
+
+## 0.6. Brand-guidelines prerequisite check
 
 1. Read `.agent/skills/brand-guidelines/SKILL.md`.
 2. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → stop and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd` first to establish the design direction before writing FE specs."_
@@ -42,7 +55,7 @@ Only proceed to Step 0.5 when all five placeholders report no literal `{{` chara
 
 ---
 
-## 0.75. Design system prerequisite check
+## 0.8. Design system prerequisite check
 
 Read `.agent/skills/prd-templates/references/design-system-prerequisite-check.md` and follow its procedure. Extract all seven decision areas from `docs/plans/design-system.md` and run the fail-fast validation checks. If any check fails → stop and instruct the user to run `/create-prd-design-system`.
 

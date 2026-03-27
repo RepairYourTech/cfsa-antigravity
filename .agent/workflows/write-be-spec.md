@@ -50,6 +50,17 @@ If a needed skill is missing, check if a matching entry exists in `.agent/skill-
 
 ## Orchestration
 
+### Step 0 — Pipeline State Check
+
+1. Read `.agent/progress/spec-pipeline.md`.
+   - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
+2. Identify all shards where the BE column = `not-started` AND the IA column = `complete`.
+   - If no shards have IA `complete` → **STOP**: "IA layer not complete — run `/write-architecture-spec` first."
+   - If all eligible shards already have BE `complete` → **STOP**: "All BE specs are complete. Next step: `/write-fe-spec`."
+3. Auto-select the lowest-numbered eligible shard.
+4. Present: "Pipeline tracker shows **shard [NN — name]** is the next shard needing a BE spec. Proceeding. Say 'override' to pick a different one."
+5. Pass the selected shard to Step A.
+
 ### Step A — Run `.agent/workflows/write-be-spec-classify.md`
 
 Identifies the target IA shard, classifies it (feature domain / multi-domain / cross-cutting / structural reference / composite), loads the skill bundle, reads all source material (primary shard, cross-shard references, deep dives, testability section), and reads cross-cutting specs.

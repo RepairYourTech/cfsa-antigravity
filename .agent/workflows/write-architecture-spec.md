@@ -39,6 +39,16 @@ Fill in a skeleton IA shard with full interaction details, data models, access c
 
 ## Orchestration
 
+### Step 0 — Pipeline State Check
+
+1. Read `.agent/progress/spec-pipeline.md`.
+   - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
+2. Identify all shards where the IA column = `not-started`.
+   - If none → **STOP**: "All IA shards are already complete. Next step: `/write-be-spec`."
+3. Auto-select the lowest-numbered `not-started` shard.
+4. Present: "Pipeline tracker shows **shard [NN — name]** is the next incomplete IA shard. Proceeding with this shard. Say 'override' to pick a different one."
+5. Pass the selected shard to Step A.
+
 ### Step A — Run `.agent/workflows/write-architecture-spec-design.md`
 
 Uses the brainstorming skill to clarify scope, then systematically designs all sections: interaction maps, contract shapes, data models, access control, event schemas, and edge cases. Each section is presented to the user for discussion and refinement.

@@ -41,3 +41,15 @@
    ```
 
 5. **Report status** — log what was completed and what's next.
+
+6. **Read-back verification** — immediately after updating the tracker:
+
+   (a) Read `.agent/progress/spec-pipeline.md` back.
+   (b) Locate the row for the shard that was just updated.
+   (c) Verify the column that was just marked shows `complete` (not `not-started`, not unchanged, not any other value).
+   (d) If the cell does NOT show `complete`:
+       - Log: `"Pipeline tracker write-back failed for shard [NN] [layer] column — cell still shows [current value]"`
+       - Retry the write once.
+       - Read back and re-verify.
+       - If second attempt fails → **STOP**: `"Unable to update spec-pipeline.md for shard [NN] [layer] after 2 attempts. Do not proceed — investigate before continuing."`
+   (e) On success: log `"Pipeline tracker verified: shard [NN] [layer] = complete"`

@@ -22,7 +22,19 @@ Explore requirements, map all interactions, and define contracts, data models, a
 
 **Prerequisite**: Skeleton IA shard must exist in `docs/plans/ia/`. If it does not, tell the user to run `/decompose-architecture` first.
 
-## 0. Map guard
+## 0. Pipeline State Check
+
+1. Read `.agent/progress/spec-pipeline.md`.
+   - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
+2. Identify all shards where the IA column = `not-started`.
+   - If none → **STOP**: "All IA shards are already complete. Next step: `/write-be-spec`."
+3. Auto-select the lowest-numbered `not-started` shard.
+4. Present: "Pipeline tracker shows **shard [NN — name]** is the next incomplete IA shard. Proceeding with this shard. Say 'override' to pick a different one."
+5. Use the selected shard as the target for all subsequent steps.
+
+---
+
+## 0.1. Map guard
 
 Read the surface stack map from `.agent/instructions/tech-stack.md`. Verify that the following have filled values:
 - **Databases** column (per-surface, any row)
@@ -33,7 +45,7 @@ If any are empty → **HARD STOP**: tell the user to run `/create-prd` first.
 
 ---
 
-## 0.5. Re-run check
+## 0.6. Re-run check
 
 Before loading skills, check whether the shard file at `docs/plans/ia/[shard-name].md` already has content beyond skeleton placeholders (look for filled-in sections vs empty `<!-- TODO -->` markers).
 
@@ -44,35 +56,23 @@ Before loading skills, check whether the shard file at `docs/plans/ia/[shard-nam
 
 ## 1. Explore requirements
 
-### 1a. Read the authoritative sources
+### 1a. Read authoritative sources
 
-Read the following files and build a **reconciliation table** comparing what each source says about this shard's features. Use the `ideation-index.md` Structure Map to find the correct domain folder path (may be under `domains/` or `surfaces/{name}/` for multi-product projects). The ideation domain's feature files are the **primary source of truth** for sub-features — the architecture design is secondary context.
+Build a **reconciliation table** comparing sources. Ideation domain feature files are **primary source of truth** — architecture design is secondary. Use `ideation-index.md` Structure Map for domain folder path.
 
-1. The relevant ideation domain folder for this shard (path from `ideation-index.md` Structure Map):
-   - Read the domain's `*-index.md` for the children table and Role Matrix
-   - Read each child **feature `.md` file** for sub-feature details (Role Lens, behavior, edge cases)
-   - Read the domain's `*-cx.md` for cross-domain interactions relevant to this shard
-   - If the domain has sub-domain folders, recurse into them and aggregate all descendant feature files
-2. The shard's `## Features` section (from `/decompose-architecture-structure`)
-3. `docs/plans/ideation/ideation-index.md` — Must Have features for this domain
+1. Ideation domain folder (path from Structure Map):
+   - `*-index.md` (children table + Role Matrix), each child feature `.md`, `*-cx.md`
+   - If sub-domain folders exist, recurse and aggregate all descendant feature files
+2. Shard's `## Features` section
+3. `docs/plans/ideation/ideation-index.md` — Must Have features
 
-Read `.agent/skills/spec-writing/SKILL.md` and `.agent/skills/architecture-mapping/SKILL.md`. Follow the architecture-mapping skill's Sub-Feature Reconciliation Protocol to build the reconciliation table and apply mismatch handling rules.
+Read `.agent/skills/spec-writing/SKILL.md` and `.agent/skills/architecture-mapping/SKILL.md`. Follow the Sub-Feature Reconciliation Protocol.
 
 ### 1b. Scope confirmation
 
-Present the reconciled `## Features` list to the user, including a count of newly added sub-features:
+Present reconciled features with counts of added (`[N]`) and architecture-only (`[M]`) sub-features. Ask: "Does this match your intent? Any to add, remove, or re-scope?" **Wait for confirmation.** Update shard file immediately on changes.
 
-> **Reconciled features for [Shard NN — Domain Name]:**
-> [bullet list of all sub-features, with `[Architecture-only]` markers]
-> 
-> **[N] sub-features added from ideation domain tree** that were missing from the shard skeleton.
-> **[M] sub-features marked `[Architecture-only]`** — not found in ideation domain tree, added during decomposition.
-> 
-> "Does this feature list match your intent for this domain? Any sub-features to add, remove, or re-scope?"
-
-**Wait for explicit user confirmation before proceeding.** If the user modifies the list, update the shard's `## Features` section in `docs/plans/ia/[shard-name].md` immediately.
-
-**Post-reconciliation calibration check**: Count confirmed sub-features. If **≥ 10**, follow the **Sub-Feature Complexity Split Protocol** in `.agent/skills/architecture-mapping/SKILL.md` — present the split proposal, wait for approval, redirect to `/decompose-architecture-validate`. Do NOT proceed to Step 2 with an oversized shard. **After any split**: run `/remediate-shard-split` — do NOT restart spec writing until zero stale parent references remain.
+**Post-reconciliation**: If **≥ 10** sub-features → follow Sub-Feature Complexity Split Protocol (`.agent/skills/architecture-mapping/SKILL.md`), redirect to `/decompose-architecture-validate`. **After any split**: run `/remediate-shard-split` before restarting.
 
 If the sub-feature count is **< 10**, proceed directly to Step 1c.
 
@@ -161,20 +161,11 @@ For each event's listed consumers: verify consumer shard exists in `docs/plans/i
 
 ## 7. Document edge cases
 
-Read .agent/skills/resolve-ambiguity/SKILL.md and follow its methodology.
+Read and follow `.agent/skills/resolve-ambiguity/SKILL.md` and `.agent/skills/adversarial-review/SKILL.md` (attack scenarios, abuse cases, race conditions). Read each `{{SECURITY_SKILLS}}` skill and apply its attack surface methodology.
 
-Read .agent/skills/adversarial-review/SKILL.md and follow its structured methodology for generating attack scenarios, abuse cases, race conditions, and security edge cases against this shard's interactions. Produce spec-level gap items for any identified risks.
+Cover: rate limits/abuse, concurrent access, deletion cascades, state conflicts, empty/null states.
 
-Read each skill listed in `{{SECURITY_SKILLS}}` (comma-separated). For each skill directory name, read `.agent/skills/[skill]/SKILL.md` before proceeding.
-For each skill in {{SECURITY_SKILLS}}, follow its attack surface methodology for edge case identification.
-
-- Rate limits and abuse scenarios
-- Concurrent access handling
-- Deletion cascades
-- State transition conflicts
-- Empty/null states
-
-**Review questions**: "What's the worst thing a malicious user could try in this domain?" / "What happens if two users do the same thing at the same time?" / "What happens when related data is deleted?"
+**Review questions**: "Worst thing a malicious user could try?" / "Two users do the same thing simultaneously?" / "What happens when related data is deleted?"
 
 ## 7.5. Write deep dive files (if applicable)
 

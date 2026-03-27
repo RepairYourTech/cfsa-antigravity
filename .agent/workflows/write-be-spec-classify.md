@@ -24,13 +24,26 @@ Identify the target IA shard, classify it, load skills, and read all source mate
 
 ---
 
+## 0. Pipeline State Check
+
+1. Read `.agent/progress/spec-pipeline.md`.
+   - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
+2. Identify all shards where the BE column = `not-started` AND the IA column = `complete`.
+   - If no shards have IA `complete` → **STOP**: "IA layer not complete — run `/write-architecture-spec` first."
+   - If all eligible shards already have BE `complete` → **STOP**: "All BE specs are complete. Next step: `/write-fe-spec`."
+3. Auto-select the lowest-numbered eligible shard.
+4. Present: "Pipeline tracker shows **shard [NN — name]** is the next shard needing a BE spec. Proceeding. Say 'override' to pick a different one."
+5. Use the selected shard as the target for all subsequent steps.
+
+---
+
 ## 1. Verify IA layer is complete, then identify the target shard
 
 1. Read `docs/plans/ia/index.md`
 2. Check every shard's status column
 3. If any shard is not ✅ → **STOP**: list incomplete shards and redirect to `/write-architecture-spec`
 
-Determine which IA shard to process. Read it in full before proceeding.
+Determine which IA shard to process (using the shard selected in Step 0). Read it in full before proceeding.
 
 ## 2. Classify the shard
 

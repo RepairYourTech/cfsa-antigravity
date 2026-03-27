@@ -148,7 +148,7 @@ If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/refe
 
 ## 12.7. Completion Gate (MANDATORY)
 
-1. Update `.agent/progress/spec-pipeline.md` — mark FE column for this shard as complete
+1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the FE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 8. Go back and run Protocol 08 now before proceeding."
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `memory/patterns.md`
    - Non-trivial decisions made → write to `memory/decisions.md`

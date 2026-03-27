@@ -1,5 +1,42 @@
 # cfsa-antigravity
 
+## 2.18.5
+
+### Patch Changes
+
+- fix: spec-writing workflows now read and update the pipeline tracker
+
+  **Problem**: All 6 spec-writing entry points (`/write-architecture-spec`,
+  `/write-be-spec`, `/write-fe-spec` — both parent orchestrators and entry shards)
+  never read `spec-pipeline.md` on invocation. Agents guessed which shard to work on
+  or asked the user, ignoring the tracker entirely. Terminal shards referenced updating
+  the tracker but had no read-back verification, allowing silent write failures.
+
+  **Fix**:
+
+  - **Step 0 — Pipeline State Check** added to all 6 entry points: on invocation, reads
+    `.agent/progress/spec-pipeline.md`, auto-selects the next incomplete shard for the
+    relevant layer, and presents it for user confirmation.
+  - **Protocol 08 — Read-Back Verification** (Step 6): after updating the tracker, the
+    agent reads it back to confirm the cell changed to `complete`. Retries once on
+    failure, hard stops if verification fails twice.
+  - **Terminal shard completion gates**: duplicate update instructions replaced with
+    verification reads that block `notify_user` if the tracker cell does not show
+    `complete`.
+
+  Files changed:
+
+  - `.agent/workflows/write-architecture-spec.md`
+  - `.agent/workflows/write-architecture-spec-design.md`
+  - `.agent/workflows/write-architecture-spec-deepen.md`
+  - `.agent/workflows/write-be-spec.md`
+  - `.agent/workflows/write-be-spec-classify.md`
+  - `.agent/workflows/write-be-spec-write.md`
+  - `.agent/workflows/write-fe-spec.md`
+  - `.agent/workflows/write-fe-spec-classify.md`
+  - `.agent/workflows/write-fe-spec-write.md`
+  - `.agent/skills/session-continuity/protocols/08-spec-pipeline-update.md`
+
 ## 2.18.2
 
 ### Patch Changes
