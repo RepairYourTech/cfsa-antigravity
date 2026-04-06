@@ -1,0 +1,247 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project Overview
+
+**CFSA Antigravity** is a Constraint-First Specification Architecture pipeline that transforms raw ideas into exhaustively specified, test-driven, production-quality code through progressive gates. This is a **meta-project** — it's the kit that gets installed into other projects, not a destination project itself.
+
+- **Entry Point**: `npx cfsa-antigravity init` — installs the pipeline into target projects
+- **Core Philosophy**: Every line of code is production-grade from line one. No MVPs, no throwaway code, no "fix it later."
+- **Agent-Agnostic**: Works with any AI agent supporting slash commands (Antigravity, Cursor, Windsurf, etc.)
+
+## Essential Commands
+
+### Installation & Maintenance
+```bash
+npm run build          # Build template/ from .agent/ and .claude/ for publishing
+npm run check          # Verify template integrity
+npm run changeset      # Create a changeset for versioning
+npm test              # Run tests (if present)
+```
+
+### Development Workflow
+- **Entry Point**: Users run `/ideate` to start the pipeline in their projects
+- **Sync Kit**: `/sync-kit` pulls upstream improvements into existing installations
+- **Status**: `cfsa-antigravity status` checks installation and unfilled placeholders
+
+## Architecture Overview
+
+### The Progressive Decision Lock System
+
+The pipeline enforces a **progressive decision lock** — each stage locks decisions that downstream stages cannot contradict:
+
+1. `/ideate` → Locks **vision** (problem, personas, features, constraints)
+2. `/create-prd` → Locks **architecture** (tech stack, system design, security model)
+3. `/decompose-architecture` → Locks **domain boundaries** (shard structure, dependencies)
+4. `/write-architecture-spec` → Locks **interaction specs** (contracts, data models per shard)
+5. `/write-be-spec` → Locks **backend contracts** (API endpoints, schemas, middleware)
+6. `/write-fe-spec` → Locks **frontend specs** (components, state, interactions)
+7. `/plan-phase` → Locks **implementation order** (dependency-ordered TDD slices)
+8. `/setup-workspace` → Locks **operational foundation** (project scaffolded, CI/CD green)
+9. `/implement-slice` → Locks **code** (tests → implementation → validation)
+
+### Directory Structure
+
+```
+.claude/
+├── commands/            # Slash command shims (/ideate, /create-prd, etc.)
+├── skills/
+│   ├── workflows/       # Pipeline workflow skills
+│   ├── setup/           # Setup/bootstrap skills
+│   └── utilities/       # Utility skills
+├── skill-library/       # Shared skill-library (symlink to .agent/skill-library)
+├── rules/               # Always-active constraints
+├── instructions/        # Core directives (workflow, tech-stack, patterns)
+└── memory/              # Claude-side memory/session continuity
+docs/
+├── plans/               # User project specifications (output directory)
+│   ├── ideation/
+│   ├── ia/
+│   ├── be/
+│   └── fe/
+└── audits/              # Ambiguity audits
+template/                # Built from .agent/ + .claude/ for npm publishing (DO NOT EDIT DIRECTLY)
+bin/cli.mjs              # CLI entry point
+```
+
+### The Fractal Ideation Structure
+
+The ideation phase (`/ideate`) produces a **fractal folder structure** that serves as the source of truth for all downstream work:
+
+```
+docs/plans/ideation/
+├── ideation-index.md    # Pipeline key file — shape, structure map, MoSCoW
+├── ideation-cx.md       # Global cross-cut (multi-product only)
+├── domains/             # Single/multi-surface-shared projects
+│   └── 01-domain-name/
+│       ├── domain-name-index.md   # Children table, Role Matrix, decisions
+│       ├── domain-name-cx.md      # Cross-cuts between children
+│       └── 01-feature.md          # Leaf feature file (Role Lens, behavior)
+├── meta/               # Structured metadata
+│   ├── problem-statement.md
+│   ├── personas.md
+│   ├── constraints.md
+│   └── competitive-landscape.md
+└── [surfaces/]         # Multi-product projects only
+    └── {surface}/
+```
+
+**Key**: `ideation-index.md` is the **pipeline key file** — all downstream workflows read it first.
+
+## Workflows & Skills System
+
+### Workflow Architecture
+
+- **Workflow Skills**: `.claude/skills/workflows/workflow-*.md` files that define each pipeline stage
+- **Slash Commands**: `.claude/commands/*.md` shims expose `/ideate`, `/create-prd`, etc.
+- **Sharding**: Large workflows split into shard skills (e.g., `create-prd-stack`, `create-prd-compile`)
+- **Independent Invocation**: Parent workflows orchestrate shard skills; shards can be invoked directly when needed
+
+### The Placeholder System
+
+Templates use `{{PLACEHOLDER}}` markers that are filled by `/bootstrap-agents` (mirrored as Claude workflow/command wiring):
+
+- `{{PROJECT_NAME}}`, `{{DESCRIPTION}}`, `{{TECH_STACK_SUMMARY}}`
+- `{{CONTRACT_LIBRARY}}` (e.g., "zod", "pydantic", "go-validation")
+- Per-surface stack decisions in `tech-stack.md` Surface Stack Map
+
+**Critical**: Never hardcode placeholder values. Always keep them as `{{PLACEHOLDER}}` in the kit source.
+
+### Skill Resolution
+
+Claude workflows resolve skills from the **Surface Stack Map** in `.claude/instructions/tech-stack.md` (source parity with `.agent/` is maintained):
+
+1. Determine the shard/slice's surface from its directory path
+2. Look up the row for that surface in the Per-Surface table
+3. Load all skills listed in the required columns
+4. Cross-cutting workflows use the Cross-Cutting Skills table
+
+## Development Practices
+
+### When Contributing
+
+1. **Issue First**: Every PR must have a linked, approved issue
+2. **Changesets**: Run `npm run changeset` for user-facing changes
+3. **Build Before Submit**: `npm run build` must pass
+4. **Workflow Size Limit**: New workflows must be under 12,000 characters
+5. **No Hardcoded Placeholders**: Keep `{{PLACEHOLDER}}` values intact
+6. **Shared Content**: Put reusable content in `prd-templates/references/`, not inline
+
+### Testing Strategy
+
+The kit enforces **TDD: Red → Green → Refactor** for all implementation:
+
+1. Write failing tests first (Red)
+2. Write minimal production code to pass (Green)
+3. Refactor while keeping tests green
+4. Minimum 80% coverage (unit + integration + E2E)
+
+### Non-Negotiable Rules
+
+Rules in `.agent/rules/` apply to **every task**:
+
+- **security-first**: PII isolation, input validation, secret handling
+- **tdd-contract-first**: Schemas before implementation, tests ARE the spec
+- **vertical-slices**: All four surfaces (BE, FE, tests, docs) or it's not done
+- **specificity-standards**: Testable acceptance criteria, exhaustive spec depth
+- **boundary-not-placeholder**: Use typed interface stubs, not `// TODO` comments
+- **completion-checklist**: Code + tests + tracking = done (code alone is incomplete)
+
+## Publishing Process
+
+```bash
+# 1. Build template from source
+npm run build
+
+# 2. Verify integrity
+npm run check
+
+# 3. Create changeset (if user-facing changes)
+npm run changeset
+
+# 4. Commit and PR
+git add .
+git commit -m "feat: ..."
+git push
+
+# 5. After PR merge, GitHub Action opens "Version Packages" PR
+# 6. Merge that PR to trigger npm publish
+```
+
+### What Gets Published
+
+The `template/` directory is what gets published to npm. It's built from:
+- `.agent/` (full directory)
+- `.claude/` (full directory)
+- `docs/` (full directory, but `docs/plans/` and `docs/audits/` content is stripped)
+- Root config files (`GEMINI.md`, `AGENTS.md`, `CLAUDE.md`)
+
+Session-specific data is excluded (`.agent/progress/*.md` except README and `.claude/memory/sessions/*.md` except README).
+
+## Key Documentation
+
+| Document | Purpose |
+|----------|---------|
+| `README.md` | User-facing overview and quick start |
+| `AGENTS.md` | Agent config (Antigravity CLI) |
+| `GEMINI.md` | Agent config (Gemini CLI) |
+| `CONTRIBUTING.md` | Contribution workflow and PR process |
+| `docs/kit-architecture.md` | Deep dive into kit internals |
+| `docs/README.md` | Full pipeline walkthrough |
+
+## Pipeline Entry Point Detection
+
+When a user runs a command, check:
+
+1. **Ideation Complete?** → `docs/plans/ideation/ideation-index.md` exists
+2. **PRD Complete?** → No `{{PLACEHOLDER}}` values in `GEMINI.md`/`AGENTS.md`
+3. **Installation Status?** → `cfsa-antigravity status`
+
+If ideation-index.md doesn't exist, the pipeline hasn't started — tell user to run `/ideate` first.
+
+## Cost-Blind Execution
+
+**Critical**: The cost of API calls, tokens, or compute to complete your work is **never your concern**. Do not estimate, report, or factor operational AI costs into any decision. The only cost constraints that matter are user-defined project constraints (e.g., "keep hosting costs low"). If the user hasn't defined a cost constraint, cost is not a factor.
+
+## Writing Decisions to Disk
+
+**Every confirmed decision must be written to its output file immediately.** Never batch decisions in-memory across a long conversation. If the conversation truncates, all confirmed work must survive on disk.
+
+This is enforced by:
+- **Session Continuity Protocols** (`.agent/skills/session-continuity/protocols/`)
+- **Progress Tracking** (`.agent/progress/spec-pipeline.md`)
+- **Pattern Extraction** (`.agent/skills/session-continuity/protocols/04-pattern-extraction.md`)
+
+## Common Tasks
+
+### Adding a New Workflow
+
+1. Create `.agent/workflows/your-workflow.md` (under 12,000 characters)
+2. Create matching Claude workflow skill: `.claude/skills/workflows/workflow-your-workflow.md`
+3. Add slash command shim: `.claude/commands/your-workflow.md`
+4. Ensure workflow file includes `Parity source: .agent/workflows/your-workflow.md`
+5. Update `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md` workflow docs if needed
+6. Run `npm run check` (parity guard enforces .agent↔.claude mapping)
+7. Create changeset: `npm run changeset`
+
+### Adding a New Skill
+
+1. Create in `.agent/skill-library/[category]/[skill-name]/`
+2. Add `SKILL.md` with YAML frontmatter (name, description)
+3. Add to `.agent/skill-library/MANIFEST.md`
+4. Follow stack-specific pattern if needed (e.g., `references/typescript.md`)
+
+### Updating Templates
+
+1. Edit files in `.agent/`, `.claude/`, or `docs/` (never edit `template/` directly)
+2. Run `npm run build` to sync changes to `template/`
+3. Verify with `npm run check`
+4. Commit and create PR
+
+## Project Configuration Files
+
+- **commitlint.config.js** — Enforces conventional commit format
+- **package.json** — Zero-dependency CLI by design
+- **.changeset/** — Versioning and changelog generation
+- **.github/workflows/** — CI/CD automation

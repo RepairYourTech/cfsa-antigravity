@@ -27,12 +27,27 @@ mkdir -p "$TEMPLATE_DIR"
 info "Copying .agent/"
 cp -a "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent"
 
+# .claude/ — full directory
+if [[ -d "$ROOT_DIR/.claude" ]]; then
+    info "Copying .claude/"
+    cp -a "$ROOT_DIR/.claude" "$TEMPLATE_DIR/.claude"
+
+    # Handle skill-library symlink (if it exists)
+    if [[ -L "$TEMPLATE_DIR/.claude/skill-library" ]]; then
+        info "Resolving .claude/skill-library symlink"
+        rm "$TEMPLATE_DIR/.claude/skill-library"
+        cp -a "$ROOT_DIR/.agent/skill-library" "$TEMPLATE_DIR/.claude/skill-library"
+    fi
+else
+    warn ".claude/ directory not found — skipping (Claude Code version not yet implemented)"
+fi
+
 # docs/ — full directory
 info "Copying docs/"
 cp -a "$ROOT_DIR/docs" "$TEMPLATE_DIR/docs"
 
 # Root config files
-for file in GEMINI.md AGENTS.md; do
+for file in GEMINI.md AGENTS.md CLAUDE.md; do
     if [[ -f "$ROOT_DIR/$file" ]]; then
         info "Copying $file"
         cp "$ROOT_DIR/$file" "$TEMPLATE_DIR/$file"
@@ -47,6 +62,12 @@ done
 if [[ -d "$TEMPLATE_DIR/.agent/progress" ]]; then
     info "Cleaning .agent/progress/ (session-specific data)"
     find "$TEMPLATE_DIR/.agent/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+fi
+
+# Remove .claude/memory/sessions/ contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.claude/memory/sessions" ]]; then
+    info "Cleaning .claude/memory/sessions/ (session-specific data)"
+    find "$TEMPLATE_DIR/.claude/memory/sessions" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
 # Remove any docs/plans/ content (project-specific)

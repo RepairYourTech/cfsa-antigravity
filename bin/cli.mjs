@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { resolve, join, relative, dirname } from "node:path";
+import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, statSync, rmSync } from "node:fs";
+import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { argv, exit, cwd } from "node:process";
 
@@ -45,29 +45,33 @@ ${c.bold}Commands:${c.reset}
   ${c.cyan}version${c.reset}   Show version
 
 ${c.bold}Init Options:${c.reset}
-  --force       Overwrite existing .agent/ folder
-  --path <dir>  Install into specific directory (default: current directory)
-  --dry-run     Preview what would be copied without making changes
-  --quiet       Suppress output (for CI/CD)
+  --agent <type>  Agent type: antigravity or claude (default: antigravity)
+  --force         Overwrite existing agent folder
+  --path <dir>    Install into specific directory (default: current directory)
+  --dry-run       Preview what would be copied without making changes
+  --quiet         Suppress output (for CI/CD)
 
 ${c.bold}Examples:${c.reset}
-  ${c.dim}# Install into current project${c.reset}
+  ${c.dim}# Install Antigravity version (default)${c.reset}
   npx cfsa-antigravity init
 
+  ${c.dim}# Install Claude Code version${c.reset}
+  npx cfsa-antigravity init --agent claude
+
   ${c.dim}# Install into a specific directory${c.reset}
-  npx cfsa-antigravity init --path ./my-project
+  npx cfsa-antigravity init --agent claude --path ./my-project
 
   ${c.dim}# Preview what will be installed${c.reset}
-  npx cfsa-antigravity init --dry-run
+  npx cfsa-antigravity init --agent claude --dry-run
 
   ${c.dim}# Overwrite existing installation${c.reset}
-  npx cfsa-antigravity init --force
+  npx cfsa-antigravity init --agent claude --force
 `);
 }
 
 // --- Parse Arguments ---
 function parseArgs(args) {
-    const parsed = { command: null, force: false, dryRun: false, path: null, quiet: false };
+    const parsed = { command: null, agent: null, force: false, dryRun: false, path: null, quiet: false };
 
     let i = 0;
     while (i < args.length) {
@@ -92,6 +96,19 @@ function parseArgs(args) {
             case "--quiet":
             case "-q":
                 parsed.quiet = true;
+                break;
+            case "--agent":
+            case "-a":
+                i++;
+                parsed.agent = args[i];
+                if (!parsed.agent) {
+                    error("--agent requires an argument (antigravity or claude)");
+                    exit(1);
+                }
+                if (!["antigravity", "claude"].includes(parsed.agent)) {
+                    error(`Invalid agent type: ${parsed.agent}. Must be 'antigravity' or 'claude'`);
+                    exit(1);
+                }
                 break;
             case "--path":
             case "-p":
@@ -138,23 +155,27 @@ function countFiles(dir) {
     return count;
 }
 
-// --- List top-level items to copy ---
-function getTemplateItems() {
+// --- Ensure template exists ---
+function ensureTemplateDir() {
     if (!existsSync(TEMPLATE_DIR)) {
         error("Template directory not found. Package may be corrupted.");
         error(`Expected: ${TEMPLATE_DIR}`);
         exit(1);
     }
-    return readdirSync(TEMPLATE_DIR, { withFileTypes: true });
 }
 
 // --- Init Command ---
 function cmdInit(opts) {
+    ensureTemplateDir();
+
     const targetDir = resolve(opts.path || cwd());
+    const agentType = opts.agent || "antigravity";
+    const agentDir = agentType === "claude" ? ".claude" : ".agent";
 
     log("");
     log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
     log(`${c.dim}Installing into: ${targetDir}${c.reset}`);
+    log(`${c.dim}Agent type: ${agentType}${c.reset}`);
     log("");
 
     // Check if target directory exists
@@ -167,45 +188,77 @@ function cmdInit(opts) {
         }
     }
 
-    const items = getTemplateItems();
+    // Copy agent-specific folder
+    const srcAgentDir = join(TEMPLATE_DIR, agentDir);
+    const destAgentDir = join(targetDir, agentDir);
+
+    if (!existsSync(srcAgentDir)) {
+        error(`${agentDir}/ not found in template. Package may be corrupted.`);
+        exit(1);
+    }
+
     let copied = 0;
     let skipped = 0;
-    const copiedPaths = [];
-    const skippedPaths = [];
 
-    for (const item of items) {
-        const src = join(TEMPLATE_DIR, item.name);
-        const dest = join(targetDir, item.name);
-
-        if (existsSync(dest) && !opts.force) {
-            const fileCount = item.isDirectory() ? countFiles(src) : 1;
-            skipped += fileCount;
-            skippedPaths.push(item.name);
-            warn(`Skipped ${c.bold}${item.name}${c.reset} (already exists — use --force to overwrite)`);
-            continue;
-        }
-
+    // Check if agent directory already exists
+    if (existsSync(destAgentDir) && !opts.force) {
+        const fileCount = countFiles(srcAgentDir);
+        skipped += fileCount;
+        warn(`Skipped ${c.bold}${agentDir}/${c.reset} (already exists — use --force to overwrite)`);
+    } else {
         if (opts.dryRun) {
-            const fileCount = item.isDirectory() ? countFiles(src) : 1;
+            const fileCount = countFiles(srcAgentDir);
             copied += fileCount;
-            copiedPaths.push(item.name);
-            info(`Would copy ${c.bold}${item.name}${c.reset} (${fileCount} files)`);
-            continue;
-        }
-
-        // Copy
-        if (item.isDirectory()) {
-            cpSync(src, dest, { recursive: true, force: opts.force });
+            info(`Would copy ${c.bold}${agentDir}/${c.reset} (${fileCount} files)`);
         } else {
-            const destDir = dirname(dest);
-            if (!existsSync(destDir)) mkdirSync(destDir, { recursive: true });
-            cpSync(src, dest, { force: opts.force });
+            if (existsSync(destAgentDir)) {
+                log(`Removing existing ${agentDir}/...`);
+                // Remove existing directory
+                rmSync(destAgentDir, { recursive: true, force: true });
+            }
+            cpSync(srcAgentDir, destAgentDir, { recursive: true });
+            const fileCount = countFiles(destAgentDir);
+            copied += fileCount;
+            info(`Copied ${c.bold}${agentDir}/${c.reset} (${fileCount} files)`);
         }
+    }
 
-        const fileCount = item.isDirectory() ? countFiles(dest) : 1;
+    // Copy shared docs/ directory
+    const srcDocsDir = join(TEMPLATE_DIR, "docs");
+    const destDocsDir = join(targetDir, "docs");
+
+    if (opts.dryRun) {
+        if (existsSync(srcDocsDir)) {
+            const fileCount = countFiles(srcDocsDir);
+            if (!existsSync(destDocsDir)) {
+                copied += fileCount;
+                info(`Would copy ${c.bold}docs/${c.reset} (${fileCount} files)`);
+            }
+        }
+    } else if (existsSync(srcDocsDir) && !existsSync(destDocsDir)) {
+        cpSync(srcDocsDir, destDocsDir, { recursive: true });
+        const fileCount = countFiles(destDocsDir);
         copied += fileCount;
-        copiedPaths.push(item.name);
-        info(`Copied ${c.bold}${item.name}${c.reset} (${fileCount} files)`);
+        info(`Copied ${c.bold}docs/${c.reset} (${fileCount} files)`);
+    } else if (existsSync(destDocsDir)) {
+        warn(`Skipped ${c.bold}docs/${c.reset} (already exists)`);
+    }
+
+    // Copy root config files if they don't exist
+    const configFiles = ["GEMINI.md", "AGENTS.md", "CLAUDE.md"];
+    for (const file of configFiles) {
+        const srcFile = join(TEMPLATE_DIR, file);
+        const destFile = join(targetDir, file);
+
+        if (existsSync(srcFile) && !existsSync(destFile)) {
+            if (opts.dryRun) {
+                info(`Would copy ${c.bold}${file}${c.reset}`);
+            } else {
+                cpSync(srcFile, destFile);
+                copied++;
+                info(`Copied ${c.bold}${file}${c.reset}`);
+            }
+        }
     }
 
     // Summary
@@ -216,8 +269,13 @@ function cmdInit(opts) {
         log(`${c.bold}${c.green}Installation complete!${c.reset} ${copied} files copied, ${skipped} skipped`);
         log("");
         log(`${c.bold}Next steps:${c.reset}`);
-        log(`  1. Open your project in an AI editor (Antigravity, Cursor, etc.)`);
-        log(`  2. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
+        if (agentType === "claude") {
+            log(`  1. Open your project in Claude Code`);
+            log(`  2. Run the ideate workflow to start the pipeline`);
+        } else {
+            log(`  1. Open your project in an AI editor (Antigravity, Cursor, etc.)`);
+            log(`  2. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
+        }
         log("");
         log(`${c.dim}Documentation: https://github.com/RepairYourTech/cfsa-antigravity${c.reset}`);
     } else {
@@ -228,33 +286,41 @@ function cmdInit(opts) {
 }
 
 // --- Status Command ---
-function cmdStatus() {
+function cmdStatus(opts) {
     const targetDir = cwd();
-    const agentDir = join(targetDir, ".agent");
+
+    const agentType = opts.agent || (existsSync(join(targetDir, ".agent")) ? "antigravity" : (existsSync(join(targetDir, ".claude")) ? "claude" : null));
+    const agentDir = agentType === "claude" ? ".claude" : ".agent";
 
     log("");
     log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
     log(`${c.dim}Checking: ${targetDir}${c.reset}`);
+    if (agentType) {
+        log(`${c.dim}Agent type: ${agentType}${c.reset}`);
+    }
     log("");
 
-    if (!existsSync(agentDir)) {
-        warn("Not installed — .agent/ directory not found");
+    if (!agentType || !existsSync(join(targetDir, agentDir))) {
+        warn("Not installed — no .agent/ or .claude/ directory found");
         log(`  Run ${c.cyan}cfsa-antigravity init${c.reset} to install`);
         log("");
         exit(1);
     }
 
-    info(".agent/ directory found");
+    info(`${agentDir}/ directory found`);
 
     const checks = [
-        { path: ".agent/workflows", label: "Workflows" },
-        { path: ".agent/skills", label: "Skills" },
-        { path: ".agent/skill-library", label: "Skill Library" },
-        { path: ".agent/instructions", label: "Instructions" },
-        { path: ".agent/rules", label: "Rules" },
+        ...(agentType === "claude"
+            ? [{ path: `${agentDir}/commands`, label: "Commands" }]
+            : [{ path: `${agentDir}/workflows`, label: "Workflows" }]),
+        { path: `${agentDir}/skills`, label: "Skills" },
+        { path: `${agentDir}/skill-library`, label: "Skill Library" },
+        { path: `${agentDir}/instructions`, label: "Instructions" },
+        { path: `${agentDir}/rules`, label: "Rules" },
         { path: "docs/plans", label: "Plans directory" },
         { path: "GEMINI.md", label: "GEMINI.md" },
         { path: "AGENTS.md", label: "AGENTS.md" },
+        { path: "CLAUDE.md", label: "CLAUDE.md" },
     ];
 
     let installed = 0;
@@ -276,15 +342,18 @@ function cmdStatus() {
     log("");
     log(`${c.bold}Status:${c.reset} ${installed} components found, ${missing} missing`);
 
-    // Check for unfilled placeholders in GEMINI.md
-    const geminiPath = join(targetDir, "GEMINI.md");
-    if (existsSync(geminiPath)) {
-        const content = readFileSync(geminiPath, "utf-8");
+    for (const configFile of ["GEMINI.md", "AGENTS.md", "CLAUDE.md"]) {
+        const configPath = join(targetDir, configFile);
+        if (!existsSync(configPath)) {
+            continue;
+        }
+
+        const content = readFileSync(configPath, "utf-8");
         const placeholders = content.match(/\{\{[A-Z_]+\}\}/g);
         if (placeholders) {
             const unique = [...new Set(placeholders)];
             log("");
-            warn(`${unique.length} unfilled placeholder(s) in GEMINI.md — run /create-prd to fill them`);
+            warn(`${unique.length} unfilled placeholder(s) in ${configFile} — run /create-prd to fill them`);
             for (const p of unique.slice(0, 5)) {
                 log(`  ${c.dim}${p}${c.reset}`);
             }
@@ -292,7 +361,7 @@ function cmdStatus() {
                 log(`  ${c.dim}... and ${unique.length - 5} more${c.reset}`);
             }
         } else {
-            info("GEMINI.md — all placeholders filled");
+            info(`${configFile} — all placeholders filled`);
         }
     }
 
@@ -308,7 +377,7 @@ switch (args.command) {
         cmdInit(args);
         break;
     case "status":
-        cmdStatus();
+        cmdStatus(args);
         break;
     case "version":
         log(PKG.version);
