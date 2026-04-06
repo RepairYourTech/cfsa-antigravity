@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 2.19.2
+
+### Patch Changes
+
+- 4ef138c: Mirror all core `.agent/skills/*` directories into `.claude/skills/*` so the Claude installation includes the same core skill set as Antigravity.
+
 ## 2.19.1
 
 ### Patch Changes
