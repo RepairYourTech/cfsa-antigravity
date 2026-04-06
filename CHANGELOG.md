@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 2.19.0
+
+### Minor Changes
+
+- 04fc609: Add Claude Code workflow parity for the full CFSA pipeline and utility workflows, including setup and validation flows. Introduce integrity guardrails that enforce `.agent`↔`.claude` workflow filename parity and required source-reference blocks in CI checks.
+
 ## 2.18.5
 
 ### Patch Changes
