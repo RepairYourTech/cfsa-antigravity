@@ -60,12 +60,25 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 - Isolated implementation decisions (variable names, file paths) — skip
 - Repeating an existing pattern already logged — update confidence instead
 
+## Native Memory Sync (Claude Code)
+
+When running in Claude Code, memory capture is dual-write:
+
+1. Write the CFSA entry to `.claude/memory/{patterns|decisions|blockers}.md`
+2. Evaluate native-memory relevance and sync to Claude native memory store:
+   - User correction/preference → `feedback`
+   - User-specific preference/profile signal → `user`
+   - Project decision/blocker context with downstream impact → `project`
+   - External system pointer/where-to-look info → `reference`
+
+If a trigger requires CFSA logging and native-memory relevance, both writes are required in the same conversation.
+
 ## Pre-Completion Check
 
 Before calling `notify_user` to report completion of ANY workflow or substantial task:
 
 1. **Scan this conversation** for triggers in the table above
-2. **If triggers found** → write entries to the appropriate memory files
+2. **If triggers found** → write entries to `.claude/memory/*` and sync relevant items to native memory
 3. **If no triggers** → explicitly confirm: "No new patterns, decisions, or blockers to log"
 
 This check is **not skippable**. It applies to every pipeline stage, every conversation, every session.

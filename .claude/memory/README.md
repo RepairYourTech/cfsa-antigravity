@@ -93,6 +93,36 @@ This memory system complements Claude Code's built-in features:
 - **Memory**: Decision/blocker/pattern tracking is CFSA-specific, stored here
 - **Sessions**: Session logs provide richer context than Claude Code's history
 
+## Native Memory Bridge (Required)
+
+When running in Claude Code, memory capture is dual-write:
+
+1. Write CFSA operational memory to `.claude/memory/*`
+2. Also sync durable collaboration memory to Claude native memory store using the native memory types
+
+### Mapping Rules
+
+- `patterns.md` entries map to native **feedback** memory when they reflect user corrections/preferences
+- `decisions.md` entries map to native **project** memory for project decisions; map to **user** memory when the decision is actually a user preference
+- `blockers.md` entries map to native **project** memory when they affect ongoing work context
+- External system pointers discovered while logging decisions/blockers map to native **reference** memory
+
+### Source of Truth
+
+- `.claude/memory/*` remains the pipeline execution log
+- Native memory remains the long-lived collaboration memory across sessions
+- Do not replace one with the other; keep them synchronized when trigger conditions are met
+
+### What Not To Sync
+
+- Trivial implementation details (file names, one-off variable choices)
+- Routine entries with no future value
+- Any codebase facts directly derivable from files or git history
+
+### Trigger
+
+On any memory-capture trigger (decision/correction/pattern/blocker), evaluate whether a native memory entry should also be written and sync it in the same conversation.
+
 ## Cleanup
 
 Session logs are automatically cleaned during template build, keeping only README.md. Decision, pattern, and blocker logs persist across installations.

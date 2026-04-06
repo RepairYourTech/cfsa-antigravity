@@ -37,7 +37,7 @@ A unit of work is only DONE when:
    - Phase progress fractions updated (e.g., `3/10` → `4/10`)
    - Overall progress fractions updated
 4. **The Locks**: All task claims (`[!]` flags and `files:` blocks) are removed.
-5. **The Memory**: All three memory files in `.agent/progress/memory/` are checked:
+5. **The Memory**: All three memory files in `.claude/memory/` are checked:
    - `patterns.md` — Any patterns observed (what worked, what failed) logged per Protocol 04. **User corrections are logged as anti-patterns.**
    - `decisions.md` — Any non-trivial decisions logged per Protocol 06
    - `blockers.md` — Any blockers hit logged with status and impact
