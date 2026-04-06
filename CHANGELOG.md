@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 2.19.3
+
+### Patch Changes
+
+- acc070f: Add Claude memory artifacts (`patterns.md`, `decisions.md`, `blockers.md`, sessions README) and enforce a native-memory bridge so CFSA memory capture dual-writes relevant entries to Claude native memory types.
+
 ## 2.19.2
 
 ### Patch Changes
