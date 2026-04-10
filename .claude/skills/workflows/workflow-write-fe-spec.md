@@ -12,15 +12,11 @@ parameters:
 
 Runs FE specification authoring in two shards: classify → write.
 
-Parity source:
-- `.agent/workflows/write-fe-spec.md`
-- `.agent/workflows/write-fe-spec-classify.md`
-- `.agent/workflows/write-fe-spec-write.md`
 
 ## Prerequisites
 
 1. BE spec for target shard is complete
-2. `.agent/progress/spec-pipeline.md` exists
+2. `.claude/progress/spec-pipeline.md` exists
 3. FE conventions/index files exist under `docs/plans/fe/`
 4. Design system and brand guidance are available for visual surfaces
 
@@ -28,7 +24,7 @@ Parity source:
 
 ### Step 0 — Pipeline-state shard selection
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.claude/progress/spec-pipeline.md`.
 2. Find shards where BE is `complete` and FE is `not-started`.
 3. Select lowest-numbered eligible shard unless user explicitly overrides.
 4. If none remain, stop and recommend `/plan-phase`.
@@ -51,7 +47,7 @@ Call skill: `write-fe-spec-write`
 Expected outputs:
 - Full FE spec file(s) in `docs/plans/fe/`
 - Updated `docs/plans/fe/index.md`
-- Updated `.agent/progress/spec-pipeline.md` FE status
+- Updated `.claude/progress/spec-pipeline.md` FE status
 - Ambiguity + navigation completeness gate outcomes
 
 ## Quality Gate

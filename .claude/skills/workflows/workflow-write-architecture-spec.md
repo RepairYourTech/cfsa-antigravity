@@ -12,22 +12,18 @@ parameters:
 
 Runs IA specification authoring in two shards: design → deepen.
 
-Parity source:
-- `.agent/workflows/write-architecture-spec.md`
-- `.agent/workflows/write-architecture-spec-design.md`
-- `.agent/workflows/write-architecture-spec-deepen.md`
 
 ## Prerequisites
 
 1. Decomposition outputs exist (`docs/plans/ia/` skeletons + indexes)
-2. `.agent/progress/spec-pipeline.md` exists and includes IA column states
+2. `.claude/progress/spec-pipeline.md` exists and includes IA column states
 3. Stack map is resolved for required categories (Databases, Security, Surfaces)
 
 ## Step-by-Step
 
 ### Step 0 — Pipeline-state shard selection
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.claude/progress/spec-pipeline.md`.
 2. Select lowest-numbered IA shard with `not-started` status unless override is explicitly requested.
 3. If no IA shard remains: stop and direct next step to `/write-be-spec`.
 

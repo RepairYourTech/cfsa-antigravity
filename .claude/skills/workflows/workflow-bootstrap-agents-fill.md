@@ -10,14 +10,10 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/bootstrap-agents-fill.md`
-
-Port of `.agent/workflows/bootstrap-agents-fill.md`.
 
 ## Step-by-Step
 
-1. Apply per-surface updates in `.agent/instructions/tech-stack.md` without clobbering unrelated filled cells.
+1. Apply per-surface updates in `.claude/instructions/tech-stack.md` without clobbering unrelated filled cells.
 2. Apply cross-cutting and global settings updates.
 3. Fill instruction templates (`commands.md`, `workflow.md`, `patterns.md`, `structure.md`) where values are provided.
 4. Sync root config placeholders in `AGENTS.md` and `GEMINI.md`.

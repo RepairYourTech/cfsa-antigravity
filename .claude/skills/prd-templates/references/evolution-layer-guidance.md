@@ -7,8 +7,8 @@ Reference for `/evolve-feature-classify` Step 4 and `/evolve-feature-cascade` St
 ### Ideation Layer (`docs/plans/ideation/`)
 
 1. **Placement**: Read `ideation-index.md` Structure Map. Identify the domain folder. Create new domain if needed.
-2. **Classification Gate**: Apply Node Classification Gate from `.agent/skills/idea-extraction/SKILL.md` — leaf feature or sub-domain folder.
-3. **Write**: Use `.agent/skills/prd-templates/references/fractal-feature-template.md`. Include:
+2. **Classification Gate**: Apply Node Classification Gate from `.claude/skills/idea-extraction/SKILL.md` — leaf feature or sub-domain folder.
+3. **Write**: Use `.claude/skills/prd-templates/references/fractal-feature-template.md`. Include:
    - Feature description (what and why)
    - Affected personas
    - Success criteria

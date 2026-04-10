@@ -9,11 +9,11 @@ version: 3.0.0
 **This is a utility command, not an entry point.** It gets called by other pipeline commands (like `/create-prd`, `/write-be-spec`, `/write-fe-spec`, `/implement-slice`) whenever they make tech stack decisions or introduce new dependencies.
 
 Bootstrap does two things:
-1. **Fill the surface stack map** in `.agent/instructions/tech-stack.md` with stack decisions
+1. **Fill the surface stack map** in `.claude/instructions/tech-stack.md` with stack decisions
 2. **Provision skills** from `skill-library/` using the 4-tier resolution chain
 
 **Input**: Surface-keyed stack values + optional global values
-**Output**: Filled map cells + newly installed skills in `.agent/skills/`
+**Output**: Filled map cells + newly installed skills in `.claude/skills/`
 
 ---
 
@@ -100,7 +100,7 @@ If any values are missing, leave those cells empty — they'll be filled on a fu
 
 ## 2. Fill the surface stack map
 
-Open `.agent/instructions/tech-stack.md` and update:
+Open `.claude/instructions/tech-stack.md` and update:
 
 ### 2a. Per-Surface Skills table
 
@@ -135,23 +135,23 @@ Replace in **both** `AGENTS.md` and `GEMINI.md`:
 
 ## 4. Fill instruction templates
 
-### `.agent/instructions/commands.md`
+### `.claude/instructions/commands.md`
 Write per-surface command sections. For each surface in the map, create a section with its commands (Test Cmd, Validation Cmd, Lint Cmd, Build Cmd, Dev Cmd, Package Mgr).
 
-### `.agent/instructions/workflow.md`
+### `.claude/instructions/workflow.md`
 Fill `{{VALIDATION_COMMAND}}` with the primary surface's validation command.
 
-### `.agent/instructions/patterns.md`
+### `.claude/instructions/patterns.md`
 Replace `{{FRAMEWORK_PATTERNS}}` if provided.
 
-### `.agent/instructions/structure.md`
+### `.claude/instructions/structure.md`
 Replace `{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}` if provided.
 
 ---
 
 ## 5. Fill operational skill and rule templates
 
-Scan `.agent/skills/*/SKILL.md` and `.agent/rules/*.md` for `{{PLACEHOLDER}}` values and fill any that match the provided values. Currently applicable:
+Scan `.claude/skills/*/SKILL.md` and `.claude/rules/*.md` for `{{PLACEHOLDER}}` values and fill any that match the provided values. Currently applicable:
 
 - `{{VALIDATION_COMMAND}}` — in `fix-bug`, `main-workflow`, `deploy`, `refactor`
 - `{{PACKAGE_MANAGER}}` — in `refactor`, `security-audit`
@@ -173,13 +173,13 @@ If `skill-library/MANIFEST.md` does not exist, skip steps 7-8 and go to step 9.
 For each skill name referenced in ANY cell of the surface stack map, resolve it using this chain:
 
 ### Tier 1: Exact Match
-Check `.agent/skill-library/{name}/` (or `.agent/skills/{name}/` if already installed).
-- **Found in library** AND not yet installed → copy to `.agent/skills/{name}/`, fill any `{{PLACEHOLDER}}`s in the copied SKILL.md
+Check `.claude/skill-library/{name}/` (or `.claude/skills/{name}/` if already installed).
+- **Found in library** AND not yet installed → copy to `.claude/skills/{name}/`, fill any `{{PLACEHOLDER}}`s in the copied SKILL.md
 - **Already installed** → skip (idempotent)
 - **Not found** → proceed to Tier 2
 
 ### Tier 2: Partial Match + Adequacy Check
-Search `.agent/skill-library/` and `.agent/skills/` for skills whose name contains the base term. E.g., for `surrealdb-embedded`, check if `surrealdb` exists.
+Search `.claude/skill-library/` and `.claude/skills/` for skills whose name contains the base term. E.g., for `surrealdb-embedded`, check if `surrealdb` exists.
 
 - **Partial match found** → Read its `SKILL.md`. Assess: does it cover the needed variant? Check for keywords related to the specific need (e.g., "embedded", "WASM", "Rust-native" for `surrealdb-embedded`).
   - **Adequate** — the existing skill covers the variant → use it. Note in the report: `"{name}" resolved by existing "{partial}" skill (covers {variant})`.
@@ -187,7 +187,7 @@ Search `.agent/skill-library/` and `.agent/skills/` for skills whose name contai
 - **No partial match** → proceed to Tier 3
 
 ### Tier 3: External Discovery
-Read `.agent/skills/find-skills/SKILL.md` and invoke its discovery methodology to search for the skill externally.
+Read `.claude/skills/find-skills/SKILL.md` and invoke its discovery methodology to search for the skill externally.
 
 - **Found** → install → fill map cell with resolved name
 - **Not found** → proceed to Tier 4
@@ -252,7 +252,7 @@ Present the results to the calling command (not directly to the user — the cal
 Bootstrap is safe to call multiple times:
 
 - **Already-filled map cells**: Cells with values are NOT overwritten unless the calling command explicitly re-provides a value for that surface + column
-- **Already-installed skills**: Skills that already exist in `.agent/skills/` are not re-copied from the library
+- **Already-installed skills**: Skills that already exist in `.claude/skills/` are not re-copied from the library
 - **New surface rows**: New surfaces trigger new row creation without affecting existing rows
 - **Appending values**: Cross-cutting skills and accumulated columns append to existing comma-separated lists without duplicating
 - **Partial invocation**: Bootstrap can be called with just one surface or one key — it only fills what's provided

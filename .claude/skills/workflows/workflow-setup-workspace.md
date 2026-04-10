@@ -12,12 +12,6 @@ parameters:
 
 Runs workspace setup in four ordered shards: scaffold → cicd → hosting → data.
 
-Parity source:
-- `.agent/workflows/setup-workspace.md`
-- `.agent/workflows/setup-workspace-scaffold.md`
-- `.agent/workflows/setup-workspace-cicd.md`
-- `.agent/workflows/setup-workspace-hosting.md`
-- `.agent/workflows/setup-workspace-data.md`
 
 ## Prerequisites
 

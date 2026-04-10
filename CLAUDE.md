@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Installation & Maintenance
 ```bash
-npm run build          # Build template/ from .agent/ and .claude/ for publishing
+npm run build          # Build template/ from the maintained .agent/ and standalone .claude/ trees for publishing
 npm run check          # Verify template integrity
 npm run changeset      # Create a changeset for versioning
 npm test              # Run tests (if present)
@@ -50,7 +50,7 @@ The pipeline enforces a **progressive decision lock** — each stage locks decis
 │   ├── workflows/       # Pipeline workflow skills
 │   ├── setup/           # Setup/bootstrap skills
 │   └── utilities/       # Utility skills
-├── skill-library/       # Shared skill-library (symlink to .agent/skill-library)
+├── skill-library/       # Claude-owned skill library
 ├── rules/               # Always-active constraints
 ├── instructions/        # Core directives (workflow, tech-stack, patterns)
 └── memory/              # Claude-side memory/session continuity
@@ -110,7 +110,7 @@ Templates use `{{PLACEHOLDER}}` markers that are filled by `/bootstrap-agents` (
 
 ### Skill Resolution
 
-Claude workflows resolve skills from the **Surface Stack Map** in `.claude/instructions/tech-stack.md` (source parity with `.agent/` is maintained):
+Claude workflows resolve skills from the **Surface Stack Map** in `.claude/instructions/tech-stack.md`:
 
 1. Determine the shard/slice's surface from its directory path
 2. Look up the row for that surface in the Per-Surface table
@@ -139,7 +139,7 @@ The kit enforces **TDD: Red → Green → Refactor** for all implementation:
 
 ### Non-Negotiable Rules
 
-Rules in `.agent/rules/` apply to **every task**:
+Rules in `.claude/rules/` apply to **every task**:
 
 - **security-first**: PII isolation, input validation, secret handling
 - **tdd-contract-first**: Schemas before implementation, tests ARE the spec
@@ -209,27 +209,27 @@ If ideation-index.md doesn't exist, the pipeline hasn't started — tell user to
 **Every confirmed decision must be written to its output file immediately.** Never batch decisions in-memory across a long conversation. If the conversation truncates, all confirmed work must survive on disk.
 
 This is enforced by:
-- **Session Continuity Protocols** (`.agent/skills/session-continuity/protocols/`)
-- **Progress Tracking** (`.agent/progress/spec-pipeline.md`)
-- **Pattern Extraction** (`.agent/skills/session-continuity/protocols/04-pattern-extraction.md`)
+- **Session Continuity Protocols** (`.claude/skills/session-continuity/protocols/`)
+- **Progress Tracking** (`.claude/progress/spec-pipeline.md`)
+- **Pattern Extraction** (`.claude/skills/session-continuity/protocols/04-pattern-extraction.md`)
 
 ## Common Tasks
 
 ### Adding a New Workflow
 
-1. Create `.agent/workflows/your-workflow.md` (under 12,000 characters)
-2. Create matching Claude workflow skill: `.claude/skills/workflows/workflow-your-workflow.md`
-3. Add slash command shim: `.claude/commands/your-workflow.md`
-4. Ensure workflow file includes `Parity source: .agent/workflows/your-workflow.md`
+1. If you're changing Antigravity, edit `.agent/workflows/your-workflow.md`
+2. If you're changing Claude, edit `.claude/skills/workflows/workflow-your-workflow.md`
+3. If the workflow should exist in both runtimes, add the matching counterpart in the other tree
+4. Add the Claude slash command shim when applicable: `.claude/commands/your-workflow.md`
 5. Update `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md` workflow docs if needed
-6. Run `npm run check` (parity guard enforces .agent↔.claude mapping)
+6. Run `npm run check`
 7. Create changeset: `npm run changeset`
 
 ### Adding a New Skill
 
-1. Create in `.agent/skill-library/[category]/[skill-name]/`
+1. Create it in the runtime you are extending (`.agent/skill-library/[category]/[skill-name]/` or `.claude/skill-library/[category]/[skill-name]/`)
 2. Add `SKILL.md` with YAML frontmatter (name, description)
-3. Add to `.agent/skill-library/MANIFEST.md`
+3. Add it to the matching runtime's `skill-library/MANIFEST.md`
 4. Follow stack-specific pattern if needed (e.g., `references/typescript.md`)
 
 ### Updating Templates

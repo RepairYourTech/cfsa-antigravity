@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-be-spec-write.md`
-
-Port of `.agent/workflows/write-be-spec-write.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -50,7 +46,7 @@ Apply line-count thresholds:
 ### Step 4 — Index and tracker updates
 
 1. Update `docs/plans/be/index.md`.
-2. Update BE completion state in `.agent/progress/spec-pipeline.md`.
+2. Update BE completion state in `.claude/progress/spec-pipeline.md`.
 3. Handle structural-reference no-spec rows when classification indicates 0 specs.
 
 ### Step 5 — Iterative deepening passes

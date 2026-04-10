@@ -2,13 +2,36 @@
 
 **Purpose:** Provide a high-level map of the agentic machinery that powers CFSA Antigravity.
 
-This document serves as a guide to understanding how the various components within the `.agent/` directory interlock to provide a robust, agent-agnostic development environment.
+This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes, with `.agent/` and `.claude/` each owning their own execution assets.
 
 ---
 
 ## 1. Code Organization
 
-The intelligence of the kit lives entirely within the `.agent/` directory.
+The kit ships two runtime trees in this repository:
+
+```text
+.agent/                      # Antigravity runtime
+├── instructions/
+├── progress/
+├── rules/
+├── skill-library/
+├── skills/
+└── workflows/
+
+.claude/                     # Claude Code runtime
+├── commands/
+├── instructions/
+├── progress/
+├── rules/
+├── skill-library/
+├── skills/
+└── memory/
+```
+
+`.agent/` and `.claude/` implement the same CFSA pipeline for different agent environments. Each runtime owns its own execution assets and state.
+
+### Antigravity Runtime Components
 
 ```text
 .agent/
@@ -20,11 +43,26 @@ The intelligence of the kit lives entirely within the `.agent/` directory.
 └── workflows/       # Structured processes (the "playbooks")
 ```
 
+### Claude Runtime Components
+
+```text
+.claude/
+├── commands/        # Slash command shims
+├── instructions/    # Core directives for Claude runtime
+├── progress/        # Claude pipeline state
+├── rules/           # Always-on constraints
+├── skill-library/   # Claude-owned installable skill packages
+├── skills/          # Active Claude capabilities
+└── memory/          # Claude-specific memory and session logs
+```
+
 ### Core Components
+
+The concepts are the same across both runtimes; only the concrete paths differ.
 
 *   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, `commands.md`) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
 *   **Rules:** Preemptively loaded constraints that apply to *every* task. Covers security, TDD, vertical slices, debugging discipline, memory capture, questioning style, and more. See `GEMINI.md` → Agent Rules table for the full list.
-*   **Skill Library:** (`.agent/skill-library/`) Installable skill packages organized by category (e.g., `stack/databases/`, `stack/frontend-frameworks/`). Skills are provisioned from here into `.agent/skills/` by the bootstrap system when tech decisions are confirmed. Contains `MANIFEST.md` with the full taxonomy.
+*   **Skill Library:** Each runtime has its own `skill-library/` directory. It contains installable skill packages organized by category (e.g., `stack/databases/`, `stack/frontend-frameworks/`). Each runtime provisions skills from its own `skill-library/` into its own `skills/` directory and keeps its own `MANIFEST.md`.
 *   **Skills:** Modular capabilities (e.g., `technical-writer`, `brainstorming`). Agents load these explicitly when a task requires them, preventing context bloat.
 *   **Workflows:** Step-by-step markdown checklists invoked via `/slash-commands` (e.g., `/create-prd`, `/implement-slice`). They chain skills together to achieve complex, multi-stage goals.
 
@@ -172,12 +210,12 @@ Each CX entry includes which nodes interact, confidence level, 5 synthesis quest
 
 Agents are inherently stateless across conversations. The kit uses the **Session Continuity** protocol to provide a persistent memory system.
 
-### The `.agent/progress/` Directory
+### Runtime progress directories
 
-This directory acts as the agent's long-term and working memory.
+Antigravity uses `.agent/progress/`. Claude Code uses `.claude/progress/`. Both serve the same purpose: phase tracking, spec-pipeline tracking, and session resumption.
 
 ```text
-.agent/progress/
+.agent/progress/ or .claude/progress/
 ├── index.md                      # Master checklist — phases + overall %
 ├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
 ├── phases/
@@ -208,7 +246,7 @@ This directory acts as the agent's long-term and working memory.
 - **Dated File Convention** — See below in this section (Section 3) — governs which artifact paths use glob patterns vs. hardcoded names.
 - **Placeholder Verification Gate Protocol** — See Section 4.5 — governs the Step 0 guard that prevents workflows from reading `{{PLACEHOLDER}}`-dependent skills before bootstrap has run.
 - **Kit Maintenance Checklist** — See Section 6 — governs what must be updated when new workflows or skills are added.
-- **Surface Model** — `.agent/skills/prd-templates/references/surface-model.md` — The authoritative reference for surface types (web/mobile/cli/etc.) and implementation layers, and how the two models relate.
+- **Surface Model** — runtime-specific `prd-templates/references/surface-model.md` — The authoritative reference for surface types (web/mobile/cli/etc.) and implementation layers, and how the two models relate.
 
 ### Dated File Convention
 
@@ -237,7 +275,7 @@ The power of the kit comes from how these modules interact:
 
 *   **Workflows call Skills:** A workflow like `/create-prd` will explicitly instruct the agent to use the `technical-writer` and `brainstorming` skills.
 *   **Rules constrain Workflows:** While a workflow dictates the *steps*, the rules dictate *how* those steps are performed (e.g., `/implement-slice` must obey `tdd-contract-first.md`).
-*   **State informs Execution:** Workflows read from `.agent/progress/` to contextualize their execution based on past decisions and current active phases.
+*   **State informs Execution:** Each runtime reads from its own progress directory (`.agent/progress/` or `.claude/progress/`) to contextualize execution based on past decisions and current active phases.
 
 ### Frontmatter `skills:` Semantic
 
@@ -246,7 +284,7 @@ Workflow files declare skills in two places with different semantics:
 | Location | Purpose | Scope |
 |----------|---------|-------|
 | **Frontmatter `skills:` list** | **Dependency manifest** — declares the union of all skills this workflow and its shards may need | Informational tag; not an instruction to load |
-| **Body `Read .agent/skills/[name]/SKILL.md`** | **Actionable instruction** — the agent reads and follows this skill during execution | Exact loading instruction |
+| **Body `Read [runtime]/skills/[name]/SKILL.md`** | **Actionable instruction** — the agent reads and follows this skill during execution | Exact loading instruction |
 
 **Parent orchestrators** (e.g., `implement-slice.md`, `write-be-spec.md`) list all skills their shards use in frontmatter but typically don't read them in their own body — their shards do the actual reading.
 
@@ -268,7 +306,7 @@ When a workflow needs a policy, template, or procedure, it references the shared
 
 ### Skill Loading Protocol
 
-Workflows that need stack-specific skills (Languages, Databases, FE Frameworks, etc.) reference `.agent/skills/prd-templates/references/skill-loading-protocol.md` instead of repeating the loading instructions inline. The protocol centralizes:
+Workflows that need stack-specific skills (Languages, Databases, FE Frameworks, etc.) reference the runtime-local `skills/prd-templates/references/skill-loading-protocol.md` instead of repeating the loading instructions inline. The protocol centralizes:
 
 - How to read the surface stack map in `tech-stack.md`
 - Which skill categories to load per workflow
@@ -284,13 +322,13 @@ The bootstrap system transforms the kit from a generic template into a project-s
 ### Components
 
 *   **`bootstrap-agents-fill`**: Receives template key-value pairs and fills `{{PLACEHOLDER}}` markers across all instruction files and root agent config files (`AGENTS.md`, `GEMINI.md`). Idempotent — only fills what's provided, leaves other placeholders untouched.
-*   **`bootstrap-agents-provision`**: Reads the skill library manifest, copies matching skills from `.agent/skill-library/` into `.agent/skills/`, fills skill-specific placeholders, composes `FRAMEWORK_PATTERNS` from the installed frontend framework skill, and updates the installed skills list in all root config files.
+*   **`bootstrap-agents-provision`**: Reads the runtime-local skill library manifest, copies matching skills into the active runtime's skills directory, fills skill-specific placeholders, composes `FRAMEWORK_PATTERNS` from the installed frontend framework skill, and updates the installed skills list in all root config files.
 
 ### Invocation Model
 
 Bootstrap fires **progressively** — once per confirmed tech decision during `/create-prd-stack`, not in a batch at the end:
 
-1. **Database confirmed** → fills DB placeholders (`DATABASE`, `ORM`, etc.) + provisions database skill from `.agent/skill-library/` (e.g., `stack/databases/surrealdb-expert`, `stack/databases/postgresql-patterns`)
+1. **Database confirmed** → fills DB placeholders (`DATABASE`, `ORM`, etc.) + provisions the matching database skill from the active runtime's skill library (e.g., `stack/databases/surrealdb-expert`, `stack/databases/postgresql-patterns`)
 2. **Frontend framework confirmed** → fills framework placeholders + provisions framework skill + composes `FRAMEWORK_PATTERNS` for `patterns.md`
 3. **Step 9.5 of `/create-prd-compile`** → fills `PROJECT_STRUCTURE` and `ARCHITECTURE_TABLE` in `structure.md`
 
@@ -329,7 +367,7 @@ All three gates emit a **four-part hard stop message** per unfilled placeholder:
 
 **Key constraint:** No auto-refire of bootstrap. The agent stops and tells the user exactly what to run.
 
-For detailed per-workflow placeholder mappings and recovery commands, see `.agent/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
+For detailed per-workflow placeholder mappings and recovery commands, see the runtime-local `skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
 
 **Reference implementation:** `write-be-spec-classify.md` Step 2.5 is the canonical example of a correctly implemented placeholder guard.
 
@@ -359,20 +397,20 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ## 6. Kit Maintenance Checklist
 
-**When a new workflow or shard is added to `.agent/workflows/`:**
+**When a new workflow or shard is added to a runtime tree (`.agent/workflows/` or `.claude/skills/workflows/`):**
 
 - [ ] Add a row to the `AGENTS.md` Pipeline Workflow Table
 - [ ] Add a matching row to the `GEMINI.md` Pipeline Workflow Table (must stay in sync with `AGENTS.md`)
 - [ ] If the workflow introduces a new system component or new convention, update the relevant section of `docs/kit-architecture.md`
 - [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
-- [ ] If the workflow introduces a new skill, add it to `.agent/skill-library/MANIFEST.md`
+- [ ] If the workflow introduces a new skill, add it to the matching runtime's `skill-library/MANIFEST.md`
 
-**When a new rule is added to `.agent/rules/`:**
+**When a new rule is added to a runtime tree (`.agent/rules/` or `.claude/rules/`):**
 
 - [ ] Add a row to the `GEMINI.md` Agent Rules table
 - [ ] If the rule uses `{{PLACEHOLDER}}` values, follow the placeholder checklist below
 
-**When adding a `{{PLACEHOLDER}}` to any `.agent/rules/*.md`**
+**When adding a `{{PLACEHOLDER}}` to any runtime rule file**
 
 - [ ] Add the placeholder name and the rule file it lives in to the "Currently applicable" note in `bootstrap-agents-fill.md` Step 3 (the rules scan step)
 - [ ] Add the corresponding bootstrap key to the `bootstrap-agents-fill.md` Step 1 key table if it doesn't already exist
@@ -388,18 +426,22 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ## 7. Git Integration
 
-### Excluding `.agent/` from Git Without `.gitignore`
+### Excluding runtime directories from Git without `.gitignore`
 
-The `.agent/` directory should be indexed by the IDE (for agent context loading) but excluded from version control. Instead of adding it to `.gitignore` (which affects all contributors and may conflict with other entries), use the repository-local exclude file:
+Do not hide the runtime directory your tool needs to index. If you need local-only exclusions, prefer the repository-local exclude file instead of shared `.gitignore` rules.
+
+Examples:
 
 ```bash
 echo '.agent/' >> .git/info/exclude
+# or
+echo '.claude/' >> .git/info/exclude
 ```
 
 **Why this matters:**
 - `.git/info/exclude` is local to your clone — it won't appear in diffs or affect collaborators
-- The IDE still sees and indexes `.agent/` for full agent functionality
+- Your editor can still index the installed runtime for full agent functionality
 - No `.gitignore` pollution or merge conflicts from differing agent setups
-- Each developer can manage their own agent directory independently
+- Each developer can manage their own runtime directory independently
 
-> **Note:** If the project *ships* with `.agent/` as part of the kit (like this starter), you may want `.agent/` tracked in Git. In that case, use `.git/info/exclude` only for runtime-generated files like `.agent/progress/sessions/` and `.agent/progress/slices/`.
+> **Note:** If the project ships one or both runtime trees as part of the kit (like this starter), keep those tracked in Git and use local excludes only for runtime-generated files such as session logs or progress artifacts.

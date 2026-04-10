@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/audit-ambiguity-rubrics.md`
-
-Port of `.agent/workflows/audit-ambiguity-rubrics.md` to Claude Code skill format.
 
 ## Prerequisites
 

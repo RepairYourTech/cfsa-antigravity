@@ -12,10 +12,6 @@ parameters:
 
 Utility orchestrator for surgical, idempotent bootstrap updates.
 
-Parity source:
-- `.agent/workflows/bootstrap-agents.md`
-- `.agent/workflows/bootstrap-agents-fill.md`
-- `.agent/workflows/bootstrap-agents-provision.md`
 
 ## Step-by-Step
 

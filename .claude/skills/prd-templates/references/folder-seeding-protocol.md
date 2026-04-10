@@ -33,11 +33,11 @@ For multi-product projects, additionally create `surfaces/` with sub-folders per
 
 Read these templates when creating files:
 
-- `.agent/skills/prd-templates/references/ideation-index-template.md` (super-index)
-- `.agent/skills/prd-templates/references/ideation-crosscut-template.md` (global CX)
-- `.agent/skills/prd-templates/references/fractal-node-index-template.md` (node index)
-- `.agent/skills/prd-templates/references/fractal-cx-template.md` (node CX)
-- `.agent/skills/prd-templates/references/fractal-feature-template.md` (feature file)
+- `.claude/skills/prd-templates/references/ideation-index-template.md` (super-index)
+- `.claude/skills/prd-templates/references/ideation-crosscut-template.md` (global CX)
+- `.claude/skills/prd-templates/references/fractal-node-index-template.md` (node index)
+- `.claude/skills/prd-templates/references/fractal-cx-template.md` (node CX)
+- `.claude/skills/prd-templates/references/fractal-feature-template.md` (feature file)
 
 ## Domain Seeding Rules
 

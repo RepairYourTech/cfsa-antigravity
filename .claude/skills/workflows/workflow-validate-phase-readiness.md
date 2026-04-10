@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/validate-phase-readiness.md`
-
-Port of `.agent/workflows/validate-phase-readiness.md` to Claude Code skill format.
 
 ## Prerequisites
 

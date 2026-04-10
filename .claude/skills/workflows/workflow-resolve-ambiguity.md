@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/resolve-ambiguity.md`
-
-Port of `.agent/workflows/resolve-ambiguity.md`.
 
 ## Step-by-Step
 

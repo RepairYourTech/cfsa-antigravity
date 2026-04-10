@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/remediate-shard-split.md`
-
-Port of `.agent/workflows/remediate-shard-split.md`.
 
 ## Step-by-Step
 

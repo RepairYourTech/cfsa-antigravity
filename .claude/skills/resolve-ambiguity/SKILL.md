@@ -38,10 +38,10 @@ Check sources in this order. **Stop as soon as you find authoritative informatio
 
 Look for project-specific context that may already answer the question:
 - `AGENTS.md` or `GEMINI.md` — Agent instructions, tech stack, validation commands
-- `.agent/instructions/tech-stack.md` — Technology decisions
-- `.agent/instructions/patterns.md` — Code conventions
-- `.agent/instructions/structure.md` — Directory layout
-- `.agent/instructions/commands.md` — Dev, test, lint, build
+- `.claude/instructions/tech-stack.md` — Technology decisions
+- `.claude/instructions/patterns.md` — Code conventions
+- `.claude/instructions/structure.md` — Directory layout
+- `.claude/instructions/commands.md` — Dev, test, lint, build
 
 If these files contain `{{PLACEHOLDER}}` values, the information hasn't been decided yet — move to the next tier.
 

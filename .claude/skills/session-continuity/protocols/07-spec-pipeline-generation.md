@@ -1,4 +1,4 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.claude/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
 
 # Protocol 7: Spec Pipeline Generation
 
@@ -13,7 +13,7 @@ have IA specs, BE specs, and FE specs completed.
 
 1. **Read the IA index** — `docs/plans/ia/index.md` — to get the list of shards.
 
-2. **Create `.agent/progress/spec-pipeline.md`**:
+2. **Create `.claude/progress/spec-pipeline.md`**:
    ```markdown
    # Spec Pipeline Progress
 

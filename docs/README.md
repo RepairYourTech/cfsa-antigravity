@@ -178,20 +178,20 @@ cp cfsa-antigravity/AGENTS.md /path/to/your-project/
 |-------|------------|
 | **Antigravity** | Both `AGENTS.md` and `GEMINI.md` are present — bootstrap fills both during `/create-prd`. |
 | **Gemini CLI** | `GEMINI.md` is your agent config. Bootstrap fills it during `/create-prd`. |
-| **Claude Code** | Copy rules/instructions into `.claude/` using Claude's format |
+| **Claude Code** | Use the standalone `.claude/` runtime installed via `cfsa-antigravity init --agent claude` |
 | **Cursor** | Reference from `.cursorrules` or your Cursor config |
 | **Windsurf** | Reference from `.windsurfrules` or equivalent |
 | **Other** | Follow your agent's convention for loading system instructions |
 
 > [!WARNING]
-> **Important Note on `.gitignore`**
+> **Important Note on agent runtime directories**
 >
-> If you are using AI-powered editors like **Cursor** or **Windsurf**, adding the `.agent/` folder to your `.gitignore` may prevent the IDE from indexing the workflows. This results in slash commands (like `/plan`, `/debug`) not appearing in the chat suggestion dropdown.
+> Do not hide the runtime directory your agent/editor needs to index.
 >
-> **Recommended Solution:** To keep the `.agent/` folder local (not tracked by Git) while maintaining AI functionality:
+> - Antigravity-style installs use `.agent/`
+> - Claude Code installs use `.claude/`
 >
-> 1. Ensure `.agent/` is **NOT** in your project's `.gitignore`.
-> 2. Instead, add it to your local exclude file: `.git/info/exclude`
+> **Recommended Solution:** Keep the installed runtime directory out of shared `.gitignore` rules and use `.git/info/exclude` for local-only exclusions.
 
 ### Start
 
@@ -205,15 +205,15 @@ The pipeline tells you what to run next at every step. You never have to guess.
 
 ## The Skill System
 
-**Bundled skills** ship with the kit in `.agent/skills/`. These are universal capabilities every project needs regardless of tech stack — things like TDD workflow, clean code principles, accessibility auditing, brainstorming, and systematic debugging. They're always present, always loaded.
+**Bundled skills** ship with the active runtime's `skills/` directory. These are universal capabilities every project needs regardless of tech stack — things like TDD workflow, clean code principles, accessibility auditing, brainstorming, and systematic debugging. They're always present, always loaded.
 
-**Skill library** lives in `.agent/skill-library/`. These are stack-specific and surface-specific skills that get provisioned by bootstrap as tech decisions are confirmed during `/create-prd`. They're never loaded directly — bootstrap copies the relevant ones into `.agent/skills/` and fills any placeholders with your project's confirmed values.
+**Skill library** lives in the active runtime's `skill-library/`. These are stack-specific and surface-specific skills that get provisioned by bootstrap as tech decisions are confirmed during `/create-prd`. They're never loaded directly — bootstrap copies the relevant ones into the runtime's `skills/` directory and fills any placeholders with your project's confirmed values.
 
 Bootstrap fires once per confirmed decision — it fills only what was just decided and leaves everything else untouched.
 
 ### Bootstrap & Template System
 
-Instruction files in `.agent/instructions/` are **templates**, not static files — they ship with `{{PLACEHOLDER}}` markers that bootstrap fills as tech decisions are confirmed during `/create-prd`.
+Instruction files in the active runtime's `instructions/` directory are **templates**, not static files — they ship with `{{PLACEHOLDER}}` markers that bootstrap fills as tech decisions are confirmed during `/create-prd`.
 
 | File | Filled by | When |
 |------|-----------|------|

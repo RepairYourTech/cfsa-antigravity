@@ -1,4 +1,4 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.claude/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
 
 # Protocol 8: Spec Pipeline Update
 
@@ -14,7 +14,7 @@
 1. **Identify the shard and layer** — which shard just got its spec completed,
    and which layer (IA, BE, or FE)?
 
-2. **Update `.agent/progress/spec-pipeline.md`** — before updating any cell, perform these validation checks:
+2. **Update `.claude/progress/spec-pipeline.md`** — before updating any cell, perform these validation checks:
 
    (a) Read the `File` column for the shard from the tracker to get the expected file path.
    (b) Confirm the file exists at that path. If not → **skip the update** and report: `"Cannot mark [shard] [layer] as complete — file not found at [path]"`
@@ -44,7 +44,7 @@
 
 6. **Read-back verification** — immediately after updating the tracker:
 
-   (a) Read `.agent/progress/spec-pipeline.md` back.
+   (a) Read `.claude/progress/spec-pipeline.md` back.
    (b) Locate the row for the shard that was just updated.
    (c) Verify the column that was just marked shows `complete` (not `not-started`, not unchanged, not any other value).
    (d) If the cell does NOT show `complete`:

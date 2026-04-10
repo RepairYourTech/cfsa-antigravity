@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/ideate-discover.md`
-
-Port of `.agent/workflows/ideate-discover.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -31,12 +27,12 @@ Port of `.agent/workflows/ideate-discover.md` to Claude Code skill format.
 ### Step 2 — Read engagement tier and apply gate behavior
 
 1. Read `## Engagement Tier` from ideation index.
-2. Apply gate behavior from `.agent/skills/prd-templates/references/engagement-tier-protocol.md`.
+2. Apply gate behavior from `.claude/skills/prd-templates/references/engagement-tier-protocol.md`.
 3. If tier missing, default to Hybrid and request override/confirmation.
 
 ### Step 3 — Recursive domain exploration
 
-1. Execute recursive exhaustion protocol in `.agent/skills/idea-extraction/SKILL.md`.
+1. Execute recursive exhaustion protocol in `.claude/skills/idea-extraction/SKILL.md`.
 2. Route by expansion mode from ideation index:
    - Full
    - Vertical

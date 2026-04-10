@@ -1,4 +1,4 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.claude/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
 
 # Protocol 3: Progress Update
 
@@ -10,9 +10,9 @@
 
 ## Steps
 
-1. **Mark tasks and acceptance criteria `[x]`** in the slice's tracking location (use the exact files in the `.agent/progress/` directory, NEVER guess the path):
-   - If slice has its own file: update `.agent/progress/slices/phase-NN-slice-NN.md`
-   - If inline: update `.agent/progress/phases/phase-NN.md`
+1. **Mark tasks and acceptance criteria `[x]`** in the slice's tracking location (use the exact files in the `.claude/progress/` directory, NEVER guess the path):
+   - If slice has its own file: update `.claude/progress/slices/phase-NN-slice-NN.md`
+   - If inline: update `.claude/progress/phases/phase-NN.md`
 
 2. **Release any claimed tasks** — if the completed task had `[!]`:
    - Change status from `[/]` to `[x]`
@@ -42,7 +42,7 @@
    **Progress**: 4/7 slices
    ```
 
-5. **Update `.agent/progress/index.md`** — recalculate overall progress:
+5. **Update `.claude/progress/index.md`** — recalculate overall progress:
    ```markdown
    **Overall**: 12/20 slices (60%)
    ```

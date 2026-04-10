@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/plan-phase-write.md`
-
-Port of `.agent/workflows/plan-phase-write.md` to Claude Code skill format.
 
 ## Prerequisites
 

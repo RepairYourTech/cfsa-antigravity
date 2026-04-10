@@ -12,7 +12,7 @@ Classify user-provided input to determine which mode the `idea-extraction` skill
 
 ## Mode References
 
-Each mode's full process is defined in `.agent/skills/idea-extraction/SKILL.md`:
+Each mode's full process is defined in `.claude/skills/idea-extraction/SKILL.md`:
 
 - **Extraction Mode** → `## Input-Adaptive Modes → Extraction Mode — Rich Input`
 - **Expansion Mode** → `## Input-Adaptive Modes → Expansion Mode — Thin Input`

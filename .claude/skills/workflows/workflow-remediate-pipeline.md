@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/remediate-pipeline.md`
-
-Port of `.agent/workflows/remediate-pipeline.md`.
 
 ## Step-by-Step
 

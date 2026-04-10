@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/update-architecture-map.md`
-
-Port of `.agent/workflows/update-architecture-map.md`.
 
 ## Step-by-Step
 

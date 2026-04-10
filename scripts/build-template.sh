@@ -31,15 +31,8 @@ cp -a "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent"
 if [[ -d "$ROOT_DIR/.claude" ]]; then
     info "Copying .claude/"
     cp -a "$ROOT_DIR/.claude" "$TEMPLATE_DIR/.claude"
-
-    # Handle skill-library symlink (if it exists)
-    if [[ -L "$TEMPLATE_DIR/.claude/skill-library" ]]; then
-        info "Resolving .claude/skill-library symlink"
-        rm "$TEMPLATE_DIR/.claude/skill-library"
-        cp -a "$ROOT_DIR/.agent/skill-library" "$TEMPLATE_DIR/.claude/skill-library"
-    fi
 else
-    warn ".claude/ directory not found — skipping (Claude Code version not yet implemented)"
+    warn ".claude/ directory not found — skipping"
 fi
 
 # docs/ — full directory
@@ -62,6 +55,12 @@ done
 if [[ -d "$TEMPLATE_DIR/.agent/progress" ]]; then
     info "Cleaning .agent/progress/ (session-specific data)"
     find "$TEMPLATE_DIR/.agent/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+fi
+
+# Remove .claude/progress/ contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.claude/progress" ]]; then
+    info "Cleaning .claude/progress/ (session-specific data)"
+    find "$TEMPLATE_DIR/.claude/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
 # Remove .claude/memory/sessions/ contents (session-specific)
@@ -94,8 +93,9 @@ COMMIT_HASH=$(git rev-parse HEAD)
 KIT_VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
 BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-info "Generating .agent/kit-sync.md (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
-cat > "$TEMPLATE_DIR/.agent/kit-sync.md" << EOF
+info "Generating kit sync state (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
+for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md"; do
+cat > "$sync_file" << EOF
 # Kit Sync State
 
 upstream: https://github.com/RepairYourTech/cfsa-antigravity
@@ -103,6 +103,7 @@ last_synced_commit: $COMMIT_HASH
 last_synced_at: $BUILD_TIMESTAMP
 kit_version: $KIT_VERSION
 EOF
+done
 
 # --- Summary ---
 file_count=$(find "$TEMPLATE_DIR" -type f | wc -l | tr -d ' ')

@@ -154,7 +154,7 @@ Enter parallel mode when the slice's tasks contain surface tags (`BE`, `FE`, `QA
 ### Dispatch Instructions
 
 1. **Untagged tasks first** — Contract/schema work runs sequentially by orchestrator (Phase 0) before any tagged dispatch.
-2. **QA-RED** — QA agent writes comprehensive failing tests for ALL acceptance criteria. Tests MUST fail. Read `.agent/skills/session-continuity/protocols/09-parallel-claim.md`. Every contract field and error type covered.
+2. **QA-RED** — QA agent writes comprehensive failing tests for ALL acceptance criteria. Tests MUST fail. Read `.claude/skills/session-continuity/protocols/09-parallel-claim.md`. Every contract field and error type covered.
 3. **BE + FE parallel** — Code against tests and contracts simultaneously. Annotate spec-gap decisions with `// DECISION: [what and why]`.
 4. **QA-GREEN** — Re-verify all tests pass, anti-cheat check, add integration tests.
 5. **Iterative loop rule** — If QA-GREEN fails → re-dispatch BE/FE → QA-GREEN again → repeat until all pass.
@@ -162,4 +162,4 @@ Enter parallel mode when the slice's tasks contain surface tags (`BE`, `FE`, `QA
 
 ### Progress Logging
 
-Log each dispatch phase to `.agent/progress/slices/phase-NN-slice-NN.md` under `## Dispatch Log`.
+Log each dispatch phase to `.claude/progress/slices/phase-NN-slice-NN.md` under `## Dispatch Log`.

@@ -37,7 +37,7 @@ After confirmation, write the decision to the target file + section.
 
 ### 5. Verify Write
 
-Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`):
+Follow the write verification protocol (`.claude/skills/prd-templates/references/write-verification-protocol.md`):
 - Read back the target file
 - Verify the section header exists and content matches what was confirmed
 - If missing or mismatched → write failed, retry

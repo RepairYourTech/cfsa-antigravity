@@ -12,10 +12,6 @@ parameters:
 
 Runs validation in two shards: quality → readiness.
 
-Parity source:
-- `.agent/workflows/validate-phase.md`
-- `.agent/workflows/validate-phase-quality.md`
-- `.agent/workflows/validate-phase-readiness.md`
 
 ## Prerequisites
 

@@ -4,7 +4,7 @@
 
 Specification and implementation workflows must verify the surface stack map is populated **before** any skill reads. This prevents spec authoring from running with empty map cells, which would produce patterns incompatible with the chosen tech stack.
 
-> **Note**: As of v3, workflows no longer use `{{PLACEHOLDER}}` values for skill paths. Instead, they read skill names from the surface stack map in `.agent/instructions/tech-stack.md`. This gate verifies map completeness.
+> **Note**: As of v3, workflows no longer use `{{PLACEHOLDER}}` values for skill paths. Instead, they read skill names from the surface stack map in `.claude/instructions/tech-stack.md`. This gate verifies map completeness.
 
 ## How to Apply
 
@@ -14,7 +14,7 @@ Add a **Step 0 — Map guard** to any specification or implementation workflow t
 
 ### 1. Read the surface stack map
 
-Read `.agent/instructions/tech-stack.md` and parse both tables:
+Read `.claude/instructions/tech-stack.md` and parse both tables:
 - **Per-Surface Skills** — One row per surface
 - **Cross-Cutting Skills** — Project-wide categories
 
@@ -80,4 +80,4 @@ This fallback **only** applies to workflows invoked within the `/create-prd` orc
 
 ## Commands verification
 
-Additionally verify that `.agent/instructions/commands.md` has non-template values. If the commands section still contains `{{COMMAND_SECTIONS}}`, run `/bootstrap-agents` to fill it.
+Additionally verify that `.claude/instructions/commands.md` has non-template values. If the commands section still contains `{{COMMAND_SECTIONS}}`, run `/bootstrap-agents` to fill it.

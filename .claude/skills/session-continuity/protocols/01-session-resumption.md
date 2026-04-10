@@ -1,4 +1,4 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.claude/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
 
 # Protocol 1: Session Resumption
 
@@ -10,7 +10,7 @@
 
 ## Steps
 
-1. **Check if `.agent/progress/index.md` exists**
+1. **Check if `.claude/progress/index.md` exists**
    - If no: this is a fresh project with no tracked progress. Skip resumption.
    - If yes: continue.
 

@@ -10,15 +10,11 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-be-spec-classify.md`
-
-Port of `.agent/workflows/write-be-spec-classify.md` to Claude Code skill format.
 
 ## Prerequisites
 
 1. Target IA shard is complete
-2. `docs/plans/ia/index.md` and `.agent/progress/spec-pipeline.md` are present
+2. `docs/plans/ia/index.md` and `.claude/progress/spec-pipeline.md` are present
 
 ## Step-by-Step
 

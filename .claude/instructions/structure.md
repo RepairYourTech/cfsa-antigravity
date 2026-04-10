@@ -20,10 +20,10 @@
 ## Protected Files (Do Not Modify Without Approval)
 - `AGENTS.md` — Project agent config
 - `docs/plans/ENGINEERING-STANDARDS.md` — Quality bar
-- `.agent/instructions/*` — Agent rules
+- `.claude/instructions/*` — Agent rules
 - `package.json` — Dependencies (add carefully)
 - `tsconfig.json` — TypeScript config
 
 ## Notes
-- All agent config lives in `.agent/` (canonical for all agents)
+- Claude Code agent config lives in `.claude/`
 - Frontend and API may be separately deployed depending on architecture

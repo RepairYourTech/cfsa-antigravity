@@ -13,7 +13,7 @@ The checkpoint is a markdown file with YAML-style key-value pairs. Agents must p
 ```markdown
 # Workflow Checkpoint
 
-active_shard: .agent/workflows/create-prd-stack.md
+active_shard: .claude/skills/workflows/workflow-create-prd-stack.md
 current_step: per-axis-flow
 current_item: Frontend Framework (STK-04)
 items_completed: [Hosting (STK-01), Database (STK-02), Auth (STK-03)]

@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-fe-spec-classify.md`
-
-Port of `.agent/workflows/write-fe-spec-classify.md` to Claude Code skill format.
 
 ## Prerequisites
 

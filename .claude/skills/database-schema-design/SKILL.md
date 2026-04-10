@@ -21,7 +21,7 @@ Design scalable, well-structured database schemas with proper relationships, con
 
 ## Paradigm-Specific References
 
-After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.agent/instructions/tech-stack.md`):
+After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.claude/instructions/tech-stack.md`):
 
 | Paradigm | Reference | Example Stores |
 |----------|-----------|----------------|
@@ -147,7 +147,7 @@ Present and confirm the table with the user before proceeding to Sub-step B.
 
 ### Sub-step B — Registry-First Skill Search
 
-Before presenting any store options, read `.agent/skills/find-skills/SKILL.md` and run `npx skills find [query type or store name]` for each query type that appeared in the table.
+Before presenting any store options, read `.claude/skills/find-skills/SKILL.md` and run `npx skills find [query type or store name]` for each query type that appeared in the table.
 
 If the registry returns a skill, install it first. The bundled skill library is a fallback only.
 
@@ -198,7 +198,7 @@ For each cross-store entity, answer the following in order:
 
 ### Skill Instruction
 
-Read all database skills listed in the Databases column of the surface stack map (`.agent/instructions/tech-stack.md`) for advice on each store's transaction semantics and consistency guarantees before completing this step.
+Read all database skills listed in the Databases column of the surface stack map (`.claude/instructions/tech-stack.md`) for advice on each store's transaction semantics and consistency guarantees before completing this step.
 
 ### Output
 

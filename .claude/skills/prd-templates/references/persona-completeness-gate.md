@@ -17,4 +17,4 @@ Every persona must have all 6 fields populated before proceeding past persona ex
 
 If any field is absent for any persona → probe the user before proceeding.
 
-Reference: `.agent/skills/pipeline-rubrics/references/ideation-rubric.md` Dimension 2.
+Reference: `.claude/skills/pipeline-rubrics/references/ideation-rubric.md` Dimension 2.

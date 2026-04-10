@@ -10,7 +10,7 @@ A pipeline that turns a raw idea into exhaustively specified, test-driven, produ
 npx cfsa-antigravity init
 ```
 
-This installs the `.agent/` folder, `docs/` structure, and agent config files into your project.
+This installs the selected agent runtime (`.agent/` by default, or `.claude/` with `--agent claude`), the `docs/` structure, and agent config files into your project.
 
 ## CLI
 
@@ -22,13 +22,19 @@ This installs the `.agent/` folder, `docs/` structure, and agent config files in
 | `cfsa-antigravity init --dry-run` | Preview what would be installed |
 | `cfsa-antigravity init --path ./dir` | Install into specific directory |
 
-### ⚠️ Important Note on `.gitignore`
-If you are using AI-powered editors like **Cursor** or **Windsurf**, adding the `.agent/` folder to your `.gitignore` may prevent the IDE from indexing the workflows. This results in slash commands (like `/ideate`, `/create-prd`) not appearing in the chat suggestion dropdown.
+### Choosing the runtime directory
+- Antigravity-style installs use `.agent/`
+- Claude Code installs use `.claude/`
+
+If you are using an editor that indexes agent files for slash commands, do not hide the runtime directory you actually installed.
 
 **Recommended Solution:**
-To keep the `.agent/` folder local (not tracked by Git) while maintaining AI functionality:
-1. Ensure `.agent/` is **NOT** in your project's `.gitignore`.
-2. Instead, add it to your local exclude file: `.git/info/exclude`
+Keep the installed runtime directory out of shared `.gitignore` rules when your tool needs to index it. Prefer `.git/info/exclude` for local-only exclusions.
+
+Examples:
+1. Antigravity install → keep `.agent/` out of `.gitignore`
+2. Claude install → keep `.claude/` out of `.gitignore`
+3. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
    
 ## Get Started
 
@@ -49,7 +55,7 @@ The kit evolves independently of your project. To pull improvements into an exis
 This performs a **semantic merge** — it applies new workflows, skills, and rules from the upstream kit while preserving your project-specific values (tech stack, validation commands, filled placeholders). It will never overwrite your project decisions.
 
 - First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
-- Tracks sync state in `.agent/kit-sync.md` so it knows what changed since last update
+- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md` or `.claude/kit-sync.md`) so it knows what changed since last update
 - Flags any structural migrations needed (e.g., ideation format changes)
 
 ## Documentation

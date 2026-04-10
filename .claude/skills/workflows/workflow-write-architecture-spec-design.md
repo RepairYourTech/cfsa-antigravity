@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-architecture-spec-design.md`
-
-Port of `.agent/workflows/write-architecture-spec-design.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -24,8 +20,8 @@ Port of `.agent/workflows/write-architecture-spec-design.md` to Claude Code skil
 
 ### Step 0 — Pipeline and map guards
 
-1. Read `.agent/progress/spec-pipeline.md` and select target shard.
-2. Verify required stack map values exist in `.agent/instructions/tech-stack.md`:
+1. Read `.claude/progress/spec-pipeline.md` and select target shard.
+2. Verify required stack map values exist in `.claude/instructions/tech-stack.md`:
    - Databases
    - Security
    - Surfaces

@@ -12,11 +12,6 @@ parameters:
 
 Runs the ideation stage in three shards: extract → discover → validate.
 
-Parity source:
-- `.agent/workflows/ideate.md`
-- `.agent/workflows/ideate-extract.md`
-- `.agent/workflows/ideate-discover.md`
-- `.agent/workflows/ideate-validate.md`
 
 ## Prerequisites
 

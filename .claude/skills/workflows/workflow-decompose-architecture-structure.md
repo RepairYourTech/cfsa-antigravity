@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/decompose-architecture-structure.md`
-
-Port of `.agent/workflows/decompose-architecture-structure.md` to Claude Code skill format.
 
 ## Prerequisites
 

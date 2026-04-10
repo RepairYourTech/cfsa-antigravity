@@ -6,11 +6,11 @@ Templates, formats, and scan procedures for `/propagate-decision` workflows.
 
 | Decision Type | Source Document | Downstream Scope |
 |--------------|-----------------|-------------------|
-| **structure** | `.agent/instructions/structure.md` | All IA shards, BE specs, FE specs |
-| **tech-stack** | `.agent/instructions/tech-stack.md` + architecture doc | All IA shards, BE specs, FE specs |
+| **structure** | `.claude/instructions/structure.md` | All IA shards, BE specs, FE specs |
+| **tech-stack** | `.claude/instructions/tech-stack.md` + architecture doc | All IA shards, BE specs, FE specs |
 | **auth-model** | Architecture doc (auth/security section) | All BE specs with middleware, all FE specs with auth flows |
 | **data-placement** | `docs/plans/data-placement-strategy.md` | All IA shards with data models, all BE specs with storage |
-| **patterns** | `.agent/instructions/patterns.md` | All IA shards, BE specs with implementation patterns, FE specs with component patterns |
+| **patterns** | `.claude/instructions/patterns.md` | All IA shards, BE specs with implementation patterns, FE specs with component patterns |
 | **error-architecture** | Architecture doc `## Error Architecture` (5 sub-sections) | All BE specs, all FE specs |
 
 ## Selection Menu Format

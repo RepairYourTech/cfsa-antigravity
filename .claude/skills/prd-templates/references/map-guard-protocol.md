@@ -8,7 +8,7 @@
 
 ### 1. Read the Map
 
-Read the surface stack map from `.agent/instructions/tech-stack.md`.
+Read the surface stack map from `.claude/instructions/tech-stack.md`.
 
 ### 2. Check Required Cells
 
@@ -38,7 +38,7 @@ If the empty cells are auto-recoverable:
 
 1. **Read `docs/plans/architecture-draft.md`** — extract confirmed tech stack decisions (languages, frameworks, databases, ORMs, hosting, auth, CI/CD)
 2. **Build the bootstrap key set** from confirmed decisions
-3. **Execute `/bootstrap-agents`** with those keys — read `.agent/workflows/bootstrap-agents.md` and run BOTH shards (fill + provision)
+3. **Execute `/bootstrap-agents`** with those keys — read `.claude/skills/workflows/workflow-bootstrap-agents.md` and run BOTH shards (fill + provision)
 4. **Re-read the surface stack map** after bootstrap completes
 5. **Re-check the required cells** — if now filled → proceed. If still empty → escalate to hard stop (Step 5)
 

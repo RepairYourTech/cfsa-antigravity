@@ -12,10 +12,6 @@ parameters:
 
 Runs slice implementation in two shards: setup → tdd.
 
-Parity source:
-- `.agent/workflows/implement-slice.md`
-- `.agent/workflows/implement-slice-setup.md`
-- `.agent/workflows/implement-slice-tdd.md`
 
 ## Prerequisites
 

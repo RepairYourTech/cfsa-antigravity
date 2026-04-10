@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-fe-spec-write.md`
-
-Port of `.agent/workflows/write-fe-spec-write.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -38,7 +34,7 @@ Apply line-count thresholds:
 ### Step 3 — Index and tracker updates
 
 1. Update `docs/plans/fe/index.md` status.
-2. Update FE completion state in `.agent/progress/spec-pipeline.md` via protocol.
+2. Update FE completion state in `.claude/progress/spec-pipeline.md` via protocol.
 
 ### Step 4 — Iterative deepening passes
 

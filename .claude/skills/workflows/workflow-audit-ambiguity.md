@@ -12,10 +12,6 @@ parameters:
 
 Runs ambiguity auditing in two shards: rubrics → execute.
 
-Parity source:
-- `.agent/workflows/audit-ambiguity.md`
-- `.agent/workflows/audit-ambiguity-rubrics.md`
-- `.agent/workflows/audit-ambiguity-execute.md`
 
 ## Prerequisites
 

@@ -30,7 +30,7 @@ trigger: always_on
 
 ## Naming Conventions
 
-Follow the project's established conventions in `.agent/instructions/patterns.md`. When no convention exists yet, use the stack's community standard.
+Follow the project's established conventions in `.claude/instructions/patterns.md`. When no convention exists yet, use the stack's community standard.
 
 ## Anti-Spaghetti Rules
 

@@ -17,7 +17,7 @@ This skill ensures all code development follows TDD principles with comprehensiv
 
 ## Stack-Specific References
 
-After reading the methodology below, read the reference matching your surface's Languages column in the surface stack map (`.agent/instructions/tech-stack.md`):
+After reading the methodology below, read the reference matching your surface's Languages column in the surface stack map (`.claude/instructions/tech-stack.md`):
 
 | Language | Reference |
 |----------|-----------|

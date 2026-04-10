@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/create-prd-design-system.md`
-
-Port of `.agent/workflows/create-prd-design-system.md` to Claude Code skill format.
 
 ## Prerequisites
 

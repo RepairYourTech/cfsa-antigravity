@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/ideate-extract.md`
-
-Port of `.agent/workflows/ideate-extract.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -24,8 +20,8 @@ Port of `.agent/workflows/ideate-extract.md` to Claude Code skill format.
 
 ### Step 1 — Input assessment
 
-1. Read and apply input classification protocol from `.agent/skills/prd-templates/references/input-classification.md`.
-2. Read `.agent/skills/idea-extraction/SKILL.md` and run mode-specific path:
+1. Read and apply input classification protocol from `.claude/skills/prd-templates/references/input-classification.md`.
+2. Read `.claude/skills/idea-extraction/SKILL.md` and run mode-specific path:
    - Extraction mode (rich input)
    - Expansion mode (thin input)
    - Interview mode (verbal/no file)
@@ -49,7 +45,7 @@ Port of `.agent/workflows/ideate-extract.md` to Claude Code skill format.
 
 ### Step 4 — Seed fractal ideation folder
 
-1. Follow folder seeding protocol from `.agent/skills/prd-templates/references/folder-seeding-protocol.md`.
+1. Follow folder seeding protocol from `.claude/skills/prd-templates/references/folder-seeding-protocol.md`.
 2. Create required node artifacts (`{slug}-index.md`, `{slug}-cx.md`, feature leaves).
 3. Verify `docs/plans/ideation/.gitkeep` and `docs/plans/ideation/README.md` remain present.
 

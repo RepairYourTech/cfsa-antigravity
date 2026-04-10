@@ -1,4 +1,4 @@
-> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.agent/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
+> **Framework context required**: This is a protocol excerpt. Before following these steps, read `.claude/skills/session-continuity/SKILL.md` for the complete framework — including the Adaptive Granularity Rule, Level Hierarchy Reference, Frozen Files concept, and Parallel Claim protocol. Protocol files are reference documents for specific steps, not standalone instructions.
 
 # Protocol 2: Progress Generation
 
@@ -12,7 +12,7 @@
 
 1. **Read the phase plan** that was just created (the output of `/plan-phase`).
 
-2. **Create or update `.agent/progress/index.md`**:
+2. **Create or update `.claude/progress/index.md`**:
    ```markdown
    # Implementation Progress
 
@@ -27,7 +27,7 @@
    | Phase 1: {{NAME}} | not-started | 0/{{N}} | [→](phases/phase-01.md) |
    ```
 
-3. **Create `.agent/progress/phases/phase-NN.md`**:
+3. **Create `.claude/progress/phases/phase-NN.md`**:
    ```markdown
    # Phase {{N}}: {{NAME}}
 
@@ -55,7 +55,7 @@
    - `files:` blocks are NOT written during generation — only during claim (Protocol 9)
    - Subtasks under tagged tasks inherit the parent's surface ownership
 
-4. **Create `.agent/progress/slices/phase-NN-slice-NN.md`** for each slice with ≥3 criteria:
+4. **Create `.claude/progress/slices/phase-NN-slice-NN.md`** for each slice with ≥3 criteria:
    ```markdown
    # Phase {{P}} / Slice {{S}}: {{NAME}}
 

@@ -41,7 +41,7 @@ When a multi-surface feature launches on one surface first:
 
 ## The Four Implementation Layers
 
-> **Note on terminology**: The layers below describe implementation completeness criteria — what every feature slice requires regardless of surface type. These are not the same as surface types (web/mobile/cli/etc.). For the mapping between surface types and how each implementation layer manifests on that surface, see `.agent/skills/prd-templates/references/surface-model.md`.
+> **Note on terminology**: The layers below describe implementation completeness criteria — what every feature slice requires regardless of surface type. These are not the same as surface types (web/mobile/cli/etc.). For the mapping between surface types and how each implementation layer manifests on that surface, see `.claude/skills/prd-templates/references/surface-model.md`.
 
 | Surface | What It Is | Example |
 |---------|-----------|---------|

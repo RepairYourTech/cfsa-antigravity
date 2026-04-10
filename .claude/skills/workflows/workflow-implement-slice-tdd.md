@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/implement-slice-tdd.md`
-
-Port of `.agent/workflows/implement-slice-tdd.md` to Claude Code skill format.
 
 ## Prerequisites
 

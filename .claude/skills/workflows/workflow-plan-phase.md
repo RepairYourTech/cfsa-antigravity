@@ -12,15 +12,11 @@ parameters:
 
 Runs phase planning in two shards: preflight → write.
 
-Parity source:
-- `.agent/workflows/plan-phase.md`
-- `.agent/workflows/plan-phase-preflight.md`
-- `.agent/workflows/plan-phase-write.md`
 
 ## Prerequisites
 
 1. IA, BE, and FE spec layers are fully complete
-2. Phase progression state exists in `.agent/progress/`
+2. Phase progression state exists in `.claude/progress/`
 3. Architecture phasing section and spec indexes are available
 
 ## Step-by-Step
@@ -48,7 +44,7 @@ Call skill: `plan-phase-write`
 Expected outputs:
 - `docs/plans/phases/phase-N.md`
 - `docs/plans/phases/phase-N-draft.md`
-- generated progress files in `.agent/progress/`
+- generated progress files in `.claude/progress/`
 - verified bootstrap/map completeness for planning prerequisites
 
 ## Completion Checklist

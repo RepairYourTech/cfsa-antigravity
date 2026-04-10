@@ -12,13 +12,6 @@ parameters:
 
 Runs the create-prd stage in five shards and compiles final architecture outputs.
 
-Parity source:
-- `.agent/workflows/create-prd.md`
-- `.agent/workflows/create-prd-stack.md`
-- `.agent/workflows/create-prd-design-system.md`
-- `.agent/workflows/create-prd-architecture.md`
-- `.agent/workflows/create-prd-security.md`
-- `.agent/workflows/create-prd-compile.md`
 
 ## Prerequisites
 

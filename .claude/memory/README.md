@@ -131,4 +131,4 @@ Session logs are automatically cleaned during template build, keeping only READM
 
 - `.claude/skills/utilities/memory-protocol.md` — Memory management skill
 - `.claude/skills/utilities/progress-tracking.md` — Task integration
-- `.agent/progress/` — Antigravity's equivalent markdown-based tracking
+- `.claude/progress/` — Antigravity's equivalent markdown-based tracking

@@ -38,16 +38,16 @@ This skill writes directly to the `docs/plans/ideation/` folder using a **fracta
 **Key rules:**
 
 1. **Always folders.** Every domain, sub-domain, and even single-surface projects use folders — no flat files. One universal pattern, no exceptions.
-2. **Indexes at every level.** Template: `.agent/skills/prd-templates/references/fractal-node-index-template.md`
-3. **CX files at every level.** Template: `.agent/skills/prd-templates/references/fractal-cx-template.md`
-4. **Feature files are leaf nodes.** Template: `.agent/skills/prd-templates/references/fractal-feature-template.md`
+2. **Indexes at every level.** Template: `.claude/skills/prd-templates/references/fractal-node-index-template.md`
+3. **CX files at every level.** Template: `.claude/skills/prd-templates/references/fractal-cx-template.md`
+4. **Feature files are leaf nodes.** Template: `.claude/skills/prd-templates/references/fractal-feature-template.md`
 5. **Depth is reactive.** The structure grows during exploration — never pre-scaffolded beyond what's discovered.
 6. **Soft limit at 4 levels.** If creating a level 5+ node, pause and ask the user: "This is getting unusually deep — should I promote a parent to reduce nesting, or is this depth justified?"
 
 ### Super-Index
 
-The top-level `ideation-index.md` uses a different template: `.agent/skills/prd-templates/references/ideation-index-template.md`
-The top-level `ideation-cx.md` uses: `.agent/skills/prd-templates/references/ideation-crosscut-template.md`
+The top-level `ideation-index.md` uses a different template: `.claude/skills/prd-templates/references/ideation-index-template.md`
+The top-level `ideation-cx.md` uses: `.claude/skills/prd-templates/references/ideation-crosscut-template.md`
 
 ### Numbering Convention
 

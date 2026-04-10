@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/write-architecture-spec-deepen.md`
-
-Port of `.agent/workflows/write-architecture-spec-deepen.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -49,7 +45,7 @@ Ensure event-consumer cross-references are valid and bidirectional.
 ### Step 4 — Update indexes and tracker
 
 1. Mark shard complete in `docs/plans/ia/index.md`.
-2. Update `.agent/progress/spec-pipeline.md` IA column via protocol.
+2. Update `.claude/progress/spec-pipeline.md` IA column via protocol.
 3. Run conditional bootstrap if shard is the architecture-design stack-lock shard.
 
 ### Step 5 — Ambiguity gates and last-shard branch

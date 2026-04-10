@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/evolve-contract.md`
-
-Port of `.agent/workflows/evolve-contract.md`.
 
 ## Step-by-Step
 

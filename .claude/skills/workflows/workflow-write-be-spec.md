@@ -12,22 +12,18 @@ parameters:
 
 Runs BE specification authoring in two shards: classify → write.
 
-Parity source:
-- `.agent/workflows/write-be-spec.md`
-- `.agent/workflows/write-be-spec-classify.md`
-- `.agent/workflows/write-be-spec-write.md`
 
 ## Prerequisites
 
 1. IA shard(s) are complete and marked ✅ in `docs/plans/ia/index.md`
-2. `.agent/progress/spec-pipeline.md` exists
+2. `.claude/progress/spec-pipeline.md` exists
 3. BE conventions/index files exist under `docs/plans/be/`
 
 ## Step-by-Step
 
 ### Step 0 — Pipeline-state shard selection
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.claude/progress/spec-pipeline.md`.
 2. Find shards where IA is `complete` and BE is `not-started`.
 3. Select lowest-numbered eligible shard unless user explicitly overrides.
 4. If none remain, stop and recommend `/write-fe-spec`.
@@ -49,7 +45,7 @@ Call skill: `write-be-spec-write`
 Expected outputs:
 - Full BE spec file(s) in `docs/plans/be/`
 - Updated `docs/plans/be/index.md`
-- Updated `.agent/progress/spec-pipeline.md` BE status
+- Updated `.claude/progress/spec-pipeline.md` BE status
 - Ambiguity gate results + next allowed command
 
 ## Quality Gate

@@ -12,10 +12,6 @@ parameters:
 
 Runs decomposition in two shards: structure → validate.
 
-Parity source:
-- `.agent/workflows/decompose-architecture.md`
-- `.agent/workflows/decompose-architecture-structure.md`
-- `.agent/workflows/decompose-architecture-validate.md`
 
 ## Prerequisites
 

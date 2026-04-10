@@ -6,16 +6,16 @@ Standard procedure for loading skills from the surface stack map before beginnin
 
 1. **Determine the surface**: Identify which surface this work belongs to from the directory path or phase plan (e.g., `docs/plans/be/web/` → surface `web`; flat `docs/plans/be/` → surface `shared`).
 
-2. **Read the surface stack map**: Open `.agent/instructions/tech-stack.md` and locate this surface's row.
+2. **Read the surface stack map**: Open `.claude/instructions/tech-stack.md` and locate this surface's row.
 
 3. **For each skill category** relevant to your workflow (Languages, Databases, BE Frameworks, FE Frameworks, FE Design, ORMs, Auth, Unit Tests, E2E Tests, State Mgmt, Accessibility, CI/CD, Hosting, Security):
    - Read the skill name(s) listed in that cell
-   - For each skill directory name, read `.agent/skills/[skill]/SKILL.md`
+   - For each skill directory name, read `.claude/skills/[skill]/SKILL.md`
    - Follow its conventions (language, testing, framework, design, etc.)
 
 4. **Cross-cutting skills**: Some categories (Auth, Security, CI/CD, Hosting, Accessibility) are in the cross-cutting section — not per-surface. Read those from the cross-cutting rows.
 
-5. **Missing skill fallback**: If any skill in the bundle is not installed in `.agent/skills/` and is not in `.agent/skill-library/MANIFEST.md`, read `.agent/skills/find-skills/SKILL.md` and follow its discovery methodology to search for a community equivalent before proceeding without it.
+5. **Missing skill fallback**: If any skill in the bundle is not installed in `.claude/skills/` and is not in `.claude/skill-library/MANIFEST.md`, read `.claude/skills/find-skills/SKILL.md` and follow its discovery methodology to search for a community equivalent before proceeding without it.
 
 ## Which Categories to Load Per Workflow
 

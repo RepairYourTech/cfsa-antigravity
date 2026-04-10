@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/propagate-decision.md`
-
-Port of `.agent/workflows/propagate-decision.md`.
 
 ## Step-by-Step
 

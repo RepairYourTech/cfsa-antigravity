@@ -14,7 +14,7 @@ parameters:
 
 ## Overview
 
-This skill provisions Claude Code skills from `.claude/skill-library/` (shared via symlink to `.agent/skill-library/`) based on `.claude/instructions/tech-stack.md`.
+This skill provisions Claude Code skills from `.claude/skill-library/` (shared via symlink to `.claude/skill-library/`) based on `.claude/instructions/tech-stack.md`.
 
 Equivalent to Antigravity's `bootstrap-agents-provision.md` shard.
 

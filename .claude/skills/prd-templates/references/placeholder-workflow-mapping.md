@@ -2,7 +2,7 @@
 
 Maps surface stack map columns and cross-cutting categories to the workflows that consume them.
 
-> **How workflows use the map**: See `.agent/instructions/tech-stack.md` for the surface stack map format and resolution rules. Workflows determine their surface context (from shard directory or slice surface tag), then look up the corresponding row and column.
+> **How workflows use the map**: See `.claude/instructions/tech-stack.md` for the surface stack map format and resolution rules. Workflows determine their surface context (from shard directory or slice surface tag), then look up the corresponding row and column.
 
 ## Per-Surface Columns
 

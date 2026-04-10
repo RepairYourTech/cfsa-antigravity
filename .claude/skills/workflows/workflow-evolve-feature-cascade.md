@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/evolve-feature-cascade.md`
-
-Port of `.agent/workflows/evolve-feature-cascade.md`.
 
 ## Step-by-Step
 

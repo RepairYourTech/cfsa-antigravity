@@ -1,6 +1,6 @@
 # Workflow Skills
 
-This directory contains Claude Code workflow skills that port Antigravity pipeline workflows.
+This directory contains Claude Code workflow skills for the CFSA pipeline.
 
 ## Files
 
@@ -69,7 +69,7 @@ When adding a new workflow skill:
 2. Use `workflow-<name>-<shard>.md` for shard skills
 3. Include frontmatter: `name`, `description`, `parameters`
 4. Keep deterministic step order and explicit stop gates
-5. Add parity links to source `.agent/workflows/*.md`
+5. Keep command and shard references self-contained within `.claude/`
 
 ## Conventions
 

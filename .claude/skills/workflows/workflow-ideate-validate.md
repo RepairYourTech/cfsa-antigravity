@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/ideate-validate.md`
-
-Port of `.agent/workflows/ideate-validate.md` to Claude Code skill format.
 
 ## Prerequisites
 
@@ -29,13 +25,13 @@ Port of `.agent/workflows/ideate-validate.md` to Claude Code skill format.
 
 ### Step 2 — Constraints and metrics
 
-1. Run constraint exploration via `.agent/skills/prd-templates/references/constraint-exploration.md`.
+1. Run constraint exploration via `.claude/skills/prd-templates/references/constraint-exploration.md`.
 2. Detect showstoppers and pause for user decision when found.
 3. Write `docs/plans/ideation/meta/constraints.md` with at least one constraint entry.
 
 ### Step 3 — Domain exhaustion and missing-domain reasoning
 
-1. Run domain exhaustion criteria from `.agent/skills/prd-templates/references/domain-exhaustion-criteria.md`.
+1. Run domain exhaustion criteria from `.claude/skills/prd-templates/references/domain-exhaustion-criteria.md`.
 2. Perform missing-domain reasoning:
    - product archetype baseline
    - folder coverage comparison
@@ -57,7 +53,7 @@ If tier is Auto:
 
 ### Step 6 — Ideation rubric quality gate and review request
 
-1. Apply ideation rubric (`.agent/skills/pipeline-rubrics/references/ideation-rubric.md`) across all dimensions.
+1. Apply ideation rubric (`.claude/skills/pipeline-rubrics/references/ideation-rubric.md`) across all dimensions.
 2. Resolve warning/fail dimensions before review request unless loop guard threshold reached.
 3. Request user review of ideation index and vision outputs.
 4. Stop and wait for explicit approval.

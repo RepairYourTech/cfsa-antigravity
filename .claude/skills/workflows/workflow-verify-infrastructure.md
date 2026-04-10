@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/verify-infrastructure.md`
-
-Port of `.agent/workflows/verify-infrastructure.md`.
 
 ## Step-by-Step
 

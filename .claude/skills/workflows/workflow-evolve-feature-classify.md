@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/evolve-feature-classify.md`
-
-Port of `.agent/workflows/evolve-feature-classify.md`.
 
 ## Step-by-Step
 

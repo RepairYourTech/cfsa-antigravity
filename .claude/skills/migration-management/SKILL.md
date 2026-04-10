@@ -21,7 +21,7 @@ Implement robust database migration systems with version control, rollback capab
 
 ## Paradigm-Specific References
 
-After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.agent/instructions/tech-stack.md`):
+After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.claude/instructions/tech-stack.md`):
 
 | Paradigm | Reference | Example Stores |
 |----------|-----------|----------------|

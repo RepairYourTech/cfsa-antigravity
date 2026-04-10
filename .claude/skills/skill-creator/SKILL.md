@@ -16,7 +16,7 @@ Create new skills for the CFSA Antigravity kit that follow the established forma
 - User wants to create a new skill for the kit
 - User wants to package domain knowledge into a reusable skill
 - User asks "create a skill for X" or "make a skill that does Y"
-- Extending the `.agent/skills/` or `.agent/skill-library/` directories
+- Extending the `.claude/skills/` or `.claude/skill-library/` directories
 
 ## When NOT to Use
 
@@ -27,7 +27,7 @@ Create new skills for the CFSA Antigravity kit that follow the established forma
 
 ## Skill Anatomy
 
-Every skill lives in a directory under `.agent/skills/` (installed, always available) or `.agent/skill-library/` (catalog, provisioned per-project):
+Every skill lives in a directory under `.claude/skills/` (installed, always available) or `.claude/skill-library/` (catalog, provisioned per-project):
 
 ```
 skill-name/
@@ -80,13 +80,13 @@ Ask these questions (most can be inferred — only ask if genuinely ambiguous):
 | What domain does this cover? | Determines skill-library placement (stack/surface/meta) |
 | What triggers it? | Defines the "When to Use" section |
 | What should it NOT do? | Defines boundaries — prevents scope creep |
-| Is this installed or library? | `.agent/skills/` (always active) vs `.agent/skill-library/` (provisioned) |
+| Is this installed or library? | `.claude/skills/` (always active) vs `.claude/skill-library/` (provisioned) |
 
 **Decision rules:**
-- Cross-cutting concerns (planning, debugging, testing) → `.agent/skills/`
-- Tech-specific (React, PostgreSQL, Docker) → `.agent/skill-library/stack/`
-- Surface-specific (web perf, mobile UX, API design) → `.agent/skill-library/surface/`
-- Meta/tooling (git, MCP builders, tmux) → `.agent/skill-library/meta/`
+- Cross-cutting concerns (planning, debugging, testing) → `.claude/skills/`
+- Tech-specific (React, PostgreSQL, Docker) → `.claude/skill-library/stack/`
+- Surface-specific (web perf, mobile UX, API design) → `.claude/skill-library/surface/`
+- Meta/tooling (git, MCP builders, tmux) → `.claude/skill-library/meta/`
 
 ### 2. Research the Domain
 
@@ -131,7 +131,7 @@ Keep `references/` files focused — one topic per file, not a catchall.
 
 ### 5. Register in MANIFEST
 
-If the skill goes in `.agent/skill-library/`, add it to `MANIFEST.md`:
+If the skill goes in `.claude/skill-library/`, add it to `MANIFEST.md`:
 
 ```markdown
 | Category | Skill | Description | When to Provision |
@@ -139,7 +139,7 @@ If the skill goes in `.agent/skill-library/`, add it to `MANIFEST.md`:
 | stack/databases | postgresql | PostgreSQL patterns... | When project uses PostgreSQL |
 ```
 
-If the skill goes in `.agent/skills/`, no registration needed — it's always active.
+If the skill goes in `.claude/skills/`, no registration needed — it's always active.
 
 ### 6. Validate
 
@@ -158,7 +158,7 @@ Before committing, verify:
 
 ## Skill Placement Guide
 
-### `.agent/skills/` (Installed Skills)
+### `.claude/skills/` (Installed Skills)
 
 These load automatically for every project. Reserved for:
 - Pipeline workflow skills (ideation, spec-writing, planning)
@@ -166,7 +166,7 @@ These load automatically for every project. Reserved for:
 - Agent behavior skills (verification, planning, brainstorming)
 - Meta skills (skill-creator, find-skills, session-continuity)
 
-### `.agent/skill-library/` (Library Skills)
+### `.claude/skill-library/` (Library Skills)
 
 Provisioned per-project based on tech stack. Organized by:
 

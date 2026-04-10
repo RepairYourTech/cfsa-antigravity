@@ -21,7 +21,7 @@ Use this skill when the user:
 
 ## When Called as a Workflow Fallback
 
-Workflows that load stack-specific skills may invoke this skill as a fallback when a required skill is not installed in `.agent/skills/` and has no matching entry in `.agent/skill-library/MANIFEST.md`. In this case:
+Workflows that load stack-specific skills may invoke this skill as a fallback when a required skill is not installed in `.claude/skills/` and has no matching entry in `.claude/skill-library/MANIFEST.md`. In this case:
 
 1. Use the `npx skills find [skill-name]` command to search the open agent skills ecosystem for a matching skill
 2. Present the top results to the user with install commands

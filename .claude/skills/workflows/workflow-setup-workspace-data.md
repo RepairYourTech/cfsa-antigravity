@@ -10,10 +10,6 @@ parameters:
 
 ## Overview
 
-Parity source:
-- `.agent/workflows/setup-workspace-data.md`
-
-Port of `.agent/workflows/setup-workspace-data.md` to Claude Code skill format.
 
 ## Prerequisites
 

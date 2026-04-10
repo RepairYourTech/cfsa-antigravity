@@ -8,7 +8,7 @@
 
 ### 1. Fire
 
-Read `.agent/workflows/bootstrap-agents.md` and execute with the provided key(s).
+Read `.claude/skills/workflows/workflow-bootstrap-agents.md` and execute with the provided key(s).
 
 ### 2. Verify
 
@@ -16,12 +16,12 @@ After bootstrap returns, verify that the target was actually filled:
 
 | Key Type | Where to Verify | How to Verify |
 |----------|----------------|---------------|
-| Language/Framework/DB/ORM | Surface stack map in `.agent/instructions/tech-stack.md` | The cell for the provided key's surface row is no longer empty |
+| Language/Framework/DB/ORM | Surface stack map in `.claude/instructions/tech-stack.md` | The cell for the provided key's surface row is no longer empty |
 | CI/CD, Hosting, Auth, Security | Cross-cutting section of surface stack map | The cell is no longer empty |
-| Design direction | `.agent/skills/brand-guidelines/SKILL.md` | `{{DESIGN_DIRECTION}}` no longer appears as literal text |
-| Project structure | `.agent/instructions/structure.md` | `{{PROJECT_STRUCTURE}}` no longer appears as literal text |
-| Dev tooling | `.agent/instructions/commands.md` | Template values are replaced with real commands |
-| New dependency skill | `.agent/skills/[skill-name]/SKILL.md` | The skill directory exists and `SKILL.md` is readable |
+| Design direction | `.claude/skills/brand-guidelines/SKILL.md` | `{{DESIGN_DIRECTION}}` no longer appears as literal text |
+| Project structure | `.claude/instructions/structure.md` | `{{PROJECT_STRUCTURE}}` no longer appears as literal text |
+| Dev tooling | `.claude/instructions/commands.md` | Template values are replaced with real commands |
+| New dependency skill | `.claude/skills/[skill-name]/SKILL.md` | The skill directory exists and `SKILL.md` is readable |
 
 ### 3. Hard Gate
 

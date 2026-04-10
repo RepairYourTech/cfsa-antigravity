@@ -55,4 +55,4 @@ Not all decisions follow the engagement tier. Some are always user-facing regard
 | **Structural** | No — tier-aware | File naming, directory organization |
 | **Implementation** | No — agent decides | Import ordering, variable naming |
 
-See `.agent/rules/decision-classification.md` for the full classification.
+See `.claude/rules/decision-classification.md` for the full classification.
