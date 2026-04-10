@@ -170,6 +170,7 @@ cp -r cfsa-antigravity/.agent /path/to/your-project/
 cp -r cfsa-antigravity/docs /path/to/your-project/
 cp cfsa-antigravity/GEMINI.md /path/to/your-project/
 cp cfsa-antigravity/AGENTS.md /path/to/your-project/
+cp cfsa-antigravity/CODEX.md /path/to/your-project/
 ```
 
 ### Agent Setup
@@ -177,8 +178,10 @@ cp cfsa-antigravity/AGENTS.md /path/to/your-project/
 | Agent | What to Do |
 |-------|------------|
 | **Antigravity** | Both `AGENTS.md` and `GEMINI.md` are present — bootstrap fills both during `/create-prd`. |
+| **Codex** | Use `CODEX.md` for repo guidance and the shared `.agent/` runtime installed via `cfsa-antigravity init --agent codex`. |
 | **Gemini CLI** | `GEMINI.md` is your agent config. Bootstrap fills it during `/create-prd`. |
 | **Claude Code** | Use the standalone `.claude/` runtime installed via `cfsa-antigravity init --agent claude` |
+| **Factory Droid** | Use the standalone `.factory/` runtime installed via `cfsa-antigravity init --agent factory` |
 | **Cursor** | Reference from `.cursorrules` or your Cursor config |
 | **Windsurf** | Reference from `.windsurfrules` or equivalent |
 | **Other** | Follow your agent's convention for loading system instructions |
@@ -189,7 +192,9 @@ cp cfsa-antigravity/AGENTS.md /path/to/your-project/
 > Do not hide the runtime directory your agent/editor needs to index.
 >
 > - Antigravity-style installs use `.agent/`
+> - Codex installs also use `.agent/`
 > - Claude Code installs use `.claude/`
+> - Factory Droid installs use `.factory/`
 >
 > **Recommended Solution:** Keep the installed runtime directory out of shared `.gitignore` rules and use `.git/info/exclude` for local-only exclusions.
 

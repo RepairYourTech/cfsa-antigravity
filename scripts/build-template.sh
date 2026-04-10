@@ -35,12 +35,20 @@ else
     warn ".claude/ directory not found — skipping"
 fi
 
+# .factory/ — full directory
+if [[ -d "$ROOT_DIR/.factory" ]]; then
+    info "Copying .factory/"
+    cp -a "$ROOT_DIR/.factory" "$TEMPLATE_DIR/.factory"
+else
+    warn ".factory/ directory not found — skipping"
+fi
+
 # docs/ — full directory
 info "Copying docs/"
 cp -a "$ROOT_DIR/docs" "$TEMPLATE_DIR/docs"
 
 # Root config files
-for file in GEMINI.md AGENTS.md CLAUDE.md; do
+for file in GEMINI.md AGENTS.md CLAUDE.md CODEX.md; do
     if [[ -f "$ROOT_DIR/$file" ]]; then
         info "Copying $file"
         cp "$ROOT_DIR/$file" "$TEMPLATE_DIR/$file"
@@ -69,6 +77,18 @@ if [[ -d "$TEMPLATE_DIR/.claude/memory/sessions" ]]; then
     find "$TEMPLATE_DIR/.claude/memory/sessions" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
+# Remove .factory/progress/ contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.factory/progress" ]]; then
+    info "Cleaning .factory/progress/ (session-specific data)"
+    find "$TEMPLATE_DIR/.factory/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+fi
+
+# Remove .factory/memory/sessions/ contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.factory/memory/sessions" ]]; then
+    info "Cleaning .factory/memory/sessions/ (session-specific data)"
+    find "$TEMPLATE_DIR/.factory/memory/sessions" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+fi
+
 # Remove any docs/plans/ content (project-specific)
 if [[ -d "$TEMPLATE_DIR/docs/plans" ]]; then
     info "Cleaning docs/plans/ content (project-specific specs)"
@@ -94,7 +114,7 @@ KIT_VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
 BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 info "Generating kit sync state (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
-for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md"; do
+for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md" "$TEMPLATE_DIR/.factory/kit-sync.md"; do
 cat > "$sync_file" << EOF
 # Kit Sync State
 

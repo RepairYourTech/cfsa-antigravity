@@ -2,16 +2,16 @@
 
 **Purpose:** Provide a high-level map of the agentic machinery that powers CFSA Antigravity.
 
-This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes, with `.agent/` and `.claude/` each owning their own execution assets.
+This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes. The shared `.agent/` runtime serves Antigravity and Codex-style installs, while `.claude/` owns Claude-specific execution assets.
 
 ---
 
 ## 1. Code Organization
 
-The kit ships two runtime trees in this repository:
+The kit ships multiple runtime trees in this repository:
 
 ```text
-.agent/                      # Antigravity runtime
+.agent/                      # Shared Antigravity/Codex runtime
 ├── instructions/
 ├── progress/
 ├── rules/
@@ -27,9 +27,16 @@ The kit ships two runtime trees in this repository:
 ├── skill-library/
 ├── skills/
 └── memory/
+
+.factory/                    # Factory Droid runtime
+├── instructions/
+├── memory/
+├── progress/
+├── skill-library/
+└── skills/
 ```
 
-`.agent/` and `.claude/` implement the same CFSA pipeline for different agent environments. Each runtime owns its own execution assets and state.
+`.agent/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the shared `.agent/` runtime plus the root `CODEX.md` guidance file rather than a separate runtime tree. Each runtime owns its own execution assets and state.
 
 ### Antigravity Runtime Components
 
@@ -58,7 +65,7 @@ The kit ships two runtime trees in this repository:
 
 ### Core Components
 
-The concepts are the same across both runtimes; only the concrete paths differ.
+The concepts are the same across these runtimes; only the concrete paths differ.
 
 *   **Instructions:** (`workflow.md`, `tech-stack.md`, `structure.md`, `patterns.md`, `commands.md`) Baseline knowledge the agent needs to operate in the specific environment. These files ship as templates with `{{PLACEHOLDER}}` markers — they are not static files. The bootstrap system fills them progressively as tech decisions are confirmed during `/create-prd`. An instruction file with unfilled placeholders is a broken agent context. `workflow.md` enforces the mandatory execution sequence: Understand Context -> Check Skills -> Execute -> Validate.
 *   **Rules:** Preemptively loaded constraints that apply to *every* task. Covers security, TDD, vertical slices, debugging discipline, memory capture, questioning style, and more. See `GEMINI.md` → Agent Rules table for the full list.

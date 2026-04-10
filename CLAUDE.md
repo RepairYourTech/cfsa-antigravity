@@ -8,13 +8,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Entry Point**: `npx cfsa-antigravity init` — installs the pipeline into target projects
 - **Core Philosophy**: Every line of code is production-grade from line one. No MVPs, no throwaway code, no "fix it later."
-- **Agent-Agnostic**: Works with any AI agent supporting slash commands (Antigravity, Cursor, Windsurf, etc.)
+- **Agent-Agnostic**: Works with any AI agent supporting slash commands or repo instruction files (Antigravity, Codex, Cursor, Windsurf, Factory Droid, etc.)
 
 ## Essential Commands
 
 ### Installation & Maintenance
 ```bash
-npm run build          # Build template/ from the maintained .agent/ and standalone .claude/ trees for publishing
+npm run build          # Build template/ from the maintained .agent/, .claude/, and .factory/ trees for publishing
 npm run check          # Verify template integrity
 npm run changeset      # Create a changeset for versioning
 npm test              # Run tests (if present)
@@ -54,6 +54,12 @@ The pipeline enforces a **progressive decision lock** — each stage locks decis
 ├── rules/               # Always-active constraints
 ├── instructions/        # Core directives (workflow, tech-stack, patterns)
 └── memory/              # Claude-side memory/session continuity
+.factory/
+├── skills/              # All pipeline skills (workflows + rules + utilities as SKILL.md)
+├── skill-library/       # Factory-owned skill library
+├── instructions/        # Core directives (workflow, tech-stack, patterns)
+├── memory/              # Factory-side memory/session continuity
+└── progress/            # Pipeline progress tracking
 docs/
 ├── plans/               # User project specifications (output directory)
 │   ├── ideation/
@@ -61,7 +67,7 @@ docs/
 │   ├── be/
 │   └── fe/
 └── audits/              # Ambiguity audits
-template/                # Built from .agent/ + .claude/ for npm publishing (DO NOT EDIT DIRECTLY)
+template/                # Built from .agent/ + .claude/ + .factory/ + root configs for npm publishing (DO NOT EDIT DIRECTLY)
 bin/cli.mjs              # CLI entry point
 ```
 
@@ -174,10 +180,11 @@ git push
 The `template/` directory is what gets published to npm. It's built from:
 - `.agent/` (full directory)
 - `.claude/` (full directory)
+- `.factory/` (full directory)
 - `docs/` (full directory, but `docs/plans/` and `docs/audits/` content is stripped)
-- Root config files (`GEMINI.md`, `AGENTS.md`, `CLAUDE.md`)
+- Root config files (`GEMINI.md`, `AGENTS.md`, `CLAUDE.md`, `CODEX.md`)
 
-Session-specific data is excluded (`.agent/progress/*.md` except README and `.claude/memory/sessions/*.md` except README).
+Session-specific data is excluded (`.agent/progress/*.md` except README, `.claude/memory/sessions/*.md` except README, and `.factory/memory/sessions/*.md` except README).
 
 ## Key Documentation
 
@@ -185,6 +192,7 @@ Session-specific data is excluded (`.agent/progress/*.md` except README and `.cl
 |----------|---------|
 | `README.md` | User-facing overview and quick start |
 | `AGENTS.md` | Agent config (Antigravity CLI) |
+| `CODEX.md` | Agent config and repo guidance for Codex |
 | `GEMINI.md` | Agent config (Gemini CLI) |
 | `CONTRIBUTING.md` | Contribution workflow and PR process |
 | `docs/kit-architecture.md` | Deep dive into kit internals |
@@ -219,15 +227,16 @@ This is enforced by:
 
 1. If you're changing Antigravity, edit `.agent/workflows/your-workflow.md`
 2. If you're changing Claude, edit `.claude/skills/workflows/workflow-your-workflow.md`
-3. If the workflow should exist in both runtimes, add the matching counterpart in the other tree
-4. Add the Claude slash command shim when applicable: `.claude/commands/your-workflow.md`
-5. Update `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md` workflow docs if needed
-6. Run `npm run check`
-7. Create changeset: `npm run changeset`
+3. If you're changing Factory, create `.factory/skills/your-workflow/SKILL.md`
+4. If the workflow should exist in all runtimes, add the matching counterpart in each tree
+5. Add the Claude slash command shim when applicable: `.claude/commands/your-workflow.md`
+6. Update `AGENTS.md`, `GEMINI.md`, and `CLAUDE.md` workflow docs if needed
+7. Run `npm run check`
+8. Create changeset: `npm run changeset`
 
 ### Adding a New Skill
 
-1. Create it in the runtime you are extending (`.agent/skill-library/[category]/[skill-name]/` or `.claude/skill-library/[category]/[skill-name]/`)
+1. Create it in the runtime you are extending (`.agent/skill-library/[category]/[skill-name]/`, `.claude/skill-library/[category]/[skill-name]/`, or `.factory/skill-library/[category]/[skill-name]/`)
 2. Add `SKILL.md` with YAML frontmatter (name, description)
 3. Add it to the matching runtime's `skill-library/MANIFEST.md`
 4. Follow stack-specific pattern if needed (e.g., `references/typescript.md`)

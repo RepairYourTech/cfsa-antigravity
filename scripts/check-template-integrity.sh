@@ -26,9 +26,9 @@ if [[ ! -d "$TEMPLATE_DIR" ]]; then
 fi
 
 # ──────────────────────────────────────
-# 2. Root config files: GEMINI.md, AGENTS.md, CLAUDE.md
+# 2. Root config files: GEMINI.md, AGENTS.md, CLAUDE.md, CODEX.md
 # ──────────────────────────────────────
-for file in GEMINI.md AGENTS.md CLAUDE.md; do
+for file in GEMINI.md AGENTS.md CLAUDE.md CODEX.md; do
     src="$ROOT_DIR/$file"
     tpl="$TEMPLATE_DIR/$file"
 
@@ -146,6 +146,21 @@ for f in "$ROOT_DIR/.agent/workflows/"*.md "$ROOT_DIR/.claude/skills/workflows/"
     fi
 done
 
+# Check Factory workflow skills — only skills that correspond to pipeline workflows
+# (derived from Claude workflow names to avoid flagging large non-workflow skills)
+if [[ -d "$ROOT_DIR/.claude/skills/workflows" ]]; then
+    while IFS= read -r wf_name; do
+        factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
+        [[ -f "$factory_skill" ]] || continue
+        sz=$(wc -c < "$factory_skill" | tr -d ' ')
+        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
+            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
+            over_limit=$((over_limit + 1))
+        fi
+    done < <(find "$ROOT_DIR/.claude/skills/workflows" -maxdepth 1 -name "workflow-*.md" -type f -print \
+        | sed 's|.*/workflow-||' | sed 's|\.md$||' | sort)
+fi
+
 if [[ "$over_limit" -eq 0 ]]; then
     info "All workflows under ${CHAR_LIMIT} char limit"
 fi
@@ -261,7 +276,111 @@ if [[ "$errors" -eq 0 ]]; then
 fi
 
 # ──────────────────────────────────────
-# 8. Summary
+# 8. .factory/ directory drift
+# ──────────────────────────────────────
+if [[ -d "$ROOT_DIR/.factory" ]]; then
+    if [[ ! -d "$TEMPLATE_DIR/.factory" ]]; then
+        fail "template/.factory/ missing — template rebuild needed"
+    else
+        drift_output=$(diff -rq "$ROOT_DIR/.factory" "$TEMPLATE_DIR/.factory" 2>/dev/null \
+            | grep -v "memory/sessions" \
+            | grep -v "progress/memory" \
+            | grep -v "kit-sync.md" || true)
+
+        drift_count=$(echo "$drift_output" | grep -c . || true)
+
+        if [[ "$drift_count" -gt 0 && -n "$drift_output" ]]; then
+            fail ".factory/ has $drift_count drifted file(s) from template/.factory/"
+            echo "$drift_output" | head -10 >&2
+        else
+            info ".factory/ in sync"
+        fi
+    fi
+fi
+
+# ──────────────────────────────────────
+# 9. Factory standalone runtime guard
+# ──────────────────────────────────────
+factory_refs_file=$(mktemp)
+trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file" "$factory_refs_file"' EXIT
+
+# No .agent/ references in .factory/
+if grep -R -n "\.agent/" "$ROOT_DIR/.factory" \
+    --include='*.md' \
+    --exclude='README.md' \
+    --exclude-dir='memory' \
+    --exclude-dir='progress' > "$factory_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$factory_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected .agent reference(s) under .factory/"
+    head -10 "$factory_refs_file" >&2
+else
+    info "No runtime .agent references remain under .factory/"
+fi
+
+# No .claude/ references in .factory/
+if grep -R -n "\.claude/" "$ROOT_DIR/.factory" \
+    --include='*.md' \
+    --exclude='README.md' \
+    --exclude-dir='memory' \
+    --exclude-dir='progress' > "$factory_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$factory_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected .claude reference(s) under .factory/"
+    head -10 "$factory_refs_file" >&2
+else
+    info "No runtime .claude references remain under .factory/"
+fi
+
+if [[ ! -d "$ROOT_DIR/.factory/skill-library" || -L "$ROOT_DIR/.factory/skill-library" ]]; then
+    fail ".factory/skill-library must exist as a real directory"
+else
+    info ".factory/skill-library is local"
+fi
+
+if [[ -d "$ROOT_DIR/.factory/progress" ]]; then
+    info ".factory/progress/ exists"
+else
+    fail ".factory/progress/ missing"
+fi
+
+if [[ -f "$ROOT_DIR/.factory/kit-sync.md" ]]; then
+    info ".factory/kit-sync.md present"
+else
+    fail ".factory/kit-sync.md missing"
+fi
+
+if [[ -f "$TEMPLATE_DIR/.factory/kit-sync.md" ]]; then
+    info "template/.factory/kit-sync.md present"
+else
+    fail "template/.factory/kit-sync.md missing — template rebuild needed"
+fi
+
+if [[ -d "$TEMPLATE_DIR/.factory/progress" ]]; then
+    info "template/.factory/progress/ present"
+else
+    fail "template/.factory/progress/ missing — template rebuild needed"
+fi
+
+if [[ -L "$TEMPLATE_DIR/.factory/skill-library" ]]; then
+    fail "template/.factory/skill-library must not be a symlink"
+else
+    info "template/.factory/skill-library is local"
+fi
+
+# No .agent/ or .claude/ references in template/.factory/
+if grep -R -n "\.agent/\|\.claude/" "$TEMPLATE_DIR/.factory" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' > "$factory_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$factory_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected .agent/.claude reference(s) in template/.factory/"
+    head -10 "$factory_refs_file" >&2
+else
+    info "No runtime .agent/.claude references remain in template/.factory/"
+fi
+
+if [[ "$errors" -eq 0 ]]; then
+    info "Factory standalone integrity checks passed"
+fi
+
+# ──────────────────────────────────────
+# 10. Summary
 # ──────────────────────────────────────
 echo ""
 if [[ "$errors" -gt 0 ]]; then

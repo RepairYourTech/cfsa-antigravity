@@ -4,6 +4,7 @@ import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, statSync, rmS
 import { resolve, join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { argv, exit, cwd } from "node:process";
+import { createInterface } from "node:readline";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,6 +22,7 @@ const c = {
     red: isTTY ? "\x1b[31m" : "",
     cyan: isTTY ? "\x1b[36m" : "",
     magenta: isTTY ? "\x1b[35m" : "",
+    white: isTTY ? "\x1b[37m" : "",
 };
 
 // --- Logging ---
@@ -30,8 +32,150 @@ const info = (msg) => log(`${c.green}✓${c.reset} ${msg}`);
 const warn = (msg) => log(`${c.yellow}⚠${c.reset} ${msg}`);
 const error = (msg) => { console.error(`${c.red}✗${c.reset} ${msg}`); };
 
+// --- Runtime display names (fallback to directory name for unknown runtimes) ---
+const RUNTIME_DISPLAY = {
+    ".agent":   { name: "Antigravity",   desc: "Antigravity, Cursor, Codex, Gemini CLI" },
+    ".claude":  { name: "Claude Code",   desc: "Standalone Claude Code runtime" },
+    ".factory": { name: "Factory Droid", desc: "Standalone Factory Droid runtime" },
+};
+
+// --- Discover available runtimes from template/ ---
+function discoverRuntimes() {
+    if (!existsSync(TEMPLATE_DIR)) return [];
+    return readdirSync(TEMPLATE_DIR, { withFileTypes: true })
+        .filter(e => e.isDirectory() && e.name.startsWith(".") && existsSync(join(TEMPLATE_DIR, e.name, "kit-sync.md")))
+        .map(e => {
+            const meta = RUNTIME_DISPLAY[e.name];
+            return {
+                dir: e.name,
+                name: meta?.name || e.name.replace(/^\./, ""),
+                desc: meta?.desc || "",
+                files: countFiles(join(TEMPLATE_DIR, e.name)),
+            };
+        })
+        .sort((a, b) => a.dir.localeCompare(b.dir));
+}
+
+// --- Interactive multi-select TUI ---
+function multiSelect(runtimes) {
+    return new Promise((resolve, reject) => {
+        if (!isTTY || !process.stdin.setRawMode) {
+            reject(new Error("Interactive mode requires a TTY. Use --agent to specify runtimes."));
+            return;
+        }
+
+        const selected = new Set();
+        let cursor = 0;
+        const stdin = process.stdin;
+
+        function render() {
+            // Move cursor to start and clear
+            process.stdout.write(`\x1b[${runtimes.length + 2}A\x1b[J`);
+            draw();
+        }
+
+        function draw() {
+            log(`${c.bold}Select agent runtimes to install:${c.reset}  ${c.dim}(multiple allowed)${c.reset}`);
+            log("");
+            for (let i = 0; i < runtimes.length; i++) {
+                const rt = runtimes[i];
+                const isCur = i === cursor;
+                const isSel = selected.has(i);
+                const pointer = isCur ? `${c.cyan}>${c.reset}` : " ";
+                const check = isSel ? `${c.green}●${c.reset}` : `${c.dim}○${c.reset}`;
+                const name = isCur ? `${c.bold}${c.white}${rt.name}${c.reset}` : rt.name;
+                const dir = `${c.dim}${rt.dir}/${c.reset}`;
+                const desc = rt.desc ? `  ${c.dim}${rt.desc}${c.reset}` : "";
+                const files = `${c.dim}(${rt.files} files)${c.reset}`;
+                log(`  ${pointer} ${check} ${name.padEnd(isCur ? 33 : 20)} ${dir.padEnd(isCur ? 26 : 22)} ${files}${desc}`);
+            }
+            log("");
+            log(`  ${c.dim}↑↓${c.reset} move  ${c.dim}space${c.reset} toggle  ${c.dim}a${c.reset} all  ${c.dim}enter${c.reset} confirm  ${c.dim}q${c.reset} quit`);
+        }
+
+        // Initial draw
+        draw();
+
+        stdin.setRawMode(true);
+        stdin.resume();
+        stdin.setEncoding("utf-8");
+
+        function cleanup() {
+            stdin.setRawMode(false);
+            stdin.pause();
+            stdin.removeListener("data", onKey);
+        }
+
+        function onKey(key) {
+            // Ctrl+C
+            if (key === "\x03") {
+                cleanup();
+                log("\nAborted.");
+                exit(0);
+            }
+            // q
+            if (key === "q") {
+                cleanup();
+                log("\nAborted.");
+                exit(0);
+            }
+            // Enter
+            if (key === "\r" || key === "\n") {
+                cleanup();
+                if (selected.size === 0) {
+                    render();
+                    log(`\n${c.yellow}⚠${c.reset} Select at least one runtime.`);
+                    stdin.setRawMode(true);
+                    stdin.resume();
+                    stdin.on("data", onKey);
+                    return;
+                }
+                const result = [...selected].sort().map(i => runtimes[i]);
+                resolve(result);
+                return;
+            }
+            // Space — toggle
+            if (key === " ") {
+                if (selected.has(cursor)) {
+                    selected.delete(cursor);
+                } else {
+                    selected.add(cursor);
+                }
+                render();
+                return;
+            }
+            // a — toggle all
+            if (key === "a") {
+                if (selected.size === runtimes.length) {
+                    selected.clear();
+                } else {
+                    for (let i = 0; i < runtimes.length; i++) selected.add(i);
+                }
+                render();
+                return;
+            }
+            // Arrow keys (escape sequences)
+            if (key === "\x1b[A" || key === "k") { // Up
+                cursor = (cursor - 1 + runtimes.length) % runtimes.length;
+                render();
+                return;
+            }
+            if (key === "\x1b[B" || key === "j") { // Down
+                cursor = (cursor + 1) % runtimes.length;
+                render();
+                return;
+            }
+        }
+
+        stdin.on("data", onKey);
+    });
+}
+
 // --- Usage ---
 function usage() {
+    const runtimes = discoverRuntimes();
+    const rtList = runtimes.map(r => r.dir.replace(/^\./, "")).join(", ");
+
     log(`
 ${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}
 ${c.dim}Constraint-First Specification Architecture for AI agents${c.reset}
@@ -45,33 +189,36 @@ ${c.bold}Commands:${c.reset}
   ${c.cyan}version${c.reset}   Show version
 
 ${c.bold}Init Options:${c.reset}
-  --agent <type>  Agent type: antigravity or claude (default: antigravity)
-  --force         Overwrite existing agent folder
+  --agent <list>  Comma-separated runtimes for non-interactive install (${rtList})
+  --force         Overwrite existing agent folders
   --path <dir>    Install into specific directory (default: current directory)
   --dry-run       Preview what would be copied without making changes
-  --quiet         Suppress output (for CI/CD)
+  --quiet         Suppress output (for CI/CD — installs all runtimes)
 
 ${c.bold}Examples:${c.reset}
-  ${c.dim}# Install Antigravity version (default)${c.reset}
+  ${c.dim}# Interactive — pick which runtimes to install${c.reset}
   npx cfsa-antigravity init
 
-  ${c.dim}# Install Claude Code version${c.reset}
-  npx cfsa-antigravity init --agent claude
+  ${c.dim}# Non-interactive — install specific runtimes${c.reset}
+  npx cfsa-antigravity init --agent claude,factory
+
+  ${c.dim}# Install a single runtime${c.reset}
+  npx cfsa-antigravity init --agent factory
 
   ${c.dim}# Install into a specific directory${c.reset}
   npx cfsa-antigravity init --agent claude --path ./my-project
 
   ${c.dim}# Preview what will be installed${c.reset}
-  npx cfsa-antigravity init --agent claude --dry-run
+  npx cfsa-antigravity init --dry-run
 
   ${c.dim}# Overwrite existing installation${c.reset}
-  npx cfsa-antigravity init --agent claude --force
+  npx cfsa-antigravity init --force
 `);
 }
 
 // --- Parse Arguments ---
 function parseArgs(args) {
-    const parsed = { command: null, agent: null, force: false, dryRun: false, path: null, quiet: false };
+    const parsed = { command: null, agents: null, force: false, dryRun: false, path: null, quiet: false };
 
     let i = 0;
     while (i < args.length) {
@@ -100,15 +247,11 @@ function parseArgs(args) {
             case "--agent":
             case "-a":
                 i++;
-                parsed.agent = args[i];
-                if (!parsed.agent) {
-                    error("--agent requires an argument (antigravity or claude)");
+                if (!args[i]) {
+                    error("--agent requires a comma-separated list of runtimes");
                     exit(1);
                 }
-                if (!["antigravity", "claude"].includes(parsed.agent)) {
-                    error(`Invalid agent type: ${parsed.agent}. Must be 'antigravity' or 'claude'`);
-                    exit(1);
-                }
+                parsed.agents = args[i].split(",").map(s => s.trim()).filter(Boolean);
                 break;
             case "--path":
             case "-p":
@@ -129,7 +272,6 @@ function parseArgs(args) {
                     usage();
                     exit(1);
                 }
-                // Treat first positional as command if not set
                 if (!parsed.command) {
                     parsed.command = arg;
                 }
@@ -164,18 +306,163 @@ function ensureTemplateDir() {
     }
 }
 
+// --- Resolve agent names to runtime directories ---
+function resolveAgentNames(agentNames, available) {
+    const resolved = [];
+    for (const name of agentNames) {
+        // Try exact dir match first (.agent, .claude, .factory)
+        const dotName = name.startsWith(".") ? name : `.${name}`;
+        const match = available.find(r => r.dir === dotName);
+        if (match) {
+            resolved.push(match);
+            continue;
+        }
+        // Try display name match (case-insensitive)
+        const byName = available.find(r => r.name.toLowerCase() === name.toLowerCase());
+        if (byName) {
+            resolved.push(byName);
+            continue;
+        }
+        // Legacy single-agent names: "antigravity" / "codex" → .agent
+        if (name === "antigravity" || name === "codex") {
+            const agentRt = available.find(r => r.dir === ".agent");
+            if (agentRt && !resolved.find(r => r.dir === ".agent")) {
+                resolved.push(agentRt);
+            }
+            continue;
+        }
+        error(`Unknown runtime: ${name}`);
+        const names = available.map(r => r.dir.replace(/^\./, "")).join(", ");
+        error(`Available: ${names}`);
+        exit(1);
+    }
+    // Deduplicate
+    const seen = new Set();
+    return resolved.filter(r => {
+        if (seen.has(r.dir)) return false;
+        seen.add(r.dir);
+        return true;
+    });
+}
+
+// --- Install runtimes ---
+function installRuntimes(runtimes, targetDir, opts) {
+    let totalCopied = 0;
+    let totalSkipped = 0;
+
+    // Install each runtime directory
+    for (const rt of runtimes) {
+        const srcDir = join(TEMPLATE_DIR, rt.dir);
+        const destDir = join(targetDir, rt.dir);
+
+        if (!existsSync(srcDir)) {
+            error(`${rt.dir}/ not found in template. Package may be corrupted.`);
+            exit(1);
+        }
+
+        if (existsSync(destDir) && !opts.force) {
+            const fileCount = countFiles(srcDir);
+            totalSkipped += fileCount;
+            warn(`Skipped ${c.bold}${rt.dir}/${c.reset} (already exists — use --force to overwrite)`);
+        } else {
+            if (opts.dryRun) {
+                const fileCount = countFiles(srcDir);
+                totalCopied += fileCount;
+                info(`Would copy ${c.bold}${rt.dir}/${c.reset} (${fileCount} files)`);
+            } else {
+                if (existsSync(destDir)) {
+                    rmSync(destDir, { recursive: true, force: true });
+                }
+                cpSync(srcDir, destDir, { recursive: true });
+                const fileCount = countFiles(destDir);
+                totalCopied += fileCount;
+                info(`Copied ${c.bold}${rt.dir}/${c.reset} (${fileCount} files)`);
+            }
+        }
+    }
+
+    // Copy shared docs/ directory
+    const srcDocsDir = join(TEMPLATE_DIR, "docs");
+    const destDocsDir = join(targetDir, "docs");
+
+    if (opts.dryRun) {
+        if (existsSync(srcDocsDir) && !existsSync(destDocsDir)) {
+            const fileCount = countFiles(srcDocsDir);
+            totalCopied += fileCount;
+            info(`Would copy ${c.bold}docs/${c.reset} (${fileCount} files)`);
+        }
+    } else if (existsSync(srcDocsDir) && !existsSync(destDocsDir)) {
+        cpSync(srcDocsDir, destDocsDir, { recursive: true });
+        const fileCount = countFiles(destDocsDir);
+        totalCopied += fileCount;
+        info(`Copied ${c.bold}docs/${c.reset} (${fileCount} files)`);
+    } else if (existsSync(destDocsDir)) {
+        warn(`Skipped ${c.bold}docs/${c.reset} (already exists)`);
+    }
+
+    // Copy root config files that exist in template
+    const configCandidates = readdirSync(TEMPLATE_DIR)
+        .filter(f => f.endsWith(".md") && f === f.toUpperCase() && statSync(join(TEMPLATE_DIR, f)).isFile());
+
+    for (const file of configCandidates) {
+        const srcFile = join(TEMPLATE_DIR, file);
+        const destFile = join(targetDir, file);
+
+        if (!existsSync(destFile)) {
+            if (opts.dryRun) {
+                info(`Would copy ${c.bold}${file}${c.reset}`);
+            } else {
+                cpSync(srcFile, destFile);
+                totalCopied++;
+                info(`Copied ${c.bold}${file}${c.reset}`);
+            }
+        }
+    }
+
+    return { totalCopied, totalSkipped };
+}
+
 // --- Init Command ---
-function cmdInit(opts) {
+async function cmdInit(opts) {
     ensureTemplateDir();
 
+    const available = discoverRuntimes();
+    if (available.length === 0) {
+        error("No runtimes found in template directory. Package may be corrupted.");
+        exit(1);
+    }
+
     const targetDir = resolve(opts.path || cwd());
-    const agentType = opts.agent || "antigravity";
-    const agentDir = agentType === "claude" ? ".claude" : ".agent";
 
     log("");
     log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
     log(`${c.dim}Installing into: ${targetDir}${c.reset}`);
-    log(`${c.dim}Agent type: ${agentType}${c.reset}`);
+    log("");
+
+    let selected;
+
+    if (opts.agents) {
+        // Non-interactive: --agent flag provided
+        selected = resolveAgentNames(opts.agents, available);
+    } else if (!isTTY || QUIET) {
+        // Non-TTY or quiet: install all runtimes
+        selected = available;
+        if (!QUIET) {
+            log(`${c.dim}Non-interactive mode — installing all ${available.length} runtimes${c.reset}`);
+            log("");
+        }
+    } else {
+        // Interactive: show multi-select picker
+        try {
+            selected = await multiSelect(available);
+            log("");
+        } catch (e) {
+            error(e.message);
+            exit(1);
+        }
+    }
+
+    log(`${c.dim}Runtimes: ${selected.map(r => r.name).join(", ")}${c.reset}`);
     log("");
 
     // Check if target directory exists
@@ -188,94 +475,18 @@ function cmdInit(opts) {
         }
     }
 
-    // Copy agent-specific folder
-    const srcAgentDir = join(TEMPLATE_DIR, agentDir);
-    const destAgentDir = join(targetDir, agentDir);
-
-    if (!existsSync(srcAgentDir)) {
-        error(`${agentDir}/ not found in template. Package may be corrupted.`);
-        exit(1);
-    }
-
-    let copied = 0;
-    let skipped = 0;
-
-    // Check if agent directory already exists
-    if (existsSync(destAgentDir) && !opts.force) {
-        const fileCount = countFiles(srcAgentDir);
-        skipped += fileCount;
-        warn(`Skipped ${c.bold}${agentDir}/${c.reset} (already exists — use --force to overwrite)`);
-    } else {
-        if (opts.dryRun) {
-            const fileCount = countFiles(srcAgentDir);
-            copied += fileCount;
-            info(`Would copy ${c.bold}${agentDir}/${c.reset} (${fileCount} files)`);
-        } else {
-            if (existsSync(destAgentDir)) {
-                log(`Removing existing ${agentDir}/...`);
-                // Remove existing directory
-                rmSync(destAgentDir, { recursive: true, force: true });
-            }
-            cpSync(srcAgentDir, destAgentDir, { recursive: true });
-            const fileCount = countFiles(destAgentDir);
-            copied += fileCount;
-            info(`Copied ${c.bold}${agentDir}/${c.reset} (${fileCount} files)`);
-        }
-    }
-
-    // Copy shared docs/ directory
-    const srcDocsDir = join(TEMPLATE_DIR, "docs");
-    const destDocsDir = join(targetDir, "docs");
-
-    if (opts.dryRun) {
-        if (existsSync(srcDocsDir)) {
-            const fileCount = countFiles(srcDocsDir);
-            if (!existsSync(destDocsDir)) {
-                copied += fileCount;
-                info(`Would copy ${c.bold}docs/${c.reset} (${fileCount} files)`);
-            }
-        }
-    } else if (existsSync(srcDocsDir) && !existsSync(destDocsDir)) {
-        cpSync(srcDocsDir, destDocsDir, { recursive: true });
-        const fileCount = countFiles(destDocsDir);
-        copied += fileCount;
-        info(`Copied ${c.bold}docs/${c.reset} (${fileCount} files)`);
-    } else if (existsSync(destDocsDir)) {
-        warn(`Skipped ${c.bold}docs/${c.reset} (already exists)`);
-    }
-
-    // Copy root config files if they don't exist
-    const configFiles = ["GEMINI.md", "AGENTS.md", "CLAUDE.md"];
-    for (const file of configFiles) {
-        const srcFile = join(TEMPLATE_DIR, file);
-        const destFile = join(targetDir, file);
-
-        if (existsSync(srcFile) && !existsSync(destFile)) {
-            if (opts.dryRun) {
-                info(`Would copy ${c.bold}${file}${c.reset}`);
-            } else {
-                cpSync(srcFile, destFile);
-                copied++;
-                info(`Copied ${c.bold}${file}${c.reset}`);
-            }
-        }
-    }
+    const { totalCopied, totalSkipped } = installRuntimes(selected, targetDir, opts);
 
     // Summary
     log("");
     if (opts.dryRun) {
-        log(`${c.bold}Dry run complete:${c.reset} ${copied} files would be copied, ${skipped} skipped`);
-    } else if (copied > 0) {
-        log(`${c.bold}${c.green}Installation complete!${c.reset} ${copied} files copied, ${skipped} skipped`);
+        log(`${c.bold}Dry run complete:${c.reset} ${totalCopied} files would be copied, ${totalSkipped} skipped`);
+    } else if (totalCopied > 0) {
+        log(`${c.bold}${c.green}Installation complete!${c.reset} ${totalCopied} files copied, ${totalSkipped} skipped`);
         log("");
         log(`${c.bold}Next steps:${c.reset}`);
-        if (agentType === "claude") {
-            log(`  1. Open your project in Claude Code`);
-            log(`  2. Run the ideate workflow to start the pipeline`);
-        } else {
-            log(`  1. Open your project in an AI editor (Antigravity, Cursor, etc.)`);
-            log(`  2. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
-        }
+        log(`  1. Open your project in your agent of choice`);
+        log(`  2. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
         log("");
         log(`${c.dim}Documentation: https://github.com/RepairYourTech/cfsa-antigravity${c.reset}`);
     } else {
@@ -286,74 +497,107 @@ function cmdInit(opts) {
 }
 
 // --- Status Command ---
-function cmdStatus(opts) {
+function cmdStatus() {
     const targetDir = cwd();
-
-    const agentType = opts.agent || (existsSync(join(targetDir, ".agent")) ? "antigravity" : (existsSync(join(targetDir, ".claude")) ? "claude" : null));
-    const agentDir = agentType === "claude" ? ".claude" : ".agent";
+    const available = discoverRuntimes();
 
     log("");
     log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
     log(`${c.dim}Checking: ${targetDir}${c.reset}`);
-    if (agentType) {
-        log(`${c.dim}Agent type: ${agentType}${c.reset}`);
-    }
     log("");
 
-    if (!agentType || !existsSync(join(targetDir, agentDir))) {
-        warn("Not installed — no .agent/ or .claude/ directory found");
+    // Detect all installed runtimes
+    const installed = available.filter(r => existsSync(join(targetDir, r.dir)));
+
+    if (installed.length === 0) {
+        const dirNames = available.map(r => `${r.dir}/`).join(", ");
+        warn(`Not installed — no runtime directory found (${dirNames})`);
         log(`  Run ${c.cyan}cfsa-antigravity init${c.reset} to install`);
         log("");
         exit(1);
     }
 
-    info(`${agentDir}/ directory found`);
+    log(`${c.bold}Installed runtimes:${c.reset} ${installed.map(r => `${r.name} (${r.dir}/)`).join(", ")}`);
+    log("");
 
-    const checks = [
-        ...(agentType === "claude"
-            ? [{ path: `${agentDir}/commands`, label: "Commands" }]
-            : [{ path: `${agentDir}/workflows`, label: "Workflows" }]),
-        { path: `${agentDir}/skills`, label: "Skills" },
-        { path: `${agentDir}/skill-library`, label: "Skill Library" },
-        { path: `${agentDir}/instructions`, label: "Instructions" },
-        { path: `${agentDir}/rules`, label: "Rules" },
+    let totalInstalled = 0;
+    let totalMissing = 0;
+
+    for (const rt of installed) {
+        const agentDir = rt.dir;
+        info(`${c.bold}${rt.name}${c.reset} — ${agentDir}/`);
+
+        // Build checks based on what the runtime contains
+        const checks = [
+            { path: `${agentDir}/skills`, label: "  Skills" },
+            { path: `${agentDir}/skill-library`, label: "  Skill Library" },
+            { path: `${agentDir}/instructions`, label: "  Instructions" },
+        ];
+
+        // Runtime-specific checks
+        if (existsSync(join(targetDir, agentDir, "commands"))) {
+            checks.unshift({ path: `${agentDir}/commands`, label: "  Commands" });
+        }
+        if (existsSync(join(targetDir, agentDir, "workflows"))) {
+            checks.unshift({ path: `${agentDir}/workflows`, label: "  Workflows" });
+        }
+        if (existsSync(join(targetDir, agentDir, "rules"))) {
+            checks.push({ path: `${agentDir}/rules`, label: "  Rules" });
+        }
+
+        for (const check of checks) {
+            const fullPath = join(targetDir, check.path);
+            if (existsSync(fullPath)) {
+                const isDir = statSync(fullPath).isDirectory();
+                const detail = isDir ? `${countFiles(fullPath)} files` : "present";
+                info(`${check.label} ${c.dim}(${detail})${c.reset}`);
+                totalInstalled++;
+            } else {
+                warn(`${check.label} — missing`);
+                totalMissing++;
+            }
+        }
+        log("");
+    }
+
+    // Shared resources
+    const sharedChecks = [
         { path: "docs/plans", label: "Plans directory" },
-        { path: "GEMINI.md", label: "GEMINI.md" },
-        { path: "AGENTS.md", label: "AGENTS.md" },
-        { path: "CLAUDE.md", label: "CLAUDE.md" },
     ];
 
-    let installed = 0;
-    let missing = 0;
+    // Auto-detect config files (uppercase .md files)
+    const configFiles = readdirSync(targetDir)
+        .filter(f => f.endsWith(".md") && f === f.toUpperCase() && statSync(join(targetDir, f)).isFile());
 
-    for (const check of checks) {
+    for (const check of sharedChecks) {
         const fullPath = join(targetDir, check.path);
         if (existsSync(fullPath)) {
-            const isDir = statSync(fullPath).isDirectory();
-            const detail = isDir ? `${countFiles(fullPath)} files` : "present";
+            const detail = `${countFiles(fullPath)} files`;
             info(`${check.label} ${c.dim}(${detail})${c.reset}`);
-            installed++;
+            totalInstalled++;
         } else {
             warn(`${check.label} — missing`);
-            missing++;
+            totalMissing++;
         }
     }
 
+    for (const file of configFiles) {
+        info(`${file} ${c.dim}(present)${c.reset}`);
+        totalInstalled++;
+    }
+
     log("");
-    log(`${c.bold}Status:${c.reset} ${installed} components found, ${missing} missing`);
+    log(`${c.bold}Status:${c.reset} ${totalInstalled} components found, ${totalMissing} missing`);
 
-    for (const configFile of ["GEMINI.md", "AGENTS.md", "CLAUDE.md"]) {
-        const configPath = join(targetDir, configFile);
-        if (!existsSync(configPath)) {
-            continue;
-        }
-
+    // Check placeholders in config files
+    for (const file of configFiles) {
+        const configPath = join(targetDir, file);
         const content = readFileSync(configPath, "utf-8");
         const placeholders = content.match(/\{\{[A-Z_]+\}\}/g);
         if (placeholders) {
             const unique = [...new Set(placeholders)];
             log("");
-            warn(`${unique.length} unfilled placeholder(s) in ${configFile} — run /create-prd to fill them`);
+            warn(`${unique.length} unfilled placeholder(s) in ${file} — run /create-prd to fill them`);
             for (const p of unique.slice(0, 5)) {
                 log(`  ${c.dim}${p}${c.reset}`);
             }
@@ -361,7 +605,7 @@ function cmdStatus(opts) {
                 log(`  ${c.dim}... and ${unique.length - 5} more${c.reset}`);
             }
         } else {
-            info(`${configFile} — all placeholders filled`);
+            info(`${file} — all placeholders filled`);
         }
     }
 
@@ -377,7 +621,7 @@ switch (args.command) {
         cmdInit(args);
         break;
     case "status":
-        cmdStatus(args);
+        cmdStatus();
         break;
     case "version":
         log(PKG.version);

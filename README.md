@@ -10,21 +10,34 @@ A pipeline that turns a raw idea into exhaustively specified, test-driven, produ
 npx cfsa-antigravity init
 ```
 
-This installs the selected agent runtime (`.agent/` by default, or `.claude/` with `--agent claude`), the `docs/` structure, and agent config files into your project.
+This launches an interactive picker where you select which agent runtimes to install. Pick one or many -- each runtime is fully standalone.
+
+For CI/CD or non-interactive use, specify runtimes directly:
+
+```bash
+npx cfsa-antigravity init --agent claude,factory
+```
 
 ## CLI
 
 | Command | Description |
 |---------|-------------|
-| `cfsa-antigravity init` | Install the pipeline into your project |
-| `cfsa-antigravity status` | Check installation + unfilled placeholders |
+| `cfsa-antigravity init` | Interactive multi-select runtime installer |
+| `cfsa-antigravity init --agent claude,factory` | Non-interactive install of specific runtimes |
+| `cfsa-antigravity status` | Check all installed runtimes + unfilled placeholders |
 | `cfsa-antigravity init --force` | Overwrite existing installation |
 | `cfsa-antigravity init --dry-run` | Preview what would be installed |
 | `cfsa-antigravity init --path ./dir` | Install into specific directory |
 
-### Choosing the runtime directory
-- Antigravity-style installs use `.agent/`
-- Claude Code installs use `.claude/`
+### Available runtimes
+
+Runtimes are auto-detected from the template. Currently shipped:
+
+- **Antigravity** (`.agent/`) -- Antigravity, Cursor, Codex, Gemini CLI
+- **Claude Code** (`.claude/`) -- Standalone Claude Code runtime
+- **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
+
+Each runtime is fully standalone with no cross-references. Install any combination side-by-side.
 
 If you are using an editor that indexes agent files for slash commands, do not hide the runtime directory you actually installed.
 
@@ -33,8 +46,10 @@ Keep the installed runtime directory out of shared `.gitignore` rules when your 
 
 Examples:
 1. Antigravity install → keep `.agent/` out of `.gitignore`
-2. Claude install → keep `.claude/` out of `.gitignore`
-3. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
+2. Codex install → keep `.agent/` out of `.gitignore`
+3. Claude install → keep `.claude/` out of `.gitignore`
+4. Factory install → keep `.factory/` out of `.gitignore`
+5. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
    
 ## Get Started
 
@@ -55,7 +70,7 @@ The kit evolves independently of your project. To pull improvements into an exis
 This performs a **semantic merge** — it applies new workflows, skills, and rules from the upstream kit while preserving your project-specific values (tech stack, validation commands, filled placeholders). It will never overwrite your project decisions.
 
 - First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
-- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md` or `.claude/kit-sync.md`) so it knows what changed since last update
+- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md`, `.claude/kit-sync.md`, or `.factory/kit-sync.md`) so it knows what changed since last update
 - Flags any structural migrations needed (e.g., ideation format changes)
 
 ## Documentation
