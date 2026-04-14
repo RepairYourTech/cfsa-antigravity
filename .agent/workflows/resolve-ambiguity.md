@@ -73,9 +73,18 @@ Update the relevant spec documents with resolved content. Record each resolution
 
 > In addition to the Resolution Log, append a row to each modified spec's `## Changelog` table recording: today's date, `'Ambiguity resolution: [brief description]'`, `/resolve-ambiguity`, and the sections updated. If the spec does not yet have a `## Changelog` section, add one before appending.
 
+## 5.5. Refresh graph if spec files changed
+
+If Step 5 modified any spec document under `.memory/wiki/specs/`:
+1. Call `memory_compile` to rebuild derived memory artifacts from current spec truth.
+2. Confirm the compile succeeded and reported graph outputs.
+3. Do not proceed to Step 6 until the compile succeeds.
+
+If no spec files were changed, skip this step.
+
 ## 6. Propose next step
 
-Use `notify_user` to summarize what was resolved.
+Use `notify_user` to summarize what was resolved, including graph refresh confirmation when Step 5.5 ran.
 
 ### Proposed next step
 

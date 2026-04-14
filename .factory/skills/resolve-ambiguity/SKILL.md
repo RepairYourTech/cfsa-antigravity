@@ -19,4 +19,5 @@ parameters:
 4. Classify gaps into technical/factual vs intent/choice.
 5. Resolve and apply approved fixes.
 6. Append Resolution Log and Changelog updates to modified specs.
-7. Propose fresh ambiguity-audit rerun for verification.
+7. If Step 5/6 changed spec files under `.memory/wiki/specs/`, call `memory_compile` and verify the compile succeeded before reporting completion.
+8. Propose fresh ambiguity-audit rerun for verification.
