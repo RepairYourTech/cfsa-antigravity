@@ -38,7 +38,7 @@ Each cell is a comma-separated list of skill directory names from `.claude/skill
 
 > **Multi-value cells**: A surface can list multiple skills per column (e.g., `tailwind, vanilla-css` or `supabase, surrealdb, pglite`). Workflows iterate and load ALL listed skills.
 
-> **Shared row**: The `shared` surface represents cross-surface backend infrastructure (API layer, shared database, etc.). Shards in `docs/plans/shared/` resolve against this row.
+> **Shared row**: The `shared` surface represents cross-surface backend infrastructure (API layer, shared database, etc.). Shards in `.memory/wiki/specs/shared/` resolve against this row.
 
 ### Cross-Cutting Skills
 
@@ -90,4 +90,4 @@ Verification gates in `workflow-plan-phase` and `workflow-implement-slice` check
 ## Reference
 
 - [Architecture Design](../../{{ARCHITECTURE_DOC}}) — full system design with rationale
-- [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) — Quality thresholds
+- [Engineering Standards](../../.memory/wiki/specs/ENGINEERING-STANDARDS.md) — Quality thresholds

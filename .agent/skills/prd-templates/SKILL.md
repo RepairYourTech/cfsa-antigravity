@@ -19,7 +19,7 @@ Canonical markdown templates for all pipeline output documents. Workflows refere
 
 ## Conventions
 
-**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `docs/plans/*-architecture-design.md`). See `docs/kit-architecture.md` Section 3 — Dated File Convention for the full rule and table. Note: `ideation-index.md` and `vision.md` are NOT dated — they are living documents updated throughout ideation.
+**Dated File Convention**: Compiled artifacts (e.g., `architecture-design.md`, `data-placement-strategy.md`, `ENGINEERING-STANDARDS.md`, audit reports) are always prefixed with `YYYY-MM-DD-`. Any workflow reading these files must use a glob pattern (e.g., `.memory/wiki/specs/*-architecture-design.md`). See `docs/kit-architecture.md` Section 3 — Dated File Convention for the full rule and table. Note: `ideation-index.md` and `vision.md` are NOT dated — they are living documents updated throughout ideation.
 
 ## How to Use
 
@@ -52,10 +52,10 @@ Run this procedure when filling the `## Features` section of each shard skeleton
 
 ### Source
 
-Read `docs/plans/ideation/ideation-index.md` — specifically the `## Structural Classification` and `## Structure Map` sections.
+Read `.memory/wiki/specs/ideation/ideation-index.md` — specifically the `## Structural Classification` and `## Structure Map` sections.
 
 - **All project shapes**: Use the Structure Map to find the correct domain **folder** path. Each domain is a folder containing `*-index.md` (children table + Role Matrix), `*-cx.md` (cross-cuts), and child feature `.md` files.
-- **Multi-product projects**: Domain folders may be under `docs/plans/ideation/surfaces/{surface-name}/` (surface-exclusive) or `docs/plans/ideation/domains/` (shared).
+- **Multi-product projects**: Domain folders may be under `.memory/wiki/specs/ideation/surfaces/{surface-name}/` (surface-exclusive) or `.memory/wiki/specs/ideation/domains/` (shared).
 
 Match each shard to its ideation domain by name. Walk the domain's fractal tree: read the domain index for the children list, then read each child feature file to extract sub-features. If the domain has sub-domain folders, recurse into them.
 
@@ -82,11 +82,11 @@ At the validation step, the user must confirm whether to:
 
 ### Directory Example
 
-Seeded skeletons always live in the flat `docs/plans/ia/` directory — IA is shared across all surfaces. Multi-product projects add per-surface BE and FE directories only:
+Seeded skeletons always live in the flat `.memory/wiki/specs/ia/` directory — IA is shared across all surfaces. Multi-product projects add per-surface BE and FE directories only:
 
 **Single-surface:**
 ```
-docs/plans/ia/
+.memory/wiki/specs/ia/
 ├── 00-infrastructure.md
 ├── 01-user-accounts.md      ← ## Features seeded from ideation/domains/01-user-accounts/ (index + feature files)
 ├── 02-content-library.md    ← ## Features seeded from ideation/domains/02-content-library/ (index + feature files)
@@ -95,13 +95,13 @@ docs/plans/ia/
 
 **Multi-product** (IA stays flat — only BE/FE get per-surface directories):
 ```
-docs/plans/ia/
+.memory/wiki/specs/ia/
 ├── 00-infrastructure.md
 ├── 01-operations.md         ← ## Features seeded from ideation/surfaces/desktop/01-operations/ (index + feature files)
 ├── 02-device-history.md     ← ## Features seeded from ideation/domains/02-device-history/ (index + feature files)
 
-docs/plans/be/desktop/       ← per-surface BE specs (inside be/)
-docs/plans/fe/desktop/       ← per-surface FE specs (inside fe/)
-docs/plans/be/               ← shared BE specs (pre-scaffolded, serves as shared surface)
-docs/plans/fe/               ← shared FE specs (pre-scaffolded, serves as shared surface)
+.memory/wiki/specs/be/desktop/       ← per-surface BE specs (inside be/)
+.memory/wiki/specs/fe/desktop/       ← per-surface FE specs (inside fe/)
+.memory/wiki/specs/be/               ← shared BE specs (pre-scaffolded, serves as shared surface)
+.memory/wiki/specs/fe/               ← shared FE specs (pre-scaffolded, serves as shared surface)
 ```

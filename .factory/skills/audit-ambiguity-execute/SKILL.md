@@ -13,13 +13,13 @@ parameters:
 
 ## Prerequisites
 
-1. `docs/audits/audit-scope.md` exists and includes `## Rubric Files`
+1. `.memory/wiki/specs/audits/audit-scope.md` exists and includes `## Rubric Files`
 
 ## Step-by-Step
 
 ### Step 0 — Scope and rubric load
 
-1. Read `docs/audits/audit-scope.md`.
+1. Read `.memory/wiki/specs/audits/audit-scope.md`.
 2. Load only rubric files listed in `## Rubric Files`.
 3. Enforce freshness/session-independence gate for remediated runs.
 

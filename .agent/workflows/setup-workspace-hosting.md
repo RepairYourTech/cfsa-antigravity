@@ -37,7 +37,7 @@ Also read `.agent/skills/deployment-procedures/SKILL.md` for deployment principl
 
 ## 2. Determine hosting architecture
 
-Read `docs/plans/*-architecture-design.md` for deployment topology.
+Read `.memory/wiki/specs/*-architecture-design.md` for deployment topology.
 
 | Pattern | Hosting Strategy |
 |---------|-----------------|
@@ -97,7 +97,7 @@ For each environment on the hosting platform:
 
 ## 4. Configure domains and DNS
 
-Read `docs/plans/*-architecture-design.md` for domain requirements.
+Read `.memory/wiki/specs/*-architecture-design.md` for domain requirements.
 
 If custom domains are specified:
 

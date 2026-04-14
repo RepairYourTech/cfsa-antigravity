@@ -1,6 +1,6 @@
 # Design System Decision Options & Output Template
 
-Reference material for the `/create-prd-design-system` workflow. Contains option menus for all seven decisions and the canonical output template for `docs/plans/design-system.md`.
+Reference material for the `/create-prd-design-system` workflow. Contains option menus for all seven decisions and the canonical output template for `.memory/wiki/specs/design-system.md`.
 
 ---
 
@@ -130,7 +130,7 @@ If **Hybrid** is selected, ask the user to define the density rules:
 
 ## design-system.md Output Template
 
-The final `docs/plans/design-system.md` must have this exact structure:
+The final `.memory/wiki/specs/design-system.md` must have this exact structure:
 
 ```markdown
 # Design System

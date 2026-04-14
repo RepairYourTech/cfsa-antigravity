@@ -5,7 +5,7 @@ Before taking any action on a task:
 ## 1. Understand Context
 - Read the agent config file at project root (`AGENTS.md` for Antigravity, `GEMINI.md` for Gemini CLI, or equivalent for your agent)
 - Read relevant `.factory/instructions/` files for the task type
-- Check [Engineering Standards](../../docs/plans/ENGINEERING-STANDARDS.md) for quality bar — if this file doesn't exist yet, the pipeline hasn't reached /create-prd; run /ideate then /create-prd first
+- Check [Engineering Standards](../../.memory/wiki/specs/ENGINEERING-STANDARDS.md) for quality bar — if this file doesn't exist yet, the pipeline hasn't reached /create-prd; run /ideate then /create-prd first
 - **Session Resumption**: If `.factory/progress/index.md` exists, read `.factory/skills/session-continuity/protocols/01-session-resumption.md` and follow the **Session Resumption Protocol** to load cross-session context and identify the resumption point
 
 ## 2. Check Skills
@@ -37,8 +37,9 @@ Do NOT mark a task complete until all validations pass.
 
 After completing a workflow or substantial task:
 
-- **Pattern Extraction**: Read `.factory/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `memory/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
+- **Pattern Extraction**: Read `.factory/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `.memory/wiki/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
 - **Session Close**: Read `.factory/skills/session-continuity/protocols/05-session-close.md` and follow the **Session Close Protocol**. Write a session log to `.factory/progress/sessions/` so the next session can resume cleanly.
+- **Unified Memory First**: Treat `.memory/` as the canonical project memory root. When shared memory is needed, prefer the `cfsa-memory` MCP bridge over runtime-local silos so all runtimes see the same memory.
 
 > These steps are **not optional**. They are what differentiate a pipeline that gets
 > smarter over time from one that repeats the same mistakes.

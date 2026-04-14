@@ -52,7 +52,7 @@ Read these skills for slice planning guidance:
 
 Read the **Surfaces** list from the Global Settings section of `.agent/instructions/tech-stack.md`. For each row below, only run the check if "Applies To" matches the project's confirmed surfaces. Skip inapplicable rows.
 
-Read all FE specs in `docs/plans/fe/` and check the following table.
+Read all FE specs in `.memory/wiki/specs/fe/` and check the following table.
 
 | Check | Applies To | What It Verifies |
 |---|---|---|
@@ -77,11 +77,11 @@ Only when all **applicable** checks pass does the workflow continue to the next 
 
 Read `.agent/skills/cross-layer-consistency/SKILL.md` and follow its full cross-layer audit methodology.
 
-Read `docs/plans/be/index.md` and `docs/plans/fe/index.md`.
+Read `.memory/wiki/specs/be/index.md` and `.memory/wiki/specs/fe/index.md`.
 
 ### 0.6a. BE↔FE Coverage
 
-For every BE spec listed in `docs/plans/be/index.md`, check whether at least one FE spec's `## Source Map` section references it. Apply the following rules:
+For every BE spec listed in `.memory/wiki/specs/be/index.md`, check whether at least one FE spec's `## Source Map` section references it. Apply the following rules:
 
 1. **Covered**: The BE spec appears in at least one FE `## Source Map` → pass.
 2. **Internal-only exception**: If the BE spec is annotated `[internal-only — no UI]` in the BE index, it is exempt from FE coverage → pass.
@@ -98,7 +98,7 @@ For every BE spec listed in `docs/plans/be/index.md`, check whether at least one
 >
 > For each, either:
 > 1. Add FE coverage via `/write-fe-spec`
-> 2. Mark the BE spec as `[internal-only — no UI]` in `docs/plans/be/index.md` if it has no user-facing surface
+> 2. Mark the BE spec as `[internal-only — no UI]` in `.memory/wiki/specs/be/index.md` if it has no user-facing surface
 >
 > Confirm when resolved."
 
@@ -122,7 +122,7 @@ Collect all mismatches into a consistency report. If any exist → **hard stop**
 
 ## 0.7. Feature ledger verification
 
-If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow the **Verification Gate** procedure.
+If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow the **Verification Gate** procedure.
 
 Count features by completeness (✅ complete, ⚠️ partial, ❌ orphaned). If any features show `❌ missing` in the IA Status, BE Status, or FE Status columns → **BLOCKING GATE**: present the orphaned features and require resolution before proceeding to slice planning.
 
@@ -132,7 +132,7 @@ If the ledger does not exist, skip this step.
 
 ## 0.8. Draft continuity check
 
-Check whether `docs/plans/phases/phase-N-draft.md` already exists (where N is the current phase number).
+Check whether `.memory/wiki/specs/phases/phase-N-draft.md` already exists (where N is the current phase number).
 
 - **If it exists**: Read it and identify which slices are already drafted vs missing. Present: "A draft exists for Phase N with [X] slices. **Continue** (add missing only) or **start fresh** (overwrite)?" Wait for the user.
 - **If it does not exist**: Proceed normally.

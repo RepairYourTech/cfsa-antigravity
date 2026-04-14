@@ -118,7 +118,7 @@ For each database query introduced or modified in this slice:
 2. **Index coverage**: For each new WHERE clause, ORDER BY, or JOIN condition, verify a supporting index exists in the migration/schema. If no index exists and the table is expected to exceed 10,000 rows, add one
 3. **Query plan verification** (if test DB is available): Run EXPLAIN ANALYZE (or equivalent) on queries targeting tables with >1,000 rows in seed data. Flag any sequential scan on a table expected to grow beyond 10,000 rows
 
-If `docs/plans/ENGINEERING-STANDARDS.md` defines `### DB Query Time` budgets, annotate each new query with its expected tier in a code comment: `// DB-TIER-2: uncached read, p95 target < 50ms`
+If `.memory/wiki/specs/ENGINEERING-STANDARDS.md` defines `### DB Query Time` budgets, annotate each new query with its expected tier in a code comment: `// DB-TIER-2: uncached read, p95 target < 50ms`
 
 ### 5.6. Resource cleanup verification
 

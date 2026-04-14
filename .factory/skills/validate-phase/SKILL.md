@@ -37,7 +37,7 @@ Call skill: `validate-phase-readiness`
 Expected outputs:
 - gate applicability matrix
 - readiness gate results (API docs/a11y/perf/security/dependencies)
-- consolidated report in `docs/audits/phase-N-validation.md`
+- consolidated report in `.memory/wiki/specs/audits/phase-N-validation.md`
 - final pass/fail verdict + constrained next step recommendation
 
 ## Quality Gate

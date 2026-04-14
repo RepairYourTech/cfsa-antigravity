@@ -42,13 +42,13 @@ Transform a raw idea into comprehensive, structured ideation output through exha
 > every line of code downstream will be shallow. Treat this phase with the seriousness it
 > deserves.
 
-**Output**: `docs/plans/ideation/` folder (pipeline key file: `ideation-index.md`) + `docs/plans/vision.md` (human-readable summary)
+**Output**: `.memory/wiki/specs/ideation/` folder (pipeline key file: `ideation-index.md`) + `.memory/wiki/specs/vision.md` (human-readable summary)
 
 ---
 
 ## 0. Prerequisite gate
 
-Check whether `docs/plans/ideation/ideation-index.md` already exists.
+Check whether `.memory/wiki/specs/ideation/ideation-index.md` already exists.
 
 - **If it does NOT exist** → This is a fresh ideation. Proceed to Shard 1.
 - **If it exists but is corrupt** (file size < 100 bytes OR missing `## Structural Classification` section) → Treat as fresh. Warn: "Found a corrupt ideation-index.md — treating as a fresh start." Delete the corrupt file and proceed to Shard 1.
@@ -57,10 +57,10 @@ Check whether `docs/plans/ideation/ideation-index.md` already exists.
 ### 0.1. Downstream cascade check
 
 Scan for downstream pipeline output:
-- `docs/plans/*-architecture-design.md`
-- `docs/plans/ia/` (any `.md` files besides `index.md`)
-- `docs/plans/be/` (any `.md` files besides `index.md`)
-- `docs/plans/fe/` (any `.md` files besides `index.md`)
+- `.memory/wiki/specs/*-architecture-design.md`
+- `.memory/wiki/specs/ia/` (any `.md` files besides `index.md`)
+- `.memory/wiki/specs/be/` (any `.md` files besides `index.md`)
+- `.memory/wiki/specs/fe/` (any `.md` files besides `index.md`)
 
 **If downstream artifacts exist** → **STOP**. Present:
 
@@ -78,7 +78,7 @@ Scan for downstream pipeline output:
 
 **If no downstream artifacts exist** → Present the standard overwrite prompt:
 
-> ⚠️ **Ideation output already exists** at `docs/plans/ideation/ideation-index.md`.
+> ⚠️ **Ideation output already exists** at `.memory/wiki/specs/ideation/ideation-index.md`.
 >
 > Running `/ideate` again will overwrite the existing ideation output.
 >
@@ -102,7 +102,7 @@ Scan for downstream pipeline output:
 
 ### Step 1 — Run `.agent/workflows/ideate-extract.md`
 
-Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), determines structural classification (single-surface, multi-surface-shared, multi-product-hub, multi-product-peer), checks for existing ideation folder (re-run check), creates the fractal `docs/plans/ideation/` folder structure using the Node Classification Gate, asks user to choose engagement tier (Auto/Hybrid/Interactive) and expansion mode, writes both to `ideation-index.md` immediately, and loads skills.
+Classifies the user's input (rich doc, thin PRD, chat transcript, verbal), determines structural classification (single-surface, multi-surface-shared, multi-product-hub, multi-product-peer), checks for existing ideation folder (re-run check), creates the fractal `.memory/wiki/specs/ideation/` folder structure using the Node Classification Gate, asks user to choose engagement tier (Auto/Hybrid/Interactive) and expansion mode, writes both to `ideation-index.md` immediately, and loads skills.
 
 ### Step 2 — Run `.agent/workflows/ideate-discover.md`
 
@@ -110,7 +110,7 @@ Recursive breadth-before-depth exploration: Level 0 (global domain map) → Leve
 
 ### Step 3 — Run `.agent/workflows/ideate-validate.md`
 
-Explores constraints, success metrics, and competitive positioning. Runs leaf-node exhaustion check (all leaf features ≥ `[DEEP]`, Role Lens complete, Deep Think yields zero hypotheses, all CX files clean). Verifies fractal structure compliance. Compiles `docs/plans/vision.md` as a human-readable executive summary.
+Explores constraints, success metrics, and competitive positioning. Runs leaf-node exhaustion check (all leaf features ≥ `[DEEP]`, Role Lens complete, Deep Think yields zero hypotheses, all CX files clean). Verifies fractal structure compliance. Compiles `.memory/wiki/specs/vision.md` as a human-readable executive summary.
 
 ---
 
@@ -131,7 +131,7 @@ Explores constraints, success metrics, and competitive positioning. Runs leaf-no
 
 Before reporting completion to the user:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

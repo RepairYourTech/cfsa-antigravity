@@ -19,7 +19,7 @@ pipeline:
 
 Run iterative deepening passes, write the completed spec, update indexes, run the ambiguity gate, and present for review.
 
-**Prerequisite**: Read the shard file at `docs/plans/ia/[shard-name].md`. Sections should be filled in from the design shard (not skeleton placeholders).
+**Prerequisite**: Read the shard file at `.memory/wiki/specs/ia/[shard-name].md`. Sections should be filled in from the design shard (not skeleton placeholders).
 
 **Skeleton detection**: If the file contains `<!-- TODO -->` markers, `[TBD]` placeholders, or sections with only a heading and no body text → the design shard has not completed. **STOP**: run `/write-architecture-spec-design` first.
 
@@ -43,7 +43,7 @@ Re-read the complete draft (interactions + contracts + data model + access contr
 - Access rules that don't cover all interaction types
 - Edge cases that imply missing error codes in contracts
 - Event schemas that carry fields not in the data model
-- **Event consumer cross-references**: For each event's listed consumers, verify the consumer shard exists in `docs/plans/ia/index.md` and its `## Interactions` or `## Event Schemas` section references this event. If a consumer shard doesn't reference the event → add a cross-reference link in both directions. If a consumer shard doesn't exist → **STOP**.
+- **Event consumer cross-references**: For each event's listed consumers, verify the consumer shard exists in `.memory/wiki/specs/ia/index.md` and its `## Interactions` or `## Event Schemas` section references this event. If a consumer shard doesn't reference the event → add a cross-reference link in both directions. If a consumer shard doesn't exist → **STOP**.
 
 Fix every inconsistency found. Present findings to the user.
 
@@ -80,11 +80,11 @@ may reveal further edge cases. Stop when a pass produces no meaningful additions
 - Passes 4-5 → normal. Continue if producing meaningful additions.
 - **After pass 5** → **STOP**: "5 deepening passes completed. Still producing new content. Present remaining gaps to user: continue deepening or accept current spec depth?"
 
-## 9. Write the spec to `docs/plans/ia/[shard-name].md`
+## 9. Write the spec to `.memory/wiki/specs/ia/[shard-name].md`
 
 Read .agent/skills/technical-writer/SKILL.md for the spec writing step.
 
-Replace the skeleton sections in `docs/plans/ia/[shard-name].md` with the full content from all passes. Ensure all cross-shard dependencies are bidirectional.
+Replace the skeleton sections in `.memory/wiki/specs/ia/[shard-name].md` with the full content from all passes. Ensure all cross-shard dependencies are bidirectional.
 
 ### 9.5. Spec complexity gate
 
@@ -100,7 +100,7 @@ Count the total lines in the written spec file.
 
 ### 9.1. Post-write verification
 
-Re-read `docs/plans/ia/[shard-name].md` and verify:
+Re-read `.memory/wiki/specs/ia/[shard-name].md` and verify:
 1. All required sections contain non-empty content (not just headers or `<!-- TODO -->` markers)
 2. File size is > 0 bytes
 3. No `<!-- TODO -->` markers remain (outside of intentional `[N/A]` sections)
@@ -108,7 +108,7 @@ Re-read `docs/plans/ia/[shard-name].md` and verify:
 
 ## 10. Update IA index
 
-Change the shard's status from 🔲 to ✅ in `docs/plans/ia/index.md`.
+Change the shard's status from 🔲 to ✅ in `.memory/wiki/specs/ia/index.md`.
 
 ## 11. Update spec pipeline
 
@@ -136,7 +136,7 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
 
 ## 13. Full ambiguity audit (mandatory when this is the last IA shard)
 
-1. Read `docs/plans/ia/index.md`
+1. Read `.memory/wiki/specs/ia/index.md`
 2. Check if all shards show ✅
 
 **More shards remain**: Proceed to the next shard. Do not propose `/write-be-spec` yet — the IA layer is not complete.
@@ -151,9 +151,9 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run the
 
 1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the IA column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 11. Go back and run Protocol 08 now before proceeding."
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 

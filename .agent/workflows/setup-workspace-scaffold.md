@@ -25,7 +25,7 @@ Initialize the project, create the directory structure, install dependencies, an
 
 ## 0.5. Feature ledger pre-flight
 
-If `docs/plans/feature-ledger.md` exists:
+If `.memory/wiki/specs/feature-ledger.md` exists:
 1. Read the ledger and the current phase plan
 2. Verify every **Must Have** feature has a non-empty entry in the **Phase** column
 3. If any Must Have feature has no phase assignment → **STOP**: "Must Have feature `[ID: name]` has no phase assignment. Assign it via `/plan-phase` before scaffolding."
@@ -34,7 +34,7 @@ If `docs/plans/feature-ledger.md` exists:
 
 ## 1. Read architecture pattern
 
-Read `docs/plans/*-architecture-design.md` and determine:
+Read `.memory/wiki/specs/*-architecture-design.md` and determine:
 
 1. **Architecture pattern**: monolith / monorepo / multi-repo
 2. **Service list**: enumerate every service/package (for monolith: just one)
@@ -91,7 +91,7 @@ Read `.agent/instructions/structure.md` for the project's directory layout.
 
 ## 5. Install dependencies
 
-Read `docs/plans/*-architecture-design.md` dependency section.
+Read `.memory/wiki/specs/*-architecture-design.md` dependency section.
 
 1. **Production dependencies**: Install all runtime dependencies listed in the architecture doc
 2. **Dev dependencies**: Install linter, formatter, type-checker, test framework (from the surface stack map's Unit Tests and E2E Tests cells)
@@ -124,7 +124,7 @@ Create/update configuration files:
 
 ## 7. Create environment template
 
-Read `docs/plans/*-architecture-design.md` environment/configuration section.
+Read `.memory/wiki/specs/*-architecture-design.md` environment/configuration section.
 
 1. Create `.env.example` with ALL environment variables documented
 2. Each variable gets a comment explaining its purpose and format
@@ -166,9 +166,9 @@ Run the dev server command from `.agent/instructions/commands.md`:
 ## 9.5. Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.

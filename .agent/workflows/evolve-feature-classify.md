@@ -17,7 +17,7 @@ pipeline:
 
 Capture the user's new feature, requirement, or constraint. Classify it, identify the correct entry point document, write the new content at proper spec depth, and determine which downstream layers need updating.
 
-> **Prerequisite**: `docs/plans/ideation/ideation-index.md` must exist. If not → **STOP**: run `/ideate` first.
+> **Prerequisite**: `.memory/wiki/specs/ideation/ideation-index.md` must exist. If not → **STOP**: run `/ideate` first.
 
 ---
 
@@ -52,9 +52,9 @@ What type of change is this?
 
 | Classification | Entry Point Document |
 |---------------|---------------------|
-| **[1] New feature** | `docs/plans/ideation/ideation-index.md` + fractal tree placement (Step 4) |
-| **[2] New requirement** | The IA shard that owns the affected domain (read `docs/plans/ia/index.md` to find it) |
-| **[3] New technical constraint** | `docs/plans/[dated]-architecture-design.md` |
+| **[1] New feature** | `.memory/wiki/specs/ideation/ideation-index.md` + fractal tree placement (Step 4) |
+| **[2] New requirement** | The IA shard that owns the affected domain (read `.memory/wiki/specs/ia/index.md` to find it) |
+| **[3] New technical constraint** | `.memory/wiki/specs/[dated]-architecture-design.md` |
 | **[4] Scope correction** | Ask the user which document contains the misunderstanding |
 
 ---

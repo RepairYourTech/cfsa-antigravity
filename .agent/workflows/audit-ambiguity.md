@@ -43,7 +43,7 @@ Asks the user which layer(s) to audit, loads the source documents, and provides 
 
 ### Step B — Run `.agent/workflows/audit-ambiguity-execute.md`
 
-Audits each document one at a time (read → score with evidence → classify gaps → verify → finalize), compiles the report to `docs/audits/`, remediates gaps using `resolve-ambiguity`, and proposes next steps.
+Audits each document one at a time (read → score with evidence → classify gaps → verify → finalize), compiles the report to `.memory/wiki/specs/audits/`, remediates gaps using `resolve-ambiguity`, and proposes next steps.
 
 ---
 

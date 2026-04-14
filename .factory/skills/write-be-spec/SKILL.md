@@ -15,9 +15,9 @@ Runs BE specification authoring in two shards: classify → write.
 
 ## Prerequisites
 
-1. IA shard(s) are complete and marked ✅ in `docs/plans/ia/index.md`
+1. IA shard(s) are complete and marked ✅ in `.memory/wiki/specs/ia/index.md`
 2. `.factory/progress/spec-pipeline.md` exists
-3. BE conventions/index files exist under `docs/plans/be/`
+3. BE conventions/index files exist under `.memory/wiki/specs/be/`
 
 ## Step-by-Step
 
@@ -43,8 +43,8 @@ Expected outputs:
 Call skill: `write-be-spec-write`
 
 Expected outputs:
-- Full BE spec file(s) in `docs/plans/be/`
-- Updated `docs/plans/be/index.md`
+- Full BE spec file(s) in `.memory/wiki/specs/be/`
+- Updated `.memory/wiki/specs/be/index.md`
 - Updated `.factory/progress/spec-pipeline.md` BE status
 - Ambiguity gate results + next allowed command
 

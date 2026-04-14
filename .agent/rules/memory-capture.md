@@ -9,21 +9,21 @@ trigger: always_on
 
 ## The Problem
 
-The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`, `memory/blockers.md`) — all empty. `workflow.md` Step 5 says "Learn (MANDATORY)" but no enforcement exists. This rule IS the enforcement.
+The canonical project memory lives in `.memory/`, with compiled human-readable files at `.memory/wiki/patterns.md`, `.memory/wiki/decisions.md`, and `.memory/wiki/blockers.md`. `workflow.md` Step 5 says "Learn (MANDATORY)"; this rule enforces writing to that shared memory instead of leaving knowledge fragmented by runtime.
 
 ## When to Write
 
 | Trigger | What Happened | Target File | Format |
 |---------|---------------|-------------|--------|
-| User corrects me | "No, that's wrong" / "Don't do that" / "I told you to..." | `memory/patterns.md` | Anti-pattern (PAT-NNN) |
-| User says "remember this" | Explicit instruction to retain information | `memory/decisions.md` | Decision (DEC-NNN) |
-| Non-trivial decision made | Choice with ripple effects (see Protocol 06 triage) | `memory/decisions.md` | Decision (DEC-NNN) |
-| Something blocks progress | External dependency, missing spec, tooling failure | `memory/blockers.md` | Blocker (BLOCKER-NNN) |
-| Pattern emerges | Something works well or fails repeatedly | `memory/patterns.md` | Pattern (PAT-NNN) |
+| User corrects me | "No, that's wrong" / "Don't do that" / "I told you to..." | `.memory/wiki/patterns.md` | Anti-pattern (PAT-NNN) |
+| User says "remember this" | Explicit instruction to retain information | `.memory/wiki/decisions.md` | Decision (DEC-NNN) |
+| Non-trivial decision made | Choice with ripple effects (see Protocol 06 triage) | `.memory/wiki/decisions.md` | Decision (DEC-NNN) |
+| Something blocks progress | External dependency, missing spec, tooling failure | `.memory/wiki/blockers.md` | Blocker (BLOCKER-NNN) |
+| Pattern emerges | Something works well or fails repeatedly | `.memory/wiki/patterns.md` | Pattern (PAT-NNN) |
 
 ## How to Write
 
-### Patterns (`memory/patterns.md`)
+### Patterns (`.memory/wiki/patterns.md`)
 
 ```markdown
 ### PAT-NNN: [Short description] (YYYY-MM-DD)
@@ -34,7 +34,7 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 - **Source**: What triggered this entry
 ```
 
-### Decisions (`memory/decisions.md`)
+### Decisions (`.memory/wiki/decisions.md`)
 
 ```markdown
 ### DEC-NNN: [Decision summary] (YYYY-MM-DD)
@@ -45,7 +45,7 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 - **Reversibility**: High | Medium | Low
 ```
 
-### Blockers (`memory/blockers.md`)
+### Blockers (`.memory/wiki/blockers.md`)
 
 ```markdown
 ### BLOCKER-NNN: [Description] (YYYY-MM-DD)

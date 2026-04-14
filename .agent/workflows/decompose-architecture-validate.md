@@ -37,7 +37,7 @@ For each shard skeleton:
 Read `.agent/skills/architecture-mapping/SKILL.md` and follow its methodology.
 
 For each shard marked "Needs Deep Dive" in the domain boundary table:
-1. Create empty deep dive skeleton at `docs/plans/ia/deep-dives/[feature-name].md`
+1. Create empty deep dive skeleton at `.memory/wiki/specs/ia/deep-dives/[feature-name].md`
 2. Add reference in parent shard's "Deep Dives Needed" section
 3. Add to IA index deep dives column
 
@@ -55,7 +55,7 @@ Read `.agent/skills/prd-templates/references/shard-boundary-analysis.md` → **S
 
 - **Shard load calibration gate**: Count sub-features in each shard using the bullet/named-item rule (defined in the analysis reference). If Step 9.5 pre-flagged shards, review first. Apply the thresholds. For ≥10, use the split proposal format from the reference.
 
-  **After any split**: Update `docs/plans/ia/decomposition-plan.md`, re-run Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed to Step 13 until zero stale parent references remain.**
+  **After any split**: Update `.memory/wiki/specs/ia/decomposition-plan.md`, re-run Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed to Step 13 until zero stale parent references remain.**
 
   **Split loop guard**: Track how many times the same shard has been split.
   - **1st split** → normal. Apply the split.
@@ -72,7 +72,7 @@ Verify structural integrity:
 
 ## 12.5. Update feature tracking ledger
 
-If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 2 — IA Assignment**.
+If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 2 — IA Assignment**.
 
 For each IA shard skeleton, match its features to ledger rows and populate the IA Shard and IA Status columns. Run the orphan check — any ideation feature with no IA shard assignment is flagged as `❌ missing`. Present orphans to the user for resolution before proceeding.
 
@@ -85,9 +85,9 @@ Read `.agent/skills/session-continuity/protocols/07-spec-pipeline-generation.md`
 ## 13.5. Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.

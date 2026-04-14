@@ -35,7 +35,7 @@ Ensure event-consumer cross-references are valid and bidirectional.
 
 ### Step 3 — Finalize shard and run complexity gate
 
-1. Write full integrated shard content to `docs/plans/ia/[shard-name].md`.
+1. Write full integrated shard content to `.memory/wiki/specs/ia/[shard-name].md`.
 2. Re-read and verify required sections are non-empty and consistent.
 3. Apply complexity thresholds:
    - <=400 lines pass
@@ -44,7 +44,7 @@ Ensure event-consumer cross-references are valid and bidirectional.
 
 ### Step 4 — Update indexes and tracker
 
-1. Mark shard complete in `docs/plans/ia/index.md`.
+1. Mark shard complete in `.memory/wiki/specs/ia/index.md`.
 2. Update `.factory/progress/spec-pipeline.md` IA column via protocol.
 3. Run conditional bootstrap if shard is the architecture-design stack-lock shard.
 

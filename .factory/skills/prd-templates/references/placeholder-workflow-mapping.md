@@ -42,7 +42,7 @@ How each workflow determines which surface's row to read:
 
 | Workflow Type | Resolution Method |
 |--------------|-------------------|
-| Spec-writing (`write-be-spec`, `write-fe-spec`) | Shard directory path: `docs/plans/be/desktop/` → surface `desktop`; flat `docs/plans/be/` → surface `shared` |
+| Spec-writing (`write-be-spec`, `write-fe-spec`) | Shard directory path: `.memory/wiki/specs/be/desktop/` → surface `desktop`; flat `.memory/wiki/specs/be/` → surface `shared` |
 | Implementation (`implement-slice`) | Slice's `surface:` tag from the phase plan |
 | Planning (`plan-phase`) | Iterates ALL surfaces in the map |
 | Validation (`validate-phase`) | Runs per-surface commands for all surfaces |

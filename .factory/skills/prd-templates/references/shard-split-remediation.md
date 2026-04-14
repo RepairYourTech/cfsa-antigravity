@@ -23,7 +23,7 @@ Templates, formats, and scan patterns for `/remediate-shard-split` workflow.
 
 ## Cross-Reference Scan Patterns
 
-Grep the entire `docs/plans/` tree for the parent shard number using these patterns. The `NN` below represents the parent number (e.g., `00`, `01`, `02`).
+Grep the entire `.memory/wiki/specs/` tree for the parent shard number using these patterns. The `NN` below represents the parent number (e.g., `00`, `01`, `02`).
 
 ### Primary Patterns (always scan)
 
@@ -42,21 +42,21 @@ Grep the entire `docs/plans/` tree for the parent shard number using these patte
 
 | Directory | Required |
 |-----------|----------|
-| `docs/plans/ia/` | Always |
-| `docs/plans/be/` | If exists |
-| `docs/plans/fe/` | If exists |
-| `docs/plans/be/web/` | If exists |
-| `docs/plans/fe/web/` | If exists |
-| `docs/plans/be/desktop/` | If exists |
-| `docs/plans/fe/desktop/` | If exists |
-| `docs/plans/be/mobile/` | If exists |
-| `docs/plans/fe/mobile/` | If exists |
+| `.memory/wiki/specs/ia/` | Always |
+| `.memory/wiki/specs/be/` | If exists |
+| `.memory/wiki/specs/fe/` | If exists |
+| `.memory/wiki/specs/be/web/` | If exists |
+| `.memory/wiki/specs/fe/web/` | If exists |
+| `.memory/wiki/specs/be/desktop/` | If exists |
+| `.memory/wiki/specs/fe/desktop/` | If exists |
+| `.memory/wiki/specs/be/mobile/` | If exists |
+| `.memory/wiki/specs/fe/mobile/` | If exists |
 
 ### Exclusions
 
 - The parent stub file itself (already marked SPLIT)
-- `docs/audits/` (audit records, not active specs)
-- `docs/plans/ideation/` (upstream of decomposition — doesn't use shard numbers)
+- `.memory/wiki/specs/audits/` (audit records, not active specs)
+- `.memory/wiki/specs/ideation/` (upstream of decomposition — doesn't use shard numbers)
 
 ## Context Matching Heuristics
 

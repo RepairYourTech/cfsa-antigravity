@@ -161,7 +161,7 @@ If any criterion is unmet → continue refinement. Do NOT proceed to implementat
 
 ## After Brainstorming
 
-1. Write the design to `docs/plans/YYYY-MM-DD-<topic>-design.md`
+1. Write the design to `.memory/wiki/specs/YYYY-MM-DD-<topic>-design.md`
 2. Include: understanding summary, assumptions, decision log, final design
 3. Ask: "Ready to set up for implementation?"
 4. If yes, hand off to the appropriate pipeline command (`/plan-phase`, `/implement-slice`, etc.)

@@ -4,7 +4,7 @@ Reference for `/evolve-feature-classify` Step 4 and `/evolve-feature-cascade` St
 
 ## Entry Point Writing Depth
 
-### Ideation Layer (`docs/plans/ideation/`)
+### Ideation Layer (`.memory/wiki/specs/ideation/`)
 
 1. **Placement**: Read `ideation-index.md` Structure Map. Identify the domain folder. Create new domain if needed.
 2. **Classification Gate**: Apply Node Classification Gate from `.agent/skills/idea-extraction/SKILL.md` — leaf feature or sub-domain folder.

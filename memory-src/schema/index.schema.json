@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unified Memory Index Entry",
+  "type": "object",
+  "required": ["id", "type", "title", "path", "timestamp"],
+  "properties": {
+    "id": { "type": "string" },
+    "type": { "type": "string" },
+    "title": { "type": "string" },
+    "path": { "type": "string" },
+    "source": { "type": "string" },
+    "agent": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "excerpt": { "type": "string" }
+  },
+  "additionalProperties": true
+}

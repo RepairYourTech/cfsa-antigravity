@@ -17,7 +17,7 @@ pipeline:
 
 Scan all five pipeline layers, check for existing audit reports, determine the starting layer, and present a remediation plan for user approval.
 
-> **Prerequisite**: At least one pipeline layer must have completed documents. If `docs/plans/ideation/ideation-index.md` does not exist, tell the user to run `/ideate` first.
+> **Prerequisite**: At least one pipeline layer must have completed documents. If `.memory/wiki/specs/ideation/ideation-index.md` does not exist, tell the user to run `/ideate` first.
 
 ---
 
@@ -50,12 +50,12 @@ Before assessing pipeline layers, scan all instruction files for any `{{` patter
 **If all instruction files are clean**: Confirm "Instruction files are fully configured." and proceed to the additional checks below.
 
 **Check for unapplied propagation scan:**
-Look for `docs/audits/propagation-scan-*.md`. If any exist, check whether a corresponding `docs/audits/propagation-[type]-*.md` exists with a newer timestamp. If a scan exists without a completed apply record:
+Look for `.memory/wiki/specs/audits/propagation-scan-*.md`. If any exist, check whether a corresponding `.memory/wiki/specs/audits/propagation-[type]-*.md` exists with a newer timestamp. If a scan exists without a completed apply record:
 
 > **STOP** — A decision propagation scan was run but not applied. Run `/propagate-decision-apply` to apply the pending fixes before pipeline remediation. Auditing specs that are inconsistent with locked decisions produces meaningless results.
 
 **Check for unapplied feature evolution:**
-Look for `docs/audits/evolve-feature-*.md`. If any exist, check whether the affected layers have been re-audited since the evolution was applied (compare timestamps of the evolution record against the layer audit reports). If layers were updated but not re-audited:
+Look for `.memory/wiki/specs/audits/evolve-feature-*.md`. If any exist, check whether the affected layers have been re-audited since the evolution was applied (compare timestamps of the evolution record against the layer audit reports). If layers were updated but not re-audited:
 
 > **Note** — A feature evolution was applied to [layers]. Run `/audit-ambiguity [layer]` to verify the new content meets the quality bar before pipeline remediation proceeds.
 
@@ -71,11 +71,11 @@ Check which layers have content by verifying the presence of key files:
 
 | Layer | Key Files to Check | Has Content If… |
 |-------|-------------------|-------------------|
-| Ideation | `docs/plans/ideation/ideation-index.md` | File exists, ≥1 domain folder under `domains/` (or `surfaces/`) with `*-index.md` + `*-cx.md`, and domains at `[DEEP]`+ in Structure Map |
-| Architecture | `docs/plans/*-architecture-design.md` | At least one dated file exists |
-| IA | `docs/plans/ia/index.md` | File exists with ≥1 shard listed |
-| BE | `docs/plans/be/index.md` | File exists with ≥1 spec listed |
-| FE | `docs/plans/fe/index.md` | File exists with ≥1 spec listed |
+| Ideation | `.memory/wiki/specs/ideation/ideation-index.md` | File exists, ≥1 domain folder under `domains/` (or `surfaces/`) with `*-index.md` + `*-cx.md`, and domains at `[DEEP]`+ in Structure Map |
+| Architecture | `.memory/wiki/specs/*-architecture-design.md` | At least one dated file exists |
+| IA | `.memory/wiki/specs/ia/index.md` | File exists with ≥1 shard listed |
+| BE | `.memory/wiki/specs/be/index.md` | File exists with ≥1 spec listed |
+| FE | `.memory/wiki/specs/fe/index.md` | File exists with ≥1 spec listed |
 
 For each layer with content, also note:
 - How many documents it contains (shards/specs count)
@@ -86,7 +86,7 @@ For each layer with content, also note:
 
 ## 2. Check existing audit reports
 
-For each layer with content, check `docs/audits/[layer]-ambiguity-report.md` and `docs/audits/audit-scope.md`. Classify each layer using this decision tree:
+For each layer with content, check `.memory/wiki/specs/audits/[layer]-ambiguity-report.md` and `.memory/wiki/specs/audits/audit-scope.md`. Classify each layer using this decision tree:
 
 | Condition | Classification |
 |-----------|---------------|
@@ -134,6 +134,6 @@ Use `notify_user` to present the following:
 
 ---
 
-Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Remediation State** template. Create or update `docs/audits/remediation-state.md` using the template, filling in layer statuses from Step 2 and the current layer from Step 3.
+Read `.agent/skills/prd-templates/references/operational-templates.md` for the **Remediation State** template. Create or update `.memory/wiki/specs/audits/remediation-state.md` using the template, filling in layer statuses from Step 2 and the current layer from Step 3.
 
 After writing `remediation-state.md`, proceed to run `.agent/workflows/remediate-pipeline-execute.md`.

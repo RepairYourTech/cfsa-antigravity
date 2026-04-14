@@ -4,7 +4,7 @@ Run this check before writing any FE spec.
 
 ## Procedure
 
-1. Check whether `docs/plans/design-system.md` exists.
+1. Check whether `.memory/wiki/specs/design-system.md` exists.
 2. If it does not exist → **stop** and tell the user: _"The design system has not been established yet. Run `/create-prd-design-system` to lock navigation paradigm, layout grid, page archetypes, and global state design language before writing FE specs."_
 3. If it exists → read and extract all seven decision areas: Navigation Paradigm, Layout Grid, Page Archetypes, Global Component Inventory, Motion Language, Data Density Philosophy, and Global State Design Language.
 4. The extracted decisions are **requirements** for this FE spec — any violation is a rubric failure under Dimension 11 (Design System Consistency).

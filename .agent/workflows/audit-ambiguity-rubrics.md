@@ -44,14 +44,14 @@ Read `.agent/skills/pipeline-rubrics/references/scoring.md` for the document-to-
 1. Count the total documents discovered by filesystem tools.
 2. State: **"Enumerated N documents for [layer] audit."**
 3. **Minimum counts** — if below these thresholds, re-scan:
-   - Ideation: count ALL `.md` files recursively under `docs/plans/ideation/` (expect 20+ for any real project)
+   - Ideation: count ALL `.md` files recursively under `.memory/wiki/specs/ideation/` (expect 20+ for any real project)
    - Architecture: ≥2 (`architecture-design.md` + `ENGINEERING-STANDARDS.md`)
    - IA/BE/FE: ≥2 (index + at least one shard/spec)
 4. If re-scan still yields fewer than threshold, state why and proceed with the actual count.
 
 ## 2b. Persist audit scope
 
-Write `docs/audits/audit-scope.md` with the determined scope and the **complete** document list from Step 2a:
+Write `.memory/wiki/specs/audits/audit-scope.md` with the determined scope and the **complete** document list from Step 2a:
 
 ```markdown
 # Audit Scope

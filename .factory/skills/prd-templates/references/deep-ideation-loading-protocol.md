@@ -91,7 +91,7 @@ List the implied entities in the "Key Entities" column. These are **hints**, not
 
 ### Step 6 — Write to architecture-draft.md
 
-Write the completed Domain Digest Table to `docs/plans/architecture-draft.md` as the first section (`## Ideation Digest`). If the file doesn't exist yet, create it with this section.
+Write the completed Domain Digest Table to `.memory/wiki/specs/architecture-draft.md` as the first section (`## Ideation Digest`). If the file doesn't exist yet, create it with this section.
 
 > **Write immediately.** Do not hold the digest in memory — write it to disk as soon as it's compiled. All subsequent create-prd shards read from `architecture-draft.md`.
 

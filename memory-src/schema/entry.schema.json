@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Unified Memory Entry",
+  "type": "object",
+  "required": ["id", "timestamp", "type", "agent", "source", "text"],
+  "properties": {
+    "id": { "type": "string" },
+    "timestamp": { "type": "string" },
+    "type": { "type": "string" },
+    "agent": { "type": "string" },
+    "source": { "type": "string" },
+    "title": { "type": ["string", "null"] },
+    "text": { "type": "string" },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": { "type": "object" }
+  },
+  "additionalProperties": true
+}

@@ -25,7 +25,7 @@ interactions — then present hypotheses to the user for confirmation or rejecti
 
 ## Fractal Structure Protocol
 
-This skill writes directly to the `docs/plans/ideation/` folder using a **fractal pattern** — every node in the tree (surface, domain, sub-domain) follows the same structure:
+This skill writes directly to the `.memory/wiki/specs/ideation/` folder using a **fractal pattern** — every node in the tree (surface, domain, sub-domain) follows the same structure:
 
 ```
 {node}/

@@ -39,7 +39,7 @@ Scan downstream pipeline documents for contradictions with locked decisions, the
 
 ### Step A — Run `.agent/workflows/propagate-decision-scan.md`
 
-Pre-scans all 6 decision types, presents a selection menu to the user, runs a full scan on the selected types, builds an impact report with explicit contradictions and implicit assumptions, writes the report to `docs/audits/propagation-scan-[date].md`, and stops for user confirmation before proceeding.
+Pre-scans all 6 decision types, presents a selection menu to the user, runs a full scan on the selected types, builds an impact report with explicit contradictions and implicit assumptions, writes the report to `.memory/wiki/specs/audits/propagation-scan-[date].md`, and stops for user confirmation before proceeding.
 
 ### Step B — Run `.agent/workflows/propagate-decision-apply.md`
 

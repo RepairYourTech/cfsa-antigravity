@@ -19,7 +19,7 @@
 
 ## Protected Files (Do Not Modify Without Approval)
 - `AGENTS.md` — Project agent config
-- `docs/plans/ENGINEERING-STANDARDS.md` — Quality bar
+- `.memory/wiki/specs/ENGINEERING-STANDARDS.md` — Quality bar
 - `.factory/instructions/*` — Agent rules
 - `package.json` — Dependencies (add carefully)
 - `tsconfig.json` — TypeScript config

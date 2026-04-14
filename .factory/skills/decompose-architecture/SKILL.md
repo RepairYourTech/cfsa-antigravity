@@ -15,9 +15,9 @@ Runs decomposition in two shards: structure → validate.
 
 ## Prerequisites
 
-1. Approved `docs/plans/*-architecture-design.md` exists
-2. `docs/plans/ideation/ideation-index.md` exists
-3. If surfaces include web/mobile/desktop, `docs/plans/design-system.md` should exist before FE specification work
+1. Approved `.memory/wiki/specs/*-architecture-design.md` exists
+2. `.memory/wiki/specs/ideation/ideation-index.md` exists
+3. If surfaces include web/mobile/desktop, `.memory/wiki/specs/design-system.md` should exist before FE specification work
 
 ## Step-by-Step
 
@@ -34,25 +34,25 @@ Runs decomposition in two shards: structure → validate.
 2. Walk ideation fractal structure to identify domain boundaries.
 3. Build boundary table and assign shard numbers (`00-*` foundation, then dependency order).
 4. Present decomposition proposal and require explicit approval.
-5. Write `docs/plans/ia/decomposition-plan.md` immediately after approval.
+5. Write `.memory/wiki/specs/ia/decomposition-plan.md` immediately after approval.
 
 ### Step 2 — Run structure shard
 
 Call skill: `decompose-architecture-structure`
 
 Expected outputs:
-- `docs/plans/ia/*.md` shard skeletons (including mandatory `00-infrastructure.md`)
-- `docs/plans/ia/index.md`
-- `docs/plans/be/index.md`
-- `docs/plans/fe/index.md`
-- `docs/plans/index.md`
+- `.memory/wiki/specs/ia/*.md` shard skeletons (including mandatory `00-infrastructure.md`)
+- `.memory/wiki/specs/ia/index.md`
+- `.memory/wiki/specs/be/index.md`
+- `.memory/wiki/specs/fe/index.md`
+- `.memory/wiki/specs/index.md`
 
 ### Step 3 — Run validate shard
 
 Call skill: `decompose-architecture-validate`
 
 Expected outputs:
-- deep dive skeletons under `docs/plans/ia/deep-dives/`
+- deep dive skeletons under `.memory/wiki/specs/ia/deep-dives/`
 - shard type annotations and dependency validation results
 - updated feature ledger IA assignments (when ledger exists)
 - generated spec pipeline tracker

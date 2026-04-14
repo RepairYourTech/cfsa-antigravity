@@ -17,9 +17,9 @@ pipeline:
 
 # Write BE Spec — Write & Validate
 
-Write the BE spec(s) to `docs/plans/be/`, update indexes, run quality checks, and present for review.
+Write the BE spec(s) to `.memory/wiki/specs/be/`, update indexes, run quality checks, and present for review.
 
-**Prerequisite**: Read the spec file at `docs/plans/be/[NN-feature-name].md`. The `## Classification` section and Referenced Material Inventory should be present from the classify shard. If the file does not exist or lacks a `## Classification` section, run `/write-be-spec-classify` first.
+**Prerequisite**: Read the spec file at `.memory/wiki/specs/be/[NN-feature-name].md`. The `## Classification` section and Referenced Material Inventory should be present from the classify shard. If the file does not exist or lacks a `## Classification` section, run `/write-be-spec-classify` first.
 
 **Re-run detection**: If the spec file already has content beyond the classification stub (filled endpoint sections, schema definitions, middleware rules):
 - Present current state and ask: "This BE spec has existing content. **Continue** (skip filled sections) or **redo specific sections** (which ones)?"
@@ -27,7 +27,7 @@ Write the BE spec(s) to `docs/plans/be/`, update indexes, run quality checks, an
 
 ---
 
-## 7. Write the spec to `docs/plans/be/[NN-feature-name].md`
+## 7. Write the spec to `.memory/wiki/specs/be/[NN-feature-name].md`
 
 **Endpoint completeness reconciliation**: Before writing any section, build a reconciliation table from the sub-feature endpoint inventory (produced during `/write-be-spec-classify`):
 
@@ -65,7 +65,7 @@ Count the total lines in the written BE spec file.
 
 ## 8. Update the BE index
 
-Add or update the spec entry in `docs/plans/be/index.md`. For multi-domain splits, add one row per BE spec with the shared IA source.
+Add or update the spec entry in `.memory/wiki/specs/be/index.md`. For multi-domain splits, add one row per BE spec with the shared IA source.
 
 If a shard was classified as **structural reference** with 0 BE specs, add a row with `—` status and a note explaining why (e.g., "Structural reference — no API surface").
 
@@ -131,7 +131,7 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run:
 
 ## 12. Full ambiguity audit (mandatory when last BE spec)
 
-1. Read `docs/plans/be/index.md`
+1. Read `.memory/wiki/specs/be/index.md`
 2. Check if all BE specs show ✅
 
 **More specs remain**: Proceed to the next spec.
@@ -150,15 +150,15 @@ If this BE spec introduces a technology not already in the project's tech stack:
 
 ## 13.5. Update feature tracking ledger
 
-If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 3 — BE Coverage**. Match the endpoints in this spec to Feature IDs and populate the BE Spec and BE Status columns.
+If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 3 — BE Coverage**. Match the endpoints in this spec to Feature IDs and populate the BE Spec and BE Status columns.
 
 ## 13.7. Completion Gate (MANDATORY)
 
 1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the BE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 9. Go back and run Protocol 08 now before proceeding."
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 

@@ -6,12 +6,11 @@ package-lock.json
 # Kit development tools (not distributed)
 .agent/skills/antigravity-workflows/
 
-# Project-specific content (kit provides empty scaffolding only)
-# These dirs exist with README.md/.gitkeep but content is project-specific
-docs/audits/*.md
-!docs/audits/README.md
-docs/plans/**/*.md
-!docs/plans/**/README.md
+# Project-specific authoritative vault content
+# Canonical pipeline docs live under .memory/wiki/specs/
+.memory/wiki/specs/**/*.md
+!.memory/wiki/specs/**/README.md
+!.memory/wiki/specs/**/.gitkeep
 
 # Session-specific agent data
 .agent/progress/slices/

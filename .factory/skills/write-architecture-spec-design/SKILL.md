@@ -13,7 +13,7 @@ parameters:
 
 ## Prerequisites
 
-1. Target IA shard skeleton exists under `docs/plans/ia/`
+1. Target IA shard skeleton exists under `.memory/wiki/specs/ia/`
 2. Pipeline tracker is available to determine current shard when not overridden
 
 ## Step-by-Step

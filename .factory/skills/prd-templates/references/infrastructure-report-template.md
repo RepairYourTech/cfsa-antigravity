@@ -4,7 +4,7 @@ Use this template when creating the report during `/verify-infrastructure`.
 
 ## Initial Report (Step 0.6)
 
-Create at `docs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-auth].md`:
+Create at `.memory/wiki/specs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-auth].md`:
 
 ```markdown
 # Infrastructure Verification Report

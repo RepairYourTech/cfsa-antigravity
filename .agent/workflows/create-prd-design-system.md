@@ -17,7 +17,7 @@ pipeline:
 
 # Create PRD — Design System Decisions
 
-Establish the structural UI architecture — navigation paradigm, layout grid, page archetypes, global component inventory, motion language, data density philosophy, and global state design language. Produces `docs/plans/design-system.md` which all FE specs must consume.
+Establish the structural UI architecture — navigation paradigm, layout grid, page archetypes, global component inventory, motion language, data density philosophy, and global state design language. Produces `.memory/wiki/specs/design-system.md` which all FE specs must consume.
 
 **Prerequisite**: Tech stack decisions must be locked (`/create-prd-stack` completed). Design direction must be confirmed in `.agent/skills/brand-guidelines/SKILL.md`.
 
@@ -29,15 +29,15 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 2. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → **stop** and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd-stack` first to establish the design direction before designing the system."_
 3. If all placeholders are filled → extract and store for this session: the confirmed `DESIGN_DIRECTION`, color palette, typography choices, motion philosophy, and anti-patterns.
 
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+Read `## Engagement Tier` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
 Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for design system decisions (all 7 decisions are product decisions).
 
-1. Read `docs/plans/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `docs/plans/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
+1. Read `.memory/wiki/specs/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
 2. Read `.agent/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
 3. Read `.agent/skills/design-direction/SKILL.md` — for direction characteristics and anti-patterns.
 4. Read `.agent/skills/technical-writer/SKILL.md` — for document writing conventions.
-5. Read `.agent/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `docs/plans/design-system.md`.
+5. Read `.agent/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `.memory/wiki/specs/design-system.md`.
 6. Note which surfaces are in scope from `## Project Surfaces`.
 
 ### Ideation workflow context
@@ -53,11 +53,11 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ### Checkpoint resumption
 
-Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
 
 ### Per-decision Ideation Synthesis requirement
 
-Before presenting **each** of the 7 design system decisions below, write a brief **Ideation Synthesis** (2-4 bullets) explaining how the ideation content informs THIS specific decision. Each bullet must cite a specific file. **Append each synthesis as a `## {Decision Name}` section to `docs/plans/prd-working/design-system-synthesis.md`.**
+Before presenting **each** of the 7 design system decisions below, write a brief **Ideation Synthesis** (2-4 bullets) explaining how the ideation content informs THIS specific decision. Each bullet must cite a specific file. **Append each synthesis as a `## {Decision Name}` section to `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`.**
 
 **Cite-or-Stop Gate**: Your synthesis must contain ≥ 1 project-specific finding with a file citation per decision.  Generic reasoning like "this is a complex app, so sidebar navigation" without citing which domains/workflows make it complex → **STOP** and re-read the heavy domain files.
 
@@ -75,7 +75,7 @@ Present surface-appropriate options from the **Navigation Paradigm Options** sec
 
 **Wait for explicit user confirmation before proceeding** *(Interactive/Hybrid)* or auto-confirm with Deep Think *(Auto)*.
 
-On confirmation, write the `## Navigation Paradigm` section to `docs/plans/design-system.md` immediately. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -90,7 +90,7 @@ Provide a **default recommendation** based on the confirmed design direction:
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Layout Grid` table to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -100,7 +100,7 @@ Based on the feature inventory from `ideation-index.md`, propose a named archety
 
 Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Page Archetypes` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -112,7 +112,7 @@ Present the derived list. Ask: (1) Are any components missing? (2) Should any be
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global Component Inventory` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
+On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
 
 ---
 
@@ -120,7 +120,7 @@ On confirmation, write the `## Global Component Inventory` section to `docs/plan
 
 Present the options from the **Motion Language Options** in `design-system-decisions.md`. Present a recommendation based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Motion Language` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -128,7 +128,7 @@ On confirmation, write the `## Motion Language` section to `docs/plans/design-sy
 
 Present the options from the **Data Density Options** in `design-system-decisions.md`. If **Hybrid** is selected, ask the user to define per-archetype density rules. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Data Density Philosophy` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -136,13 +136,13 @@ On confirmation, write the `## Data Density Philosophy` section to `docs/plans/d
 
 Two-part decision. Present the loading state, error state, and empty state options from the **Global State Design Language Options** in `design-system-decisions.md`. Present recommendations based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global State Design Language` section to `docs/plans/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
 ## 9. Write and verify design-system.md
 
-After all seven decisions, verify that `docs/plans/design-system.md` was written progressively and is complete. Use the **design-system.md Output Template** from `design-system-decisions.md` as the canonical structure.
+After all seven decisions, verify that `.memory/wiki/specs/design-system.md` was written progressively and is complete. Use the **design-system.md Output Template** from `design-system-decisions.md` as the canonical structure.
 
 Verify:
 1. All seven sections are present and filled (no placeholders, no TBDs).
@@ -159,8 +159,8 @@ If any section is incomplete, loop back to the relevant decision step and resolv
 
 Before reporting completion or proceeding to next shard:
 
-1. **Update checkpoint** — Write final state to `docs/plans/prd-working/workflow-state.md`: mark all 7 decisions complete, set `current_step: completion`.
-2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.agent/progress/memory/`. All 7 design system decisions should have `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Update checkpoint** — Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all 7 decisions complete, set `current_step: completion`.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.memory/wiki/`. All 7 design system decisions should have `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
 3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 4. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

@@ -21,7 +21,7 @@ This skill owns the interview methodology for establishing concrete, enforceable
 
 ## Write-As-You-Go Rule
 
-Performance budgets are written **as you go** — each axis is discussed, decided, and immediately written to the corresponding subsection of `docs/plans/ENGINEERING-STANDARDS.md`. Do not batch them.
+Performance budgets are written **as you go** — each axis is discussed, decided, and immediately written to the corresponding subsection of `.memory/wiki/specs/ENGINEERING-STANDARDS.md`. Do not batch them.
 
 ## Surface Conditioning
 
@@ -40,7 +40,7 @@ Before any threshold is chosen, anchor all budgets to an explicit operating cont
 
 Ask: "What is the lowest-spec device and slowest network your users will realistically use? All budgets will be validated against this baseline."
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `## Performance Budgets` baseline note — fill in the `[device tier]` and `[network condition]` placeholders.
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `## Performance Budgets` baseline note — fill in the `[device tier]` and `[network condition]` placeholders.
 
 ### Axis 1 — Web Vitals per page type (web/desktop surfaces only)
 
@@ -54,7 +54,7 @@ Define LCP, INP, and CLS targets **per page type** (e.g., landing, dashboard, de
 
 Ask: "Which page types does your app have, and do these starting points fit?"
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### Web Vitals per page type`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### Web Vitals per page type`
 
 ### Axis 2 — JS bundle size per page type (web/desktop surfaces only)
 
@@ -67,7 +67,7 @@ Define initial and total JS budgets **per page type**, gzipped.
 
 Ask: "Are there pages that pull in large libraries (maps, charts, editors)? Those need their own row."
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### JS Bundle Size per page type`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### JS Bundle Size per page type`
 
 ### Axis 3 — API response time per tier
 
@@ -82,7 +82,7 @@ Define p50, p95, and p99 targets **per tier**, not a single number for the whole
 
 Ask: "Do any endpoints call external services? Those belong in Tier 4. Are there any endpoints that don't fit these four tiers?"
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### API Response Time per tier`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### API Response Time per tier`
 
 ### Axis 4 — DB query time per tier
 
@@ -97,7 +97,7 @@ Define p50 and p95 targets **per query tier**.
 
 Ask: "Are there any known heavy queries (reports, analytics)? Those belong in Tier 4. Any queries that don't fit these four tiers?"
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### DB Query Time per tier`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### DB Query Time per tier`
 
 ### Axis 5 — Desktop / mobile surface budgets (if applicable)
 
@@ -121,7 +121,7 @@ Define surface-specific budgets using the reference table:
 
 Ask: "Do these match your target devices and user expectations?"
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### Desktop surfaces` and/or `### Mobile surfaces`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### Desktop surfaces` and/or `### Mobile surfaces`
 
 ### Axis 6 — CI enforcement mapping
 
@@ -137,7 +137,7 @@ For **every budget defined in axes 0–5**, name the enforcement tool and fail c
 
 Ask: "For API and DB budgets, should CI fail immediately or warn-then-fail after a baseline run?"
 
-**Write immediately** → `docs/plans/ENGINEERING-STANDARDS.md` § `### CI Enforcement`
+**Write immediately** → `.memory/wiki/specs/ENGINEERING-STANDARDS.md` § `### CI Enforcement`
 
 ## Closing Summary
 

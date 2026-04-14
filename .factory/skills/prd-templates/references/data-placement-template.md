@@ -1,6 +1,6 @@
 # Data Placement Strategy Template
 
-Use this template to create `docs/plans/data-placement-strategy.md` during `/create-prd-architecture`.
+Use this template to create `.memory/wiki/specs/data-placement-strategy.md` during `/create-prd-architecture`.
 
 ```markdown
 # Data Placement Strategy

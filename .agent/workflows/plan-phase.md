@@ -22,9 +22,9 @@ Break a phase into TDD vertical slices, each spanning all four surfaces (contrac
 **Output**: Phase plan with ordered slices and acceptance criteria
 
 **Prerequisite**: Approved specs across all three layers must exist. Verify:
-1. `docs/plans/ia/index.md` exists and all shards show ✅
-2. `docs/plans/be/index.md` exists and all specs show ✅
-3. `docs/plans/fe/index.md` exists and all specs show ✅
+1. `.memory/wiki/specs/ia/index.md` exists and all shards show ✅
+2. `.memory/wiki/specs/be/index.md` exists and all specs show ✅
+3. `.memory/wiki/specs/fe/index.md` exists and all specs show ✅
 
 If any index is missing or contains incomplete specs → **STOP**: "Spec layers are not complete. Run `/write-architecture-spec`, `/write-be-spec`, and/or `/write-fe-spec` to complete all specs before planning a phase."
 
@@ -48,7 +48,7 @@ Run `.agent/workflows/plan-phase-write.md`.
 
 Before reporting completion to the user:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

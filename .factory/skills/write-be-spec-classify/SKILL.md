@@ -14,7 +14,7 @@ parameters:
 ## Prerequisites
 
 1. Target IA shard is complete
-2. `docs/plans/ia/index.md` and `.factory/progress/spec-pipeline.md` are present
+2. `.memory/wiki/specs/ia/index.md` and `.factory/progress/spec-pipeline.md` are present
 
 ## Step-by-Step
 

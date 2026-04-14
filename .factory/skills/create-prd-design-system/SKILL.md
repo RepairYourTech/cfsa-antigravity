@@ -34,11 +34,11 @@ parameters:
 ### Step 2 — Per-decision synthesis and locking (7 decisions)
 
 For each decision below:
-1. Write cited ideation synthesis (2-4 bullets) to `docs/plans/prd-working/design-system-synthesis.md`.
+1. Write cited ideation synthesis (2-4 bullets) to `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`.
 2. Enforce cite-or-stop gate (minimum one project-specific citation).
 3. Present options, trade-offs, recommendation.
 4. Confirm decision (tier-aware).
-5. Write corresponding section to `docs/plans/design-system.md` immediately.
+5. Write corresponding section to `.memory/wiki/specs/design-system.md` immediately.
 
 Decisions:
 1. Navigation paradigm
@@ -51,7 +51,7 @@ Decisions:
 
 ### Step 3 — Completeness verification
 
-1. Validate all seven sections exist in `docs/plans/design-system.md`.
+1. Validate all seven sections exist in `.memory/wiki/specs/design-system.md`.
 2. Ensure no placeholders or TBD values remain.
 3. Ensure global component inventory is usable as FE seed inventory.
 

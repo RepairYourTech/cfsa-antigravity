@@ -18,4 +18,4 @@ parameters:
 3. Classify each layer status (confirmed-clean / unverified-clean / needs-audit / no-content).
 4. Determine starting layer (respecting upstream-clean requirement).
 5. Present remediation plan and require user approval.
-6. Persist `docs/audits/remediation-state.md`.
+6. Persist `.memory/wiki/specs/audits/remediation-state.md`.

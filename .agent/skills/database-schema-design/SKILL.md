@@ -170,7 +170,7 @@ For each confirmed store, fire bootstrap with its specific sub-key:
 
 ### Sub-step E — Write Persistence Map
 
-After all stores are confirmed, write to `docs/plans/architecture-draft.md` as a locked section titled `## Persistence Map`.
+After all stores are confirmed, write to `.memory/wiki/specs/architecture-draft.md` as a locked section titled `## Persistence Map`.
 
 Must include:
 - The feature-to-query table from Sub-step A

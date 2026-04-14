@@ -37,7 +37,7 @@ Walk existing pipeline output layer by layer — audit with adversarial probing,
 
 ### Step A — Run `.agent/workflows/remediate-pipeline-assess.md`
 
-Scans all pipeline layers for existing content, checks `docs/audits/` for prior audit reports, classifies each layer (confirmed-clean / unverified-clean / needs-audit / no-content), determines the starting layer, presents the remediation plan to the user for approval, and writes `docs/audits/remediation-state.md`.
+Scans all pipeline layers for existing content, checks `.memory/wiki/specs/audits/` for prior audit reports, classifies each layer (confirmed-clean / unverified-clean / needs-audit / no-content), determines the starting layer, presents the remediation plan to the user for approval, and writes `.memory/wiki/specs/audits/remediation-state.md`.
 
 ### Step B — Run `.agent/workflows/remediate-pipeline-execute.md`
 

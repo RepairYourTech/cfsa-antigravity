@@ -35,15 +35,15 @@ Scan the surface stack map (`.agent/instructions/tech-stack.md`) for completenes
 
 ## 0.5. Determine trigger
 
-Read the current phase plan (e.g., `docs/plans/phases/phase-1.md`) to identify what just completed.
+Read the current phase plan (e.g., `.memory/wiki/specs/phases/phase-1.md`) to identify what just completed.
 
 - **If `/setup-workspace` was just completed** → trigger is `workspace`, report suffix is `-workspace`
 - **If the `00-infrastructure` slice was just completed** → trigger is `infrastructure`, report suffix is empty
 - **If the auth slice was just completed** → trigger is `auth`, report suffix is `-auth`
 
-Set the report filename now: `docs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-workspace|-auth].md`.
+Set the report filename now: `.memory/wiki/specs/audits/verify-infrastructure-YYYY-MM-DD-HHMM[-workspace|-auth].md`.
 
-**Re-run detection**: Check if a previous verification report exists for this trigger (search `docs/audits/` for `verify-infrastructure-*[-auth].md`).\n- If a previous report exists and shows `✅ PASS` → ask: \"A passing verification report already exists (`[filename]`). Re-run all checks or skip?\"\n- If a previous report exists and shows `❌ FAIL` → proceed automatically (re-verification needed).\n- If no previous report exists → proceed normally.
+**Re-run detection**: Check if a previous verification report exists for this trigger (search `.memory/wiki/specs/audits/` for `verify-infrastructure-*[-auth].md`).\n- If a previous report exists and shows `✅ PASS` → ask: \"A passing verification report already exists (`[filename]`). Re-run all checks or skip?\"\n- If a previous report exists and shows `❌ FAIL` → proceed automatically (re-verification needed).\n- If no previous report exists → proceed normally.
 
 ---
 
@@ -157,7 +157,7 @@ If auth IS implemented:
 
 ## 6.5. Logging gate
 
-Read `docs/plans/*-architecture-design.md` section `## Observability Architecture` to load the confirmed logging decisions.
+Read `.memory/wiki/specs/*-architecture-design.md` section `## Observability Architecture` to load the confirmed logging decisions.
 
 1. Verify structured startup log is emitted on application boot with the following 5 required fields:
    - `timestamp` (ISO 8601)
@@ -197,7 +197,7 @@ Read `docs/plans/*-architecture-design.md` section `## Observability Architectur
 ## 6.7. Spec pipeline integrity check
 
 1. Read `.agent/progress/spec-pipeline.md` — verify all IA/BE/FE columns show ✅ for all shards included in the current phase
-2. If `docs/plans/feature-ledger.md` exists:
+2. If `.memory/wiki/specs/feature-ledger.md` exists:
    - Read the ledger and verify no **Must Have** features have gaps in IA/BE/FE coverage
    - If any Must Have feature has an empty column → **STOP**: "Feature `[ID: name]` is missing `[column]` coverage. Complete the spec before proceeding to implementation."
 
@@ -216,9 +216,9 @@ The final report must include all eight gate checks: 0 (placeholder audit), 1 (C
 ## 8.5. Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 3. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 

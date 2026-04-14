@@ -9,21 +9,21 @@ trigger: always_on
 
 ## The Problem
 
-The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`, `memory/blockers.md`) — all empty. `workflow.md` Step 5 says "Learn (MANDATORY)" but no enforcement exists. This rule IS the enforcement.
+The pipeline needs shared memory that survives across runtimes. The canonical project memory lives in `.memory/`, with `.memory/wiki/patterns.md`, `.memory/wiki/decisions.md`, and `.memory/wiki/blockers.md` as the human-readable compiled files. This rule enforces writing to that shared memory instead of letting learning fragment across runtime-local silos.
 
 ## When to Write
 
 | Trigger | What Happened | Target File | Format |
 |---------|---------------|-------------|--------|
-| User corrects me | "No, that's wrong" / "Don't do that" / "I told you to..." | `memory/patterns.md` | Anti-pattern (PAT-NNN) |
-| User says "remember this" | Explicit instruction to retain information | `memory/decisions.md` | Decision (DEC-NNN) |
-| Non-trivial decision made | Choice with ripple effects (see Protocol 06 triage) | `memory/decisions.md` | Decision (DEC-NNN) |
-| Something blocks progress | External dependency, missing spec, tooling failure | `memory/blockers.md` | Blocker (BLOCKER-NNN) |
-| Pattern emerges | Something works well or fails repeatedly | `memory/patterns.md` | Pattern (PAT-NNN) |
+| User corrects me | "No, that's wrong" / "Don't do that" / "I told you to..." | `.memory/wiki/patterns.md` | Anti-pattern (PAT-NNN) |
+| User says "remember this" | Explicit instruction to retain information | `.memory/wiki/decisions.md` | Decision (DEC-NNN) |
+| Non-trivial decision made | Choice with ripple effects (see Protocol 06 triage) | `.memory/wiki/decisions.md` | Decision (DEC-NNN) |
+| Something blocks progress | External dependency, missing spec, tooling failure | `.memory/wiki/blockers.md` | Blocker (BLOCKER-NNN) |
+| Pattern emerges | Something works well or fails repeatedly | `.memory/wiki/patterns.md` | Pattern (PAT-NNN) |
 
 ## How to Write
 
-### Patterns (`memory/patterns.md`)
+### Patterns (`.memory/wiki/patterns.md`)
 
 ```markdown
 ### PAT-NNN: [Short description] (YYYY-MM-DD)
@@ -34,7 +34,7 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 - **Source**: What triggered this entry
 ```
 
-### Decisions (`memory/decisions.md`)
+### Decisions (`.memory/wiki/decisions.md`)
 
 ```markdown
 ### DEC-NNN: [Decision summary] (YYYY-MM-DD)
@@ -45,7 +45,7 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 - **Reversibility**: High | Medium | Low
 ```
 
-### Blockers (`memory/blockers.md`)
+### Blockers (`.memory/wiki/blockers.md`)
 
 ```markdown
 ### BLOCKER-NNN: [Description] (YYYY-MM-DD)
@@ -64,7 +64,7 @@ The pipeline has three memory files (`memory/patterns.md`, `memory/decisions.md`
 
 When running in Claude Code, memory capture is dual-write:
 
-1. Write the CFSA entry to `.claude/memory/{patterns|decisions|blockers}.md`
+1. Write the CFSA entry to the unified project memory at `.memory/wiki/{patterns|decisions|blockers}.md` (or through the shared memory MCP tools when available)
 2. Evaluate native-memory relevance and sync to Claude native memory store:
    - User correction/preference → `feedback`
    - User-specific preference/profile signal → `user`
@@ -78,7 +78,7 @@ If a trigger requires CFSA logging and native-memory relevance, both writes are 
 Before calling `notify_user` to report completion of ANY workflow or substantial task:
 
 1. **Scan this conversation** for triggers in the table above
-2. **If triggers found** → write entries to `.claude/memory/*` and sync relevant items to native memory
+2. **If triggers found** → write entries to `.memory/wiki/*` and sync relevant items to native memory
 3. **If no triggers** → explicitly confirm: "No new patterns, decisions, or blockers to log"
 
 This check is **not skippable**. It applies to every pipeline stage, every conversation, every session.

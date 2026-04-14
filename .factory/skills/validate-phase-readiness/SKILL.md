@@ -55,7 +55,7 @@ parameters:
 
 1. Verify quality shard already wrote spec coverage section.
 2. Append readiness sections to existing phase validation report.
-3. Update progress/memory/session artifacts.
+3. Update progress, unified `.memory/`, and session artifacts.
 4. Present report with pass/fail verdict and constrained next steps.
 
 ## Completion Checklist

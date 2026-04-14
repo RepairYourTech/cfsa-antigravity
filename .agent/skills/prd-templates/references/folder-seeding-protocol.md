@@ -1,10 +1,10 @@
 # Folder Seeding Protocol
 
-Rules for creating the `docs/plans/ideation/` folder structure during `/ideate-extract`.
+Rules for creating the `.memory/wiki/specs/ideation/` folder structure during `/ideate-extract`.
 
 ## Additive-Only Rule
 
-The `docs/plans/ideation/` directory already exists in the kit with `.gitkeep` and `README.md`. You are ADDING files into this existing directory.
+The `.memory/wiki/specs/ideation/` directory already exists in the kit with `.gitkeep` and `README.md`. You are ADDING files into this existing directory.
 
 - Do NOT delete, overwrite, or replace the directory itself
 - Do NOT remove any existing files (`.gitkeep`, `README.md`)
@@ -15,7 +15,7 @@ The `docs/plans/ideation/` directory already exists in the kit with `.gitkeep` a
 After seeding, the folder should contain kit-shipped files PLUS new pipeline files:
 
 ```
-docs/plans/ideation/
+.memory/wiki/specs/ideation/
 ├── .gitkeep                ← KIT-SHIPPED — do not touch
 ├── README.md               ← KIT-SHIPPED — do not touch
 ├── ideation-index.md       ← NEW: super-index (from ideation-index-template)
@@ -47,7 +47,7 @@ Domains come from the **confirmed classification table** (Step 1.4.5), NOT from 
 
 | Classification | Placement |
 |---|---|
-| Single-surface | `docs/plans/ideation/{NN}-{slug}/` |
+| Single-surface | `.memory/wiki/specs/ideation/{NN}-{slug}/` |
 | Hub-and-spoke | Surface-exclusive in `surfaces/{surface}/{NN}-{slug}/`, shared in hub surface |
 | Peer | Surface-exclusive in `surfaces/{surface}/{NN}-{slug}/`, shared in `shared/{NN}-{slug}/` |
 
@@ -74,4 +74,4 @@ After all nodes are created, update `ideation-index.md` structure map with paths
 
 ## Post-Seeding Verification Gate
 
-After creating all files, verify that `docs/plans/ideation/.gitkeep` and `docs/plans/ideation/README.md` still exist. If EITHER file is missing → **STOP**: "Kit-shipped files were destroyed during seeding. Restore `.gitkeep` and/or `README.md` to `docs/plans/ideation/` before continuing."
+After creating all files, verify that `.memory/wiki/specs/ideation/.gitkeep` and `.memory/wiki/specs/ideation/README.md` still exist. If EITHER file is missing → **STOP**: "Kit-shipped files were destroyed during seeding. Restore `.gitkeep` and/or `README.md` to `.memory/wiki/specs/ideation/` before continuing."

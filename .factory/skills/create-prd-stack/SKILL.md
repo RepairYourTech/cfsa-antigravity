@@ -13,14 +13,14 @@ parameters:
 
 ## Prerequisites
 
-1. `docs/plans/ideation/ideation-index.md` exists
-2. `docs/plans/ideation/meta/constraints.md` exists and includes `## Project Surfaces`
+1. `.memory/wiki/specs/ideation/ideation-index.md` exists
+2. `.memory/wiki/specs/ideation/meta/constraints.md` exists and includes `## Project Surfaces`
 
 ## Step-by-Step
 
 ### Step 1 — Checkpoint resumption
 
-1. Use workflow checkpoint protocol at `docs/plans/prd-working/workflow-state.md`.
+1. Use workflow checkpoint protocol at `.memory/wiki/specs/architecture/prd-working/workflow-state.md`.
 2. Resume if active shard matches; otherwise initialize fresh shard checkpoint.
 
 ### Step 2 — Constraint-first discovery
@@ -34,7 +34,7 @@ parameters:
 
 ### Step 3 — Build ideation relevance index (mandatory)
 
-1. Create `docs/plans/prd-working/ideation-relevance-index.md`.
+1. Create `.memory/wiki/specs/architecture/prd-working/ideation-relevance-index.md`.
 2. Map each decision axis to relevant domain/deep-dive/CX files.
 3. Enforce stop gate: every axis must have at least one relevant ideation file.
 
@@ -43,7 +43,7 @@ parameters:
 For each applicable axis:
 1. Read all files listed for that axis in relevance index.
 2. Answer Tier 1 constraint questions from ideation evidence.
-3. Append axis synthesis (3-5 cited bullets) to `docs/plans/prd-working/stack-synthesis.md`.
+3. Append axis synthesis (3-5 cited bullets) to `.memory/wiki/specs/architecture/prd-working/stack-synthesis.md`.
 4. Enforce cite-or-stop gate (minimum two project-specific citations).
 5. Ask Tier 2 user-facing questions.
 6. Present filtered options + recommendation.
@@ -65,7 +65,7 @@ For each applicable axis:
 
 ### Step 7 — Decision persistence
 
-1. Append confirmed decisions to `docs/plans/architecture-draft.md` as they are locked.
+1. Append confirmed decisions to `.memory/wiki/specs/architecture-draft.md` as they are locked.
 2. Ensure no unresolved `TBD` values remain in this shard output.
 
 ## Completion Checklist

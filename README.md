@@ -28,6 +28,8 @@ npx cfsa-antigravity init --agent claude,factory
 | `cfsa-antigravity init --force` | Overwrite existing installation |
 | `cfsa-antigravity init --dry-run` | Preview what would be installed |
 | `cfsa-antigravity init --path ./dir` | Install into specific directory |
+| `cfsa-antigravity init --memory` | Scaffold unified `.memory/` + MCP integration |
+| `cfsa-antigravity init --migrate-memory` | Scaffold unified memory and import legacy runtime memory |
 
 ### Available runtimes
 
@@ -38,6 +40,26 @@ Runtimes are auto-detected from the template. Currently shipped:
 - **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
 
 Each runtime is fully standalone with no cross-references. Install any combination side-by-side.
+
+## Unified Project Memory
+
+Every install now scaffolds a shared `.memory/` root at the project level. It is intended to be an Obsidian-friendly vault inside the project, not just an internal data folder.
+
+```text
+.memory/
+├── .obsidian/   # vault config so the project memory opens cleanly in Obsidian
+├── raw/         # append-only captures from hooks, sessions, and imports
+├── wiki/        # human-readable compiled memory plus graph-friendly mirrors of docs/plans
+├── schema/      # machine-readable index/chunk artifacts
+├── mcp-server/  # shared project-local MCP daemon + per-runtime client entrypoints
+├── runtime/     # daemon pid/state files
+├── hooks/       # Claude hook entrypoints
+└── migrate/     # legacy memory import helpers
+```
+
+The installer also creates `.mcp.json` so supported runtimes can talk to the shared project-local memory daemon through their own MCP clients, and it merges Claude hook entries into `.claude/settings.json` for automatic capture and daemon startup. The daemon writes runtime state into `.memory/runtime/`, and the semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
+
+This replaces fragmented runtime-local memory as the canonical project memory layer. Runtime-local memory files remain legacy inputs for migration.
 
 If you are using an editor that indexes agent files for slash commands, do not hide the runtime directory you actually installed.
 
@@ -72,6 +94,19 @@ This performs a **semantic merge** — it applies new workflows, skills, and rul
 - First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
 - Tracks sync state in the installed agent runtime (`.agent/kit-sync.md`, `.claude/kit-sync.md`, or `.factory/kit-sync.md`) so it knows what changed since last update
 - Flags any structural migrations needed (e.g., ideation format changes)
+
+## What Init Adds
+
+A fresh `init` now installs:
+- your selected runtime directories (`.agent/`, `.claude/`, `.factory/`)
+- `docs/`
+- shared `.memory/`
+- `.mcp.json` with the `cfsa-memory` server registration
+- merged Claude hooks in `.claude/settings.json` when Claude is installed
+
+Use `--migrate-memory` when upgrading an older installation that still has runtime-local memory you want imported into `.memory/`.
+
+If migration finds a knowledge-file destination with different existing contents, it preserves both versions by writing a `.conflict-YYYY-MM-DD.md` sibling file for manual reconciliation.
 
 ## Documentation
 

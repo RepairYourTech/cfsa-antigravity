@@ -9,7 +9,7 @@ Templates, formats, and scan procedures for `/propagate-decision` workflows.
 | **structure** | `.factory/instructions/structure.md` | All IA shards, BE specs, FE specs |
 | **tech-stack** | `.factory/instructions/tech-stack.md` + architecture doc | All IA shards, BE specs, FE specs |
 | **auth-model** | Architecture doc (auth/security section) | All BE specs with middleware, all FE specs with auth flows |
-| **data-placement** | `docs/plans/data-placement-strategy.md` | All IA shards with data models, all BE specs with storage |
+| **data-placement** | `.memory/wiki/specs/data-placement-strategy.md` | All IA shards with data models, all BE specs with storage |
 | **patterns** | `.factory/instructions/patterns.md` | All IA shards, BE specs with implementation patterns, FE specs with component patterns |
 | **error-architecture** | Architecture doc `## Error Architecture` (5 sub-sections) | All BE specs, all FE specs |
 
@@ -32,15 +32,15 @@ Decision propagation pre-scan:
 ## Error-Architecture Scan Procedure
 
 **Source extraction:**
-- Locate `docs/plans/*-architecture-design.md` using glob
+- Locate `.memory/wiki/specs/*-architecture-design.md` using glob
 - Read `## Error Architecture` and extract locked decisions from: `### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`
 
-**BE spec conformance** (scan `docs/plans/be/`):
+**BE spec conformance** (scan `.memory/wiki/specs/be/`):
 - Check error envelope by locked name and canonical field names
 - Check propagation chain rules
 - Classify: explicit contradiction / implicit assumption / consistent
 
-**FE spec conformance** (scan `docs/plans/fe/`):
+**FE spec conformance** (scan `.memory/wiki/specs/fe/`):
 - Check client fallback contract for surface type
 - Check error boundary placement
 - Same classification
@@ -115,7 +115,7 @@ Skipped: X items
 
 Recommended next steps:
 1. Run `/resolve-ambiguity` to address the X flagged assumptions
-   (see docs/audits/propagation-ambiguity-[date].md)
+   (see .memory/wiki/specs/audits/propagation-ambiguity-[date].md)
 2. Run `/remediate-pipeline` to audit all layers with the corrected specs
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```

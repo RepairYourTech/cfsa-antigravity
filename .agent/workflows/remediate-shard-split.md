@@ -33,7 +33,7 @@ Update all downstream cross-references after a parent shard is split into sub-sh
 
 If invoked by a parent workflow, the parent shard number and sub-shard list are already known. If invoked standalone:
 
-1. Scan `docs/plans/ia/` for parent stubs containing `SPLIT →` markers
+1. Scan `.memory/wiki/specs/ia/` for parent stubs containing `SPLIT →` markers
 2. For each split parent, list its sub-shards by reading files matching the `[NN][a-z]-*.md` pattern
 3. Present findings to user and ask which split to remediate (if multiple)
 
@@ -66,7 +66,7 @@ Present to user for confirmation. **Wait for approval before proceeding.**
 
 Read `.agent/skills/prd-templates/references/shard-split-remediation.md` → **Cross-Reference Scan Patterns**.
 
-Grep `docs/plans/` recursively for all references to the parent shard number. The scan must cover:
+Grep `.memory/wiki/specs/` recursively for all references to the parent shard number. The scan must cover:
 
 | Reference Pattern | Example |
 |------------------|---------|
@@ -77,7 +77,7 @@ Grep `docs/plans/` recursively for all references to the parent shard number. Th
 | Parenthetical inline refs | `(see shard 00)` |
 | Cross-shard links | `[00-infrastructure.md]` |
 
-**Scope**: All directories under `docs/plans/` — `ia/`, `be/`, `fe/`, and any per-surface subdirectories within `be/` and `fe/` (e.g., `be/web/`, `fe/desktop/`, `be/mobile/`).
+**Scope**: All directories under `.memory/wiki/specs/` — `ia/`, `be/`, `fe/`, and any per-surface subdirectories within `be/` and `fe/` (e.g., `be/web/`, `fe/desktop/`, `be/mobile/`).
 
 **Exclusion**: Skip the parent stub file itself (it's already marked SPLIT).
 
@@ -154,7 +154,7 @@ After user confirmation: apply each fix to the target file immediately. After ap
 
 ## 6. Verification grep (BLOCKING GATE)
 
-After all fixes are applied, run a verification grep for the parent shard number across the entire `docs/plans/` tree.
+After all fixes are applied, run a verification grep for the parent shard number across the entire `.memory/wiki/specs/` tree.
 
 **Pass condition**: Zero stale references remain (excluding the parent stub itself).
 
@@ -169,7 +169,7 @@ If stale references are found:
 
 Read `.agent/skills/technical-writer/SKILL.md` for writing standards.
 
-Write `docs/audits/shard-split-remediation-[parent]-[date].md` recording:
+Write `.memory/wiki/specs/audits/shard-split-remediation-[parent]-[date].md` recording:
 - Parent shard identifier and name
 - Sub-shard mapping table used
 - Total references scanned
@@ -194,7 +194,7 @@ Sub-shards: [NNa], [NNb], [NNc], [NNd]
 Updated:  X references across Y documents
 Skipped:  X references
 Stale:    0 remaining ✅
-Record:   docs/audits/shard-split-remediation-[parent]-[date].md
+Record:   .memory/wiki/specs/audits/shard-split-remediation-[parent]-[date].md
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 

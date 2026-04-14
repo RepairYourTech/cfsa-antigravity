@@ -1,6 +1,6 @@
 # Engineering Standards Template
 
-Use this template when creating `docs/plans/ENGINEERING-STANDARDS.md`. Fill in concrete values based on tech stack decisions — **no TBDs allowed**.
+Use this template when creating `.memory/wiki/specs/ENGINEERING-STANDARDS.md`. Fill in concrete values based on tech stack decisions — **no TBDs allowed**.
 
 ```markdown
 # [Project Name] — Engineering Standards

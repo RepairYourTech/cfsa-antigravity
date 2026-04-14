@@ -16,7 +16,7 @@ This workflow scans the current state of the repository and produces a "living" 
 
 ---
 
-**Prerequisite**: Verify that `/validate-phase` passed for the current phase before updating the architecture map. Read `docs/audits/phase-N-validation.md` (where N is the current phase number) and confirm the verdict is PASS. If the phase has not been validated or the verdict is FAIL → **STOP**: "Run `/validate-phase` for Phase N and ensure it passes before updating the architecture map."
+**Prerequisite**: Verify that `/validate-phase` passed for the current phase before updating the architecture map. Read `.memory/wiki/specs/audits/phase-N-validation.md` (where N is the current phase number) and confirm the verdict is PASS. If the phase has not been validated or the verdict is FAIL → **STOP**: "Run `/validate-phase` for Phase N and ensure it passes before updating the architecture map."
 
 ## 0. Load architecture mapping skill
 
@@ -67,7 +67,7 @@ Ensure the document is human-readable, well-structured, and focuses on high-leve
 
 ## 6. Phase completion gate
 
-Read `docs/plans/*-architecture-design.md` → **Phasing** section to determine the total number of planned phases.
+Read `.memory/wiki/specs/*-architecture-design.md` → **Phasing** section to determine the total number of planned phases.
 Read `.agent/progress/index.md` to determine the current phase number N and how many phases have `status: complete`.
 
 ### If completed phases < total phases
@@ -82,7 +82,7 @@ All phases are complete. The pipeline has reached its terminal state. Present:
 
 > "✅ **All phases complete.** Architecture map updated. The project is ready for deployment.
 >
-> - Refer to `docs/plans/ENGINEERING-STANDARDS.md` for deployment procedures
+> - Refer to `.memory/wiki/specs/ENGINEERING-STANDARDS.md` for deployment procedures
 > - Refer to your CI/CD pipeline configuration for automated deployment
 > - Run `/validate-phase` for the final phase if not already done
 >

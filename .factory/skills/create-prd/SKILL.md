@@ -15,7 +15,7 @@ Runs the create-prd stage in five shards and compiles final architecture outputs
 
 ## Prerequisites
 
-1. `docs/plans/ideation/ideation-index.md` exists and is complete
+1. `.memory/wiki/specs/ideation/ideation-index.md` exists and is complete
 2. Ideation approval already obtained
 3. `.factory/instructions/tech-stack.md` exists and has resolved values for required map cells
 
@@ -35,46 +35,46 @@ Runs the create-prd stage in five shards and compiles final architecture outputs
 Call skill: `create-prd-stack`
 
 Expected outputs:
-- `docs/plans/prd-working/ideation-relevance-index.md`
-- `docs/plans/prd-working/stack-synthesis.md`
-- Stack decisions appended to `docs/plans/architecture-draft.md`
+- `.memory/wiki/specs/architecture/prd-working/ideation-relevance-index.md`
+- `.memory/wiki/specs/architecture/prd-working/stack-synthesis.md`
+- Stack decisions appended to `.memory/wiki/specs/architecture-draft.md`
 
 ### Step 2 — Run design-system shard
 
 Call skill: `create-prd-design-system`
 
 Expected outputs:
-- `docs/plans/design-system.md`
-- `docs/plans/prd-working/design-system-synthesis.md`
+- `.memory/wiki/specs/design-system.md`
+- `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`
 
 ### Step 3 — Run architecture shard
 
 Call skill: `create-prd-architecture`
 
 Expected outputs:
-- `## System Architecture` in `docs/plans/architecture-draft.md`
-- `## Error Architecture` in `docs/plans/architecture-draft.md`
-- `## Data Strategy` in `docs/plans/architecture-draft.md`
-- `docs/plans/data-placement-strategy.md`
+- `## System Architecture` in `.memory/wiki/specs/architecture-draft.md`
+- `## Error Architecture` in `.memory/wiki/specs/architecture-draft.md`
+- `## Data Strategy` in `.memory/wiki/specs/architecture-draft.md`
+- `.memory/wiki/specs/data-placement-strategy.md`
 
 ### Step 4 — Run security shard
 
 Call skill: `create-prd-security`
 
 Expected outputs:
-- `## Security Model` in `docs/plans/architecture-draft.md`
-- `## Security — Attack Surface` in `docs/plans/architecture-draft.md`
-- `## Integration Points` in `docs/plans/architecture-draft.md`
-- `## Observability Architecture` in `docs/plans/architecture-draft.md`
+- `## Security Model` in `.memory/wiki/specs/architecture-draft.md`
+- `## Security — Attack Surface` in `.memory/wiki/specs/architecture-draft.md`
+- `## Integration Points` in `.memory/wiki/specs/architecture-draft.md`
+- `## Observability Architecture` in `.memory/wiki/specs/architecture-draft.md`
 
 ### Step 5 — Run compile shard
 
 Call skill: `create-prd-compile`
 
 Expected outputs:
-- `docs/plans/YYYY-MM-DD-architecture-design.md`
-- `docs/plans/ENGINEERING-STANDARDS.md`
-- Checkpoint cleanup in `docs/plans/prd-working/`
+- `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md`
+- `.memory/wiki/specs/ENGINEERING-STANDARDS.md`
+- Checkpoint cleanup in `.memory/wiki/specs/architecture/prd-working/`
 
 ## Completion Checklist
 

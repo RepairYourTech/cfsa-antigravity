@@ -50,13 +50,13 @@ If these files contain `{{PLACEHOLDER}}` values, the information hasn't been dec
 **Check second — the pipeline's own output**
 
 The answer may already exist in a document written by an earlier pipeline stage:
-- `docs/plans/ideation/ideation-index.md` + fractal domain tree (folder `*-index.md`, `*-cx.md`, and feature files) — Problem, personas, features, constraints, domain map
-- `docs/plans/*-architecture-design.md` — Tech stack, system design, security model
-- `docs/plans/ENGINEERING-STANDARDS.md` — Quality thresholds, performance budgets
-- `docs/plans/ia/*.md` — IA shards (features, data models, access control, edge cases)
-- `docs/plans/ia/deep-dives/*.md` — Detailed architectural decisions
-- `docs/plans/be/*.md` — BE specs (endpoints, contracts, schemas)
-- `docs/plans/fe/*.md` — FE specs (components, routing, state, a11y)
+- `.memory/wiki/specs/ideation/ideation-index.md` + fractal domain tree (folder `*-index.md`, `*-cx.md`, and feature files) — Problem, personas, features, constraints, domain map
+- `.memory/wiki/specs/*-architecture-design.md` — Tech stack, system design, security model
+- `.memory/wiki/specs/ENGINEERING-STANDARDS.md` — Quality thresholds, performance budgets
+- `.memory/wiki/specs/ia/*.md` — IA shards (features, data models, access control, edge cases)
+- `.memory/wiki/specs/ia/deep-dives/*.md` — Detailed architectural decisions
+- `.memory/wiki/specs/be/*.md` — BE specs (endpoints, contracts, schemas)
+- `.memory/wiki/specs/fe/*.md` — FE specs (components, routing, state, a11y)
 
 **Read the specific section, not the entire document.** Use the IA/BE/FE index files to locate the relevant shard or spec.
 

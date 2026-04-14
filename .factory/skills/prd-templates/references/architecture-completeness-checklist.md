@@ -24,5 +24,5 @@ Apply after the architecture rubric self-check. All items must pass.
 - [ ] Platform-specific considerations documented for each target OS
 
 ## Design System
-- [ ] Design system document exists at `docs/plans/design-system.md`
+- [ ] Design system document exists at `.memory/wiki/specs/design-system.md`
 - [ ] All seven decision areas are filled (no placeholders)

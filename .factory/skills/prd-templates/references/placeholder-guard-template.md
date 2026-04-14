@@ -10,7 +10,7 @@ Emit one block per unfilled placeholder:
 >
 > **Unfilled placeholder:** `{{PLACEHOLDER_NAME}}`
 >
-> **Recovery:** If `docs/plans/*-architecture-design.md` exists, read it and extract the confirmed [tech decision] value, then run `/bootstrap-agents` with `KEY=<confirmed-value>`. If no architecture design document exists, run `/create-prd-stack` first to confirm tech stack decisions.
+> **Recovery:** If `.memory/wiki/specs/*-architecture-design.md` exists, read it and extract the confirmed [tech decision] value, then run `/bootstrap-agents` with `KEY=<confirmed-value>`. If no architecture design document exists, run `/create-prd-stack` first to confirm tech stack decisions.
 >
 > **Why this matters:** [specific step] cannot produce correct output without this skill — [concrete consequence of proceeding without it].
 

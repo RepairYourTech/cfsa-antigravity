@@ -19,22 +19,22 @@ pipeline:
 
 Build the decision constraints map from the ideation output, then walk through each tech stack axis with the user.
 
-**Prerequisite**: `docs/plans/ideation/ideation-index.md` must exist. If it does not, tell the user to run `/ideate` first.
+**Prerequisite**: `.memory/wiki/specs/ideation/ideation-index.md` must exist. If it does not, tell the user to run `/ideate` first.
 
 ## 2.4. Checkpoint resumption
 
-Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure in the protocol (re-read this workflow, skip completed items, resume from `next_action`). If it does not exist → initialize a fresh checkpoint for this shard.
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure in the protocol. If it does not exist → initialize a fresh checkpoint for this shard.
 
 ---
 
 ## 2.5. Constraint-first discovery
 
-Before any tech stack decision, read `docs/plans/ideation/meta/constraints.md` to build the **decision constraints map**.
+Before any tech stack decision, read `.memory/wiki/specs/ideation/meta/constraints.md` to build the **decision constraints map**.
 
 - **If `meta/constraints.md` does not exist** → **STOP**: "Constraints file missing. Run `/ideate` to completion — constraint exploration is required before tech stack decisions."
 - **If it exists but has no `## Project Surfaces` section** → **STOP**: "Constraints file is missing Project Surfaces. Run `/ideate-validate` to complete constraint exploration."
 
-Also read `docs/plans/ideation/ideation-index.md` — specifically `## Structural Classification` (authoritative surface list and project shape) and `## Engagement Tier` (gate behavior for this session).
+Also read `.memory/wiki/specs/ideation/ideation-index.md` — specifically `## Structural Classification` (authoritative surface list and project shape) and `## Engagement Tier` (gate behavior for this session).
 
 Read the engagement tier protocol (`.agent/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for tech stack decisions.
 
@@ -52,11 +52,11 @@ Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for t
 
 > **This step is mandatory.** Reading `ideation-index.md` + `constraints.md` gives feature names, not feature architecture. Tech stack decisions require understanding *what the features actually do*. A MoSCoW summary line is **never** sufficient context for a tech stack decision.
 
-Create directory `docs/plans/prd-working/` if it does not exist.
+Create directory `.memory/wiki/specs/architecture/prd-working/` if it does not exist.
 
 Build an **Ideation Relevance Index** — a lookup table mapping each decision axis to the specific ideation files that inform it. This index is consulted PER-AXIS to guarantee no axis skips its relevant source material.
 
-**Write the completed index to `docs/plans/prd-working/ideation-relevance-index.md`.**
+**Write the completed index to `.memory/wiki/specs/architecture/prd-working/ideation-relevance-index.md`.**
 
 ### How to build the index
 
@@ -79,7 +79,7 @@ This index is your working checklist. Before each axis, consult it and read the 
 
 ## 3. Tech stack decisions
 
-Read the **Project Surfaces** section from `docs/plans/ideation/meta/constraints.md` to determine which decision axes apply.
+Read the **Project Surfaces** section from `.memory/wiki/specs/ideation/meta/constraints.md` to determine which decision axes apply.
 
 Read `.agent/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.agent/skills/tech-stack-catalog/SKILL.md`.
 Read .agent/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.
@@ -91,14 +91,14 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 **Per-axis flow**:
 1. **Consult Ideation Relevance Index**: Look up this axis in the index built in Step 2.7. Read EVERY file listed for this axis — not optional, not "skim", not "check if relevant". Read them.
 2. **Read constraint questions**: Read `.agent/skills/tech-stack-catalog/references/constraint-questions.md` for this axis. Answer all **Tier 1 (self-answer from ideation)** questions using what you just read. These are questions YOU answer — do not ask the user.
-3. **Write Ideation Synthesis**: Before talking to the user, write a 3-5 bullet synthesis of project-specific findings relevant to this axis. Each bullet must cite a specific file (e.g., "From `diagnostics/diagnostics-deep-dive.md`: multi-agent orchestration with persistent task queues requires..."). **Append this synthesis as a `## {Axis Name}` section to `docs/plans/prd-working/stack-synthesis.md`.**
+3. **Write Ideation Synthesis**: Before talking to the user, write a 3-5 bullet synthesis of project-specific findings relevant to this axis. Each bullet must cite a specific file (e.g., "From `diagnostics/diagnostics-deep-dive.md`: multi-agent orchestration with persistent task queues requires..."). **Append this synthesis as a `## {Axis Name}` section to `.memory/wiki/specs/architecture/prd-working/stack-synthesis.md`.**
 4. **Cite-or-Stop Gate**: Your Ideation Synthesis must contain **≥ 2 project-specific findings with file citations**. If you cannot produce 2 citations → you have not read deeply enough → **STOP** and re-read the deep dives and CX files listed in the index. Generic findings like "the app needs a database" do not count.
-5. **Synthesis verification gate (HARD)**: Read `docs/plans/prd-working/workflow-state.md` and verify `synthesis_written: true` for this axis. If `false` → **STOP** — you skipped step 3. Write synthesis first.
+5. **Synthesis verification gate (HARD)**: Read `.memory/wiki/specs/architecture/prd-working/workflow-state.md` and verify `synthesis_written: true` for this axis. If `false` → **STOP** — you skipped step 3. Write synthesis first.
 6. **Ask Tier 2 questions**: Present your Ideation Synthesis alongside the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis.
 7. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to an ideation finding.
 8. Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
 9. Fire bootstrap with only that key: read `.agent/workflows/bootstrap-agents.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
-10. **Update checkpoint**: Write current progress to `docs/plans/prd-working/workflow-state.md` — mark this axis complete, set next axis, reset `synthesis_written: false`, populate `pending_reads` from the Ideation Relevance Index for the next axis. Move to next axis.
+10. **Update checkpoint**: Write current progress to `.memory/wiki/specs/architecture/prd-working/workflow-state.md` — mark this axis complete, set next axis, reset `synthesis_written: false`, populate `pending_reads` from the Ideation Relevance Index for the next axis. Move to next axis.
 
 > **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each separately. Database axis (Persistence Map Interview) is also independent.
 
@@ -106,7 +106,7 @@ Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Thin
 
 **User indecision**: Uncertain → present recommendation with reasoning. Still uncertain → apply `.agent/skills/resolve-ambiguity/SKILL.md`. Still undecided → lock as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
 
-> **Decision recording**: For each confirmed decision, follow `.agent/skills/session-continuity/protocols/06-decision-analysis.md` — record to `memory/decisions.md` with upstream/downstream effects.
+> **Decision recording**: For each confirmed decision, follow `.agent/skills/session-continuity/protocols/06-decision-analysis.md` — record to `.memory/wiki/decisions.md` with upstream/downstream effects.
 
 ### Database: Persistence Map Interview
 
@@ -124,7 +124,7 @@ Read `.agent/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for 
 
 ### After each tech decision
 
-Read each installed skill's SKILL.md before proceeding. Append the confirmed decision to `docs/plans/architecture-draft.md`.
+Read each installed skill's SKILL.md before proceeding. Append the confirmed decision to `.memory/wiki/specs/architecture-draft.md`.
 
 ### Fill kit templates (progressive bootstrap)
 
@@ -134,7 +134,7 @@ Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=cre
 
 Before reporting completion or proceeding to next shard:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.agent/progress/memory/`. Tech stack decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.memory/wiki/`. Tech stack decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

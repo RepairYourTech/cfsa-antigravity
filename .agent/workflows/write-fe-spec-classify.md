@@ -20,7 +20,7 @@ requires_placeholders: [LANGUAGE_SKILL, FRONTEND_FRAMEWORK_SKILL, FRONTEND_DESIG
 
 Identify the target FE spec, classify it, load skills, and read all source material including BE spec, IA shard, cross-references, and deep dives.
 
-**Prerequisite**: BE spec(s) for this feature must be complete (if applicable). Read `docs/plans/be/index.md` to verify.
+**Prerequisite**: BE spec(s) for this feature must be complete (if applicable). Read `.memory/wiki/specs/be/index.md` to verify.
 
 ---
 
@@ -57,7 +57,7 @@ Only proceed to Step 0.6 when all five placeholders report no literal `{{` chara
 
 ## 0.8. Design system prerequisite check
 
-Read `.agent/skills/prd-templates/references/design-system-prerequisite-check.md` and follow its procedure. Extract all seven decision areas from `docs/plans/design-system.md` and run the fail-fast validation checks. If any check fails → stop and instruct the user to run `/create-prd-design-system`.
+Read `.agent/skills/prd-templates/references/design-system-prerequisite-check.md` and follow its procedure. Extract all seven decision areas from `.memory/wiki/specs/design-system.md` and run the fail-fast validation checks. If any check fails → stop and instruct the user to run `/create-prd-design-system`.
 
 ---
 
@@ -85,7 +85,7 @@ Not every FE spec maps 1:1 to a BE feature spec. Before writing anything, classi
 - For feature specs: the BE spec(s) and IA shard it maps to
 - For cross-cutting specs: confirmation that BE spec/IA shard mapping is skipped
 
-Determine this shard's surface from its directory path (e.g., `docs/plans/fe/web/` → surface `web`; flat `docs/plans/fe/` → surface `shared` or the project's single surface).
+Determine this shard's surface from its directory path (e.g., `.memory/wiki/specs/fe/web/` → surface `web`; flat `.memory/wiki/specs/fe/` → surface `shared` or the project's single surface).
 
 Read `.agent/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-fe-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
 - `.agent/skills/error-handling-patterns/SKILL.md`
@@ -101,16 +101,16 @@ When writing the FE spec, if any requirement cannot be resolved from `ideation-i
 Read **all** of the following:
 
 ### 4a. Conventions and tech stack
-Read the file at `docs/plans/fe/index.md` (conventions template) and the file at `docs/plans/index.md` (master index, tech stack).
+Read the file at `.memory/wiki/specs/fe/index.md` (conventions template) and the file at `.memory/wiki/specs/index.md` (master index, tech stack).
 
 ### 4b. BE source spec(s) (if Feature spec)
-Read the file at `docs/plans/be/[NN-spec-name].md` (BE source spec(s)). Pay special attention to:
+Read the file at `.memory/wiki/specs/be/[NN-spec-name].md` (BE source spec(s)). Pay special attention to:
 - Request/Response contracts — these define the data shapes your components will consume
 - Error codes — these define the error states your UI must handle
 - Rate limits — these affect loading/retry UX patterns
 
 ### 4c. IA source shard (if Feature spec)
-Read the file at `docs/plans/ia/[NN-shard-name].md` (IA source shard). The FE spec needs the IA shard **in addition to** the BE spec because the IA shard contains:
+Read the file at `.memory/wiki/specs/ia/[NN-shard-name].md` (IA source shard). The FE spec needs the IA shard **in addition to** the BE spec because the IA shard contains:
 - **User flows** — step-by-step interaction sequences the UI must implement
 - **Access model** — which account tiers see which features (drives conditional rendering)
 - **Responsive behavior** — device strategy, breakpoints, mobile-specific behavior
@@ -149,14 +149,14 @@ any that contain FE-relevant decisions.
 
 ## 5. Check cross-cutting FE specs
 
-Read any completed cross-cutting FE specs — feature specs must follow their patterns. List the files matching `docs/plans/fe/00-*.md` (cross-cutting specs).
+Read any completed cross-cutting FE specs — feature specs must follow their patterns. List the files matching `.memory/wiki/specs/fe/00-*.md` (cross-cutting specs).
 
 ## 5.5. Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.
@@ -176,5 +176,5 @@ Call `notify_user` presenting:
 
 Once approved, run `/write-fe-spec-write`.
 
-> **Seed the spec file**: After classification is approved, read `.agent/skills/prd-templates/references/fe-spec-template.md` for the **FE Spec Seed Stub** (under the `## FE Spec Seed Stub` heading at the bottom of the file). Also read `.agent/skills/prd-templates/references/be-spec-template.md` for the Referenced Material Inventory format. Create the spec file at `docs/plans/fe/[NN-feature-name].md` using the stub, filling in classification details, Referenced Material Inventory, and Design Requirements from above.
+> **Seed the spec file**: After classification is approved, read `.agent/skills/prd-templates/references/fe-spec-template.md` for the **FE Spec Seed Stub** (under the `## FE Spec Seed Stub` heading at the bottom of the file). Also read `.agent/skills/prd-templates/references/be-spec-template.md` for the Referenced Material Inventory format. Create the spec file at `.memory/wiki/specs/fe/[NN-feature-name].md` using the stub, filling in classification details, Referenced Material Inventory, and Design Requirements from above.
 

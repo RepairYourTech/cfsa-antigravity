@@ -53,7 +53,7 @@
    - Key files changed
    - Any deviations from the plan
 
-7. **Log blockers** encountered during implementation to `memory/blockers.md`:
+7. **Log blockers** encountered during implementation to `.memory/wiki/blockers.md`:
    ```markdown
    ## Active Blockers
 

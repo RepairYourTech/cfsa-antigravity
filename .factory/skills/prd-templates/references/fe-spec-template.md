@@ -1,6 +1,6 @@
 # FE Spec Template
 
-Use this template when writing FE specs to `docs/plans/fe/[NN-feature-name].md`.
+Use this template when writing FE specs to `.memory/wiki/specs/fe/[NN-feature-name].md`.
 
 ```markdown
 # [Feature] — Frontend Specification

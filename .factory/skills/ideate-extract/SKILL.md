@@ -35,7 +35,7 @@ parameters:
    - `multi-surface-shared`
    - `multi-product-hub`
    - `multi-product-peer`
-   into `docs/plans/ideation/ideation-index.md` under `## Structural Classification`.
+   into `.memory/wiki/specs/ideation/ideation-index.md` under `## Structural Classification`.
 
 ### Step 3 — Re-run decision
 
@@ -47,7 +47,7 @@ parameters:
 
 1. Follow folder seeding protocol from `.factory/skills/prd-templates/references/folder-seeding-protocol.md`.
 2. Create required node artifacts (`{slug}-index.md`, `{slug}-cx.md`, feature leaves).
-3. Verify `docs/plans/ideation/.gitkeep` and `docs/plans/ideation/README.md` remain present.
+3. Verify `.memory/wiki/specs/ideation/.gitkeep` and `.memory/wiki/specs/ideation/README.md` remain present.
 
 ### Step 5 — Engagement + expansion persistence
 

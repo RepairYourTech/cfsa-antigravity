@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, statSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, cpSync, readdirSync, readFileSync, statSync, rmSync, writeFileSync } from "node:fs";
 import { resolve, join, dirname } from "node:path";
+import { pathToFileURL } from "node:url";
 import { fileURLToPath } from "node:url";
 import { argv, exit, cwd } from "node:process";
 import { createInterface } from "node:readline";
@@ -188,12 +189,17 @@ ${c.bold}Commands:${c.reset}
   ${c.cyan}status${c.reset}    Check installation status
   ${c.cyan}version${c.reset}   Show version
 
+${c.bold}Status Options:${c.reset}
+  --json          Output machine-readable status JSON
+
 ${c.bold}Init Options:${c.reset}
-  --agent <list>  Comma-separated runtimes for non-interactive install (${rtList})
-  --force         Overwrite existing agent folders
-  --path <dir>    Install into specific directory (default: current directory)
-  --dry-run       Preview what would be copied without making changes
-  --quiet         Suppress output (for CI/CD — installs all runtimes)
+  --agent <list>      Comma-separated runtimes for non-interactive install (${rtList})
+  --force             Overwrite existing agent folders
+  --path <dir>        Install into specific directory (default: current directory)
+  --dry-run           Preview what would be copied without making changes
+  --quiet             Suppress output (for CI/CD — installs all runtimes)
+  --memory            Scaffold unified .memory/ and MCP integration
+  --migrate-memory    Scaffold .memory/ and migrate legacy runtime memory
 
 ${c.bold}Examples:${c.reset}
   ${c.dim}# Interactive — pick which runtimes to install${c.reset}
@@ -218,7 +224,7 @@ ${c.bold}Examples:${c.reset}
 
 // --- Parse Arguments ---
 function parseArgs(args) {
-    const parsed = { command: null, agents: null, force: false, dryRun: false, path: null, quiet: false };
+    const parsed = { command: null, agents: null, force: false, dryRun: false, path: null, quiet: false, memory: false, migrateMemory: false, json: false };
 
     let i = 0;
     while (i < args.length) {
@@ -261,6 +267,16 @@ function parseArgs(args) {
                     error("--path requires a directory argument");
                     exit(1);
                 }
+                break;
+            case "--memory":
+                parsed.memory = true;
+                break;
+            case "--migrate-memory":
+                parsed.memory = true;
+                parsed.migrateMemory = true;
+                break;
+            case "--json":
+                parsed.json = true;
                 break;
             case "--version":
             case "-v":
@@ -343,6 +359,154 @@ function resolveAgentNames(agentNames, available) {
         seen.add(r.dir);
         return true;
     });
+}
+
+function readJsonFile(filePath, fallback = {}) {
+    if (!existsSync(filePath)) return fallback;
+    return JSON.parse(readFileSync(filePath, "utf-8"));
+}
+
+function writeJsonFile(filePath, value) {
+    mkdirSync(dirname(filePath), { recursive: true });
+    writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function mergeUniqueObjects(existing = [], additions = [], matcher = (left, right) => JSON.stringify(left) === JSON.stringify(right)) {
+    const merged = [...existing];
+    for (const addition of additions) {
+        if (!merged.some(entry => matcher(entry, addition))) {
+            merged.push(addition);
+        }
+    }
+    return merged;
+}
+
+function mergeHookConfig(existing = {}, additions = {}) {
+    const merged = { ...existing };
+    for (const [eventName, hookGroups] of Object.entries(additions)) {
+        const currentGroups = Array.isArray(merged[eventName]) ? merged[eventName] : [];
+        merged[eventName] = mergeUniqueObjects(currentGroups, hookGroups, (left, right) => {
+            return left.matcher === right.matcher && JSON.stringify(left.hooks || []) === JSON.stringify(right.hooks || []);
+        });
+    }
+    return merged;
+}
+
+function installMemoryScaffold(targetDir, opts) {
+    const srcMemoryDir = join(TEMPLATE_DIR, ".memory");
+    const destMemoryDir = join(targetDir, ".memory");
+
+    if (!existsSync(srcMemoryDir)) {
+        error("template/.memory/ not found. Run npm run build to regenerate the template.");
+        exit(1);
+    }
+
+    if (opts.dryRun) {
+        info(`Would copy ${c.bold}.memory/${c.reset} (${countFiles(srcMemoryDir)} files)`);
+        info(`Would merge ${c.bold}.mcp.json${c.reset} and ${c.bold}.claude/settings.json${c.reset}`);
+        return;
+    }
+
+    if (existsSync(destMemoryDir) && opts.force) {
+        rmSync(destMemoryDir, { recursive: true, force: true });
+    }
+
+    if (!existsSync(destMemoryDir)) {
+        cpSync(srcMemoryDir, destMemoryDir, { recursive: true });
+        info(`Copied ${c.bold}.memory/${c.reset} (${countFiles(destMemoryDir)} files)`);
+    } else {
+        cpSync(srcMemoryDir, destMemoryDir, { recursive: true, force: false, errorOnExist: false });
+        info(`Merged ${c.bold}.memory/${c.reset}`);
+    }
+
+    const mcpPath = join(targetDir, ".mcp.json");
+    const currentMcp = readJsonFile(mcpPath, {});
+    const nextMcp = {
+        ...currentMcp,
+        mcpServers: {
+            ...(currentMcp.mcpServers || {}),
+            "cfsa-memory": {
+                command: "node",
+                args: [".memory/mcp-server/client.mjs"],
+                env: {
+                    MEMORY_ROOT: ".memory",
+                    CFSA_MEMORY_HOST: "127.0.0.1",
+                    CFSA_MEMORY_PORT: "4317",
+                    CFSA_MEMORY_URL: "http://127.0.0.1:4317/mcp",
+                    CFSA_MEMORY_HEALTH_URL: "http://127.0.0.1:4317/health"
+                }
+            }
+        }
+    };
+    writeJsonFile(mcpPath, nextMcp);
+    info(`Updated ${c.bold}.mcp.json${c.reset}`);
+
+    const claudeSettingsPath = join(targetDir, ".claude", "settings.json");
+    const currentClaudeSettings = readJsonFile(claudeSettingsPath, {});
+    const memoryHooks = {
+        SessionStart: [
+            {
+                hooks: [
+                    {
+                        type: "command",
+                        command: "node .memory/hooks/session-start.mjs"
+                    }
+                ]
+            }
+        ],
+        PreCompact: [
+            {
+                matcher: "manual|auto",
+                hooks: [
+                    {
+                        type: "command",
+                        command: "node .memory/hooks/pre-compact.mjs"
+                    }
+                ]
+            }
+        ],
+        Stop: [
+            {
+                hooks: [
+                    {
+                        type: "command",
+                        command: "node .memory/hooks/session-end.mjs"
+                    }
+                ]
+            }
+        ]
+    };
+    const daemonHooks = {
+        SessionStart: [
+            {
+                hooks: [
+                    {
+                        type: "command",
+                        command: "node .memory/mcp-server/start.mjs"
+                    }
+                ]
+            }
+        ]
+    };
+
+    const nextClaudeSettings = {
+        ...currentClaudeSettings,
+        hooks: mergeHookConfig(mergeHookConfig(currentClaudeSettings.hooks || {}, daemonHooks), memoryHooks)
+    };
+    writeJsonFile(claudeSettingsPath, nextClaudeSettings);
+    info(`Updated ${c.bold}.claude/settings.json${c.reset}`);
+}
+
+async function migrateMemory(targetDir) {
+    const migratePath = join(targetDir, ".memory", "migrate", "migrate-legacy.mjs");
+    if (!existsSync(migratePath)) {
+        error("Unified memory migration script not found after scaffold.");
+        exit(1);
+    }
+
+    const migrationModule = await import(pathToFileURL(migratePath).href);
+    const result = migrationModule.migrateLegacyMemory({ projectRoot: targetDir });
+    info(`Migrated legacy memory (${result.migratedCount} item(s))`);
 }
 
 // --- Install runtimes ---
@@ -477,6 +641,20 @@ async function cmdInit(opts) {
 
     const { totalCopied, totalSkipped } = installRuntimes(selected, targetDir, opts);
 
+    installMemoryScaffold(targetDir, opts);
+    if (opts.migrateMemory && !opts.dryRun) {
+        await migrateMemory(targetDir);
+    }
+
+    if (!opts.dryRun) {
+        const compilePath = join(targetDir, ".memory", "pipeline", "compile.mjs");
+        if (existsSync(compilePath)) {
+            const compileModule = await import(pathToFileURL(compilePath).href);
+            compileModule.compileMemory({ projectRoot: targetDir });
+            info(`Initialized ${c.bold}.memory/schema/${c.reset}`);
+        }
+    }
+
     // Summary
     log("");
     if (opts.dryRun) {
@@ -486,7 +664,8 @@ async function cmdInit(opts) {
         log("");
         log(`${c.bold}Next steps:${c.reset}`);
         log(`  1. Open your project in your agent of choice`);
-        log(`  2. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
+        log(`  2. Verify ${c.cyan}.memory/${c.reset}, ${c.cyan}.mcp.json${c.reset}, and ${c.cyan}.claude/settings.json${c.reset}`);
+        log(`  3. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
         log("");
         log(`${c.dim}Documentation: https://github.com/RepairYourTech/cfsa-antigravity${c.reset}`);
     } else {
@@ -501,31 +680,51 @@ function cmdStatus() {
     const targetDir = cwd();
     const available = discoverRuntimes();
 
-    log("");
-    log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
-    log(`${c.dim}Checking: ${targetDir}${c.reset}`);
-    log("");
+    if (!args.json) {
+        log("");
+        log(`${c.bold}${c.magenta}CFSA Antigravity${c.reset} ${c.dim}v${PKG.version}${c.reset}`);
+        log(`${c.dim}Checking: ${targetDir}${c.reset}`);
+        log("");
+    }
 
     // Detect all installed runtimes
     const installed = available.filter(r => existsSync(join(targetDir, r.dir)));
 
     if (installed.length === 0) {
         const dirNames = available.map(r => `${r.dir}/`).join(", ");
-        warn(`Not installed — no runtime directory found (${dirNames})`);
-        log(`  Run ${c.cyan}cfsa-antigravity init${c.reset} to install`);
-        log("");
+        if (args.json) {
+            console.log(JSON.stringify({ ok: false, targetDir, installedRuntimes: [], message: `No runtime directory found (${dirNames})` }, null, 2));
+        } else {
+            warn(`Not installed — no runtime directory found (${dirNames})`);
+            log(`  Run ${c.cyan}cfsa-antigravity init${c.reset} to install`);
+            log("");
+        }
         exit(1);
     }
 
-    log(`${c.bold}Installed runtimes:${c.reset} ${installed.map(r => `${r.name} (${r.dir}/)`).join(", ")}`);
-    log("");
+    if (!args.json) {
+        log(`${c.bold}Installed runtimes:${c.reset} ${installed.map(r => `${r.name} (${r.dir}/)`).join(", ")}`);
+        log("");
+    }
 
     let totalInstalled = 0;
     let totalMissing = 0;
+    const statusJson = {
+        ok: true,
+        targetDir,
+        installedRuntimes: installed.map(r => ({ name: r.name, dir: r.dir })),
+        runtimeChecks: [],
+        sharedChecks: [],
+        memoryHealth: [],
+        placeholders: []
+    };
 
     for (const rt of installed) {
         const agentDir = rt.dir;
-        info(`${c.bold}${rt.name}${c.reset} — ${agentDir}/`);
+        const runtimeRecord = { name: rt.name, dir: agentDir, checks: [] };
+        if (!args.json) {
+            info(`${c.bold}${rt.name}${c.reset} — ${agentDir}/`);
+        }
 
         // Build checks based on what the runtime contains
         const checks = [
@@ -550,19 +749,28 @@ function cmdStatus() {
             if (existsSync(fullPath)) {
                 const isDir = statSync(fullPath).isDirectory();
                 const detail = isDir ? `${countFiles(fullPath)} files` : "present";
-                info(`${check.label} ${c.dim}(${detail})${c.reset}`);
+                if (!args.json) {
+                    info(`${check.label} ${c.dim}(${detail})${c.reset}`);
+                }
+                runtimeRecord.checks.push({ label: check.label.trim(), status: "present", detail });
                 totalInstalled++;
             } else {
-                warn(`${check.label} — missing`);
+                if (!args.json) {
+                    warn(`${check.label} — missing`);
+                }
+                runtimeRecord.checks.push({ label: check.label.trim(), status: "missing" });
                 totalMissing++;
             }
         }
-        log("");
+        statusJson.runtimeChecks.push(runtimeRecord);
+        if (!args.json) {
+            log("");
+        }
     }
 
     // Shared resources
     const sharedChecks = [
-        { path: "docs/plans", label: "Plans directory" },
+        { path: ".memory/wiki/specs", label: "Vault specs directory" },
     ];
 
     // Auto-detect config files (uppercase .md files)
@@ -573,21 +781,145 @@ function cmdStatus() {
         const fullPath = join(targetDir, check.path);
         if (existsSync(fullPath)) {
             const detail = `${countFiles(fullPath)} files`;
-            info(`${check.label} ${c.dim}(${detail})${c.reset}`);
+            if (!args.json) {
+                info(`${check.label} ${c.dim}(${detail})${c.reset}`);
+            }
+            statusJson.sharedChecks.push({ label: check.label, status: "present", detail });
             totalInstalled++;
         } else {
-            warn(`${check.label} — missing`);
+            if (!args.json) {
+                warn(`${check.label} — missing`);
+            }
+            statusJson.sharedChecks.push({ label: check.label, status: "missing" });
             totalMissing++;
         }
     }
 
     for (const file of configFiles) {
-        info(`${file} ${c.dim}(present)${c.reset}`);
+        if (!args.json) {
+            info(`${file} ${c.dim}(present)${c.reset}`);
+        }
+        statusJson.sharedChecks.push({ label: file, status: "present", detail: "present" });
         totalInstalled++;
     }
 
-    log("");
-    log(`${c.bold}Status:${c.reset} ${totalInstalled} components found, ${totalMissing} missing`);
+    const memoryChecks = [
+        { path: ".memory", label: "Unified memory root" },
+        { path: ".memory/mcp-server/daemon.mjs", label: "Memory MCP daemon" },
+        { path: ".memory/mcp-server/client.mjs", label: "Memory MCP client" },
+        { path: ".memory/runtime", label: "Memory daemon runtime dir" },
+        { path: ".memory/schema/index.jsonl", label: "Compiled memory index" },
+        { path: ".memory/schema/chunks.jsonl", label: "Compiled memory chunks" },
+        { path: ".memory/wiki/hubs/shards.md", label: "Shard graph hub" },
+        { path: ".memory/wiki/hubs/phases.md", label: "Phase graph hub" },
+        { path: ".memory/wiki/hubs/operations.md", label: "Operations graph hub" },
+        { path: ".memory/wiki/hubs/surfaces.md", label: "Surface graph hub" },
+        { path: ".mcp.json", label: "MCP config" },
+    ];
+
+    if (!args.json) {
+        log("");
+        log(`${c.bold}Memory health:${c.reset}`);
+    }
+    for (const check of memoryChecks) {
+        const fullPath = join(targetDir, check.path);
+        if (existsSync(fullPath)) {
+            if (!args.json) {
+                info(`  ${check.label} ${c.dim}(present)${c.reset}`);
+            }
+            statusJson.memoryHealth.push({ label: check.label, status: "present" });
+            totalInstalled++;
+        } else {
+            if (!args.json) {
+                warn(`  ${check.label} — missing`);
+            }
+            statusJson.memoryHealth.push({ label: check.label, status: "missing" });
+            totalMissing++;
+        }
+    }
+
+    const runtimeStatePath = join(targetDir, ".memory", "runtime", "cfsa-memory-daemon.json");
+    if (existsSync(runtimeStatePath)) {
+        try {
+            const runtimeState = JSON.parse(readFileSync(runtimeStatePath, "utf-8"));
+            const detail = `pid=${runtimeState.pid}, port=${runtimeState.port}`;
+            if (!args.json) {
+                info(`  Daemon runtime state ${c.dim}(${detail})${c.reset}`);
+            }
+            statusJson.memoryHealth.push({ label: "Daemon runtime state", status: "present", detail });
+            totalInstalled++;
+        } catch {
+            if (!args.json) {
+                warn("  Daemon runtime state — invalid JSON");
+            }
+            statusJson.memoryHealth.push({ label: "Daemon runtime state", status: "invalid" });
+            totalMissing++;
+        }
+    } else {
+        if (!args.json) {
+            warn("  Daemon runtime state — missing");
+        }
+        statusJson.memoryHealth.push({ label: "Daemon runtime state", status: "missing" });
+        totalMissing++;
+    }
+
+    const mcpPath = join(targetDir, ".mcp.json");
+    if (existsSync(mcpPath)) {
+        try {
+            const mcpConfig = JSON.parse(readFileSync(mcpPath, "utf-8"));
+            if (mcpConfig.mcpServers?.["cfsa-memory"]?.args?.includes(".memory/mcp-server/client.mjs")) {
+                if (!args.json) {
+                    info(`  MCP registration ${c.dim}(cfsa-memory configured)${c.reset}`);
+                }
+                statusJson.memoryHealth.push({ label: "MCP registration", status: "present", detail: "cfsa-memory configured" });
+                totalInstalled++;
+            } else {
+                if (!args.json) {
+                    warn("  MCP registration — cfsa-memory missing or misconfigured");
+                }
+                statusJson.memoryHealth.push({ label: "MCP registration", status: "missing", detail: "cfsa-memory missing or misconfigured" });
+                totalMissing++;
+            }
+        } catch {
+            if (!args.json) {
+                warn("  MCP config — invalid JSON");
+            }
+            statusJson.memoryHealth.push({ label: "MCP config", status: "invalid" });
+            totalMissing++;
+        }
+    }
+
+    const claudeSettingsPath = join(targetDir, ".claude", "settings.json");
+    if (existsSync(claudeSettingsPath)) {
+        try {
+            const claudeSettings = JSON.parse(readFileSync(claudeSettingsPath, "utf-8"));
+            const hasHooks = Boolean(claudeSettings.hooks?.SessionStart?.length);
+            if (hasHooks) {
+                if (!args.json) {
+                    info(`  Claude memory hooks ${c.dim}(configured)${c.reset}`);
+                }
+                statusJson.memoryHealth.push({ label: "Claude memory hooks", status: "present", detail: "configured" });
+                totalInstalled++;
+            } else {
+                if (!args.json) {
+                    warn("  Claude memory hooks — not configured");
+                }
+                statusJson.memoryHealth.push({ label: "Claude memory hooks", status: "missing" });
+                totalMissing++;
+            }
+        } catch {
+            if (!args.json) {
+                warn("  Claude settings — invalid JSON");
+            }
+            statusJson.memoryHealth.push({ label: "Claude settings", status: "invalid" });
+            totalMissing++;
+        }
+    }
+
+    if (!args.json) {
+        log("");
+        log(`${c.bold}Status:${c.reset} ${totalInstalled} components found, ${totalMissing} missing`);
+    }
 
     // Check placeholders in config files
     for (const file of configFiles) {
@@ -596,17 +928,26 @@ function cmdStatus() {
         const placeholders = content.match(/\{\{[A-Z_]+\}\}/g);
         if (placeholders) {
             const unique = [...new Set(placeholders)];
-            log("");
-            warn(`${unique.length} unfilled placeholder(s) in ${file} — run /create-prd to fill them`);
-            for (const p of unique.slice(0, 5)) {
-                log(`  ${c.dim}${p}${c.reset}`);
+            statusJson.placeholders.push({ file, count: unique.length, values: unique });
+            if (!args.json) {
+                log("");
+                warn(`${unique.length} unfilled placeholder(s) in ${file} — run /create-prd to fill them`);
+                for (const p of unique.slice(0, 5)) {
+                    log(`  ${c.dim}${p}${c.reset}`);
+                }
+                if (unique.length > 5) {
+                    log(`  ${c.dim}... and ${unique.length - 5} more${c.reset}`);
+                }
             }
-            if (unique.length > 5) {
-                log(`  ${c.dim}... and ${unique.length - 5} more${c.reset}`);
-            }
-        } else {
+        } else if (!args.json) {
             info(`${file} — all placeholders filled`);
         }
+    }
+
+    statusJson.summary = { totalInstalled, totalMissing };
+    if (args.json) {
+        console.log(JSON.stringify(statusJson, null, 2));
+        return;
     }
 
     log("");

@@ -33,7 +33,7 @@ Apply line-count thresholds:
 
 ### Step 3 — Index and tracker updates
 
-1. Update `docs/plans/fe/index.md` status.
+1. Update `.memory/wiki/specs/fe/index.md` status.
 2. Update FE completion state in `.factory/progress/spec-pipeline.md` via protocol.
 
 ### Step 4 — Iterative deepening passes

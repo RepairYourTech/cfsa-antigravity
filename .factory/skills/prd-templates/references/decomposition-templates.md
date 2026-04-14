@@ -6,7 +6,7 @@ Templates for shard skeletons and layer indexes created during `/decompose-archi
 
 ## Shard Skeleton
 
-For each shard, create at `docs/plans/ia/[NN-domain-name].md`:
+For each shard, create at `.memory/wiki/specs/ia/[NN-domain-name].md`:
 
 ```markdown
 # [Shard ##] — [Domain Name]
@@ -63,7 +63,7 @@ For each shard, create at `docs/plans/ia/[NN-domain-name].md`:
 
 ## IA Index
 
-Create at `docs/plans/ia/index.md`:
+Create at `.memory/wiki/specs/ia/index.md`:
 
 ```markdown
 # IA Layer — Information Architecture
@@ -94,7 +94,7 @@ Read cross-cutting shards first, then feature shards in numerical order.
 
 ## BE Index Skeleton
 
-Create at `docs/plans/be/index.md`:
+Create at `.memory/wiki/specs/be/index.md`:
 
 ```markdown
 # BE Layer — Backend Specifications
@@ -130,7 +130,7 @@ Populated by `/write-be-spec`. Mapping depends on shard document type
 
 ## FE Index Skeleton
 
-Create at `docs/plans/fe/index.md`:
+Create at `.memory/wiki/specs/fe/index.md`:
 
 ```markdown
 # FE Layer — Frontend Specifications
@@ -166,7 +166,7 @@ Populated by `/write-fe-spec`. FE specs are organized by UI surface, not backend
 
 ## Master Index — Single-Surface
 
-Create or update `docs/plans/index.md`:
+Create or update `.memory/wiki/specs/index.md`:
 
 ```markdown
 # [Project Name] — Specification Index

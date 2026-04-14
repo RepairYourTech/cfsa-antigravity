@@ -33,7 +33,7 @@ Use when writing slice entries during `/plan-phase` Step 4:
 
 ## Remediation State
 
-Use when writing `docs/audits/remediation-state.md` during `/remediate-pipeline-assess`:
+Use when writing `.memory/wiki/specs/audits/remediation-state.md` during `/remediate-pipeline-assess`:
 
 ```markdown
 # Remediation State

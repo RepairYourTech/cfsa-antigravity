@@ -147,7 +147,7 @@ Run this protocol when beginning any architecture spec shard. The ideation domai
 
 1. The relevant ideation domain folder for this shard (path from `ideation-index.md` Structure Map) — read the `*-index.md` then each child feature file
 2. The shard's `## Features` section
-3. `docs/plans/ideation/ideation-index.md` Must Have features for this domain
+3. `.memory/wiki/specs/ideation/ideation-index.md` Must Have features for this domain
 
 ### Reconciliation Table
 
@@ -202,9 +202,9 @@ Current sub-features:
   ...
 
 Proposed split:
-  [NN]a — [new domain name] → file: docs/plans/ia/[NN]a-[domain].md
+  [NN]a — [new domain name] → file: .memory/wiki/specs/ia/[NN]a-[domain].md
     Sub-features: 1, 3, 5
-  [NN]b — [new domain name] → file: docs/plans/ia/[NN]b-[domain].md
+  [NN]b — [new domain name] → file: .memory/wiki/specs/ia/[NN]b-[domain].md
     Sub-features: 2, 4, 6
 
 Split rationale: [why these groups are independent]

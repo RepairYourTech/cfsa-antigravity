@@ -20,7 +20,7 @@ requires_placeholders: [DATABASE_SKILLS, SECURITY_SKILLS, SURFACES]
 
 Explore requirements, map all interactions, and define contracts, data models, access control, event schemas, and edge cases.
 
-**Prerequisite**: Skeleton IA shard must exist in `docs/plans/ia/`. If it does not, tell the user to run `/decompose-architecture` first.
+**Prerequisite**: Skeleton IA shard must exist in `.memory/wiki/specs/ia/`. If it does not, tell the user to run `/decompose-architecture` first.
 
 ## 0. Pipeline State Check
 
@@ -47,7 +47,7 @@ If any are empty → **HARD STOP**: tell the user to run `/create-prd` first.
 
 ## 0.6. Re-run check
 
-Before loading skills, check whether the shard file at `docs/plans/ia/[shard-name].md` already has content beyond skeleton placeholders (look for filled-in sections vs empty `<!-- TODO -->` markers).
+Before loading skills, check whether the shard file at `.memory/wiki/specs/ia/[shard-name].md` already has content beyond skeleton placeholders (look for filled-in sections vs empty `<!-- TODO -->` markers).
 
 - **If sections are already filled**: Present current state and ask: "Some sections are already written. **Continue** (skip filled sections) or **redo specific sections** (which ones)?" Wait for the user.
 - **If the file is still a skeleton**: Proceed normally.
@@ -64,7 +64,7 @@ Build a **reconciliation table** comparing sources. Ideation domain feature file
    - `*-index.md` (children table + Role Matrix), each child feature `.md`, `*-cx.md`
    - If sub-domain folders exist, recurse and aggregate all descendant feature files
 2. Shard's `## Features` section
-3. `docs/plans/ideation/ideation-index.md` — Must Have features
+3. `.memory/wiki/specs/ideation/ideation-index.md` — Must Have features
 
 Read `.agent/skills/spec-writing/SKILL.md` and `.agent/skills/architecture-mapping/SKILL.md`. Follow the Sub-Feature Reconciliation Protocol.
 
@@ -80,7 +80,7 @@ If the sub-feature count is **< 10**, proceed directly to Step 1c.
 
 Read `.agent/skills/brainstorming/SKILL.md` and use it to explore any remaining ambiguous sub-features — those marked `[Architecture-only]` that the user hasn't explicitly confirmed, or any sub-feature whose scope boundary (what's in, what's out) is still unclear after 1b.
 
-> **Authoring pattern for Steps 2–7**: (1) Present each section with review questions, (2) follow decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`), (3) write to `docs/plans/ia/[shard-name].md` immediately per write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Write-as-you-go is mandatory — never batch writes.
+> **Authoring pattern for Steps 2–7**: (1) Present each section with review questions, (2) follow decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`), (3) write to `.memory/wiki/specs/ia/[shard-name].md` immediately per write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Write-as-you-go is mandatory — never batch writes.
 
 ## 2. Map all interactions
 
@@ -157,7 +157,7 @@ Write `## Event Schemas` to shard file immediately after confirmation (if applic
 
 ### 6b. Event consumer cross-reference (if events defined)
 
-For each event's listed consumers: verify consumer shard exists in `docs/plans/ia/index.md` and references this event. If consumer shard missing → **STOP**. Full cross-ref verification runs in the deepen shard.
+For each event's listed consumers: verify consumer shard exists in `.memory/wiki/specs/ia/index.md` and references this event. If consumer shard missing → **STOP**. Full cross-ref verification runs in the deepen shard.
 
 ## 7. Document edge cases
 
@@ -169,10 +169,10 @@ Cover: rate limits/abuse, concurrent access, deletion cascades, state conflicts,
 
 ## 7.5. Write deep dive files (if applicable)
 
-Scan the shard for links to `docs/plans/ia/deep-dives/` files. **If none** → skip.
+Scan the shard for links to `.memory/wiki/specs/ia/deep-dives/` files. **If none** → skip.
 
 For each referenced deep dive:
-1. Read `docs/plans/ia/deep-dives/[feature-name].md` — if already has full content, skip.
+1. Read `.memory/wiki/specs/ia/deep-dives/[feature-name].md` — if already has full content, skip.
 2. If still a skeleton → write exhaustive subsystem detail: algorithms/state machines, technology choices with rationale, phasing strategy, data schemas, failure modes, integration contracts, performance, and security.
 3. Write immediately — do not wait until Step 8. The parent shard's summary + link is sufficient; the deep dive file IS the content.
 
@@ -182,7 +182,7 @@ Scan for memory-capture triggers (rule: `memory-capture`). Write patterns/decisi
 
 ## 8. Present all sections and request approval
 
-**Section completeness gate**: Before requesting approval, verify the spec file at `docs/plans/ia/[shard-name].md` contains ALL of the following sections with non-empty content (not just headers or `<!-- TODO -->` markers):
+**Section completeness gate**: Before requesting approval, verify the spec file at `.memory/wiki/specs/ia/[shard-name].md` contains ALL of the following sections with non-empty content (not just headers or `<!-- TODO -->` markers):
 - `## Interactions`
 - `## Contracts`
 - `## Data Models`
@@ -193,7 +193,7 @@ Scan for memory-capture triggers (rule: `memory-capture`). Write patterns/decisi
 
 If any required section is missing or contains only headers → **STOP**: "Section `[name]` is empty or missing in the spec file. Complete all sections before requesting user approval."
 
-All sections are now written to `docs/plans/ia/[shard-name].md`. Please review the file directly and confirm it's ready for deepening passes.
+All sections are now written to `.memory/wiki/specs/ia/[shard-name].md`. Please review the file directly and confirm it's ready for deepening passes.
 
 > **Do NOT proceed to `/write-architecture-spec-deepen` until the user approves all sections. Proposing next steps is not the same as receiving approval.**
 

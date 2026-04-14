@@ -1,5 +1,5 @@
 ---
-description: Break architecture design into numbered IA shards and create layer indexes — establishes the full docs/plans/ structure
+description: Break architecture design into numbered IA shards and create layer indexes — establishes the full .memory/wiki/specs/ structure
 pipeline:
   position: 3
   stage: architecture
@@ -16,14 +16,14 @@ shards: [decompose-architecture-structure, decompose-architecture-validate]
 
 Break the architecture design document into domain-bounded IA shards and create the full spec layer structure.
 
-**Input**: `docs/plans/YYYY-MM-DD-architecture-design.md` (must exist and be approved)
-**Output**: `docs/plans/ia/`, `docs/plans/be/`, `docs/plans/fe/` directories with indexes and shard skeletons
+**Input**: `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` (must exist and be approved)
+**Output**: `.memory/wiki/specs/ia/`, `.memory/wiki/specs/be/`, `.memory/wiki/specs/fe/` directories with indexes and shard skeletons
 
 ---
 
 ## 1. Read architecture design
 
-Read the file at `docs/plans/*-architecture-design.md`.
+Read the file at `.memory/wiki/specs/*-architecture-design.md`.
 
 If no architecture design exists → **STOP**: tell the user to run `/create-prd` first.
 
@@ -35,9 +35,9 @@ Check the document's `**Status**:` field.
 - If `Draft` or `Review` → **STOP**: "Architecture design not yet approved. Get explicit approval first."
 - If the `**Status**:` field does not exist → **STOP**: "Architecture design document has no Status field. Add `**Status**: Approved` after explicit review, or run `/create-prd` to regenerate."
 
-Read `docs/plans/ideation/ideation-index.md` for the fractal domain map and structural classification.
+Read `.memory/wiki/specs/ideation/ideation-index.md` for the fractal domain map and structural classification.
 
-> **Design system prerequisite (web/mobile/desktop projects)**: Read `.agent/instructions/tech-stack.md` → `SURFACES`. If surfaces include `web`, `mobile`, or `desktop`, verify `docs/plans/design-system.md` exists.
+> **Design system prerequisite (web/mobile/desktop projects)**: Read `.agent/instructions/tech-stack.md` → `SURFACES`. If surfaces include `web`, `mobile`, or `desktop`, verify `.memory/wiki/specs/design-system.md` exists.
 >
 > If not: ⚠️ **Warning** — run `/create-prd-design-system` before writing FE specs. Architecture decomposition can proceed. API-only/CLI/extension projects unaffected.
 
@@ -74,7 +74,7 @@ Present the proposed domain decomposition to the user for validation.
 
 **Do not proceed** until the user explicitly approves.
 
-**Write `docs/plans/ia/decomposition-plan.md` immediately after approval**, before proceeding to skeleton creation.
+**Write `.memory/wiki/specs/ia/decomposition-plan.md` immediately after approval**, before proceeding to skeleton creation.
 
 ---
 
@@ -96,7 +96,7 @@ Present the proposed domain decomposition to the user for validation.
 
 Before reporting completion to the user:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

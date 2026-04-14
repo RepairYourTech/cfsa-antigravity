@@ -23,7 +23,7 @@ Runs phase planning in two shards: preflight → write.
 
 ### Step 0 — Full-layer readiness gate
 
-1. Verify `docs/plans/ia/index.md`, `docs/plans/be/index.md`, and `docs/plans/fe/index.md` exist.
+1. Verify `.memory/wiki/specs/ia/index.md`, `.memory/wiki/specs/be/index.md`, and `.memory/wiki/specs/fe/index.md` exist.
 2. Verify all required entries in each index are complete.
 3. If any layer is incomplete: stop and route to missing spec workflow.
 
@@ -42,8 +42,8 @@ Expected outputs:
 Call skill: `plan-phase-write`
 
 Expected outputs:
-- `docs/plans/phases/phase-N.md`
-- `docs/plans/phases/phase-N-draft.md`
+- `.memory/wiki/specs/phases/phase-N.md`
+- `.memory/wiki/specs/phases/phase-N-draft.md`
 - generated progress files in `.factory/progress/`
 - verified bootstrap/map completeness for planning prerequisites
 

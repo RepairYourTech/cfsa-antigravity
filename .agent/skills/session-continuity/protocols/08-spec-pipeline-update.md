@@ -21,7 +21,7 @@
    (c) Read the file and confirm it contains no skeleton placeholder markers (`[To be filled`, `<!-- TODO -->`, `Status: Skeleton`). If any are present → **skip the update** and report: `"Cannot mark [shard] [layer] as complete — skeleton placeholders remain in [path]: [list of markers found]"`
    (d) Only on all-pass: update the column to `complete`:
    ```markdown
-   | 03 | user-profiles | `docs/plans/ia/03-user-profiles.md` | complete | complete | not-started |
+   | 03 | user-profiles | `.memory/wiki/specs/ia/03-user-profiles.md` | complete | complete | not-started |
    ```
    (e) On any failure: skip the update and report the exact path and failure reason.
 

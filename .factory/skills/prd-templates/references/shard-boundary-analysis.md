@@ -65,15 +65,15 @@ Current sub-features:
   ...
 
 Proposed split:
-  [NN]a — [new domain name] → file: docs/plans/ia/[NN]a-[domain].md
+  [NN]a — [new domain name] → file: .memory/wiki/specs/ia/[NN]a-[domain].md
     Sub-features: 1, 3, 5
-  [NN]b — [new domain name] → file: docs/plans/ia/[NN]b-[domain].md
+  [NN]b — [new domain name] → file: .memory/wiki/specs/ia/[NN]b-[domain].md
     Sub-features: 2, 4, 6
 
 Split rationale: [why these groups are independent]
 ```
 
-**After any split**: Update `docs/plans/ia/decomposition-plan.md` with the revised table, re-run the Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed until zero stale parent references remain.** See `.factory/skills/prd-templates/references/shard-split-remediation.md` for scan patterns and matching heuristics.
+**After any split**: Update `.memory/wiki/specs/ia/decomposition-plan.md` with the revised table, re-run the Must Have coverage gate, **then run `/remediate-shard-split` to update all downstream cross-references. Do NOT proceed until zero stale parent references remain.** See `.factory/skills/prd-templates/references/shard-split-remediation.md` for scan patterns and matching heuristics.
 
 **Companion spec tracking**: When writing BE or FE specs for split shards, populate the `## Split Group` section in each spec file (see `be-spec-template.md` / `fe-spec-template.md`). This enables downstream discovery of sibling specs during implementation.
 

@@ -16,7 +16,7 @@ Runs ambiguity auditing in two shards: rubrics → execute.
 ## Prerequisites
 
 1. At least one target-layer document exists
-2. Audit report directory `docs/audits/` is available
+2. Audit report directory `.memory/wiki/specs/audits/` is available
 
 ## Step-by-Step
 
@@ -27,7 +27,7 @@ Call skill: `audit-ambiguity-rubrics`
 Expected outputs:
 - selected audit scope
 - enumerated document list per layer
-- persisted `docs/audits/audit-scope.md` with rubric file paths
+- persisted `.memory/wiki/specs/audits/audit-scope.md` with rubric file paths
 
 ### Step 2 — Run execute shard
 

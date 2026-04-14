@@ -35,21 +35,21 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 
 | # | Command | Input | Output | Stage |
 |---|---------|-------|--------|-------|
-| 1 | `/ideate` | Raw idea or `@file` | `docs/plans/ideation/` folder + `docs/plans/vision.md` (summary) | Discovery |
-| ↳ | `/ideate-extract` | User input | Classified input + `docs/plans/ideation/` folder + loaded skills | Discovery |
+| 1 | `/ideate` | Raw idea or `@file` | `.memory/wiki/specs/ideation/` folder + `.memory/wiki/specs/vision.md` (summary) | Discovery |
+| ↳ | `/ideate-extract` | User input | Classified input + `.memory/wiki/specs/ideation/` folder + loaded skills | Discovery |
 | ↳ | `/ideate-discover` | Classified input | Domain files + cross-cut ledger (recursive breadth-before-depth) | Discovery |
-| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (human summary compiled from ideation folder) | Discovery |
+| ↳ | `/ideate-validate` | Domains + features | `.memory/wiki/specs/vision.md` (human summary compiled from ideation folder) | Discovery |
 | 2 | `/create-prd` | `ideation-index.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
 
-> **Persistent intermediary**: `docs/plans/ideation/` folder — kept permanently as the pipeline's source of truth for the ideation phase.
+> **Persistent intermediary**: `.memory/wiki/specs/ideation/` folder — kept permanently as the pipeline's source of truth for the ideation phase.
 
 | ↳ | `/create-prd-stack` | `ideation/meta/constraints.md` | Tech stack decisions | Design |
-| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
+| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `.memory/wiki/specs/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
 | ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |
 
-> **Progressive working artifact**: `docs/plans/architecture-draft.md` — written incrementally by shards 1–3, read by shard 4 to compile the final `architecture-design.md`.
+> **Progressive working artifact**: `.memory/wiki/specs/architecture-draft.md` — written incrementally by shards 1–3, read by shard 4 to compile the final `architecture-design.md`.
 
 | 3 | `/decompose-architecture` | `architecture-design.md` | IA shards + layer indexes | Design |
 | ↳ | `/decompose-architecture-structure` | Approved domains | Directory structure + shard skeletons + indexes | Design |
@@ -101,7 +101,7 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 > `/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`, and `/remediate-shard-split` are utility commands callable from any stage — they are not sequential pipeline steps.
 
 > [!WARNING]
-> If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
+> If `.memory/wiki/specs/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
 
 > [!WARNING]
 > If `{{PLACEHOLDER}}` values appear anywhere in this file, bootstrap has not run — do not attempt implementation work.
@@ -121,8 +121,8 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 ### Architecture
 
 - [Architecture Design]({{ARCHITECTURE_DOC}}) — System design document
-- [Engineering Standards](docs/plans/ENGINEERING-STANDARDS.md) — Non-negotiable quality bar
-- [Data Placement Strategy](docs/plans/data-placement-strategy.md) — Entity placement + PII boundaries
+- [Engineering Standards](.memory/wiki/specs/ENGINEERING-STANDARDS.md) — Non-negotiable quality bar
+- [Data Placement Strategy](.memory/wiki/specs/data-placement-strategy.md) — Entity placement + PII boundaries
 
 ### Agent Instructions
 
@@ -163,6 +163,8 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 4. **TDD: failing test before code** — Red → Green → Refactor, every slice, every surface
 5. **Security-first** — PII never leaks, inputs validated, secrets server-side only
 6. **Write decisions to disk immediately** — Every confirmed decision is written to its output file the moment the user confirms it. Never batch decisions in-memory across a long conversation. If the conversation truncates, all confirmed work must survive on disk.
+7. **Use unified project memory** — Treat `.memory/` as the canonical shared memory root across runtimes. Write patterns, decisions, blockers, and session captures through the unified memory files or MCP tools rather than runtime-local silos.
+8. **One project daemon, many clients** — The project owns one shared memory daemon under `.memory/mcp-server/daemon.mjs`. Runtimes connect to it through their MCP clients (via `.mcp.json` -> `cfsa-memory` -> `.memory/mcp-server/client.mjs`) rather than spawning separate per-runtime memory servers.
 
 ### Decision Tree
 

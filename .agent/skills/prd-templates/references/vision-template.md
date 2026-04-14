@@ -1,9 +1,9 @@
 # Vision Document Template
 
-Use this template when compiling `docs/plans/vision.md` as the human-readable executive summary.
+Use this template when compiling `.memory/wiki/specs/vision.md` as the human-readable executive summary.
 
 > **Important**: `vision.md` is a summary document for human consumption. The pipeline reads
-> `docs/plans/ideation/ideation-index.md` directly — not this file. All the depth, domain
+> `.memory/wiki/specs/ideation/ideation-index.md` directly — not this file. All the depth, domain
 > files, CX files, and structured data live in the `ideation/` folder's fractal tree.
 
 ```markdown

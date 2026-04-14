@@ -59,7 +59,7 @@ Run the Test Cmd from `.agent/instructions/commands.md`. All tests must pass. Ze
 
 Run the Test Coverage Cmd from `.agent/instructions/commands.md`.
 
-Read `docs/plans/ENGINEERING-STANDARDS.md` and use the coverage thresholds defined in the "Test Coverage" section. If the file doesn't exist or thresholds aren't defined, fall back to these defaults:
+Read `.memory/wiki/specs/ENGINEERING-STANDARDS.md` and use the coverage thresholds defined in the "Test Coverage" section. If the file doesn't exist or thresholds aren't defined, fall back to these defaults:
 - Statements: 80%
 - Branches: 90% (critical paths: auth, payments, data mutations, permission checks), 75% (non-critical paths)
 - Functions: 80%
@@ -128,7 +128,7 @@ Verify the CI/CD pipeline is green for this phase's changes:
 
 ## 5.6.5. Deployment strategy verification
 
-Read the project's architecture design document (`docs/plans/*-architecture-design.md`) and look for a `## Deployment Strategy` section.
+Read the project's architecture design document (`.memory/wiki/specs/*-architecture-design.md`) and look for a `## Deployment Strategy` section.
 
 **If no deployment strategy is defined** → Log: "No deployment strategy in architecture doc. Using direct deploy." Proceed.
 

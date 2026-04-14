@@ -14,7 +14,7 @@ parameters:
 ## Prerequisites
 
 1. Security shard completed
-2. `docs/plans/architecture-draft.md` exists with required sections
+2. `.memory/wiki/specs/architecture-draft.md` exists with required sections
 3. Required map cells available for Unit Tests, E2E Tests, CI/CD
 
 ## Step-by-Step
@@ -52,13 +52,13 @@ parameters:
 ### Step 4 — Compile final architecture document
 
 1. Validate required sections exist in architecture draft.
-2. Compile to `docs/plans/YYYY-MM-DD-architecture-design.md`.
+2. Compile to `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md`.
 3. Ensure section depth is implementation-ready.
 
 ### Step 5 — Performance budgets and engineering standards
 
 1. Run performance budget interview for all applicable axes.
-2. Write confirmed budgets to `docs/plans/ENGINEERING-STANDARDS.md` immediately.
+2. Write confirmed budgets to `.memory/wiki/specs/ENGINEERING-STANDARDS.md` immediately.
 3. Compile full engineering standards with no unresolved placeholders.
 
 ### Step 6 — Rubric gate and review request

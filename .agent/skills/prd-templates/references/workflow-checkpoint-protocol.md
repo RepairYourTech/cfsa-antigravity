@@ -4,7 +4,7 @@
 
 ## When to use
 
-Every `/create-prd` shard workflow writes and reads this checkpoint. It lives at `docs/plans/prd-working/workflow-state.md`.
+Every `/create-prd` shard workflow writes and reads this checkpoint. It lives at `.memory/wiki/specs/architecture/prd-working/workflow-state.md`.
 
 ## Checkpoint file format
 
@@ -19,9 +19,9 @@ current_item: Frontend Framework (STK-04)
 items_completed: [Hosting (STK-01), Database (STK-02), Auth (STK-03)]
 next_action: Read ideation files for Frontend Framework axis, write synthesis
 pending_reads:
-  - docs/plans/ideation/domains/dashboard/dashboard-deep-dive.md
-  - docs/plans/ideation/domains/diagnostics/diagnostics-deep-dive.md
-  - docs/plans/ideation/ideation-cx.md
+  - .memory/wiki/specs/ideation/domains/dashboard/dashboard-deep-dive.md
+  - .memory/wiki/specs/ideation/domains/diagnostics/diagnostics-deep-dive.md
+  - .memory/wiki/specs/ideation/ideation-cx.md
 synthesis_written: false
 last_user_output: Confirmed Auth Provider as Supabase Auth (STK-03)
 ```
@@ -52,7 +52,7 @@ Update the checkpoint file at these moments:
 
 ## Read triggers — Resumption
 
-At the start of every shard, check if `docs/plans/prd-working/workflow-state.md` exists.
+At the start of every shard, check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists.
 
 ### If it exists and `active_shard` matches this shard:
 

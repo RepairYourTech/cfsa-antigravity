@@ -17,7 +17,7 @@ Runs FE specification authoring in two shards: classify → write.
 
 1. BE spec for target shard is complete
 2. `.factory/progress/spec-pipeline.md` exists
-3. FE conventions/index files exist under `docs/plans/fe/`
+3. FE conventions/index files exist under `.memory/wiki/specs/fe/`
 4. Design system and brand guidance are available for visual surfaces
 
 ## Step-by-Step
@@ -45,8 +45,8 @@ Expected outputs:
 Call skill: `write-fe-spec-write`
 
 Expected outputs:
-- Full FE spec file(s) in `docs/plans/fe/`
-- Updated `docs/plans/fe/index.md`
+- Full FE spec file(s) in `.memory/wiki/specs/fe/`
+- Updated `.memory/wiki/specs/fe/index.md`
 - Updated `.factory/progress/spec-pipeline.md` FE status
 - Ambiguity + navigation completeness gate outcomes
 

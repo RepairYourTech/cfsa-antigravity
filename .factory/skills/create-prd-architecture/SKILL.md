@@ -36,7 +36,7 @@ Design and confirm:
 6. Surface interconnection (when multi-surface)
 7. Shared domain boundary ownership
 
-Write confirmed `## System Architecture` to `docs/plans/architecture-draft.md` immediately.
+Write confirmed `## System Architecture` to `.memory/wiki/specs/architecture-draft.md` immediately.
 
 ### Step 2 — Error architecture section (hard gate)
 
@@ -54,7 +54,7 @@ Write confirmed `## System Architecture` to `docs/plans/architecture-draft.md` i
 
 ### Step 4 — Data placement document
 
-Create `docs/plans/data-placement-strategy.md` from template using locked data decisions.
+Create `.memory/wiki/specs/data-placement-strategy.md` from template using locked data decisions.
 
 ## Completion Checklist
 

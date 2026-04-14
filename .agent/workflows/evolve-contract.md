@@ -125,6 +125,6 @@ For each consumer updated in Step 5, identify which BE spec and FE spec referenc
 
 ## 7. Document the change and next steps
 
-Add an entry to the decisions log in `docs/plans/*-architecture-design.md` explaining why the contract changed.
+Add an entry to the decisions log in `.memory/wiki/specs/*-architecture-design.md` explaining why the contract changed.
 
 **Proposed next step**: Re-run `/validate-phase` for the affected phase to ensure no regressions were introduced by the contract evolution.

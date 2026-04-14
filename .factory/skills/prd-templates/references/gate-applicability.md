@@ -51,7 +51,7 @@ A gate may be **deferred** (not skipped) when:
 - The gate applies but a prerequisite is not yet available (e.g., staging deployment not configured yet for DAST)
 - The phase is early infrastructure and the gate will apply to the next phase that adds the relevant content
 
-**Hard deadline required**: Specify which phase or milestone must run the deferred gate. Log deferred gates in `docs/audits/phase-N-validation.md` with the deadline.
+**Hard deadline required**: Specify which phase or milestone must run the deferred gate. Log deferred gates in `.memory/wiki/specs/audits/phase-N-validation.md` with the deadline.
 
 **Single-deferral limit**: A gate may NOT be deferred more than once. If a previously deferred gate's deadline arrives, it MUST run — no further deferral.
 

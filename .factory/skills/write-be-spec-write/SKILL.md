@@ -45,7 +45,7 @@ Apply line-count thresholds:
 
 ### Step 4 — Index and tracker updates
 
-1. Update `docs/plans/be/index.md`.
+1. Update `.memory/wiki/specs/be/index.md`.
 2. Update BE completion state in `.factory/progress/spec-pipeline.md`.
 3. Handle structural-reference no-spec rows when classification indicates 0 specs.
 

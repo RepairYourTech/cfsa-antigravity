@@ -67,7 +67,7 @@ Identifies the target IA shard, classifies it (feature domain / multi-domain / c
 
 ### Step B — Run `.agent/workflows/write-be-spec-write.md`
 
-Writes the BE spec(s) to `docs/plans/be/`, updates the BE index, runs cross-reference checks and the ambiguity gate, checks for new dependencies (firing bootstrap if needed), and presents for review.
+Writes the BE spec(s) to `.memory/wiki/specs/be/`, updates the BE index, runs cross-reference checks and the ambiguity gate, checks for new dependencies (firing bootstrap if needed), and presents for review.
 
 ---
 
@@ -90,7 +90,7 @@ Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review dis
 
 Before reporting completion to the user:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

@@ -1,6 +1,6 @@
 # Constraint Exploration Questions
 
-Use during `/ideate-validate` Step 8 to explore constraints with the user. Write answers to `docs/plans/ideation/meta/constraints.md`.
+Use during `/ideate-validate` Step 8 to explore constraints with the user. Write answers to `.memory/wiki/specs/ideation/meta/constraints.md`.
 
 ## Core Constraint Categories
 
@@ -38,4 +38,4 @@ If not already explored during `/ideate-discover`:
 - For each: what they do well, where they fail, how we differentiate
 - What's the moat? (network effects, data, expertise, switching costs)
 
-Write to `docs/plans/ideation/meta/competitive-landscape.md`.
+Write to `.memory/wiki/specs/ideation/meta/competitive-landscape.md`.

@@ -23,9 +23,9 @@ Runs the ideation stage in three shards: extract → discover → validate.
 
 ### Step 0 — Re-run and cascade guard
 
-1. Check whether `docs/plans/ideation/ideation-index.md` exists.
+1. Check whether `.memory/wiki/specs/ideation/ideation-index.md` exists.
 2. If missing: continue.
-3. If present and valid: scan downstream artifacts (`docs/plans/*-architecture-design.md`, `docs/plans/ia/`, `docs/plans/be/`, `docs/plans/fe/`).
+3. If present and valid: scan downstream artifacts (`.memory/wiki/specs/*-architecture-design.md`, `.memory/wiki/specs/ia/`, `.memory/wiki/specs/be/`, `.memory/wiki/specs/fe/`).
 4. If downstream artifacts exist: STOP and require explicit overwrite confirmation due to cascade invalidation.
 5. If user aborts: end workflow.
 
@@ -37,7 +37,7 @@ Input:
 - `input_source`
 
 Expected outputs:
-- `docs/plans/ideation/` fractal structure seeded
+- `.memory/wiki/specs/ideation/` fractal structure seeded
 - `## Structural Classification` written in ideation index
 - `## Engagement Tier` written
 - `## Expansion Mode` written
@@ -57,9 +57,9 @@ Expected outputs:
 Call skill: `ideate-validate`
 
 Expected outputs:
-- `docs/plans/ideation/meta/constraints.md`
-- `docs/plans/vision.md`
-- `docs/plans/feature-ledger.md`
+- `.memory/wiki/specs/ideation/meta/constraints.md`
+- `.memory/wiki/specs/vision.md`
+- `.memory/wiki/specs/feature-ledger.md`
 - Ideation rubric self-check complete
 
 ## Completion Checklist

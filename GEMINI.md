@@ -22,14 +22,14 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 
 | # | Command | Input | Output | Stage |
 |---|---------|-------|--------|-------|
-| 1 | `/ideate` | Raw idea or `@file` | `docs/plans/ideation/` folder + `docs/plans/vision.md` (summary) | Discovery |
-| ↳ | `/ideate-extract` | User input | Classified input + `docs/plans/ideation/` folder + loaded skills | Discovery |
+| 1 | `/ideate` | Raw idea or `@file` | `.memory/wiki/specs/ideation/` folder + `.memory/wiki/specs/vision.md` (summary) | Discovery |
+| ↳ | `/ideate-extract` | User input | Classified input + `.memory/wiki/specs/ideation/` folder + loaded skills | Discovery |
 | ↳ | `/ideate-discover` | Classified input | Domain files + cross-cut ledger (recursive breadth-before-depth) | Discovery |
-| ↳ | `/ideate-validate` | Domains + features | `docs/plans/vision.md` (human summary compiled from ideation folder) | Discovery |
+| ↳ | `/ideate-validate` | Domains + features | `.memory/wiki/specs/vision.md` (human summary compiled from ideation folder) | Discovery |
 | 2 | `/create-prd` | `ideation-index.md` | `architecture-design.md` + `ENGINEERING-STANDARDS.md` + `data-placement-strategy.md` | Design |
 
 | ↳ | `/create-prd-stack` | `ideation/meta/constraints.md` | Tech stack decisions | Design |
-| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `docs/plans/design-system.md` | Design |
+| ↳ | `/create-prd-design-system` | Tech stack + brand-guidelines | `.memory/wiki/specs/design-system.md` | Design |
 | ↳ | `/create-prd-architecture` | Tech stack | System architecture + data strategy | Design |
 | ↳ | `/create-prd-security` | Architecture | Security model + integrations | Design |
 | ↳ | `/create-prd-compile` | All prior steps | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | Design |
@@ -81,7 +81,7 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 > **Note**: ↳ rows are independently-invocable shards. Utility commands (`/resolve-ambiguity`, `/remediate-pipeline`, `/propagate-decision`, `/evolve-feature`, `/remediate-shard-split`) are callable from any stage.
 
 > [!WARNING]
-> If `docs/plans/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
+> If `.memory/wiki/specs/ideation/ideation-index.md` does not exist, the pipeline has not started — run `/ideate` before any other workflow.
 
 > [!WARNING]
 > If `{{PLACEHOLDER}}` values appear in this file: check the current pipeline phase (see below). Pre-PRD → placeholders are expected, they fill at `/create-prd`. Post-PRD → run `/bootstrap-agents-fill`.
@@ -101,8 +101,8 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 ### Architecture
 
 - [Architecture Design]({{ARCHITECTURE_DOC}}) — System design document
-- [Engineering Standards](docs/plans/ENGINEERING-STANDARDS.md) — Non-negotiable quality bar
-- [Data Placement Strategy](docs/plans/data-placement-strategy.md) — Entity placement + PII boundaries
+- [Engineering Standards](.memory/wiki/specs/ENGINEERING-STANDARDS.md) — Non-negotiable quality bar
+- [Data Placement Strategy](.memory/wiki/specs/data-placement-strategy.md) — Entity placement + PII boundaries
 
 ### Agent Instructions
 
@@ -147,7 +147,8 @@ Rules in `.agent/rules/` are **always active** — they apply to every task, eve
 4. **TDD: failing test before code** — Red → Green → Refactor, every slice, every surface
 5. **Security-first** — PII never leaks, inputs validated, secrets server-side only
 6. **Write decisions to disk immediately** — Every confirmed decision is written to its output file the moment the user confirms it. Never batch decisions in-memory across a long conversation. If the conversation truncates, all confirmed work must survive on disk.
-7. **Write to memory every conversation** — Before ending any workflow or conversation, write patterns to `memory/patterns.md`, decisions to `memory/decisions.md`, blockers to `memory/blockers.md`. See rule: `memory-capture`.
+7. **Write to unified memory every conversation** — Before ending any workflow or conversation, write patterns to `.memory/wiki/patterns.md`, decisions to `.memory/wiki/decisions.md`, blockers to `.memory/wiki/blockers.md`, and prefer the shared MCP memory tools when available. See rule: `memory-capture`.
+8. **Use the shared memory daemon** — The project owns one `cfsa-memory` daemon under `.memory/mcp-server/daemon.mjs`. Gemini/Antigravity-style runtimes should connect through MCP client config to `.mcp.json` -> `cfsa-memory` -> `.memory/mcp-server/client.mjs` instead of spawning isolated memory servers.
 
 ### Pipeline Phase Detection
 
@@ -155,14 +156,14 @@ Before acting on any task, detect the current pipeline phase from filesystem mar
 
 | Phase | Marker | Valid Actions |
 |-------|--------|---------------|
-| Pre-ideation | No `docs/plans/ideation/ideation-index.md` | Only `/ideate` |
+| Pre-ideation | No `.memory/wiki/specs/ideation/ideation-index.md` | Only `/ideate` |
 | Ideating | `ideation/` has content, no `vision.md` | Ideation workflows only |
 | Ideation complete | `ideation-index.md` + `vision.md` exist | `/audit-ambiguity` → `/create-prd` |
 | PRD in progress | `architecture-draft.md` exists | PRD workflows only |
 | PRD complete | `architecture-design.md` + `ENGINEERING-STANDARDS.md` | `/decompose-architecture` |
-| Decomposition done | IA shards in `docs/plans/ia/` | `/write-architecture-spec` |
+| Decomposition done | IA shards in `.memory/wiki/specs/ia/` | `/write-architecture-spec` |
 | Spec writing | BE/FE specs exist | `/write-be-spec`, `/write-fe-spec` |
-| Planning | Phase plan in `docs/plans/phases/` | `/plan-phase` |
+| Planning | Phase plan in `.memory/wiki/specs/phases/` | `/plan-phase` |
 | Workspace setup | Phase plan exists, no `.agent/progress/` content | `/setup-workspace` → `/verify-infrastructure` |
 | Implementation | `.agent/progress/` has content | `/implement-slice` |
 

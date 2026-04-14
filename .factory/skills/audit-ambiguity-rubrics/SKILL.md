@@ -33,7 +33,7 @@ parameters:
 
 ### Step 3 — Persist audit scope and rubric file map
 
-Write `docs/audits/audit-scope.md` including:
+Write `.memory/wiki/specs/audits/audit-scope.md` including:
 - layers to audit
 - complete document list
 - per-layer document count

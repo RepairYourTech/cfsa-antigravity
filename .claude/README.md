@@ -4,7 +4,7 @@ This directory contains the CFSA (Constraint-First Specification Architecture) p
 
 ## Directory Structure
 
-```
+```text
 .claude/
 ├── skills/              # Pipeline workflow skills and utilities
 │   ├── workflows/       # Main pipeline workflows (ideate, create-prd, etc.)
@@ -13,11 +13,38 @@ This directory contains the CFSA (Constraint-First Specification Architecture) p
 ├── rules/               # Always-active rules that apply to every task
 ├── instructions/        # Core directives (workflow, tech-stack, patterns)
 ├── skill-library/       # Claude-owned skill library
-└── memory/              # CFSA-specific memory protocols
-    ├── decisions.md     # Locked decisions log
-    ├── patterns.md      # Reusable patterns with confidence scores
-    ├── blockers.md      # Active and resolved blockers
-    └── sessions/        # Session logs for continuity
+```
+
+Project root canonical memory / Obsidian vault:
+
+```text
+.memory/
+├── .obsidian/           # Vault config stored inside the project
+├── raw/                 # Append-only session and event captures
+├── wiki/                # Compiled patterns, decisions, blockers, and knowledge
+├── schema/              # Machine-readable retrieval artifacts
+├── mcp-server/          # Shared memory MCP server
+├── hooks/               # Claude hook entrypoints
+└── migrate/             # Legacy memory import helpers
+```
+
+The `.memory/` directory is the canonical project memory layer and is designed to function as an Obsidian-friendly vault inside the project. `.claude/memory/` exists only for Claude-native bridge guidance and session-specific conventions.
+
+A Claude install also gets:
+- `.mcp.json` with the `cfsa-memory` client registration
+- `.claude/settings.json` hook entries for SessionStart, PreCompact, and Stop
+- daemon startup through `.memory/mcp-server/start.mjs`
+- initial `.memory/schema/` compilation during `init`
+
+All runtimes should read and write shared project memory through `.memory/` and the MCP bridge.
+
+```text
+Shared memory access path
+Claude / Antigravity / Factory / Codex
+        -> runtime MCP client config
+        -> .mcp.json -> cfsa-memory -> .memory/mcp-server/client.mjs
+        -> shared daemon at .memory/mcp-server/daemon.mjs
+        -> .memory/wiki/* and .memory/schema/*
 ```
 
 ## Parallel Structure
@@ -28,8 +55,9 @@ This directory is the standalone Claude Code runtime for the CFSA pipeline. It s
 
 1. **Skills vs Workflows**: Claude Code uses skills instead of passive workflow markdown files
 2. **Task System**: Uses Claude Code's built-in Tasks system for progress tracking
-3. **Progress + Memory**: Uses `.claude/progress/` for pipeline state and `.claude/memory/` for CFSA memory
+3. **Progress + Shared Memory**: Uses `.claude/progress/` for Claude pipeline state and project-level `.memory/` for canonical cross-runtime memory
 4. **Invocation**: Workflows are invoked as skills rather than slash commands in markdown
+5. **Hooks + MCP**: Claude adds native hooks on top of the shared `cfsa-memory` MCP bridge
 
 ## Installation
 

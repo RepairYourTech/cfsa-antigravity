@@ -74,7 +74,7 @@ These are project-wide, not per-surface:
 | `DESCRIPTION` | One-line description |
 | `TECH_STACK_SUMMARY` | Supabase + SurrealDB + Astro + Tauri |
 | `SURFACES` | web, desktop, mobile |
-| `ARCHITECTURE_DOC` | docs/plans/2026-03-13-architecture-design.md |
+| `ARCHITECTURE_DOC` | .memory/wiki/specs/2026-03-13-architecture-design.md |
 
 ### Structural Values (fill instruction templates — unchanged from v2)
 

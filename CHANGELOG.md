@@ -78,9 +78,9 @@
 
 - fix: establish pre-scaffolded be/fe dirs as shared surface for multi-surface projects
 
-  Removed creation of redundant `docs/plans/shared/be/` and `docs/plans/shared/fe/` directories
-  during `/decompose-architecture-structure`. The pre-scaffolded `docs/plans/be/` and
-  `docs/plans/fe/` directories now explicitly serve as the shared surface for cross-surface
+  Removed creation of redundant `.memory/wiki/specs/shared/be/` and `.memory/wiki/specs/shared/fe/` directories
+  during `/decompose-architecture-structure`. The pre-scaffolded `.memory/wiki/specs/be/` and
+  `.memory/wiki/specs/fe/` directories now explicitly serve as the shared surface for cross-surface
   contracts, matching how all downstream workflows already resolve these paths.
 
   Files changed:
@@ -94,7 +94,7 @@
 
 ### Patch Changes
 
-- fix: remove invalid per-surface IA directories — IA is always flat in docs/plans/ia/
+- fix: remove invalid per-surface IA directories — IA is always flat in .memory/wiki/specs/ia/
 
   - `prd-templates/SKILL.md`: Fixed multi-product directory example that showed `desktop/ia/` and `shared/ia/` — now correctly shows IA as flat with only per-surface BE/FE directories.
   - `shard-split-remediation.md`: Removed `shared/ia/`, `web/ia/`, `desktop/ia/`, `mobile/ia/` from scan scope table.
@@ -125,7 +125,7 @@
 
 - c7b0717: fix: multi-surface directory structure — shared IA, per-surface BE/FE
 
-  - `decompose-architecture-structure.md`: IA stays flat in `docs/plans/ia/` (shared). Multi-surface only creates per-surface `be/` and `fe/` directories.
+  - `decompose-architecture-structure.md`: IA stays flat in `.memory/wiki/specs/ia/` (shared). Multi-surface only creates per-surface `be/` and `fe/` directories.
   - `decomposition-templates.md`: Added Surface Applicability to shard skeleton. Added Surfaces column to IA index. Rewrote multi-surface master index for shared IA model.
 
 - 92f024a: fix: add workflow state tracking to survive context truncation in /create-prd
@@ -134,7 +134,7 @@
 
   **Fix**:
 
-  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`docs/plans/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
+  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`.memory/wiki/specs/architecture/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
   - **`create-prd.md`**: Parent orchestrator now initializes checkpoint directory, reads checkpoint state during shard failure recovery (showing exact step/item/action), and cleans up the checkpoint file after the quality gate passes.
   - **`create-prd-stack.md`**: Added Step 2.4 (checkpoint resumption on entry), step 5 (synthesis verification gate — hard stop if `synthesis_written: false`), and step 10 (checkpoint update per completed axis with next-axis pending reads).
   - **`create-prd-design-system.md`**: Checkpoint resumption after ideation context loading, checkpoint update at shard completion marking all 7 decisions.
@@ -148,11 +148,11 @@
 
 - fix: multi-surface directory structure — shared IA, per-surface BE/FE
 
-  **Problem**: `decompose-architecture-structure` had conflicting instructions. Line 35 told agents to create per-surface `ia/` directories (`docs/plans/web/ia/`, `docs/plans/desktop/ia/`), but lines 55/61 and all templates put shards in flat `docs/plans/ia/`. Agents produced a chaotic mix of both structures.
+  **Problem**: `decompose-architecture-structure` had conflicting instructions. Line 35 told agents to create per-surface `ia/` directories (`.memory/wiki/specs/web/ia/`, `.memory/wiki/specs/desktop/ia/`), but lines 55/61 and all templates put shards in flat `.memory/wiki/specs/ia/`. Agents produced a chaotic mix of both structures.
 
   **Fix**:
 
-  - **`decompose-architecture-structure.md`**: IA stays flat in `docs/plans/ia/` (shared across all surfaces). Multi-surface projects only create per-surface `be/` and `fe/` directories. Step 9 updated to match.
+  - **`decompose-architecture-structure.md`**: IA stays flat in `.memory/wiki/specs/ia/` (shared across all surfaces). Multi-surface projects only create per-surface `be/` and `fe/` directories. Step 9 updated to match.
   - **`decomposition-templates.md`**: Added Surface Applicability section to shard skeleton template. Added Surfaces column to IA index. Rewrote multi-surface master index to show shared IA layer with per-surface BE/FE tables.
 
 ## 2.17.3
@@ -179,7 +179,7 @@
 
   **Fix**:
 
-  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`docs/plans/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
+  - **`workflow-checkpoint-protocol.md`** [NEW]: Shared reference defining checkpoint file format (`.memory/wiki/specs/architecture/prd-working/workflow-state.md`), write/read triggers, resumption logic, and a hard synthesis verification gate that prevents user-facing output until synthesis is written.
   - **`create-prd.md`**: Parent orchestrator initializes checkpoint directory, reads checkpoint during shard failure recovery, cleans up after quality gate.
   - **`create-prd-stack.md`**: Step 2.4 (checkpoint resumption), step 5 (synthesis verification gate), step 10 (checkpoint update per axis).
   - **`create-prd-design-system.md`**: Checkpoint resumption + completion update for all 7 decisions.
@@ -198,9 +198,9 @@
   **Fix**:
 
   - **`constraint-questions.md`**: Rewritten with two-tier question structure — Tier 1 (self-answer from ideation docs) and Tier 2 (ask the user). Added per-axis "Required Reads" mapping to ideation file types and Cite-or-Stop Gate requiring ≥2 project-specific citations before presenting options.
-  - **`create-prd-stack.md`**: Step 2.7 now builds a structured Ideation Relevance Index mapping each axis to specific domain files, deep dives, and CX entries (written to `docs/plans/prd-working/ideation-relevance-index.md`). Per-axis flow replaced with 9-step procedure: consult index → read files → write Ideation Synthesis (appended to `docs/plans/prd-working/stack-synthesis.md`) → pass Cite-or-Stop Gate → ask Tier 2 questions → filter options → confirm → bootstrap → next axis.
-  - **`create-prd-design-system.md`**: Added per-decision Ideation Synthesis requirement before each of the 7 design system decisions (appended to `docs/plans/prd-working/design-system-synthesis.md`). Cite-or-Stop Gate requires ≥1 citation per decision. Strengthened deep dive and CX file reading mandates.
-  - **New `docs/plans/prd-working/` directory**: Intermediate synthesis artifacts provide audit trail without polluting ideation documents.
+  - **`create-prd-stack.md`**: Step 2.7 now builds a structured Ideation Relevance Index mapping each axis to specific domain files, deep dives, and CX entries (written to `.memory/wiki/specs/architecture/prd-working/ideation-relevance-index.md`). Per-axis flow replaced with 9-step procedure: consult index → read files → write Ideation Synthesis (appended to `.memory/wiki/specs/architecture/prd-working/stack-synthesis.md`) → pass Cite-or-Stop Gate → ask Tier 2 questions → filter options → confirm → bootstrap → next axis.
+  - **`create-prd-design-system.md`**: Added per-decision Ideation Synthesis requirement before each of the 7 design system decisions (appended to `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`). Cite-or-Stop Gate requires ≥1 citation per decision. Strengthened deep dive and CX file reading mandates.
+  - **New `.memory/wiki/specs/architecture/prd-working/` directory**: Intermediate synthesis artifacts provide audit trail without polluting ideation documents.
 
 ## 2.17.0
 

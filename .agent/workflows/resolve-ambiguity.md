@@ -29,11 +29,11 @@ Targeted ambiguity resolution for any pipeline document or layer. Uses the `reso
 If no argument was provided, ask the user which document or layer to resolve. Accept a layer name (`vision`, `architecture`, `ia`, `be`, `fe`) or a direct `@file` path.
 
 For layer names, resolve to the canonical document(s):
-- `ideation` → `docs/plans/ideation/ideation-index.md` + `ideation-cx.md` + all `*-index.md`, `*-cx.md`, and feature `.md` files recursively under `domains/` (and `surfaces/` for multi-product projects)
-- `architecture` → `docs/plans/YYYY-MM-DD-architecture-design.md` + `docs/plans/ENGINEERING-STANDARDS.md` + `docs/plans/data-placement-strategy.md`
-- `ia` → all files in `docs/plans/ia/` (excluding `index.md`)
-- `be` → all files in `docs/plans/be/` (excluding `index.md`)
-- `fe` → all files in `docs/plans/fe/` (excluding `index.md`)
+- `ideation` → `.memory/wiki/specs/ideation/ideation-index.md` + `ideation-cx.md` + all `*-index.md`, `*-cx.md`, and feature `.md` files recursively under `domains/` (and `surfaces/` for multi-product projects)
+- `architecture` → `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` + `.memory/wiki/specs/ENGINEERING-STANDARDS.md` + `.memory/wiki/specs/data-placement-strategy.md`
+- `ia` → all files in `.memory/wiki/specs/ia/` (excluding `index.md`)
+- `be` → all files in `.memory/wiki/specs/be/` (excluding `index.md`)
+- `fe` → all files in `.memory/wiki/specs/fe/` (excluding `index.md`)
 
 ## 2. Load skill
 

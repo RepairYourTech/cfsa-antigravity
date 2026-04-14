@@ -42,13 +42,13 @@ If a migration-management skill exists, load it too (check `.agent/skills/migrat
 
 ## 2. Determine database architecture
 
-Read `docs/plans/*-architecture-design.md` for the data strategy:
+Read `.memory/wiki/specs/*-architecture-design.md` for the data strategy:
 
 1. **How many database instances?** Monolith typically has 1; multi-service may have per-service databases or a shared database with per-service schemas
 2. **Database engine per instance** (from architecture doc + surface stack map)
 3. **Managed vs self-hosted** — affects provisioning steps
 4. **Read replicas needed?** — typically not at setup, but note for later
-5. **Data placement strategy** — read `docs/plans/data-placement-strategy.md` if it exists
+5. **Data placement strategy** — read `.memory/wiki/specs/data-placement-strategy.md` if it exists
 
 | Pattern | Database Strategy |
 |---------|------------------|
@@ -121,7 +121,7 @@ Using the loaded ORM skill:
 
 2. **Configure the migration tool** to read the connection string from the environment variable
 
-3. **Create the initial schema** based on `docs/plans/data-placement-strategy.md`:
+3. **Create the initial schema** based on `.memory/wiki/specs/data-placement-strategy.md`:
    - Create only the base tables/collections specified in the strategy
    - Include audit fields (created_at, updated_at) as specified in `ENGINEERING-STANDARDS.md`
    - Set up indexes for primary keys and documented unique constraints

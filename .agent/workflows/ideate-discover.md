@@ -19,13 +19,13 @@ pipeline:
 
 Explore domains through recursive breadth-before-depth with the Deep Think protocol. Write to the fractal folder structure.
 
-**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with the fractal folder structure seeded. If missing → **STOP**: "Run `/ideate-extract` first."
+**Prerequisite**: If invoked standalone, verify `.memory/wiki/specs/ideation/ideation-index.md` exists with the fractal folder structure seeded. If missing → **STOP**: "Run `/ideate-extract` first."
 
 ---
 
 ## 2.4. Mid-shard resumption check
 
-Scan `docs/plans/ideation/` for existing domain folders and feature files.
+Scan `.memory/wiki/specs/ideation/` for existing domain folders and feature files.
 
 - **If 0 domain folders exist** → fresh exploration. Proceed to Step 2.5.
 - **If domain folders exist but ideation-index.md `## Domain Map` is incomplete** (some domains listed but not all have `[DEEP]`/`[EXHAUSTED]`) → this is a resumed session. Log: "Resuming exploration. [N] of [M] domains already explored." Skip already-completed domains and continue from the first incomplete one.
@@ -33,7 +33,7 @@ Scan `docs/plans/ideation/` for existing domain folders and feature files.
 
 ## 2.5. Read Engagement Tier
 
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+Read `## Engagement Tier` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
 - **If the section exists** → apply the specified tier.
 - **If the section is missing** → default to **Hybrid** tier. Warn: "Engagement tier not found in ideation-index.md. Defaulting to Hybrid. Override now or continue?"
@@ -51,7 +51,7 @@ Read `.agent/skills/idea-extraction/SKILL.md` — follow the **Recursive Domain 
 > [!IMPORTANT]
 > **CX Decision Gate is mandatory at every level.** After resolving ANY open question, confirming ANY Deep Think hypothesis, or receiving ANY product decision from the user → STOP and run the CX Decision Gate from `idea-extraction/SKILL.md` before proceeding. This is the #1 enforcement gap — decisions silently drop cross-domain connections without this gate.
 
-Read `## Expansion Mode` and `## Structural Classification` from `docs/plans/ideation/ideation-index.md`.
+Read `## Expansion Mode` and `## Structural Classification` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
 Route to the correct exploration mode based on what was selected in `ideate-extract` Step 1.6.5:
 
@@ -77,9 +77,9 @@ Read `.agent/skills/brainstorming/SKILL.md` and follow its methodology.
 **Persona completeness gate**: Read `.agent/skills/prd-templates/references/persona-completeness-gate.md`. Verify all 6 fields for every persona. If any field absent → probe before proceeding.
 
 **Meta files gate**: After completing problem exploration, verify ALL of the following files exist and are non-empty:
-- `docs/plans/ideation/meta/problem-statement.md` (must contain a "Why Now" section)
-- `docs/plans/ideation/meta/personas.md`
-- `docs/plans/ideation/meta/competitive-landscape.md`
+- `.memory/wiki/specs/ideation/meta/problem-statement.md` (must contain a "Why Now" section)
+- `.memory/wiki/specs/ideation/meta/personas.md`
+- `.memory/wiki/specs/ideation/meta/competitive-landscape.md`
 
 If ANY file is missing or empty → **STOP**: "Meta file `[filename]` was not written during problem exploration. Write it now before proceeding to feature inventory."
 
@@ -167,7 +167,7 @@ After all features are deepened, systematically identify emergent capabilities t
 ## Post-Discovery Verification
 
 Before completing discovery, count and verify the ideation output:
-1. List all files in `docs/plans/ideation/` recursively
+1. List all files in `.memory/wiki/specs/ideation/` recursively
 2. Verify each domain in the ideation-index has its corresponding folder with at minimum:
    - `{slug}-index.md` (domain index)
    - `{slug}-cx.md` (cross-cutting concerns file)
@@ -177,9 +177,9 @@ Before completing discovery, count and verify the ideation output:
 ## Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.

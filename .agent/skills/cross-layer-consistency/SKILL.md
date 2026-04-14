@@ -17,7 +17,7 @@ This skill provides the systematic consistency verification pass run by `audit-a
 
 ### 1. IA → BE Coverage Matrix
 
-Open `docs/plans/ia/index.md` to enumerate all IA shards. For each shard, read its data model and state transition sections. Then open `docs/plans/be/` and verify:
+Open `.memory/wiki/specs/ia/index.md` to enumerate all IA shards. For each shard, read its data model and state transition sections. Then open `.memory/wiki/specs/be/` and verify:
 
 - Every IA data model entity has a corresponding BE spec section describing its schema, storage contract, and CRUD operations.
 - Every IA state transition has a corresponding BE endpoint that drives it.
@@ -37,7 +37,7 @@ COVERAGE GAP: IA shard [name] § [section] → no corresponding BE spec section 
 
 ### 2. BE → FE Field Mapping Check
 
-For every BE endpoint documented in `docs/plans/be/`, enumerate all response fields. For each field, verify it appears in `docs/plans/fe/` — in a component prop definition, a display element, a table column, or an explicit "field not rendered" exclusion.
+For every BE endpoint documented in `.memory/wiki/specs/be/`, enumerate all response fields. For each field, verify it appears in `.memory/wiki/specs/fe/` — in a component prop definition, a display element, a table column, or an explicit "field not rendered" exclusion.
 
 Then for each FE component, verify every input prop maps to a BE request field.
 
@@ -82,7 +82,7 @@ CONSISTENCY ISSUE: IA § [access control section] permission [role→resource:op
 
 ### 5. Data Contract Drift Detection
 
-When invoked in the context of a schema change (e.g., after `evolve-contract` or a `propagate-decision` run), scan all files under `docs/plans/` for references to the changed type, field name, or validation rule. Check for:
+When invoked in the context of a schema change (e.g., after `evolve-contract` or a `propagate-decision` run), scan all files under `.memory/wiki/specs/` for references to the changed type, field name, or validation rule. Check for:
 
 - Field name string matches
 - Type annotation references

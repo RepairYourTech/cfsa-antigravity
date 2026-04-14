@@ -20,7 +20,7 @@ Cascade the new content from the entry point through all downstream layers with 
 > **Prerequisite**: Entry point document must contain the new content (from `/evolve-feature-classify` Step 4). Cascade scope must be determined (Step 5 output).
 
 **Locked decision conflict check**: Before cascading, scan the new content against locked decisions in upstream layers:
-1. Read the architecture design document (`docs/plans/*-architecture-design.md`) for locked constraints
+1. Read the architecture design document (`.memory/wiki/specs/*-architecture-design.md`) for locked constraints
 2. Compare each element of the new feature against: tech stack decisions, data placement strategy, security model, performance budgets
 3. **If conflict detected** → **STOP**: "New feature '[name]' conflicts with locked decision: [decision]. Options: (1) Modify the feature to work within the constraint, (2) Use `/propagate-decision` to change the locked decision first, then re-run `/evolve-feature`."
 4. **If no conflicts** → proceed to Step 1.
@@ -48,7 +48,7 @@ For each downstream layer with existing content (in order: architecture → IA �
 
 ## 2. Assess implementation impact
 
-If `docs/plans/phases/` exists and contains phase plans:
+If `.memory/wiki/specs/phases/` exists and contains phase plans:
 
 1. Check in-progress slices for affected acceptance criteria
 2. Check completed slices that may need revisiting (flag regression risk)
@@ -77,7 +77,7 @@ Report issues. **Do not auto-fix** — present to user.
 
 ## 4. Write evolution record
 
-Write `docs/audits/evolve-feature-[name]-[date].md` recording: feature name, change type, entry point, new content summary, layers updated, per-layer additions, implementation impact, consistency check results, timestamp.
+Write `.memory/wiki/specs/audits/evolve-feature-[name]-[date].md` recording: feature name, change type, entry point, new content summary, layers updated, per-layer additions, implementation impact, consistency check results, timestamp.
 
 ---
 

@@ -17,9 +17,9 @@ pipeline:
 
 # Write FE Spec — Write & Validate
 
-Write the FE spec to `docs/plans/fe/`, update indexes, run quality checks, and present for review.
+Write the FE spec to `.memory/wiki/specs/fe/`, update indexes, run quality checks, and present for review.
 
-**Prerequisite**: Read the spec file at `docs/plans/fe/[NN-feature-name].md`. The `## Classification` section, Referenced Material Inventory, and Design Requirements should be present from the classify shard. If the file lacks a `## Classification` section, run `/write-fe-spec-classify` first.
+**Prerequisite**: Read the spec file at `.memory/wiki/specs/fe/[NN-feature-name].md`. The `## Classification` section, Referenced Material Inventory, and Design Requirements should be present from the classify shard. If the file lacks a `## Classification` section, run `/write-fe-spec-classify` first.
 
 **Re-run detection**: If the spec file already has content beyond the classification stub (filled component sections, state definitions, routing rules):
 - Present current state and ask: "This FE spec has existing content. **Continue** (skip filled sections) or **redo specific sections** (which ones)?"
@@ -27,7 +27,7 @@ Write the FE spec to `docs/plans/fe/`, update indexes, run quality checks, and p
 
 ---
 
-## 6. Write the spec to `docs/plans/fe/[NN-feature-name].md`
+## 6. Write the spec to `.memory/wiki/specs/fe/[NN-feature-name].md`
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 Read .agent/skills/spec-writing/SKILL.md and follow its completeness testing and cross-reference checking methodology.
@@ -54,7 +54,7 @@ Count the total lines in the written FE spec file.
 
 ## 7. Update the FE index
 
-Change the spec's status from 🔲 to ✅ in `docs/plans/fe/index.md`.
+Change the spec's status from 🔲 to ✅ in `.memory/wiki/specs/fe/index.md`.
 
 ## 8. Update spec pipeline
 
@@ -128,7 +128,7 @@ Read `.agent/skills/session-continuity/protocols/ambiguity-gates.md` and run:
 
 ## 11. Full ambiguity audit (mandatory when last FE spec)
 
-1. Read `docs/plans/fe/index.md`
+1. Read `.memory/wiki/specs/fe/index.md`
 2. Check if all FE specs show ✅
 
 **More specs remain**: Proceed to the next spec.
@@ -144,15 +144,15 @@ If this FE spec introduces a new technology:
 
 ## 12.5. Update feature tracking ledger
 
-If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 4 — FE Coverage**. Match the components in this spec to Feature IDs and populate the FE Spec and FE Status columns.
+If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 4 — FE Coverage**. Match the components in this spec to Feature IDs and populate the FE Spec and FE Status columns.
 
 ## 12.7. Completion Gate (MANDATORY)
 
 1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the FE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 8. Go back and run Protocol 08 now before proceeding."
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 

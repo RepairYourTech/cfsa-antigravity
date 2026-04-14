@@ -47,6 +47,14 @@ fi
 info "Copying docs/"
 cp -a "$ROOT_DIR/docs" "$TEMPLATE_DIR/docs"
 
+# memory-src/ — unified memory scaffold source
+if [[ -d "$ROOT_DIR/memory-src" ]]; then
+    info "Copying memory-src/ -> template/.memory/"
+    cp -a "$ROOT_DIR/memory-src" "$TEMPLATE_DIR/.memory"
+else
+    warn "memory-src/ directory not found — skipping"
+fi
+
 # Root config files
 for file in GEMINI.md AGENTS.md CLAUDE.md CODEX.md; do
     if [[ -f "$ROOT_DIR/$file" ]]; then
@@ -71,41 +79,61 @@ if [[ -d "$TEMPLATE_DIR/.claude/progress" ]]; then
     find "$TEMPLATE_DIR/.claude/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
-# Remove .claude/memory/sessions/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.claude/memory/sessions" ]]; then
-    info "Cleaning .claude/memory/sessions/ (session-specific data)"
-    find "$TEMPLATE_DIR/.claude/memory/sessions" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
-fi
-
 # Remove .factory/progress/ contents (session-specific)
 if [[ -d "$TEMPLATE_DIR/.factory/progress" ]]; then
     info "Cleaning .factory/progress/ (session-specific data)"
     find "$TEMPLATE_DIR/.factory/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
-# Remove .factory/memory/sessions/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.factory/memory/sessions" ]]; then
-    info "Cleaning .factory/memory/sessions/ (session-specific data)"
-    find "$TEMPLATE_DIR/.factory/memory/sessions" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
-fi
-
-# Remove any docs/plans/ content (project-specific)
-if [[ -d "$TEMPLATE_DIR/docs/plans" ]]; then
-    info "Cleaning docs/plans/ content (project-specific specs)"
-    # Keep the directory structure but remove spec content
-    find "$TEMPLATE_DIR/docs/plans" -type f \
+# Remove any authoritative vault spec content from template/.memory/wiki/specs/ (project-specific)
+if [[ -d "$TEMPLATE_DIR/.memory/wiki/specs" ]]; then
+    info "Cleaning .memory/wiki/specs/ authoritative content (project-specific specs)"
+    find "$TEMPLATE_DIR/.memory/wiki/specs" -type f \
         ! -name "README.md" \
         ! -name ".gitkeep" \
         -delete 2>/dev/null || true
 fi
 
-# Remove any docs/audits/ content (project-specific)
-if [[ -d "$TEMPLATE_DIR/docs/audits" ]]; then
-    info "Cleaning docs/audits/ content (project-specific audits)"
-    find "$TEMPLATE_DIR/docs/audits" -type f \
-        ! -name "README.md" \
-        ! -name ".gitkeep" \
-        -delete 2>/dev/null || true
+# Initialize template/.memory/ runtime directories and strip generated content
+if [[ -d "$TEMPLATE_DIR/.memory" ]]; then
+    info "Preparing template/.memory/ scaffold"
+    mkdir -p \
+        "$TEMPLATE_DIR/.memory/.obsidian" \
+        "$TEMPLATE_DIR/.memory/raw/sessions" \
+        "$TEMPLATE_DIR/.memory/raw/events" \
+        "$TEMPLATE_DIR/.memory/raw/daily" \
+        "$TEMPLATE_DIR/.memory/raw/assets" \
+        "$TEMPLATE_DIR/.memory/wiki/knowledge" \
+        "$TEMPLATE_DIR/.memory/schema"
+
+    if [[ -f "$TEMPLATE_DIR/.memory/wiki-home.md" ]]; then :; else
+        cat > "$TEMPLATE_DIR/.memory/wiki-home.md" << 'EOF'
+# Memory Vault Home
+
+Use [[wiki/index]] as the primary navigation hub.
+EOF
+    fi
+
+    if [[ -f "$TEMPLATE_DIR/.memory/raw/README.md" ]]; then :; fi
+    if [[ -f "$TEMPLATE_DIR/.memory/wiki/README.md" ]]; then :; fi
+
+    find "$TEMPLATE_DIR/.memory/raw" -type f ! -name ".gitkeep" -delete 2>/dev/null || true
+    find "$TEMPLATE_DIR/.memory/wiki/knowledge" -type f ! -name "README.md" ! -name ".gitkeep" -delete 2>/dev/null || true
+    find "$TEMPLATE_DIR/.memory/schema" -type f ! -name "*.json" -delete 2>/dev/null || true
+
+    touch "$TEMPLATE_DIR/.memory/raw/sessions/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/raw/events/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/raw/daily/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/wiki/knowledge/.gitkeep"
+
+    cat > "$TEMPLATE_DIR/.memory/config.json" << 'EOF'
+{
+  "version": 1,
+  "backend": "jsonl",
+  "retrieval": "index-guided",
+  "agents": ["claude", "gemini", "factory", "codex"]
+}
+EOF
 fi
 
 # --- Generate kit-sync.md (sync tracking for installations) ---

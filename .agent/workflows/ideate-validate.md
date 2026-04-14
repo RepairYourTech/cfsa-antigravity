@@ -19,13 +19,13 @@ pipeline:
 
 Explore constraints, verify domain exhaustion, and compile the vision summary.
 
-**Prerequisite**: If invoked standalone, verify `docs/plans/ideation/ideation-index.md` exists with leaf nodes at `[DEEP]` or `[EXHAUSTED]` level. If not → **STOP**: "Run `/ideate-discover` first."
+**Prerequisite**: If invoked standalone, verify `.memory/wiki/specs/ideation/ideation-index.md` exists with leaf nodes at `[DEEP]` or `[EXHAUSTED]` level. If not → **STOP**: "Run `/ideate-discover` first."
 
 ---
 
 ## 7.5. Read Engagement Tier
 
-Read `## Engagement Tier` from `docs/plans/ideation/ideation-index.md`.
+Read `## Engagement Tier` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
 Read `.agent/skills/prd-templates/references/engagement-tier-protocol.md` — apply the tier's gate behavior for this shard.
 
@@ -48,7 +48,7 @@ Wait for user decision. If pivot → update problem statement and loop back to r
 
 If the surface classification changed during constraint exploration, update `ideation-index.md` `## Structural Classification` section.
 
-**Constraint file gate**: Verify `docs/plans/ideation/meta/constraints.md` exists and contains at least one constraint entry (technical, regulatory, business, or accepted risk). If empty or missing → **STOP**: "Constraint file not written. Constraints are required input for `/create-prd-stack`. Complete constraint exploration before proceeding."
+**Constraint file gate**: Verify `.memory/wiki/specs/ideation/meta/constraints.md` exists and contains at least one constraint entry (technical, regulatory, business, or accepted risk). If empty or missing → **STOP**: "Constraint file not written. Constraints are required input for `/create-prd-stack`. Complete constraint exploration before proceeding."
 
 ---
 
@@ -63,7 +63,7 @@ If any criterion fails → take the specified action. If proportionality fails �
 After verifying existing domains are deep enough, reason about whether **entire domains are missing**:
 
 1. **Product archetype analysis**: Identify the product archetype (e.g., marketplace, SaaS tool, social platform, developer tool). List the standard domain categories for this archetype.
-2. **Gap identification**: Compare the standard domain list against the actual domain folders in `docs/plans/ideation/domains/`. List any standard domains with no corresponding folder.
+2. **Gap identification**: Compare the standard domain list against the actual domain folders in `.memory/wiki/specs/ideation/domains/`. List any standard domains with no corresponding folder.
 3. **Cross-feature gap detection**: Read all CX files. For each unresolved cross-cut, ask: "Does this cross-cut imply a domain that doesn't exist yet?" (Example: if multiple features reference "notifications" but no notifications domain exists, that's a structural gap.)
 4. **Present missing domains**:
 
@@ -108,7 +108,7 @@ Read `.agent/skills/prd-templates/references/vision-template.md` for the output 
 
 Read `.agent/skills/technical-writer/SKILL.md` and follow its methodology.
 
-Compile `docs/plans/vision.md` as a human-readable executive summary. This is NOT consumed by the pipeline — the pipeline reads `ideation-index.md` directly.
+Compile `.memory/wiki/specs/vision.md` as a human-readable executive summary. This is NOT consumed by the pipeline — the pipeline reads `ideation-index.md` directly.
 
 ### Fidelity check
 
@@ -120,7 +120,7 @@ Verify every domain in `ideation-index.md` appears in `vision.md`. Nothing dropp
 
 Read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 1 — Ledger Creation**.
 
-Enumerate every leaf feature from the ideation fractal tree and write `docs/plans/feature-ledger.md` with Feature ID, Feature Name, Domain, and MoSCoW columns populated. All downstream columns start as `—`.
+Enumerate every leaf feature from the ideation fractal tree and write `.memory/wiki/specs/feature-ledger.md` with Feature ID, Feature Name, Domain, and MoSCoW columns populated. All downstream columns start as `—`.
 
 > **This step is non-optional.** The ledger is the only global tracking mechanism that follows features from ideation through implementation. Without it, features can be silently dropped at stage boundaries.
 
@@ -140,8 +140,8 @@ For any dimension that scores ⚠️ or ❌ → resolve it NOW. Loop back to the
 ### Present for review
 
 Use `notify_user` to request review of:
-- `docs/plans/ideation/ideation-index.md` — the pipeline key file
-- `docs/plans/vision.md` — the human summary
+- `.memory/wiki/specs/ideation/ideation-index.md` — the pipeline key file
+- `.memory/wiki/specs/vision.md` — the human summary
 
 Include: self-check results (all 12 dimensions), any resolved gaps, final domain coverage map, Deep Think hypothesis counts.
 

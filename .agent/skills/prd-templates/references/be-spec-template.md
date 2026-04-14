@@ -1,6 +1,6 @@
 # BE Spec Template
 
-Use this template when writing BE specs to `docs/plans/be/[NN-feature-name].md`.
+Use this template when writing BE specs to `.memory/wiki/specs/be/[NN-feature-name].md`.
 
 ```markdown
 # [Feature] — Backend Specification

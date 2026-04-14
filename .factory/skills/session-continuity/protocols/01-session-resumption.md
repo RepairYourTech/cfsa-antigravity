@@ -25,9 +25,9 @@
    - What was deferred and why?
    - What's the recommended starting point?
 
-5. **Read `memory/blockers.md`** — are there unresolved blockers?
+5. **Read `.memory/wiki/blockers.md`** — are there unresolved blockers?
 
-6. **Read `memory/decisions.md`** — load key decisions for context.
+6. **Read `.memory/wiki/decisions.md`** — load key decisions for context.
 
 7. **Summarize for the current task**:
    ```

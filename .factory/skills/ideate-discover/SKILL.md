@@ -13,7 +13,7 @@ parameters:
 
 ## Prerequisites
 
-1. `docs/plans/ideation/ideation-index.md` exists
+1. `.memory/wiki/specs/ideation/ideation-index.md` exists
 2. Extract shard already completed
 
 ## Step-by-Step
@@ -46,9 +46,9 @@ parameters:
 ### Step 4 — Problem exploration
 
 Write and verify:
-- `docs/plans/ideation/meta/problem-statement.md`
-- `docs/plans/ideation/meta/personas.md`
-- `docs/plans/ideation/meta/competitive-landscape.md`
+- `.memory/wiki/specs/ideation/meta/problem-statement.md`
+- `.memory/wiki/specs/ideation/meta/personas.md`
+- `.memory/wiki/specs/ideation/meta/competitive-landscape.md`
 
 Ensure `Why Now` section exists in problem statement.
 

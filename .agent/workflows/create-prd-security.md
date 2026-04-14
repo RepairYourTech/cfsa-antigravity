@@ -43,8 +43,8 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 > **This step is mandatory.** Shards run in separate conversations — ideation context from the orchestrator is lost.
 
-1. Read `docs/plans/ideation/ideation-index.md` — extract: persona list (all roles), MoSCoW Summary, Engagement Tier
-2. Read `docs/plans/ideation/meta/constraints.md` — extract: compliance constraints (COPPA/PCI/HIPAA triggers), regulatory requirements, age-related constraints
+1. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract: persona list (all roles), MoSCoW Summary, Engagement Tier
+2. Read `.memory/wiki/specs/ideation/meta/constraints.md` — extract: compliance constraints (COPPA/PCI/HIPAA triggers), regulatory requirements, age-related constraints
 3. Read domain-level index files for **every domain that has Must Have features** — extract the **Role Matrix** from each. The role matrix shows which personas access which domain at which permission level (Full / Config / Read-only / None). This is the primary input for access control design in Step 6.
 4. Read CX files (`ideation-cx.md` + domain-level `{domain}-cx.md`) — extract trust boundaries: which domains share data across different permission levels, cross-domain escalation paths
 
@@ -58,7 +58,7 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ### Checkpoint resumption
 
-Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
 
 ---
 
@@ -82,7 +82,7 @@ Load the Auth and Security skill(s) from the cross-cutting section per the skill
 
 ### Compliance escalation
 
-If any compliance constraint from `docs/plans/ideation/meta/constraints.md` involves **minors, payments, health data, or government-regulated domains**, it is NOT a sub-bullet — it becomes its own top-level section in the architecture document with the same depth as System Architecture. For example:
+If any compliance constraint from `.memory/wiki/specs/ideation/meta/constraints.md` involves **minors, payments, health data, or government-regulated domains**, it is NOT a sub-bullet — it becomes its own top-level section in the architecture document with the same depth as System Architecture. For example:
 
 - **Minors/COPPA/age-gating** → requires: account type hierarchy, consent flows, content filtering architecture, Guardian oversight model, age verification mechanism, blocked content categories, notification system for filter triggers
 - **Payments/PCI** → requires: token handling architecture, PCI scope boundaries, payment name verification, refund flows, dispute handling
@@ -102,7 +102,7 @@ Follow the decision confirmation protocol (`.agent/skills/prd-templates/referenc
 
 If the security model confirmed a specific security framework or compliance approach (e.g., crypto patterns, custom HSM approach), read `.agent/workflows/bootstrap-agents.md` and invoke `/bootstrap-agents SECURITY=[confirmed value]` to provision additional skills. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`). Note: surface-triggered security skills (`owasp-web-security`, `csp-cors-headers`, `input-sanitization`, `api-security-checklist`, `dependency-auditing`, `desktop-security-sandboxing`) are provisioned automatically by bootstrap when surfaces are confirmed in `/create-prd-stack` — no manual fire needed for those.
 
-Write the completed `## Security Model` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Do not wait for later steps.
+Write the completed `## Security Model` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`). Do not wait for later steps.
 
 ## 6.5. Attack Surface Review
 
@@ -112,7 +112,7 @@ Read .agent/skills/security-scanning-security-hardening/SKILL.md and follow its 
 - "Are there any attack vectors I've missed for your specific domain?"
 - "Do the OWASP mechanisms look correct, or are any of them actually handled differently?"
 
-Write the completed `## Security — Attack Surface` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Security — Attack Surface` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 7. Integration points
 
@@ -125,7 +125,7 @@ For each external service:
 3. **Fallback strategy** — Graceful degradation plan
 4. **Cost model** — Pricing tier, expected usage
 
-Write the completed `## Integration Points` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Integration Points` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 7.5. Observability Architecture
 
@@ -135,14 +135,14 @@ Read .agent/skills/logging-best-practices/SKILL.md and follow its Observability 
 - "Are these logging levels and PII exclusions correct for your compliance requirements?"
 - "Are the alerting thresholds appropriate for your expected traffic?"
 
-Write the completed `## Observability Architecture` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Observability Architecture` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## Completion Gate (MANDATORY)
 
 Before reporting completion or proceeding to next shard:
 
-1. **Update checkpoint** — Write final state to `docs/plans/prd-working/workflow-state.md`: mark all security sections complete.
-2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.agent/progress/memory/`. Security model decisions are high-impact — every confirmed decision should have `DEC-NNN` entry.
+1. **Update checkpoint** — Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all security sections complete.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.memory/wiki/`. Security model decisions are high-impact — every confirmed decision should have `DEC-NNN` entry.
 3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 4. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

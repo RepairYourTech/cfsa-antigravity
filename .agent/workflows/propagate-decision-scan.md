@@ -65,7 +65,7 @@ Read `.agent/skills/technical-writer/SKILL.md` for writing standards.
 
 Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Impact Report Format**.
 
-Write `docs/audits/propagation-scan-[date].md` using the format.
+Write `.memory/wiki/specs/audits/propagation-scan-[date].md` using the format.
 
 ---
 

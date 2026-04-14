@@ -52,11 +52,11 @@ Read `.agent/skills/idea-extraction/SKILL.md` → `## Structural Classification 
 
 ## 1.4. Re-run check
 
-Check whether `docs/plans/ideation/ideation-index.md` already exists.
+Check whether `.memory/wiki/specs/ideation/ideation-index.md` already exists.
 
 - **Exists** → Present summary (expansion mode, domain count, depth markers). Ask: "An ideation folder already exists. **Continue** or **start fresh**?"
   - **Continue** → skip seeding, jump to Step 1.6
-  - **Start fresh** → archive to `docs/plans/ideation-archive-[timestamp]/`, then seed
+  - **Start fresh** → archive to `.memory/wiki/specs/ideation-archive-[timestamp]/`, then seed
 - **Does not exist** → proceed with seeding.
 
 ## 1.4.5. Classification Confirmation (Extraction mode only)
@@ -83,7 +83,7 @@ Read `.agent/skills/technical-writer/SKILL.md` and follow its methodology.
 3. If user says retry → seed only the missing domains
 4. If user says abort → delete all newly created folders and STOP
 
-**Post-seeding verification gate**: Verify `docs/plans/ideation/.gitkeep` and `docs/plans/ideation/README.md` still exist. If EITHER is missing → **STOP**: "Kit-shipped files were destroyed during seeding. Restore them before continuing."
+**Post-seeding verification gate**: Verify `.memory/wiki/specs/ideation/.gitkeep` and `.memory/wiki/specs/ideation/README.md` still exist. If EITHER is missing → **STOP**: "Kit-shipped files were destroyed during seeding. Restore them before continuing."
 
 ## 1.6. Engagement Tier Selection (ALL input types)
 

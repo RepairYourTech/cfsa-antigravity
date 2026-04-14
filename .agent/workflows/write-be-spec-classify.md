@@ -20,7 +20,7 @@ requires_placeholders: [DATABASE_SKILLS, SECURITY_SKILLS, SURFACES]
 
 Identify the target IA shard, classify it, load skills, and read all source material including cross-references and deep dives.
 
-**Prerequisite**: IA shard must be complete (status ✅ in `docs/plans/ia/index.md`). If not → **STOP**: run `/write-architecture-spec` first.
+**Prerequisite**: IA shard must be complete (status ✅ in `.memory/wiki/specs/ia/index.md`). If not → **STOP**: run `/write-architecture-spec` first.
 
 ---
 
@@ -39,7 +39,7 @@ Identify the target IA shard, classify it, load skills, and read all source mate
 
 ## 1. Verify IA layer is complete, then identify the target shard
 
-1. Read `docs/plans/ia/index.md`
+1. Read `.memory/wiki/specs/ia/index.md`
 2. Check every shard's status column
 3. If any shard is not ✅ → **STOP**: list incomplete shards and redirect to `/write-architecture-spec`
 
@@ -73,12 +73,12 @@ When any requirement is unresolvable → load and follow `.agent/skills/resolve-
 
 ## 4. Read reference documents
 
-Read `docs/plans/be/index.md` (conventions), `docs/plans/index.md` (master index), and `docs/plans/data-placement-strategy.md` (entity placement + PII boundaries).
+Read `.memory/wiki/specs/be/index.md` (conventions), `.memory/wiki/specs/index.md` (master index), and `.memory/wiki/specs/data-placement-strategy.md` (entity placement + PII boundaries).
 
 ## 5. Read the IA source material
 
 ### 5a. Primary shard
-Read `docs/plans/ia/[NN-shard-name].md` in full.
+Read `.memory/wiki/specs/ia/[NN-shard-name].md` in full.
 
 ### 5b. Resolve cross-shard references
 Scan for cross-references. For each: read the referenced section, note borrowed content, record as: `Source: [file] § [section] (lines N–M)`.
@@ -86,7 +86,7 @@ Scan for cross-references. For each: read the referenced section, note borrowed 
 Build a **Referenced Material Inventory**.
 
 ### 5c. Read deep dives
-List `docs/plans/ia/deep-dives/`. Read each referenced deep dive in full. Extract key decisions, architectural constraints, data schemas.
+List `.memory/wiki/specs/ia/deep-dives/`. Read each referenced deep dive in full. Extract key decisions, architectural constraints, data schemas.
 
 **Deep dive completeness check**: For each deep dive file referenced by the IA shard:
 - If the file contains `<!-- TODO -->`, `[TBD]`, or sections with only headers and no content → **STOP**: "Deep dive `[filename]` is still a skeleton. Run `/write-architecture-spec-design` Step 7.5 to fill it before proceeding with BE spec writing."
@@ -97,14 +97,14 @@ If the shard has testability/acceptance criteria → read for performance target
 
 ## 6. Check cross-cutting specs
 
-Read any completed cross-cutting specs at `docs/plans/be/00-*.md`.
+Read any completed cross-cutting specs at `.memory/wiki/specs/be/00-*.md`.
 
 ## 6.5. Completion Gate (MANDATORY)
 
 1. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 2. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.
@@ -115,7 +115,7 @@ Use `notify_user` presenting: classification, expected spec count, Referenced Ma
 
 **STOP** — do NOT proceed until the user confirms.
 
-After approval: read `.agent/skills/prd-templates/references/be-spec-template.md` → create spec file stub at `docs/plans/be/[NN-feature-name].md`.
+After approval: read `.agent/skills/prd-templates/references/be-spec-template.md` → create spec file stub at `.memory/wiki/specs/be/[NN-feature-name].md`.
 
 For structural reference (0 BE specs): confirm no write shard needed, propose next IA shard.
 

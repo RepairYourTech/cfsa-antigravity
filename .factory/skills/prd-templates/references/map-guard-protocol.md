@@ -36,7 +36,7 @@ Required cells vary by workflow — check the `requires_placeholders` frontmatte
 
 If the empty cells are auto-recoverable:
 
-1. **Read `docs/plans/architecture-draft.md`** — extract confirmed tech stack decisions (languages, frameworks, databases, ORMs, hosting, auth, CI/CD)
+1. **Read `.memory/wiki/specs/architecture-draft.md`** — extract confirmed tech stack decisions (languages, frameworks, databases, ORMs, hosting, auth, CI/CD)
 2. **Build the bootstrap key set** from confirmed decisions
 3. **Execute `/bootstrap-agents`** with those keys — read `.factory/skills/bootstrap-agents/SKILL.md` and run BOTH shards (fill + provision)
 4. **Re-read the surface stack map** after bootstrap completes

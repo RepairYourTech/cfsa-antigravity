@@ -27,7 +27,7 @@ parameters:
 
 1. Run constraint exploration via `.factory/skills/prd-templates/references/constraint-exploration.md`.
 2. Detect showstoppers and pause for user decision when found.
-3. Write `docs/plans/ideation/meta/constraints.md` with at least one constraint entry.
+3. Write `.memory/wiki/specs/ideation/meta/constraints.md` with at least one constraint entry.
 
 ### Step 3 — Domain exhaustion and missing-domain reasoning
 
@@ -47,9 +47,9 @@ If tier is Auto:
 
 ### Step 5 — Compile outputs
 
-1. Compile `docs/plans/vision.md` using vision template.
+1. Compile `.memory/wiki/specs/vision.md` using vision template.
 2. Run fidelity check: every domain from ideation index appears in vision.
-3. Create `docs/plans/feature-ledger.md` with feature IDs, names, domains, and MoSCoW values.
+3. Create `.memory/wiki/specs/feature-ledger.md` with feature IDs, names, domains, and MoSCoW values.
 
 ### Step 6 — Ideation rubric quality gate and review request
 

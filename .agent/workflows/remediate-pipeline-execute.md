@@ -17,13 +17,13 @@ pipeline:
 
 Layer-by-layer audit → remediate → fresh-run instruction loop.
 
-> **Prerequisite**: Read `docs/audits/remediation-state.md` to determine the current layer and status. If this file does not exist, run `/remediate-pipeline-assess` first.
+> **Prerequisite**: Read `.memory/wiki/specs/audits/remediation-state.md` to determine the current layer and status. If this file does not exist, run `/remediate-pipeline-assess` first.
 
 ---
 
 ## 1. Read remediation state
 
-Read `docs/audits/remediation-state.md` to determine:
+Read `.memory/wiki/specs/audits/remediation-state.md` to determine:
 - The current layer to process
 - The status of all layers
 - Any layers already confirmed clean this session
@@ -32,7 +32,7 @@ Read `docs/audits/remediation-state.md` to determine:
 
 ## 2. Re-invocation detection
 
-Read `docs/audits/audit-scope.md` and look for a `## Gaps Fixed` section.
+Read `.memory/wiki/specs/audits/audit-scope.md` and look for a `## Gaps Fixed` section.
 
 - **If absent** → This is a first-pass invocation. Proceed to Step 3.
 - **If present** → Read the `layer` and `fixed_by_session` fields.
@@ -55,7 +55,7 @@ Read `.agent/skills/pipeline-rubrics/references/scoring.md` for the document-to-
 
 ### 3a. Implementer Simulation
 
-Attempt to write a stub implementation using only what's in the spec. List every decision not explicitly specified. Write each to `docs/audits/[layer]-ambiguity-report.md` as ❌. These gaps are unconditional.
+Attempt to write a stub implementation using only what's in the spec. List every decision not explicitly specified. Write each to `.memory/wiki/specs/audits/[layer]-ambiguity-report.md` as ❌. These gaps are unconditional.
 
 ### 3b. Rubric Scoring with Two-Implementer Test
 
@@ -83,7 +83,7 @@ Runs after all per-document scoring, when the layer is BE, FE, or scope is `all`
 
 Read .agent/skills/verification-before-completion/SKILL.md and follow its methodology.
 
-If 0% ambiguity on first pass — layer is "unverified clean." The fresh-run rule still applies. Add summary to report, persist `## Gaps Fixed` in `docs/audits/audit-scope.md`, proceed to Step 6.
+If 0% ambiguity on first pass — layer is "unverified clean." The fresh-run rule still applies. Add summary to report, persist `## Gaps Fixed` in `.memory/wiki/specs/audits/audit-scope.md`, proceed to Step 6.
 
 ---
 
@@ -111,7 +111,7 @@ Add summary to report.
 
 ### Persist fix metadata
 
-Append or replace `## Gaps Fixed` in `docs/audits/audit-scope.md` with: layer, fixed_at (ISO 8601), fixed_by_session (UUID), gaps_resolved (count), report_file path.
+Append or replace `## Gaps Fixed` in `.memory/wiki/specs/audits/audit-scope.md` with: layer, fixed_at (ISO 8601), fixed_by_session (UUID), gaps_resolved (count), report_file path.
 
 ---
 

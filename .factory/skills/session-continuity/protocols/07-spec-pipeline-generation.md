@@ -11,7 +11,7 @@ have IA specs, BE specs, and FE specs completed.
 
 ## Steps
 
-1. **Read the IA index** — `docs/plans/ia/index.md` — to get the list of shards.
+1. **Read the IA index** — `.memory/wiki/specs/ia/index.md` — to get the list of shards.
 
 2. **Create `.factory/progress/spec-pipeline.md`**:
    ```markdown
@@ -33,8 +33,8 @@ have IA specs, BE specs, and FE specs completed.
 
    | # | Shard | File | IA Spec | BE Spec | FE Spec |
    |---|-------|------|---------|---------|---------|
-   | 00 | {{shard-name}} | `docs/plans/ia/00-{{shard-name}}.md` | skeleton | not-started | not-started |
-   | 01 | {{shard-name}} | `docs/plans/ia/01-{{shard-name}}.md` | skeleton | not-started | not-started |
+   | 00 | {{shard-name}} | `.memory/wiki/specs/ia/00-{{shard-name}}.md` | skeleton | not-started | not-started |
+   | 01 | {{shard-name}} | `.memory/wiki/specs/ia/01-{{shard-name}}.md` | skeleton | not-started | not-started |
    | ... | ... | ... | ... | ... | ... |
 
    ## Spec Completion Tracking

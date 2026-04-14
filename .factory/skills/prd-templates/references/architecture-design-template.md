@@ -1,6 +1,6 @@
 # Architecture Design Template
 
-Use this template when compiling `docs/plans/YYYY-MM-DD-architecture-design.md`.
+Use this template when compiling `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md`.
 
 ```markdown
 # [Project Name] — Architecture Design

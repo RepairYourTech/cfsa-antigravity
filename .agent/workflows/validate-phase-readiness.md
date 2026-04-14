@@ -43,7 +43,7 @@ The gate applicability table produced here is referenced by every subsequent ste
 
 Read the surface stack map from `.agent/instructions/tech-stack.md`.
 
-1. Read `docs/plans/ENGINEERING-STANDARDS.md` → `## Code Quality` → `Required documentation`
+1. Read `.memory/wiki/specs/ENGINEERING-STANDARDS.md` → `## Code Quality` → `Required documentation`
 2. If API documentation is required or public API endpoints exist:
    - Verify OpenAPI spec file exists and matches implemented endpoints
    - For each new endpoint, verify request/response schemas match {{CONTRACT_LIBRARY}} contracts and all error codes are documented
@@ -64,7 +64,7 @@ Audit all new UI components in this phase for WCAG 2.1 AA compliance using the A
 
 ### 7a. Performance budget verification (mandatory when budgets are defined)
 
-Read `docs/plans/ENGINEERING-STANDARDS.md` section `## Performance Budgets`.
+Read `.memory/wiki/specs/ENGINEERING-STANDARDS.md` section `## Performance Budgets`.
 
 **If the section does not exist or contains only unfilled template placeholders** → Log: "No performance budgets defined in ENGINEERING-STANDARDS.md — skipping budget verification." Proceed to 7b.
 
@@ -131,7 +131,7 @@ If `dependency-auditing` skill is installed → read and run its full protocol (
 
 ## 8.7. Feature ledger reconciliation
 
-If `docs/plans/feature-ledger.md` exists:
+If `.memory/wiki/specs/feature-ledger.md` exists:
 1. Read the ledger and the current phase plan
 2. For each **Must Have** feature assigned to this phase:
    - Verify the `Implemented` column is marked complete
@@ -150,9 +150,9 @@ Grep the codebase for `BOUNDARY:` comments:
 
 ## 9. Document results
 
-**Pre-append verification**: Before appending, verify `docs/audits/phase-N-validation.md` exists and contains a `## Spec Coverage` section from Step 5.8 (quality shard). If the file does not exist or the section is missing → **STOP**: "Spec coverage sweep did not complete. Re-run `/validate-phase-quality` Step 5.8 before appending readiness results."
+**Pre-append verification**: Before appending, verify `.memory/wiki/specs/audits/phase-N-validation.md` exists and contains a `## Spec Coverage` section from Step 5.8 (quality shard). If the file does not exist or the section is missing → **STOP**: "Spec coverage sweep did not complete. Re-run `/validate-phase-quality` Step 5.8 before appending readiness results."
 
-**Note on report file**: `docs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
+**Note on report file**: `.memory/wiki/specs/audits/phase-N-validation.md` is written progressively. Step 5.8 creates the file and appends the `## Spec Coverage` section. Step 9 appends all remaining sections. Do not recreate or overwrite the file in Step 9 — append only.
 
 Follow the **Validation Report Structure** in `.agent/skills/prd-templates/references/gate-applicability.md` to structure the report with: Gate Applicability Summary, Applied Gate Results, Deferred Gates (if any), and Verdict.
 
@@ -160,9 +160,9 @@ Follow the **Validation Report Structure** in `.agent/skills/prd-templates/refer
 
 1. Update `.agent/progress/` — mark phase as validated
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
-   - Patterns observed → write to `memory/patterns.md`
-   - Non-trivial decisions made → write to `memory/decisions.md`
-   - Blockers hit → write to `memory/blockers.md`
+   - Patterns observed → write to `.memory/wiki/patterns.md`
+   - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
+   - Blockers hit → write to `.memory/wiki/blockers.md`
 3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
 4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 

@@ -22,7 +22,7 @@ Document the development methodology and phasing strategy. Compile the architect
 
 **Prerequisite**: Security model and integration points must be defined (from `/create-prd-security`).
 
-Verify `docs/plans/architecture-draft.md` exists. If it does not → **STOP**: "architecture-draft.md is missing. Previous shards should have created it. Run `/create-prd-architecture` first."
+Verify `.memory/wiki/specs/architecture-draft.md` exists. If it does not → **STOP**: "architecture-draft.md is missing. Previous shards should have created it. Run `/create-prd-architecture` first."
 
 ---
 
@@ -42,7 +42,7 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ### Checkpoint resumption
 
-Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
 
 ---
 
@@ -59,13 +59,13 @@ Document the agreed approach:
 4. **Spec layers** — IA → BE → FE pipeline
 5. **Quality gates** — What must pass before merge
 
-Write the completed `## Development Methodology` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Development Methodology` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 8.5. Ideation context reload for phasing
 
 > **Mandatory.** Phase complexity sizing from the digest alone loses depth information. A "12-feature domain" could be 12 flat features or 12 features with 3 levels of sub-domain nesting — very different phase capacity.
 
-1. Read `docs/plans/ideation/ideation-index.md` — extract: full MoSCoW Summary with per-domain feature counts, Structure Map with domain depths
+1. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract: full MoSCoW Summary with per-domain feature counts, Structure Map with domain depths
 2. For each **Must Have domain**: read `{domain}/{domain}-index.md` — extract Children table depth, sub-domain count, and dependency markers
 3. Read CX files — extract cross-domain dependencies that constrain phase ordering (e.g., domain A must be implemented before domain B if B depends on A's data)
 
@@ -77,8 +77,8 @@ Load the CI/CD skill(s) from the cross-cutting section per the skill loading pro
 
 Break the feature inventory into dependency-ordered phases. Use **two sources**:
 
-1. **MoSCoW priorities** from `docs/plans/ideation/ideation-index.md` (MoSCoW Summary) — determines Must/Should/Could classification
-2. **Domain Digest** from `docs/plans/architecture-draft.md` (`## Ideation Digest`) — if it exists, use its per-domain feature counts, sub-domain counts, and cross-domain dependencies to inform phase complexity sizing and dependency ordering. A domain with 15 features and 3 sub-domains requires more phase capacity than one with 4 features.
+1. **MoSCoW priorities** from `.memory/wiki/specs/ideation/ideation-index.md` (MoSCoW Summary) — determines Must/Should/Could classification
+2. **Domain Digest** from `.memory/wiki/specs/architecture-draft.md` (`## Ideation Digest`) — if it exists, use its per-domain feature counts, sub-domain counts, and cross-domain dependencies to inform phase complexity sizing and dependency ordering. A domain with 15 features and 3 sub-domains requires more phase capacity than one with 4 features.
 
 > **This kit does not build MVPs.** Every phase ships production-grade code —
 > fully tested, fully specified, fully accessible. Phases exist to manage
@@ -98,7 +98,7 @@ Each phase should have a rough timeline estimate and must pass the full validati
 
 Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
-Write the completed `## Phasing Strategy` section to `docs/plans/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Phasing Strategy` section to `.memory/wiki/specs/architecture-draft.md` immediately after user confirmation. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 9.5. Lock project directory structure
 
@@ -109,7 +109,7 @@ Based on the locked tech stack, generate a canonical directory tree.
 3. Build an architecture separation table mapping each concern to its directory and runtime
 4. **Present to user**: Show the directory tree and architecture table. Ask: "Does this structure match your expectations?" **Do not proceed until explicit approval.**
 5. After approval, fire bootstrap with: `PROJECT_STRUCTURE`, `ARCHITECTURE_TABLE`, `CONTRACTS_DIR`, `BUILD_OUTPUT_DIR`. **HARD GATE**: Follow the bootstrap verification protocol (`.agent/skills/prd-templates/references/bootstrap-verification-protocol.md`) — verify all 4 keys.
-6. Append a `## Directory Structure` section to `docs/plans/architecture-draft.md`
+6. Append a `## Directory Structure` section to `.memory/wiki/specs/architecture-draft.md`
 
 > If invoked standalone, surface via `notify_user`.
 
@@ -119,7 +119,7 @@ Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 
 Read .agent/skills/technical-writer/SKILL.md and apply its clarity and structure standards throughout document compilation.
 
-Read `docs/plans/architecture-draft.md` as the authoritative source.
+Read `.memory/wiki/specs/architecture-draft.md` as the authoritative source.
 
 **Section validation**: Before compiling, verify these sections exist in architecture-draft.md:
 - `## System Architecture`
@@ -130,7 +130,7 @@ Read `docs/plans/architecture-draft.md` as the authoritative source.
 
 If any required section is missing → **STOP**: "architecture-draft.md is missing `[section]`. This section should have been written by a previous shard. Run the relevant shard: architecture → `/create-prd-architecture`, security → `/create-prd-security`."
 
-Read `.agent/skills/prd-templates/references/architecture-design-template.md` for the document structure. Compile it into `docs/plans/YYYY-MM-DD-architecture-design.md` (use today's date).
+Read `.agent/skills/prd-templates/references/architecture-design-template.md` for the document structure. Compile it into `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` (use today's date).
 
 > **Depth rule**: Each section must contain the full detail gathered during steps 3-9. If a section is under 200 words, it's almost certainly too shallow. Apply the two-implementer test.
 
@@ -140,7 +140,7 @@ Read `.agent/skills/performance-budgeting/SKILL.md` and follow its Interview Pro
 
 Surface conditioning rules and the write-as-you-go rule are defined in the skill.
 
-Write each confirmed axis to `docs/plans/ENGINEERING-STANDARDS.md` immediately after confirmation.
+Write each confirmed axis to `.memory/wiki/specs/ENGINEERING-STANDARDS.md` immediately after confirmation.
 
 **Present to user**: Summarise all confirmed performance budgets. Ask: "Any axis you want to tighten, loosen, or add?"
 
@@ -148,7 +148,7 @@ Write each confirmed axis to `docs/plans/ENGINEERING-STANDARDS.md` immediately a
 
 Read .agent/skills/technical-writer/SKILL.md and follow its methodology.
 
-Read `.agent/skills/prd-templates/references/engineering-standards-template.md` for the document structure. Create `docs/plans/ENGINEERING-STANDARDS.md` — the non-negotiable quality bar for the project. Fill in concrete values based on tech stack decisions from step 3 and methodology from step 8. **No TBDs allowed.**
+Read `.agent/skills/prd-templates/references/engineering-standards-template.md` for the document structure. Create `.memory/wiki/specs/ENGINEERING-STANDARDS.md` — the non-negotiable quality bar for the project. Fill in concrete values based on tech stack decisions from step 3 and methodology from step 8. **No TBDs allowed.**
 
 ## 12. Request review and propose next steps
 
@@ -158,11 +158,11 @@ Run a pre-flight self-check before presenting. Read `.agent/skills/pipeline-rubr
 
 > ❌ **STOP** — If any dimension scores ⚠️ or ❌, do not call `notify_user`. Fix the gap now and re-run the self-check until all 15 dimensions are ✅.
 
-**Update checkpoint**: Write final state to `docs/plans/prd-working/workflow-state.md`: mark all compile sections complete, set `current_step: output`.
+**Update checkpoint**: Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all compile sections complete, set `current_step: output`.
 
 Call `notify_user` presenting:
-- `docs/plans/YYYY-MM-DD-architecture-design.md` (use the actual dated filename)
-- `docs/plans/ENGINEERING-STANDARDS.md`
+- `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` (use the actual dated filename)
+- `.memory/wiki/specs/ENGINEERING-STANDARDS.md`
 - The self-check results (all 15 dimensions with scores)
 - Any gaps resolved during the self-check
 

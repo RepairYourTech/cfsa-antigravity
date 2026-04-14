@@ -59,7 +59,7 @@ parameters:
 
 ### Step 5 — Draft continuity decision
 
-1. Detect existing `docs/plans/phases/phase-N-draft.md`.
+1. Detect existing `.memory/wiki/specs/phases/phase-N-draft.md`.
 2. Require explicit user decision to continue missing slices vs start fresh.
 
 ## Completion Checklist

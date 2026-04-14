@@ -42,18 +42,18 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
       Cross-cutting concerns are tracked at the level where they occur (CX files).
       Each domain gets its own folder the moment it's discovered (fractal-as-you-go).
 
-      Output: docs/plans/ideation/ folder (fractal tree):
+      Output: .memory/wiki/specs/ideation/ folder (fractal tree):
                 ideation-index.md      ← pipeline key file (structure map, MoSCoW, coverage)
                 ideation-cx.md         ← global cross-cuts
                 domains/*/             ← domain folders (index + CX + feature files)
                 meta/*.md              ← problem, personas, constraints, competitive landscape
-              docs/plans/vision.md     ← human-readable executive summary (not a pipeline input)
+              .memory/wiki/specs/vision.md     ← human-readable executive summary (not a pipeline input)
 
     Step 2: /audit-ambiguity ideation  ── MANDATORY ──
       Scores the ideation folder against a 12-dimension rubric.
       Agent auto-remediates any gaps found, then requires a fresh re-run.
       Not optional — /ideate will not propose /create-prd until this passes.
-      Output: docs/audits/ideation-audit.md
+      Output: .memory/wiki/specs/audits/ideation-audit.md
 
 > [!IMPORTANT]
 > **Fresh-run rule:** The session that fixed gaps cannot be the session that passes.
@@ -68,49 +68,49 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
         Examples:
           /resolve-ambiguity vision
           /resolve-ambiguity architecture
-          /resolve-ambiguity @docs/plans/ia/auth.md
+          /resolve-ambiguity @.memory/wiki/specs/ia/auth.md
 
     Step 3: /create-prd
       Reads ideation-index.md. Walks you through tech stack decisions one at a time.
       Each confirmed decision fires bootstrap to fill templates and install skills.
-      Output: docs/plans/architecture-design.md
-              docs/plans/ENGINEERING-STANDARDS.md
-              docs/plans/data-placement-strategy.md
+      Output: .memory/wiki/specs/architecture-design.md
+              .memory/wiki/specs/ENGINEERING-STANDARDS.md
+              .memory/wiki/specs/data-placement-strategy.md
 
     Step 4: /audit-ambiguity architecture (recommended)
       Scores the architecture document on a rubric. Fills gaps before decomposition.
-      Output: docs/audits/architecture-audit.md
+      Output: .memory/wiki/specs/audits/architecture-audit.md
       If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 5: /decompose-architecture
       Breaks architecture into numbered domain shards.
-      Output: docs/plans/ia/ (shard index + skeleton shards)
+      Output: .memory/wiki/specs/ia/ (shard index + skeleton shards)
 
     Step 6: /write-architecture-spec       ← repeat for EVERY shard
       Takes one skeleton shard. Writes full interaction spec — contracts, data models, RBAC, events.
-      Output: docs/plans/ia/[shard-name].md (filled)
+      Output: .memory/wiki/specs/ia/[shard-name].md (filled)
 
     ► /audit-ambiguity ia                  [MANDATORY — 0% before Step 7]
       Runs after ALL IA shards are complete. Hard gate — no BE specs until this passes.
-      Output: docs/audits/ia-audit.md
+      Output: .memory/wiki/specs/audits/ia-audit.md
       If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 7: /write-be-spec                 ← repeat for EVERY shard
       Reads IA shard. Writes backend spec — endpoints, schemas, middleware, DAL.
-      Output: docs/plans/be/[shard-name].md
+      Output: .memory/wiki/specs/be/[shard-name].md
 
     ► /audit-ambiguity be                  [MANDATORY — 0% before Step 8]
       Runs after ALL BE specs are complete. Hard gate — no FE specs until this passes.
-      Output: docs/audits/be-audit.md
+      Output: .memory/wiki/specs/audits/be-audit.md
       If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     Step 8: /write-fe-spec                 ← repeat for EVERY shard
       Reads BE spec + IA shard. Writes frontend spec — components, state, interactions.
-      Output: docs/plans/fe/[shard-name].md
+      Output: .memory/wiki/specs/fe/[shard-name].md
 
     ► /audit-ambiguity fe                  [MANDATORY — 0% before Step 9]
       Runs after ALL FE specs are complete. Hard gate — no planning until this passes.
-      Output: docs/audits/fe-audit.md
+      Output: .memory/wiki/specs/audits/fe-audit.md
       If gaps are found: agent auto-remediates, then re-run as a fresh invocation (see fresh-run rule above).
 
     ─── ALL specs (IA + BE + FE) must be complete before Step 9 ───
@@ -118,7 +118,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
     Step 9: /plan-phase
       Reads architecture + specs. Creates dependency-ordered TDD vertical slices.
       Only runs after Phase N-1 is complete (skipped for Phase 1).
-      Output: docs/plans/phases/phase-[n].md
+      Output: .memory/wiki/specs/phases/phase-[n].md
 
     Step 10: /implement-slice (infrastructure slice)
       First slice — CI/CD, environment, deployment, scaffolding, database.
@@ -126,7 +126,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
     Step 10.5: /verify-infrastructure      ── HARD GATE ──
       Verifies CI/CD green, staging live, migrations clean. Must pass before feature slices.
-      Output: docs/audits/verify-infrastructure-[date].md
+      Output: .memory/wiki/specs/audits/verify-infrastructure-[date].md
 
     Step 11: /implement-slice (auth slice)
       Auth middleware, registration, login, token management.
@@ -134,7 +134,7 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 
     Step 11.5: /verify-infrastructure      ── HARD GATE (auth pass) ──
       Re-runs with auth smoke test enabled. Must pass before auth-dependent feature slices.
-      Output: docs/audits/verify-infrastructure-[date].md
+      Output: .memory/wiki/specs/audits/verify-infrastructure-[date].md
 
     Step 12: /implement-slice (remaining feature slices)
       Takes one slice at a time. Red → Green → Refactor across all four surfaces.
@@ -162,6 +162,44 @@ The pipeline is a linear sequence of commands. Each step tells you what to run n
 ```bash
 npx cfsa-antigravity init
 ```
+
+### Unified memory scaffold
+
+`init` now also installs a shared `.memory/` directory plus `.mcp.json`. The `.memory/` directory is designed to function as an Obsidian vault inside the project.
+
+- `.memory/raw/` stores append-only session and event captures
+- `.memory/wiki/` stores compiled patterns, decisions, blockers, and knowledge pages
+- `.memory/schema/` stores machine-readable retrieval artifacts, including semantic index/manifests
+- `.memory/mcp-server/client.mjs` is the per-runtime MCP client entrypoint to the shared daemon
+- `.memory/mcp-server/daemon.mjs` is the shared project-local MCP daemon
+- `.memory/hooks/` contains Claude-oriented hook entrypoints
+
+If you are upgrading an older project with siloed runtime-local memory, run:
+
+```bash
+npx cfsa-antigravity init --migrate-memory
+```
+
+### Migration conflicts
+
+When migration imports runtime-local knowledge files into `.memory/wiki/knowledge/`, an existing destination with different contents is preserved and a sibling conflict file is written:
+
+```text
+.memory/wiki/knowledge/<name>.conflict-YYYY-MM-DD.md
+```
+
+Resolve conflicts by comparing the imported `.conflict-*.md` file with the canonical target file, merging the content you want to keep, then deleting the conflict file once resolved.
+
+Structured legacy files like old `decisions.md`, `patterns.md`, and `blockers.md` are imported through the raw memory pipeline so compile can preserve them in the unified wiki outputs.
+
+### Semantic backend
+
+The shared memory system now supports a stronger local semantic mode:
+- semantic configuration is stored in `.memory/config.json`
+- semantic artifacts are stored in `.memory/schema/semantic-index.json` and `.memory/schema/semantic-manifest.json`
+- MCP exposes semantic status, enable, query, and reindex controls
+
+The current implementation uses a local semantic backend designed to be upgraded later to a heavier vector backend without changing the MCP contract.
 
 **Manual (without npm):**
 ```bash

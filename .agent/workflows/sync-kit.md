@@ -116,32 +116,32 @@ Check the project for these indicators:
 
 | Indicator | Meaning |
 |---|---|
-| `docs/plans/ideation.md` exists | Old monolithic ideation file |
-| `docs/plans/vision.md` exists AND is referenced as pipeline input in workflows | Old vision-as-source pattern |
-| `docs/plans/ideation/` folder missing | Ideation scaffold not created |
-| `docs/plans/ideation/ideation-index.md` missing | Pipeline key file not created |
+| `.memory/wiki/specs/ideation.md` exists | Old monolithic ideation file |
+| `.memory/wiki/specs/vision.md` exists AND is referenced as pipeline input in workflows | Old vision-as-source pattern |
+| `.memory/wiki/specs/ideation/` folder missing | Ideation scaffold not created |
+| `.memory/wiki/specs/ideation/ideation-index.md` missing | Pipeline key file not created |
 
 If **none** of these indicators match → skip to Step 5.
 
 ### 4.5b. Scaffold the ideation folder
 
-If `docs/plans/ideation/` doesn't exist, create the scaffold:
+If `.memory/wiki/specs/ideation/` doesn't exist, create the scaffold:
 
 ```
-docs/plans/ideation/
+.memory/wiki/specs/ideation/
 ├── .gitkeep
 └── README.md          ← copy from upstream
 ```
 
 ### 4.5c. Flag for re-ideation
 
-If a monolithic `docs/plans/ideation.md` or `docs/plans/vision.md` (used as pipeline source) exists:
+If a monolithic `.memory/wiki/specs/ideation.md` or `.memory/wiki/specs/vision.md` (used as pipeline source) exists:
 
 1. **DO NOT delete or modify** the old file
 2. Report to the user:
    > "Your project uses the old monolithic ideation format. The new kit uses a sharded `ideation/` folder with `ideation-index.md` as the pipeline key file.
    >
-   > **To migrate:** Run `/ideate @docs/plans/ideation.md` (or `@docs/plans/vision.md`). The extract step will treat your old file as a rich document input, parse it into the new folder structure, and preserve all existing detail.
+   > **To migrate:** Run `/ideate @.memory/wiki/specs/ideation.md` (or `@.memory/wiki/specs/vision.md`). The extract step will treat your old file as a rich document input, parse it into the new folder structure, and preserve all existing detail.
    >
    > **After migration:** Run downstream workflows (`/create-prd`, etc.) to propagate the new ideation depth into your specs."
 3. **DO NOT attempt automatic migration** — the old file's structure is unknown and the user should review the re-ideation output

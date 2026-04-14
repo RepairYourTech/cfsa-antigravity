@@ -4,7 +4,7 @@ Verifies that a phase's implementation delivered what the specs required — not
 
 ## Procedure
 
-For each slice in the phase plan (`docs/plans/phases/phase-N.md`):
+For each slice in the phase plan (`.memory/wiki/specs/phases/phase-N.md`):
 
 ### FE Spec Coverage
 
@@ -41,4 +41,4 @@ Every named user flow, BE endpoint field, error code, auth rule, IA acceptance c
 
 ## Report Section
 
-Update report (`docs/audits/phase-N-validation.md`): Add a `## Spec Coverage` section listing the sweep results — covered items, uncovered items, boundary stubs, accessibility coverage, IA testability trace results, and the pass/fail verdict.
+Update report (`.memory/wiki/specs/audits/phase-N-validation.md`): Add a `## Spec Coverage` section listing the sweep results — covered items, uncovered items, boundary stubs, accessibility coverage, IA testability trace results, and the pass/fail verdict.

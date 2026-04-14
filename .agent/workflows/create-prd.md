@@ -16,8 +16,8 @@ shards: [create-prd-stack, create-prd-design-system, create-prd-architecture, cr
 
 Transform the ideation output into a production-grade architecture design document with explicit decisions on every axis.
 
-**Input**: `docs/plans/ideation/ideation-index.md` (must exist and be approved)
-**Output**: `docs/plans/YYYY-MM-DD-architecture-design.md` + `docs/plans/ENGINEERING-STANDARDS.md` + `docs/plans/data-placement-strategy.md`
+**Input**: `.memory/wiki/specs/ideation/ideation-index.md` (must exist and be approved)
+**Output**: `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` + `.memory/wiki/specs/ENGINEERING-STANDARDS.md` + `.memory/wiki/specs/data-placement-strategy.md`
 
 > **Depth standard**: Every section must be specified to the point where a developer cannot misinterpret it. The specificity-standards rule (`.agent/rules/specificity-standards.md`) applies to every word of the output.
 
@@ -25,7 +25,7 @@ Transform the ideation output into a production-grade architecture design docume
 
 ## 1. Read ideation output
 
-Read `docs/plans/ideation/ideation-index.md`.
+Read `.memory/wiki/specs/ideation/ideation-index.md`.
 
 If the file doesn't exist → **STOP**: tell the user to run `/ideate` first.
 
@@ -56,7 +56,7 @@ Read the `## Progress Summary` table in `ideation-index.md`. Check these thresho
 | Total leaf features | ≥ 50 |
 | Total surfaces | ≥ 2 (multi-product projects) |
 
-**If ANY threshold is met** → read `.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md` and follow its full procedure. This produces a **Domain Digest Table** written to `docs/plans/architecture-draft.md` as `## Ideation Digest`.
+**If ANY threshold is met** → read `.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md` and follow its full procedure. This produces a **Domain Digest Table** written to `.memory/wiki/specs/architecture-draft.md` as `## Ideation Digest`.
 
 **If no threshold is met** → skip this step. The standard `ideation-index.md` read from Step 1 is sufficient.
 
@@ -77,18 +77,18 @@ Check `.agent/skills/` for stack-specific skills. Read `.agent/skills/find-skill
 | # | Shard | What It Does |
 |---|-------|-------------|
 | 1 | [`create-prd-stack`](.agent/workflows/create-prd-stack.md) | Constraint-first discovery, tech stack decisions with bootstrap firing |
-| 1.5 | [`create-prd-design-system`](.agent/workflows/create-prd-design-system.md) | Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, state design language → `docs/plans/design-system.md` |
+| 1.5 | [`create-prd-design-system`](.agent/workflows/create-prd-design-system.md) | Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, state design language → `.memory/wiki/specs/design-system.md` |
 | 2 | [`create-prd-architecture`](.agent/workflows/create-prd-architecture.md) | System architecture, data strategy, data placement strategy document |
 | 3 | [`create-prd-security`](.agent/workflows/create-prd-security.md) | Security model, compliance escalation, integration points |
 | 4 | [`create-prd-compile`](.agent/workflows/create-prd-compile.md) | Development methodology, phasing, compile architecture-design.md + ENGINEERING-STANDARDS.md |
 
-> **Progressive working artifact**: `docs/plans/architecture-draft.md` is written incrementally by shards 1–3 and read by shard 4 to compile the final dated `architecture-design.md`.
+> **Progressive working artifact**: `.memory/wiki/specs/architecture-draft.md` is written incrementally by shards 1–3 and read by shard 4 to compile the final dated `architecture-design.md`.
 
 ---
 
 ## Orchestration
 
-Create `docs/plans/prd-working/` directory if it does not exist. Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md` — all shards use this checkpoint system.
+Create `.memory/wiki/specs/architecture/prd-working/` directory if it does not exist. Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md` — all shards use this checkpoint system.
 
 ### Step A — Run `.agent/workflows/create-prd-stack.md`
 ### Step A.5 — Run `.agent/workflows/create-prd-design-system.md`
@@ -97,8 +97,8 @@ Create `docs/plans/prd-working/` directory if it does not exist. Read `.agent/sk
 ### Step D — Run `.agent/workflows/create-prd-compile.md`
 
 **Shard failure recovery**: If any shard (A through D) fails mid-execution:
-1. Check `docs/plans/prd-working/workflow-state.md` for the checkpoint — it shows exact step, item, and next action
-2. Check `docs/plans/architecture-draft.md` for the last completed section
+1. Check `.memory/wiki/specs/architecture/prd-working/workflow-state.md` for the checkpoint — it shows exact step, item, and next action
+2. Check `.memory/wiki/specs/architecture-draft.md` for the last completed section
 3. Present the current state to the user: "Shard [N] failed at `{current_item}` (step `{current_step}`). Resume from failure point or restart the shard?"
 4. Do NOT proceed to the next shard until the current shard completes cleanly
 
@@ -118,7 +118,7 @@ For any dimension that scores ⚠️ or ❌ → resolve it NOW. Loop back to the
 
 > ❌ STOP — do not call notify_user until all dimensions score ✅ and all checklist items pass.
 
-**Checkpoint cleanup**: After quality gate passes, delete `docs/plans/prd-working/workflow-state.md` — process tracking is no longer needed. Keep synthesis files (`stack-synthesis.md`, `design-system-synthesis.md`) as audit trail.
+**Checkpoint cleanup**: After quality gate passes, delete `.memory/wiki/specs/architecture/prd-working/workflow-state.md` — process tracking is no longer needed. Keep synthesis files (`stack-synthesis.md`, `design-system-synthesis.md`) as audit trail.
 
 ### Depth audit
 
@@ -144,7 +144,7 @@ Use `notify_user` to present both documents with self-check results.
 
 Before reporting completion to the user:
 
-1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.agent/progress/memory/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
+1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
 2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 3. **Session log** — Write session entry to `.agent/progress/sessions/`.
 

@@ -15,7 +15,7 @@ Runs IA specification authoring in two shards: design → deepen.
 
 ## Prerequisites
 
-1. Decomposition outputs exist (`docs/plans/ia/` skeletons + indexes)
+1. Decomposition outputs exist (`.memory/wiki/specs/ia/` skeletons + indexes)
 2. `.factory/progress/spec-pipeline.md` exists and includes IA column states
 3. Stack map is resolved for required categories (Databases, Security, Surfaces)
 

@@ -26,7 +26,7 @@ Identify slices from specs, order by dependency, write acceptance criteria, gene
 
 ## 1. Read phase scope
 
-Read the file at `docs/plans/*-architecture-design.md` (phasing section) and the file at `docs/plans/be/index.md` (which specs to include).
+Read the file at `.memory/wiki/specs/*-architecture-design.md` (phasing section) and the file at `.memory/wiki/specs/be/index.md` (which specs to include).
 
 ## 2. Identify slices (spec-anchored derivation)
 
@@ -73,7 +73,7 @@ After all slices are identified, verify that the slices collectively cover ALL s
 
 **BLOCKING GATE**: Do NOT proceed to Step 3 until every BE endpoint and FE component is either assigned to a slice or explicitly deferred.
 
-**Feature ledger update**: If `docs/plans/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 5 — Slice Assignment**. Map each slice to its Feature IDs and populate the Phase and Slice columns.
+**Feature ledger update**: If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templates/references/feature-ledger-protocol.md` and follow **Step 5 — Slice Assignment**. Map each slice to its Feature IDs and populate the Phase and Slice columns.
 
 ### 2.75. Split companion cross-reference
 
@@ -121,7 +121,7 @@ Read `.agent/skills/prd-templates/references/operational-templates.md` for the *
 
 **Spec citation requirement**: Every acceptance criterion MUST include a spec source citation. Format: `[BE §section.subsection]`, `[FE §ComponentName]`, or `[IA §NN.EdgeCase.N]`. This ensures no criterion is invented without a traceable spec source. If a criterion cannot be traced to a spec → either the spec is incomplete (fix the spec first) or the criterion is speculative (remove it).
 
-> **Write as you go**: After completing acceptance criteria for each slice, immediately append that slice's entry to `docs/plans/phases/phase-N-draft.md` (create the file if it doesn't exist). Do not accumulate all slices in context and write them all at once in Step 5.
+> **Write as you go**: After completing acceptance criteria for each slice, immediately append that slice's entry to `.memory/wiki/specs/phases/phase-N-draft.md` (create the file if it doesn't exist). Do not accumulate all slices in context and write them all at once in Step 5.
 
 **Surface tag rules:**
 - `BE`: API routes, DB queries, middleware, business logic, server-side validation
@@ -135,7 +135,7 @@ Read `.agent/skills/parallel-agents/SKILL.md` and follow its TDD-Order Dispatch 
 
 ## 5. Finalize phase plan
 
-Read `docs/plans/phases/phase-N-draft.md` (which was built progressively in Step 4) and write the final formatted phase plan to `docs/plans/phases/phase-N.md`. The draft is the authoritative source — do not add or drop slices during finalization.
+Read `.memory/wiki/specs/phases/phase-N-draft.md` (which was built progressively in Step 4) and write the final formatted phase plan to `.memory/wiki/specs/phases/phase-N.md`. The draft is the authoritative source — do not add or drop slices during finalization.
 
 ## 6. Generate progress files
 

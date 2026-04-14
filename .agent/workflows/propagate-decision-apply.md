@@ -17,7 +17,7 @@ pipeline:
 
 Review and apply fixes for explicit contradictions one at a time, flag implicit assumptions, run consistency check, and write propagation record.
 
-> **Prerequisite**: `docs/audits/propagation-scan-[date].md` must exist. If not → run `/propagate-decision-scan` first.
+> **Prerequisite**: `.memory/wiki/specs/audits/propagation-scan-[date].md` must exist. If not → run `/propagate-decision-scan` first.
 
 ---
 
@@ -29,7 +29,7 @@ Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Cont
 
 For each explicit contradiction from the scan report: display using the format and wait for user response (Y/n/skip/stop-and-save).
 
-After applying a fix to a spec document (`docs/plans/ia/`, `docs/plans/be/`, or `docs/plans/fe/`): append `## Changelog` row. If no `## Changelog` exists, add one from the template in `.agent/skills/prd-templates/references/be-spec-template.md`.
+After applying a fix to a spec document (`.memory/wiki/specs/ia/`, `.memory/wiki/specs/be/`, or `.memory/wiki/specs/fe/`): append `## Changelog` row. If no `## Changelog` exists, add one from the template in `.agent/skills/prd-templates/references/be-spec-template.md`.
 
 ---
 
@@ -37,7 +37,7 @@ After applying a fix to a spec document (`docs/plans/ia/`, `docs/plans/be/`, or 
 
 Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Assumption Display Format**.
 
-For each implicit assumption: display using the format and wait for user response. Y → add to `docs/audits/propagation-ambiguity-[date].md`.
+For each implicit assumption: display using the format and wait for user response. Y → add to `.memory/wiki/specs/audits/propagation-ambiguity-[date].md`.
 
 ---
 
@@ -57,7 +57,7 @@ Report issues. **Do not auto-fix** — present to user.
 
 Read `.agent/skills/technical-writer/SKILL.md` for methodology.
 
-Write `docs/audits/propagation-[type]-[date].md` recording: decision type, source document, documents scanned, contradictions found/fixed/skipped, assumptions flagged/ignored, consistency results, timestamp.
+Write `.memory/wiki/specs/audits/propagation-[type]-[date].md` recording: decision type, source document, documents scanned, contradictions found/fixed/skipped, assumptions flagged/ignored, consistency results, timestamp.
 
 ---
 

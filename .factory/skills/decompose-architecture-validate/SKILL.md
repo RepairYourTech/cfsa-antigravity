@@ -25,7 +25,7 @@ parameters:
 
 ### Step 2 — Deep dive candidate generation
 
-1. For each shard marked `Needs Deep Dive`, create skeleton file under `docs/plans/ia/deep-dives/`.
+1. For each shard marked `Needs Deep Dive`, create skeleton file under `.memory/wiki/specs/ia/deep-dives/`.
 2. Add deep-dive references to parent IA shard files and IA index entries.
 
 ### Step 3 — Shard annotation and dependency graph validation
@@ -40,7 +40,7 @@ parameters:
 
 ### Step 4 — Feature ledger IA assignment (conditional)
 
-1. If `docs/plans/feature-ledger.md` exists, map features to IA shards.
+1. If `.memory/wiki/specs/feature-ledger.md` exists, map features to IA shards.
 2. Populate IA shard + IA status columns.
 3. Run orphan detection and stop for resolution if orphans are present.
 

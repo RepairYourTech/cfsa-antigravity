@@ -37,7 +37,7 @@ If the skill is not installed, check `.agent/skill-library/MANIFEST.md` and prov
 
 ## 2. Determine pipeline architecture
 
-Read `docs/plans/*-architecture-design.md` for the architecture pattern.
+Read `.memory/wiki/specs/*-architecture-design.md` for the architecture pattern.
 
 | Pattern | Pipeline Strategy |
 |---------|------------------|
@@ -85,7 +85,7 @@ For **monorepo** with matrix strategy, add a `strategy.matrix` (or equivalent) t
 Enumerate all secrets needed by the pipeline:
 
 1. Read `.env.example` — identify variables that are secrets (API keys, tokens, connection strings)
-2. Read `docs/plans/*-architecture-design.md` integration section — identify external service credentials
+2. Read `.memory/wiki/specs/*-architecture-design.md` integration section — identify external service credentials
 3. Read the Hosting skill — identify deployment credentials
 
 For each secret:

@@ -4,7 +4,7 @@
 
 ## Ledger Location
 
-`docs/plans/feature-ledger.md`
+`.memory/wiki/specs/feature-ledger.md`
 
 ## Ledger Format
 
@@ -51,7 +51,7 @@
    - **Domain**: domain name
    - **MoSCoW**: from `ideation-index.md` MoSCoW Summary (match by feature name), or from the feature's own priority field if available
 4. All other columns → `—` (not yet populated)
-5. Write to `docs/plans/feature-ledger.md`
+5. Write to `.memory/wiki/specs/feature-ledger.md`
 
 > **Context management**: Read domain indexes one at a time, extract features, move on. Same pattern as the deep-ideation-loading protocol.
 
@@ -61,8 +61,8 @@
 
 **Procedure**:
 
-1. Read `docs/plans/feature-ledger.md`
-2. For each IA shard skeleton in `docs/plans/ia/`:
+1. Read `.memory/wiki/specs/feature-ledger.md`
+2. For each IA shard skeleton in `.memory/wiki/specs/ia/`:
    - Read the shard's `## Sub-features` or features list
    - For each feature, find the matching row in the ledger (match by Feature ID or Feature Name)
    - Set **IA Shard** = shard name (e.g., `02-inventory`)
@@ -87,7 +87,7 @@
 
 **Procedure**:
 
-1. Read `docs/plans/feature-ledger.md`
+1. Read `.memory/wiki/specs/feature-ledger.md`
 2. Read the newly written BE spec's endpoint list
 3. For each endpoint, identify which Feature ID(s) it serves (from the IA shard → feature mapping)
 4. For each matched Feature ID, set **BE Spec** = spec file name, **BE Status** = `✅`
@@ -101,7 +101,7 @@
 
 **Procedure**:
 
-1. Read `docs/plans/feature-ledger.md`
+1. Read `.memory/wiki/specs/feature-ledger.md`
 2. Read the newly written FE spec's component list
 3. For each component, identify which Feature ID(s) it serves
 4. For each matched Feature ID, set **FE Spec** = spec file name, **FE Status** = `✅`
@@ -113,7 +113,7 @@
 
 **Procedure**:
 
-1. Read `docs/plans/feature-ledger.md`
+1. Read `.memory/wiki/specs/feature-ledger.md`
 2. For each slice, identify which Feature ID(s) it covers (from its spec source map)
 3. For each matched Feature ID, set **Phase** = phase number, **Slice** = slice ID
 4. Write updated ledger
@@ -124,7 +124,7 @@
 
 **Procedure**:
 
-1. Read `docs/plans/feature-ledger.md`
+1. Read `.memory/wiki/specs/feature-ledger.md`
 2. Count features by completeness:
    - **✅ Complete**: All columns through FE Status are ✅ or ⚠️ deferred
    - **⚠️ Partial**: Some columns filled, some still `—`

@@ -42,10 +42,10 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 > **This step is mandatory.** Shards run in separate conversations — ideation context from the orchestrator is lost. Reload it here.
 
-1. Read `docs/plans/ideation/ideation-index.md` — extract: Structure Map (domain list + paths), MoSCoW Summary (full feature inventory), Engagement Tier, persona list
-2. Read `docs/plans/ideation/meta/constraints.md` — extract: Project Surfaces, compliance constraints, hard/soft constraints
-3. Read `docs/plans/ideation/ideation-cx.md` (global cross-cuts) — extract: cross-domain data dependencies, trigger chains, shared entity ownership. Then read each domain-level `{domain}-cx.md` listed in the Structure Map
-4. If `## Ideation Digest` exists in `docs/plans/architecture-draft.md` → use it as the structured feature inventory. Otherwise, read domain index files (`{domain}/{domain}-index.md`) directly per the deep ideation loading protocol (`.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md`)
+1. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract: Structure Map (domain list + paths), MoSCoW Summary (full feature inventory), Engagement Tier, persona list
+2. Read `.memory/wiki/specs/ideation/meta/constraints.md` — extract: Project Surfaces, compliance constraints, hard/soft constraints
+3. Read `.memory/wiki/specs/ideation/ideation-cx.md` (global cross-cuts) — extract: cross-domain data dependencies, trigger chains, shared entity ownership. Then read each domain-level `{domain}-cx.md` listed in the Structure Map
+4. If `## Ideation Digest` exists in `.memory/wiki/specs/architecture-draft.md` → use it as the structured feature inventory. Otherwise, read domain index files (`{domain}/{domain}-index.md`) directly per the deep ideation loading protocol (`.agent/skills/prd-templates/references/deep-ideation-loading-protocol.md`)
 
 **How this context feeds downstream steps:**
 - Component diagram (4.1) ← domain boundaries from domain indexes, trigger chains from CX files
@@ -57,7 +57,7 @@ Read the engagement tier protocol (`.agent/skills/prd-templates/references/engag
 
 ### Checkpoint resumption
 
-Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `docs/plans/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed sections, resume from `next_action`). If not → initialize a fresh checkpoint.
+Read `.agent/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure. If not → initialize a fresh checkpoint.
 
 ---
 
@@ -77,7 +77,7 @@ Design the high-level system. Each sub-item requires full exploration, not a sum
    - "Which zero-downtime deployment strategy fits your risk profile? Rolling (standard), Blue-Green (easy rollback), or Canary (validate with real traffic)?"
    - "Do you want feature flags for controlled rollout of risky features? If yes, which provider (or build your own)?"
    - "What is your rollback trigger? Error rate spike above N%? Latency threshold? Manual decision?"
-   Write the confirmed strategy to `docs/plans/architecture-draft.md` under `## Deployment Strategy`.
+   Write the confirmed strategy to `.memory/wiki/specs/architecture-draft.md` under `## Deployment Strategy`.
 
 For multi-surface projects, additionally define:
 6. **Surface interconnection** — How do surfaces communicate? What is the source of truth for shared data? What happens when a surface is offline?
@@ -95,9 +95,9 @@ For each component, also define:
 
 Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
-Write the completed `## System Architecture` section to `docs/plans/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## System Architecture` section to `.memory/wiki/specs/architecture-draft.md` (create the file if it does not exist). Do not wait until the end — write this section as soon as it is completed and confirmed by the user. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
-> **Decision recording**: For each non-trivial architecture decision (technology choices, deployment topology, API style, failure handling strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Architecture decisions have the highest downstream impact in the pipeline — record them to `memory/decisions.md` with the Philosopher + Devil's Advocate deliberation.
+> **Decision recording**: For each non-trivial architecture decision (technology choices, deployment topology, API style, failure handling strategy), read `.agent/skills/session-continuity/protocols/06-decision-analysis.md` and follow the **Decision Effect Analysis Protocol**. Architecture decisions have the highest downstream impact in the pipeline — record them to `.memory/wiki/decisions.md` with the Philosopher + Devil's Advocate deliberation.
 
 ## 4.5. Error architecture
 
@@ -105,13 +105,13 @@ Write the completed `## System Architecture` section to `docs/plans/architecture
 
 Read `.agent/skills/error-handling-patterns/SKILL.md` and follow its Error Architecture Interview methodology. All 5 decisions must receive explicit user confirmation before proceeding to Data Strategy. This step is a hard gate — do not proceed until all five decisions are confirmed.
 
-Write the completed decisions to `docs/plans/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed decisions to `.memory/wiki/specs/architecture-draft.md` under a new top-level `## Error Architecture` section (between `## System Architecture` and `## Data Strategy`). The section must contain five sub-sections matching the five decisions above (`### Global Error Envelope`, `### Error Propagation Chain`, `### Unhandled Exception Strategy`, `### Client Fallback Contract`, `### Error Boundary Strategy`), with the locked canonical JSON example included verbatim under `### Global Error Envelope`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ## 5. Data strategy
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its schema design methodology.
 
-**Digest-aware entity identification**: If `## Ideation Digest` exists in `docs/plans/architecture-draft.md`, use its Key Entities column and Cross-Domain Dependencies table as the primary source for entity identification in sub-steps below. Cross-reference the digest's per-domain feature lists to ensure no entity is missed. If the digest does not exist, derive entities from the architecture sections written above.
+**Digest-aware entity identification**: If `## Ideation Digest` exists in `.memory/wiki/specs/architecture-draft.md`, use its Key Entities column and Cross-Domain Dependencies table as the primary source for entity identification in sub-steps below. Cross-reference the digest's per-domain feature lists to ensure no entity is missed. If the digest does not exist, derive entities from the architecture sections written above.
 
 Load the Databases skill(s) from the `shared` surface row per the skill loading protocol. Each sub-item must be explored to field-level depth:
 
@@ -132,24 +132,24 @@ For multi-surface projects, additionally define:
 
 Follow the decision confirmation protocol (`.agent/skills/prd-templates/references/decision-confirmation-protocol.md`) — do not write until explicitly confirmed.
 
-Write the completed `## Data Strategy` section to `docs/plans/architecture-draft.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed `## Data Strategy` section to `.memory/wiki/specs/architecture-draft.md`. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ### 5.5. Cross-Store Entity Consistency
 
 Read .agent/skills/database-schema-design/SKILL.md and follow its Cross-Store Entity Consistency Protocol for every entity that spans more than one store.
 
-Write the completed cross-store consistency table to `docs/plans/architecture-draft.md` as part of the `## Data Strategy` section. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
+Write the completed cross-store consistency table to `.memory/wiki/specs/architecture-draft.md` as part of the `## Data Strategy` section. Follow the write verification protocol (`.agent/skills/prd-templates/references/write-verification-protocol.md`).
 
 ### Data placement strategy document
 
-Read `.agent/skills/prd-templates/references/data-placement-template.md` for the template structure. Create `docs/plans/data-placement-strategy.md` using the template, filling each section with the data decisions confirmed above.
+Read `.agent/skills/prd-templates/references/data-placement-template.md` for the template structure. Create `.memory/wiki/specs/data-placement-strategy.md` using the template, filling each section with the data decisions confirmed above.
 
 ## Completion Gate (MANDATORY)
 
 Before reporting completion or proceeding to next shard:
 
-1. **Update checkpoint** — Write final state to `docs/plans/prd-working/workflow-state.md`: mark all architecture sections complete.
-2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.agent/progress/memory/`. Architecture decisions have highest downstream impact — every confirmed decision should have a `DEC-NNN` entry.
+1. **Update checkpoint** — Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all architecture sections complete.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.memory/wiki/`. Architecture decisions have highest downstream impact — every confirmed decision should have a `DEC-NNN` entry.
 3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
 4. **Session log** — Write session entry to `.agent/progress/sessions/`.
 
