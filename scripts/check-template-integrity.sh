@@ -137,7 +137,7 @@ fi
 # 6. Workflow character limit check
 # ──────────────────────────────────────
 over_limit=0
-for f in "$ROOT_DIR/.agent/workflows/"*.md "$ROOT_DIR/.claude/skills/workflows/"workflow-*.md; do
+for f in "$ROOT_DIR/.agent/workflows/"*.md; do
     [[ -f "$f" ]] || continue
     sz=$(wc -c < "$f" | tr -d ' ')
     if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
@@ -146,20 +146,25 @@ for f in "$ROOT_DIR/.agent/workflows/"*.md "$ROOT_DIR/.claude/skills/workflows/"
     fi
 done
 
-# Check Factory workflow skills — only skills that correspond to pipeline workflows
-# (derived from Claude workflow names to avoid flagging large non-workflow skills)
-if [[ -d "$ROOT_DIR/.claude/skills/workflows" ]]; then
-    while IFS= read -r wf_name; do
-        factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
-        [[ -f "$factory_skill" ]] || continue
-        sz=$(wc -c < "$factory_skill" | tr -d ' ')
+while IFS= read -r wf_name; do
+    claude_skill="$ROOT_DIR/.claude/skills/$wf_name/SKILL.md"
+    if [[ -f "$claude_skill" ]]; then
+        sz=$(wc -c < "$claude_skill" | tr -d ' ')
         if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
             fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
             over_limit=$((over_limit + 1))
         fi
-    done < <(find "$ROOT_DIR/.claude/skills/workflows" -maxdepth 1 -name "workflow-*.md" -type f -print \
-        | sed 's|.*/workflow-||' | sed 's|\.md$||' | sort)
-fi
+    fi
+
+    factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
+    [[ -f "$factory_skill" ]] || continue
+    sz=$(wc -c < "$factory_skill" | tr -d ' ')
+    if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
+        fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
+        over_limit=$((over_limit + 1))
+    fi
+done < <(find "$ROOT_DIR/.claude/commands" -maxdepth 1 -name "*.md" -type f -print \
+    | sed 's|.*/||' | sed 's|\.md$||' | sort)
 
 if [[ "$over_limit" -eq 0 ]]; then
     info "All workflows under ${CHAR_LIMIT} char limit"
@@ -175,8 +180,8 @@ extra_commands_file=$(mktemp)
 claude_agent_refs_file=$(mktemp)
 trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file"' EXIT
 
-find "$ROOT_DIR/.claude/skills/workflows" -maxdepth 1 -name "workflow-*.md" -type f -print \
-    | sed 's|.*/workflow-||' \
+find "$ROOT_DIR/.claude/commands" -maxdepth 1 -name "*.md" -type f -print \
+    | sed 's|.*/||' \
     | sed 's|\.md$||' \
     | sort > "$claude_workflows_file"
 
@@ -265,7 +270,7 @@ fi
 for command_file in "$ROOT_DIR/.claude/commands"/*.md; do
     [[ -f "$command_file" ]] || continue
     command_name=$(basename "$command_file" .md)
-    expected_reference=$(printf 'Reference: `.claude/skills/workflows/workflow-%s.md`.' "$command_name")
+    expected_reference=$(printf 'Reference: `.claude/skills/%s/SKILL.md`.' "$command_name")
     if ! grep -F -q "$expected_reference" "$command_file"; then
         fail "$(basename "$command_file") does not reference its Claude workflow file"
     fi
@@ -380,7 +385,67 @@ if [[ "$errors" -eq 0 ]]; then
 fi
 
 # ──────────────────────────────────────
-# 10. Summary
+# 10. Unified memory scaffold checks
+# ──────────────────────────────────────
+if [[ ! -d "$ROOT_DIR/memory-src" ]]; then
+    fail "memory-src/ missing from project root"
+elif [[ ! -d "$TEMPLATE_DIR/.memory" ]]; then
+    fail "template/.memory/ missing — template rebuild needed"
+else
+    memory_drift=$(diff -rq "$ROOT_DIR/memory-src" "$TEMPLATE_DIR/.memory" 2>/dev/null \
+        | grep -v "Only in .*template/.memory: raw" \
+        | grep -v "Only in .*template/.memory: wiki" \
+        | grep -v "Only in .*template/.memory/raw:" \
+        | grep -v "Only in .*template/.memory/wiki:" \
+        | grep -v "raw/" \
+        | grep -v "wiki/knowledge" \
+        | grep -v "config.json" || true)
+
+    memory_drift=$(echo "$memory_drift" | grep -v "Only in .*memory-src/raw: README.md" || true)
+
+    # Ignore generated wiki index files that are scaffolded only in template/.memory
+    memory_drift=$(echo "$memory_drift" | grep -v "Only in .*template/.memory/wiki: index.md" \
+        | grep -v "Only in .*template/.memory/wiki: patterns.md" \
+        | grep -v "Only in .*template/.memory/wiki: decisions.md" \
+        | grep -v "Only in .*template/.memory/wiki: blockers.md" || true)
+
+    memory_drift_count=$(echo "$memory_drift" | grep -c . || true)
+    if [[ "$memory_drift_count" -gt 0 && -n "$memory_drift" ]]; then
+        fail "memory-src/ has $memory_drift_count drifted file(s) from template/.memory/"
+        echo "$memory_drift" | head -10 >&2
+    else
+        info "memory-src/ in sync with template/.memory/"
+    fi
+
+    for required in \
+        "$TEMPLATE_DIR/.memory/pipeline/compile.mjs" \
+        "$TEMPLATE_DIR/.memory/mcp-server/index.mjs" \
+        "$TEMPLATE_DIR/.memory/hooks/session-start.mjs" \
+        "$TEMPLATE_DIR/.memory/migrate/migrate-legacy.mjs" \
+        "$TEMPLATE_DIR/.memory/schema/entry.schema.json" \
+        "$TEMPLATE_DIR/.memory/config.json"; do
+        if [[ -f "$required" ]]; then
+            info "$(realpath --relative-to="$TEMPLATE_DIR" "$required") present"
+        else
+            fail "$(realpath --relative-to="$TEMPLATE_DIR" "$required") missing"
+        fi
+    done
+fi
+
+# ──────────────────────────────────────
+# 11. MCP registration contract checks
+# ──────────────────────────────────────
+if grep -F -q '"cfsa-memory"' "$ROOT_DIR/bin/cli.mjs" && \
+   grep -F -q '.memory/mcp-server/client.mjs' "$ROOT_DIR/bin/cli.mjs" && \
+   grep -F -q '.memory/mcp-server/start.mjs' "$ROOT_DIR/bin/cli.mjs" && \
+   grep -F -q '.mcp.json' "$ROOT_DIR/bin/cli.mjs"; then
+    info "CLI contains unified memory MCP registration contract"
+else
+    fail "bin/cli.mjs is missing unified memory MCP registration contract"
+fi
+
+# ──────────────────────────────────────
+# 12. Summary
 # ──────────────────────────────────────
 echo ""
 if [[ "$errors" -gt 0 ]]; then
