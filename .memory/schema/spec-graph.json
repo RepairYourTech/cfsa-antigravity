@@ -1,0 +1,42 @@
+{
+  "builtAt": "2026-04-14T12:30:12.869Z",
+  "nodeCount": 4,
+  "edgeCount": 0,
+  "nodes": [
+    {
+      "id": "plan:be",
+      "type": "plan",
+      "label": "BE Specs Hub",
+      "path": ".memory/wiki/specs/be.md",
+      "shardId": null
+    },
+    {
+      "id": "plan:fe",
+      "type": "plan",
+      "label": "FE Specs Hub",
+      "path": ".memory/wiki/specs/fe.md",
+      "shardId": null
+    },
+    {
+      "id": "plan:ia",
+      "type": "plan",
+      "label": "IA Specs Hub",
+      "path": ".memory/wiki/specs/ia.md",
+      "shardId": null
+    },
+    {
+      "id": "plan:index",
+      "type": "plan",
+      "label": "Specs Hub",
+      "path": ".memory/wiki/specs/index.md",
+      "shardId": null
+    }
+  ],
+  "edges": [],
+  "stats": {
+    "byNodeType": {
+      "plan": 4
+    },
+    "byEdgeType": {}
+  }
+}

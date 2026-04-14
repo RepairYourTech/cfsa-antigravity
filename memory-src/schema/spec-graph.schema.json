@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cfsa.dev/schema/spec-graph.schema.json",
+  "title": "CFSA spec graph",
+  "type": "object",
+  "required": ["builtAt", "nodeCount", "edgeCount", "nodes", "edges", "stats"],
+  "properties": {
+    "builtAt": { "type": "string" },
+    "nodeCount": { "type": "integer", "minimum": 0 },
+    "edgeCount": { "type": "integer", "minimum": 0 },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "label", "path"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "label": { "type": "string" },
+          "path": { "type": "string" },
+          "shardId": { "type": ["string", "null"] }
+        },
+        "additionalProperties": true
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to", "type", "source"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "type": { "type": "string" },
+          "source": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "byNodeType": { "type": "object" },
+        "byEdgeType": { "type": "object" }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

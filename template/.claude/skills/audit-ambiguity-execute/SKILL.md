@@ -61,11 +61,12 @@ Append all failures as blocking report items.
    - apply approved fixes
 3. Persist `## Gaps Fixed` metadata in audit-scope file.
 
-### Step 6 — Final verdict and next-step recommendation
+### Step 6 — Graph refresh, final verdict, and next-step recommendation
 
-1. Present report + verdict.
-2. If gaps found, require fresh rerun.
-3. If 0% ambiguity and fresh-run criteria pass, recommend layer-appropriate next pipeline command.
+1. If remediation changed scoped specs, call `memory_compile` before presenting the verdict so the graph reflects current source truth.
+2. Present report + verdict.
+3. If gaps found, require fresh rerun.
+4. If 0% ambiguity and fresh-run criteria pass, recommend layer-appropriate next pipeline command.
 
 ## Completion Checklist
 
@@ -76,6 +77,7 @@ Append all failures as blocking report items.
 - [ ] summary compiled
 - [ ] remediation flow executed for gaps
 - [ ] gaps-fixed metadata persisted
+- [ ] spec graph refreshed when remediation changed scoped specs
 - [ ] verdict + constrained next step presented
 
 ## Next Steps

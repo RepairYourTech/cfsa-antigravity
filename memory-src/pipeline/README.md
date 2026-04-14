@@ -7,6 +7,7 @@ Unified memory pipeline utilities.
 - `flush.mjs` — append raw memory entries
 - `ingest.mjs` — ingest legacy or external content into raw memory
 - `compile.mjs` — compile raw/wiki content into derived wiki + schema outputs
+- `spec-graph.mjs` — extract typed spec graph nodes/edges and Obsidian relationship hubs
 - `query.mjs` — query the compiled schema/index
 - `lint.mjs` — validate the scaffold and compiled outputs
 

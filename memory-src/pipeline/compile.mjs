@@ -10,6 +10,7 @@ import {
   writeJson,
 } from "./utils.mjs";
 import { mirrorPlansIntoVault } from "./mirror-plans.mjs";
+import { buildSpecGraph } from "./spec-graph.mjs";
 import { buildSemanticIndex } from "./semantic.mjs";
 
 function articleHeader(record) {
@@ -69,6 +70,7 @@ export function compileMemory(options = {}) {
   const memoryRoot = options.memoryRoot ?? getMemoryRoot(projectRoot);
   ensureMemoryScaffold(memoryRoot);
   const mirroredPlans = mirrorPlansIntoVault({ projectRoot, memoryRoot });
+  const specGraph = buildSpecGraph({ projectRoot, memoryRoot });
 
   const rawFiles = [
     ...listFilesRecursively(join(memoryRoot, "raw", "events")),
@@ -328,6 +330,9 @@ export function compileMemory(options = {}) {
     knowledgeEntries: indexEntries.length,
     chunkEntries: chunkEntries.length,
     semanticEntries: semanticIndex.count,
+    specGraphNodes: specGraph.nodeCount,
+    specGraphEdges: specGraph.edgeCount,
+    specGraphLintIssues: specGraph.lintIssues,
     patterns: patterns.length,
     decisions: decisions.length,
     blockers: blockers.length,
@@ -340,6 +345,9 @@ export function compileMemory(options = {}) {
     knowledgeEntries: indexEntries.length,
     chunkEntries: chunkEntries.length,
     semanticEntries: semanticIndex.count,
+    specGraphNodes: specGraph.nodeCount,
+    specGraphEdges: specGraph.edgeCount,
+    specGraphLintIssues: specGraph.lintIssues,
   };
 }
 

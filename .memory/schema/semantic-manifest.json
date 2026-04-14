@@ -1,0 +1,10 @@
+{
+  "builtAt": "2026-04-14T12:30:12.872Z",
+  "backend": "local-cosine",
+  "embeddingModel": null,
+  "entryCount": 0,
+  "pythonBackend": {
+    "available": false,
+    "path": "/home/birdman/spec-pipeline-starter/.memory/pipeline/semantic_backend.py"
+  }
+}

@@ -178,3 +178,29 @@ export function scoreText(text, query) {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   return terms.reduce((score, term) => score + (haystack.includes(term) ? 1 : 0), 0);
 }
+
+export function parseFrontmatter(text) {
+  if (!text.startsWith("---\n")) {
+    return {};
+  }
+
+  const endIndex = text.indexOf("\n---", 4);
+  if (endIndex === -1) {
+    return {};
+  }
+
+  return text.slice(4, endIndex)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .reduce((acc, line) => {
+      const separatorIndex = line.indexOf(":");
+      if (separatorIndex === -1) {
+        return acc;
+      }
+      const key = line.slice(0, separatorIndex).trim();
+      const value = line.slice(separatorIndex + 1).trim().replace(/^['\"]|['\"]$/g, "");
+      acc[key] = value;
+      return acc;
+    }, {});
+}

@@ -155,12 +155,13 @@ If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templa
 ## 13.7. Completion Gate (MANDATORY)
 
 1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the BE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 9. Go back and run Protocol 08 now before proceeding."
-2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
+2. **Verify spec graph refresh** — Confirm Protocol 08 called `memory_compile` and that the compile succeeded. If graph refresh did not run → **STOP**: "Spec graph was not refreshed after tracker update. Run `memory_compile` before proceeding."
+3. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `.memory/wiki/patterns.md`
    - Non-trivial decisions made → write to `.memory/wiki/decisions.md`
    - Blockers hit → write to `.memory/wiki/blockers.md`
-3. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
-4. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
+4. If no triggers found → confirm: "No new patterns, decisions, or blockers to log"
+5. Read `.agent/skills/session-continuity/protocols/05-session-close.md` and write a session close log
 
 > **This step is not skippable.** Do not call `notify_user` until all items above are complete.
 

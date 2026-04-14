@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { ensureMemoryScaffold, fileExists, getMemoryRoot, listFilesRecursively, readJsonl } from "./utils.mjs";
+import { ensureMemoryScaffold, fileExists, getMemoryRoot, listFilesRecursively, readJson, readJsonl } from "./utils.mjs";
 
 export function lintMemory(options = {}) {
   const memoryRoot = options.memoryRoot ?? getMemoryRoot(options.projectRoot);
@@ -13,6 +13,8 @@ export function lintMemory(options = {}) {
     join(memoryRoot, "wiki", "blockers.md"),
     join(memoryRoot, "schema", "index.jsonl"),
     join(memoryRoot, "schema", "chunks.jsonl"),
+    join(memoryRoot, "schema", "spec-graph.json"),
+    join(memoryRoot, "schema", "spec-graph-lint.json"),
     join(memoryRoot, "config.json"),
   ];
 
@@ -34,12 +36,16 @@ export function lintMemory(options = {}) {
     warnings.push("No compiled memory entries yet. Run a flush/compile cycle to populate schema outputs.");
   }
 
+  const graphLint = readJson(join(memoryRoot, "schema", "spec-graph-lint.json"), { issues: [] });
+  warnings.push(...(graphLint.issues ?? []).map((issue) => `${issue.code}: ${issue.message}`));
+
   return {
     ok: errors.length === 0,
     errors,
     warnings,
     knowledgeFiles: knowledgeFiles.length,
     indexEntries: indexEntries.length,
+    graphLintIssues: (graphLint.issues ?? []).length,
   };
 }
 

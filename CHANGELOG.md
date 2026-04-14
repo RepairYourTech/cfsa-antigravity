@@ -1,5 +1,13 @@
 # cfsa-antigravity
 
+## 3.0.0
+
+### Major Changes
+
+- Promote the memory pipeline and vault scaffold updates into a major release.
+
+  This release adds typed spec-graph generation and graph querying to the unified memory runtime, refreshes spec graphs at workflow boundaries, and commits the missing durable `.memory` scaffold needed for downstream sync/install parity. It also updates template/build/check behavior so transient `.claude/worktrees/` artifacts are excluded from published output and integrity scans.
+
 ## 2.19.4
 
 ### Patch Changes

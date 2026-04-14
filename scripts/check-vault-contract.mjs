@@ -22,18 +22,32 @@ function listFilesRecursively(dir) {
   const out = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...listFilesRecursively(p));
-    else out.push(p);
+    if (entry.isDirectory()) {
+      if (entry.name === 'worktrees') {
+        continue;
+      }
+      out.push(...listFilesRecursively(p));
+      continue;
+    }
+      out.push(p);
   }
   return out;
 }
 
-function fail(message) {
-  console.error(`[vault-contract] FAIL: ${message}`);
-  process.exit(1);
+function filterExistingDirectories(directories) {
+  return directories.filter((dir) => {
+    try {
+      return statSync(dir).isDirectory();
+    } catch {
+      return false;
+    }
+  });
 }
 
-const runtimeFiles = runtimeRoots.flatMap((dir) => listFilesRecursively(dir)).filter((p) => p.endsWith('.md'));
+const existingRuntimeRoots = filterExistingDirectories(runtimeRoots);
+const existingWorkflowDirs = filterExistingDirectories(workflowDirs);
+
+const runtimeFiles = existingRuntimeRoots.flatMap((dir) => listFilesRecursively(dir)).filter((p) => p.endsWith('.md'));
 for (const file of runtimeFiles) {
   const text = readFileSync(file, 'utf8');
   for (const needle of legacyNeedles) {
@@ -43,10 +57,16 @@ for (const file of runtimeFiles) {
   }
 }
 
-const workflowFiles = workflowDirs.flatMap((dir) => listFilesRecursively(dir)).filter((p) => p.endsWith('.md'));
+const workflowFiles = existingWorkflowDirs.flatMap((dir) => listFilesRecursively(dir)).filter((p) => p.endsWith('.md'));
 const matched = workflowFiles.filter((file) => readFileSync(file, 'utf8').includes(requiredNeedle));
 if (matched.length < 20) {
   fail(`Too few workflow/skill files reference ${requiredNeedle}: ${matched.length}`);
 }
 
 console.log(`[vault-contract] PASS: no legacy docs paths in runtime trees; ${matched.length} workflow/skill files reference ${requiredNeedle}`);
+
+function fail(message) {
+  console.error(`[vault-contract] FAIL: ${message}`);
+  process.exit(1);
+}
+

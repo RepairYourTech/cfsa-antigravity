@@ -1,0 +1,29 @@
+{
+  "builtAt": "2026-04-14T12:30:12.869Z",
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "ORPHAN_SPEC",
+      "message": ".memory/wiki/specs/be.md has no graph relationships",
+      "path": ".memory/wiki/specs/be.md"
+    },
+    {
+      "severity": "warning",
+      "code": "ORPHAN_SPEC",
+      "message": ".memory/wiki/specs/fe.md has no graph relationships",
+      "path": ".memory/wiki/specs/fe.md"
+    },
+    {
+      "severity": "warning",
+      "code": "ORPHAN_SPEC",
+      "message": ".memory/wiki/specs/ia.md has no graph relationships",
+      "path": ".memory/wiki/specs/ia.md"
+    },
+    {
+      "severity": "warning",
+      "code": "ORPHAN_SPEC",
+      "message": ".memory/wiki/specs/index.md has no graph relationships",
+      "path": ".memory/wiki/specs/index.md"
+    }
+  ]
+}

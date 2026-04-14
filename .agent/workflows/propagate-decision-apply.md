@@ -61,8 +61,10 @@ Write `.memory/wiki/specs/audits/propagation-[type]-[date].md` recording: decisi
 
 ---
 
-## 5. Propose next steps
+## 5. Refresh graph and propose next steps
 
-Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Completion Summary Format** and present.
+1. Call `memory_compile` after writing the propagation record so corrected specs and removed contradictions are reflected in the graph.
+2. Verify the compile succeeded.
+3. Read `.agent/skills/prd-templates/references/decision-propagation.md` → **Completion Summary Format** and present, including graph refresh confirmation.
 
 If no assumptions flagged → omit `/resolve-ambiguity` recommendation.

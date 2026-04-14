@@ -20,4 +20,5 @@ parameters:
 5. Run consistency checks.
 6. Write evolution record.
 7. Run bootstrap check for newly introduced dependencies.
-8. Propose mandatory ambiguity-audit rerun for affected layers.
+8. Call `memory_compile` to refresh the graph after downstream spec updates.
+9. Propose mandatory ambiguity-audit rerun for affected layers.

@@ -18,4 +18,5 @@ parameters:
 3. Walk implicit assumptions and flag for ambiguity handling where accepted.
 4. Run consistency check on changed documents.
 5. Write `.memory/wiki/specs/audits/propagation-[type]-[date].md`.
-6. Present completion summary with next steps.
+6. Call `memory_compile` to refresh the spec graph from the corrected spec set.
+7. Present completion summary with graph refresh confirmation and next steps.

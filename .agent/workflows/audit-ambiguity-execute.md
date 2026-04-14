@@ -149,9 +149,11 @@ After all remediation fixes are applied, append or update a `## Gaps Fixed` sect
 
 If a `## Gaps Fixed` section already exists, **replace it** with the current run's data.
 
-## 6. Propose next steps
+## 6. Refresh graph and propose next steps
 
-Use `notify_user` to present the audit report.
+1. If remediation in Step 5 changed scoped specs, call `memory_compile` before presenting the report so the graph reflects current source truth.
+2. Verify the compile succeeded.
+3. Use `notify_user` to present the audit report.
 
 ### If gaps were found:
 After completing remediation in Step 5, propose: "Next: Re-run `/audit-ambiguity [layer]` as a fresh invocation. The session that fixed gaps cannot grade its own homework."

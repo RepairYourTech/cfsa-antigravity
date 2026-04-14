@@ -151,8 +151,10 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Verify all 
 
 > ❌ STOP — Only proceed to Step 7 when the map is fully populated. If any cells are empty after bootstrap, tell the user which cells could not be provisioned.
 
-## 7. Request review and next steps
+## 7. Refresh graph, request review, and next steps
 
-Use `notify_user` to request review of the phase plan and generated progress files.
+1. Call `memory_compile` after finalizing the phase artifacts so graph/hubs reflect the latest planning state.
+2. Verify the compile succeeded before presenting completion.
+3. Use `notify_user` to request review of the phase plan and generated progress files, including graph refresh confirmation.
 
 **STOP** — do NOT proceed until the user explicitly approves the phase plan. The only valid next step after approval is `/implement-slice` for the first slice. Read `.agent/progress/` to identify which slice to start with.

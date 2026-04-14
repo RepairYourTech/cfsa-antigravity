@@ -1,6 +1,7 @@
 import { createServer } from "node:http";
 import { memoryCompile } from "./tools/compile.mjs";
 import { memoryFlush } from "./tools/flush.mjs";
+import { memoryGraphQuery } from "./tools/graph.mjs";
 import { memoryIngest, memoryLogDaily, memoryGetActiveBlockers } from "./tools/ingest.mjs";
 import { memoryLint } from "./tools/lint.mjs";
 import { memoryContext, memoryQuery, memorySemanticStatus } from "./tools/query.mjs";
@@ -15,6 +16,7 @@ const tools = {
   memory_flush: memoryFlush,
   memory_compile: memoryCompile,
   memory_query: memoryQuery,
+  memory_graph_query: memoryGraphQuery,
   memory_context: memoryContext,
   memory_semantic_status: memorySemanticStatus,
   memory_lint: memoryLint,
@@ -27,6 +29,7 @@ const toolDefinitions = [
   { name: "memory_flush", description: "Append an entry to unified raw memory." },
   { name: "memory_compile", description: "Compile raw/wiki memory into derived schema artifacts." },
   { name: "memory_query", description: "Query compiled memory entries." },
+  { name: "memory_graph_query", description: "Traverse the typed spec graph emitted by the memory compiler." },
   { name: "memory_context", description: "Build a ready-to-inject context block from memory." },
   { name: "memory_semantic_status", description: "Report semantic retrieval capability status." },
   { name: "memory_lint", description: "Validate the unified memory scaffold." },

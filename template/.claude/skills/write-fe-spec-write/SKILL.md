@@ -58,12 +58,14 @@ Run multi-pass refinement:
 2. Update feature ledger FE coverage when ledger exists.
 3. If all FE specs complete, run navigation completeness check and resolve orphan routes.
 
-### Step 7 — Review request and constrained next-step recommendation
+### Step 7 — Graph refresh, review request, and constrained next-step recommendation
 
-Present:
+1. Run Protocol 8 fully, including mandatory `memory_compile` graph refresh after tracker verification.
+2. Present:
 - spec link(s)
 - cross-reference verification status
 - ambiguity gate status
+- spec graph refresh confirmation
 - pipeline state and allowed next command
 
 ## Completion Checklist
@@ -77,6 +79,7 @@ Present:
 - [ ] dependency bootstrap checks handled
 - [ ] feature ledger FE coverage updated (if present)
 - [ ] navigation completeness check passed when final FE spec
+- [ ] spec graph refreshed via `memory_compile`
 - [ ] review requested with constrained next-step options
 
 ## Next Steps

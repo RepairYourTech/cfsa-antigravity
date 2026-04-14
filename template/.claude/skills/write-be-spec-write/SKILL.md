@@ -69,12 +69,14 @@ Run multi-pass refinement:
 1. Detect newly introduced dependencies and trigger bootstrap + verification as needed.
 2. Update feature ledger BE coverage when ledger exists.
 
-### Step 8 — Review request and constrained next-step recommendation
+### Step 8 — Graph refresh, review request, and constrained next-step recommendation
 
-Present:
+1. Run Protocol 8 fully, including mandatory `memory_compile` graph refresh after tracker verification.
+2. Present:
 - spec link(s)
 - cross-reference verification status
 - ambiguity gate status
+- spec graph refresh confirmation
 - pipeline state and only allowed next command (`/write-be-spec` or `/write-fe-spec`)
 
 ## Completion Checklist
@@ -88,6 +90,7 @@ Present:
 - [ ] ambiguity gate completed
 - [ ] dependency bootstrap checks handled
 - [ ] feature ledger BE coverage updated (if present)
+- [ ] spec graph refreshed via `memory_compile`
 - [ ] review requested with constrained next-step options
 
 ## Next Steps

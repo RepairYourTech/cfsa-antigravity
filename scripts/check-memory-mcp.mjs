@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdtempSync, mkdirSync, rmSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
@@ -11,6 +11,10 @@ const daemonPath = join(rootDir, "memory-src", "mcp-server", "daemon.mjs");
 const clientPath = join(rootDir, "memory-src", "mcp-server", "client.mjs");
 const fixtureRoot = mkdtempSync(join(tmpdir(), "cfsa-memory-mcp-"));
 mkdirSync(join(fixtureRoot, ".memory", "mcp-server"), { recursive: true });
+mkdirSync(join(fixtureRoot, ".memory", "wiki", "specs", "ia"), { recursive: true });
+mkdirSync(join(fixtureRoot, ".memory", "wiki", "specs", "be"), { recursive: true });
+writeFileSync(join(fixtureRoot, ".memory", "wiki", "specs", "ia", "00-auth.md"), "# IA Shard 00 Auth\n", "utf8");
+writeFileSync(join(fixtureRoot, ".memory", "wiki", "specs", "be", "00-auth-be.md"), "# BE 00 Auth\n> **IA Source**: [00-auth.md](../../ia/00-auth.md)\n", "utf8");
 
 function fail(message) {
   console.error(`[memory-mcp] FAIL: ${message}`);
@@ -75,7 +79,7 @@ async function run() {
 
   const listed = await request(2, "tools/list", {});
   const toolNames = new Set((listed.result?.tools ?? []).map((tool) => tool.name));
-  for (const expected of ["memory_flush", "memory_compile", "memory_query", "memory_lint"]) {
+  for (const expected of ["memory_flush", "memory_compile", "memory_query", "memory_graph_query", "memory_lint"]) {
     if (!toolNames.has(expected)) {
       fail(`Missing expected tool: ${expected}`);
     }
@@ -125,7 +129,17 @@ async function run() {
     fail(`Query returned no results: ${JSON.stringify(queried)}`);
   }
 
-  const linted = parseTextResult(await request(6, "tools/call", {
+  const graphed = parseTextResult(await request(6, "tools/call", {
+    name: "memory_graph_query",
+    arguments: {
+      memoryRoot: join(fixtureRoot, ".memory"),
+    },
+  }));
+  if ((graphed.nodeCount ?? 0) < 1) {
+    fail(`Graph query returned no nodes: ${JSON.stringify(graphed)}`);
+  }
+
+  const linted = parseTextResult(await request(7, "tools/call", {
     name: "memory_lint",
     arguments: {
       options: {
@@ -137,7 +151,7 @@ async function run() {
     fail(`Lint failed: ${JSON.stringify(linted)}`);
   }
 
-  console.log("[memory-mcp] PASS: initialize, tools/list, flush, compile, query, lint");
+  console.log("[memory-mcp] PASS: initialize, tools/list, flush, compile, query, graph-query, lint");
   child.kill();
   daemon.kill();
   rmSync(fixtureRoot, { recursive: true, force: true });

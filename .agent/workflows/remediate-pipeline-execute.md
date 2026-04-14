@@ -117,10 +117,13 @@ Append or replace `## Gaps Fixed` in `.memory/wiki/specs/audits/audit-scope.md` 
 
 ## 6. Instruct fresh-run confirmation
 
-Use `notify_user`:
+1. Call `memory_compile` after remediation fixes are written so repaired and removed relationships are reconciled in the graph.
+2. Verify the compile succeeded.
+3. Use `notify_user`:
 
 > ## [Layer] Remediated
 > [N] gaps fixed across [M] documents.
+> Spec graph refreshed from current source truth.
 > **Next**: Run `/audit-ambiguity [layer]` as a fresh invocation.
 > When it scores 0%, run `/remediate-pipeline` again to advance.
 > Do NOT re-run this workflow in this same session.

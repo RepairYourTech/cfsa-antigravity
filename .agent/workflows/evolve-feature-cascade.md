@@ -89,8 +89,10 @@ For each missing skill: read `.agent/workflows/bootstrap-agents.md` and invoke. 
 
 ---
 
-## 5. Propose next steps
+## 5. Refresh graph and propose next steps
 
-Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Completion Summary Format** and present.
+1. Call `memory_compile` after the downstream layer updates and evolution record are written.
+2. Verify the compile succeeded.
+3. Read `.agent/skills/prd-templates/references/evolution-layer-guidance.md` → **Completion Summary Format** and present, including graph refresh confirmation.
 
 ❗ **Mandatory next step**: Run `/audit-ambiguity` on affected layers before any implementation work. List the layers updated during Step 1.

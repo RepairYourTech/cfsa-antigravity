@@ -18,5 +18,6 @@ parameters:
 3. Run cross-layer consistency checks when applicable.
 4. Classify and remediate gaps (judgment calls first, mechanical fixes second).
 5. Persist `## Gaps Fixed` metadata.
-6. Stop and instruct fresh `/audit-ambiguity [layer]` run.
-7. On confirmed-clean re-invocation, advance to next layer or complete.
+6. Call `memory_compile` so fixed/removed relationships are reconciled in the graph before the fresh rerun.
+7. Stop and instruct fresh `/audit-ambiguity [layer]` run.
+8. On confirmed-clean re-invocation, advance to next layer or complete.

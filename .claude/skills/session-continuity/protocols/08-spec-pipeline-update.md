@@ -53,3 +53,13 @@
        - Read back and re-verify.
        - If second attempt fails → **STOP**: `"Unable to update spec-pipeline.md for shard [NN] [layer] after 2 attempts. Do not proceed — investigate before continuing."`
    (e) On success: log `"Pipeline tracker verified: shard [NN] [layer] = complete"`
+
+7. **Refresh the spec graph** — after tracker verification succeeds:
+
+   (a) Call the `memory_compile` MCP tool to rebuild derived memory artifacts from current spec truth.
+   (b) Confirm the compile succeeded and reported graph outputs (`specGraphNodes`, `specGraphEdges`).
+   (c) Treat this compile as mandatory before reporting the workflow complete.
+   (d) This is the primary graph-freshness path for spec-writing workflows; the Stop hook remains the session-end backstop.
+   (e) Because the graph is rebuilt from source specs, corrections/removals must be allowed to delete stale edges on this compile pass.
+
+8. **Report status** — log what was completed and what's next.

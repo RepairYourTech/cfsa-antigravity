@@ -27,10 +27,14 @@ mkdir -p "$TEMPLATE_DIR"
 info "Copying .agent/"
 cp -a "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent"
 
-# .claude/ — full directory
+# .claude/ — full directory except transient worktrees
 if [[ -d "$ROOT_DIR/.claude" ]]; then
     info "Copying .claude/"
     cp -a "$ROOT_DIR/.claude" "$TEMPLATE_DIR/.claude"
+    if [[ -d "$TEMPLATE_DIR/.claude/worktrees" ]]; then
+        info "Removing .claude/worktrees/ (transient worktree artifacts)"
+        rm -rf -- "$TEMPLATE_DIR/.claude/worktrees"
+    fi
 else
     warn ".claude/ directory not found — skipping"
 fi

@@ -83,7 +83,11 @@ if [[ -d "$ROOT_DIR/.claude" ]]; then
             | grep -v "memory/sessions" \
             | grep -v "progress/memory" \
             | grep -v "kit-sync.md" \
-            | grep -v "settings.local.json" || true)
+            | grep -v "settings.local.json" \
+            | grep -v "/.claude/worktrees" || true)
+
+        drift_output=$(echo "$drift_output" | grep -v "Only in .*\.claude: worktrees" || true)
+
 
         drift_count=$(echo "$drift_output" | grep -c . || true)
 
@@ -215,7 +219,8 @@ if grep -R -n "\.agent/" "$ROOT_DIR/.claude" \
     --exclude='README.md' \
     --exclude='settings.local.json' \
     --exclude-dir='memory' \
-    --exclude-dir='progress' > "$claude_agent_refs_file"; then
+    --exclude-dir='progress' \
+    --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
     ref_count=$(wc -l < "$claude_agent_refs_file" | tr -d ' ')
     fail "Found $ref_count unexpected .agent reference(s) under .claude/"
     head -10 "$claude_agent_refs_file" >&2
@@ -259,7 +264,7 @@ else
     info "template/.claude/skill-library is local"
 fi
 
-if grep -R -n "\.agent/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' > "$claude_agent_refs_file"; then
+if grep -R -n "\.agent/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
     ref_count=$(wc -l < "$claude_agent_refs_file" | tr -d ' ')
     fail "Found $ref_count unexpected .agent reference(s) in template/.claude/"
     head -10 "$claude_agent_refs_file" >&2

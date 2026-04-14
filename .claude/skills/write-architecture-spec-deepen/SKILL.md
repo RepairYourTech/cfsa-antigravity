@@ -54,12 +54,14 @@ Ensure event-consumer cross-references are valid and bidirectional.
 2. If this is the last IA shard, run `/audit-ambiguity ia` before any BE spec recommendation.
 3. If IA shards remain, recommend next pending IA shard.
 
-### Step 6 — Review request and constrained next-step recommendation
+### Step 6 — Graph refresh, review request, and constrained next-step recommendation
 
-Present completion with:
+1. Run Protocol 8 fully, including mandatory `memory_compile` graph refresh after tracker verification.
+2. Present completion with:
 - shard link
 - cross-reference verification status
 - ambiguity gate confirmation
+- spec graph refresh confirmation
 - pipeline state and next allowed command
 
 ## Completion Checklist
@@ -71,6 +73,7 @@ Present completion with:
 - [ ] spec pipeline tracker updated
 - [ ] ambiguity gates passed
 - [ ] last-shard audit branch handled correctly
+- [ ] spec graph refreshed via `memory_compile`
 - [ ] review request sent and workflow paused
 
 ## Next Steps

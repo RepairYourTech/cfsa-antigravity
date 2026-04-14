@@ -59,11 +59,13 @@ parameters:
 2. Generate progress files via progress-generation protocol.
 3. Run bootstrap/map completeness gate for planning-critical categories.
 
-### Step 7 — Review request and constrained next step
+### Step 7 — Graph refresh, review request, and constrained next step
 
-1. Present phase plan + progress artifacts for approval.
-2. Stop until explicit approval.
-3. Recommend only `/implement-slice` as next command after approval.
+1. Run `memory_compile` after finalizing phase artifacts so graph/hubs reflect the latest planning state.
+2. Present phase plan + progress artifacts for approval.
+3. Include graph refresh confirmation.
+4. Stop until explicit approval.
+5. Recommend only `/implement-slice` as next command after approval.
 
 ## Completion Checklist
 
@@ -74,6 +76,7 @@ parameters:
 - [ ] acceptance criteria written with citations
 - [ ] phase draft and final plan written
 - [ ] progress files generated
+- [ ] spec graph refreshed via `memory_compile`
 - [ ] review requested with constrained next step
 
 ## Next Steps
