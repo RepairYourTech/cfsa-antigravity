@@ -57,7 +57,33 @@ Every install now scaffolds a shared `.memory/` root at the project level. It is
 └── migrate/     # legacy memory import helpers
 ```
 
-The installer also creates `.mcp.json` so supported runtimes can talk to the shared project-local memory daemon through their own MCP clients, and it merges Claude hook entries into `.claude/settings.json` for automatic capture and daemon startup. The daemon writes runtime state into `.memory/runtime/`, and the semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
+The installer ships the shared memory runtime into `.memory/`, including the project-local MCP server under `.memory/mcp-server/`. Tool-specific MCP client config is intentionally **not** managed by the kit — users wire their own `.mcp.json` / editor settings for the tools they actually use. The daemon writes runtime state into `.memory/runtime/`, and the semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
+
+### MCP client setup and first graph compile
+
+The kit installs the **server/runtime** only. You must configure your tool's MCP client yourself.
+
+For tools that use a workspace `.mcp.json`, point the tool at the shared server entrypoint:
+
+```json
+{
+  "mcpServers": {
+    "cfsa-memory": {
+      "command": "node",
+      "args": [".memory/mcp-server/client.mjs"],
+      "env": {
+        "MEMORY_ROOT": ".memory",
+        "CFSA_MEMORY_HOST": "127.0.0.1",
+        "CFSA_MEMORY_PORT": "4317",
+        "CFSA_MEMORY_URL": "http://127.0.0.1:4317/mcp",
+        "CFSA_MEMORY_HEALTH_URL": "http://127.0.0.1:4317/health"
+      }
+    }
+  }
+}
+```
+
+For an existing project, after wiring your MCP client, trigger the initial graph/index build by running the memory compile path (`memory_compile` via MCP, or the direct compile script fallback) before opening Obsidian. Verify files like `.memory/schema/spec-graph.json` and `.memory/wiki/hubs/spec-graph.md` exist, then open Obsidian at `.memory/`.
 
 This replaces fragmented runtime-local memory as the canonical project memory layer. Runtime-local memory files remain legacy inputs for migration.
 
@@ -101,8 +127,10 @@ A fresh `init` now installs:
 - your selected runtime directories (`.agent/`, `.claude/`, `.factory/`)
 - `docs/`
 - shared `.memory/`
-- `.mcp.json` with the `cfsa-memory` server registration
-- merged Claude hooks in `.claude/settings.json` when Claude is installed
+- the shared memory MCP server/runtime under `.memory/mcp-server/`
+- the rest of the `.memory` scaffold needed to compile graph/index artifacts locally
+
+Tool-specific MCP client config (such as `.mcp.json`) is user-managed and documented above.
 
 Use `--migrate-memory` when upgrading an older installation that still has runtime-local memory you want imported into `.memory/`.
 

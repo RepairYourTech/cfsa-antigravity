@@ -30,11 +30,12 @@ Project root canonical memory / Obsidian vault:
 
 The `.memory/` directory is the canonical project memory layer and is designed to function as an Obsidian-friendly vault inside the project. `.claude/memory/` exists only for Claude-native bridge guidance and session-specific conventions.
 
-A Claude install also gets:
-- `.mcp.json` with the `cfsa-memory` client registration
-- `.claude/settings.json` hook entries for SessionStart, PreCompact, and Stop
-- daemon startup through `.memory/mcp-server/start.mjs`
-- initial `.memory/schema/` compilation during `init`
+A Claude install also gets the shared `.memory/` runtime scaffold, including:
+- the `cfsa-memory` server under `.memory/mcp-server/`
+- daemon startup helpers under `.memory/mcp-server/start.mjs`
+- compile/runtime helpers under `.memory/pipeline/` and `.memory/hooks/`
+
+Tool-specific MCP client config and Claude hook wiring are user-managed. If you want Claude to talk to the shared memory daemon, add the appropriate MCP client config yourself and then run the initial compile before opening Obsidian at `.memory/`.
 
 All runtimes should read and write shared project memory through `.memory/` and the MCP bridge.
 

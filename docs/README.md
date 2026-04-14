@@ -165,14 +165,24 @@ npx cfsa-antigravity init
 
 ### Unified memory scaffold
 
-`init` now also installs a shared `.memory/` directory plus `.mcp.json`. The `.memory/` directory is designed to function as an Obsidian vault inside the project.
+`init` now installs a shared `.memory/` directory. The `.memory/` directory is designed to function as an Obsidian vault inside the project.
 
 - `.memory/raw/` stores append-only session and event captures
 - `.memory/wiki/` stores compiled patterns, decisions, blockers, and knowledge pages
 - `.memory/schema/` stores machine-readable retrieval artifacts, including semantic index/manifests
-- `.memory/mcp-server/client.mjs` is the per-runtime MCP client entrypoint to the shared daemon
+- `.memory/mcp-server/client.mjs` is the MCP bridge entrypoint for the shared daemon
 - `.memory/mcp-server/daemon.mjs` is the shared project-local MCP daemon
 - `.memory/hooks/` contains Claude-oriented hook entrypoints
+
+The kit installs the memory **server/runtime** only. `.mcp.json` and other tool-specific MCP client settings are user-managed.
+
+### Initial graph compile for existing projects
+
+After installing or updating the `.memory` runtime in an existing project:
+1. Configure your tool's MCP client manually.
+2. Trigger the first memory compile (`memory_compile` via MCP, or the direct compile script fallback).
+3. Verify graph/index artifacts exist under `.memory/schema/` and `.memory/wiki/`.
+4. Open Obsidian at `.memory/`.
 
 If you are upgrading an older project with siloed runtime-local memory, run:
 

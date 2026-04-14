@@ -274,8 +274,10 @@ The kit now separates runtime execution state from shared project memory:
 
 - Runtime progress still lives under `.agent/progress/`, `.claude/progress/`, and `.factory/progress/`
 - Canonical cross-runtime memory lives under `.memory/`
-- Claude uses hooks in `.claude/settings.json` to flush and compile memory automatically
-- All runtimes can access the same memory through `.mcp.json` -> `cfsa-memory` -> `.memory/mcp-server/client.mjs` -> shared daemon `.memory/mcp-server/daemon.mjs`
+- Claude can use hooks in `.claude/settings.json` to flush and compile memory automatically when the user chooses to wire them
+- All runtimes can access the same memory through their own MCP client config -> `cfsa-memory` -> `.memory/mcp-server/client.mjs` -> shared daemon `.memory/mcp-server/daemon.mjs`
+
+The kit ships the server/runtime. Tool-specific MCP client configuration (for example `.mcp.json`) remains user-managed.
 
 This lets Claude, Antigravity, Factory, Codex, and future runtimes query the same project memory without each runtime owning a separate canonical store.
 

@@ -403,7 +403,7 @@ function installMemoryScaffold(targetDir, opts) {
 
     if (opts.dryRun) {
         info(`Would copy ${c.bold}.memory/${c.reset} (${countFiles(srcMemoryDir)} files)`);
-        info(`Would merge ${c.bold}.mcp.json${c.reset} and ${c.bold}.claude/settings.json${c.reset}`);
+        info(`Would install the shared memory runtime only; MCP client config remains user-managed`);
         return;
     }
 
@@ -419,82 +419,8 @@ function installMemoryScaffold(targetDir, opts) {
         info(`Merged ${c.bold}.memory/${c.reset}`);
     }
 
-    const mcpPath = join(targetDir, ".mcp.json");
-    const currentMcp = readJsonFile(mcpPath, {});
-    const nextMcp = {
-        ...currentMcp,
-        mcpServers: {
-            ...(currentMcp.mcpServers || {}),
-            "cfsa-memory": {
-                command: "node",
-                args: [".memory/mcp-server/client.mjs"],
-                env: {
-                    MEMORY_ROOT: ".memory",
-                    CFSA_MEMORY_HOST: "127.0.0.1",
-                    CFSA_MEMORY_PORT: "4317",
-                    CFSA_MEMORY_URL: "http://127.0.0.1:4317/mcp",
-                    CFSA_MEMORY_HEALTH_URL: "http://127.0.0.1:4317/health"
-                }
-            }
-        }
-    };
-    writeJsonFile(mcpPath, nextMcp);
-    info(`Updated ${c.bold}.mcp.json${c.reset}`);
-
-    const claudeSettingsPath = join(targetDir, ".claude", "settings.json");
-    const currentClaudeSettings = readJsonFile(claudeSettingsPath, {});
-    const memoryHooks = {
-        SessionStart: [
-            {
-                hooks: [
-                    {
-                        type: "command",
-                        command: "node .memory/hooks/session-start.mjs"
-                    }
-                ]
-            }
-        ],
-        PreCompact: [
-            {
-                matcher: "manual|auto",
-                hooks: [
-                    {
-                        type: "command",
-                        command: "node .memory/hooks/pre-compact.mjs"
-                    }
-                ]
-            }
-        ],
-        Stop: [
-            {
-                hooks: [
-                    {
-                        type: "command",
-                        command: "node .memory/hooks/session-end.mjs"
-                    }
-                ]
-            }
-        ]
-    };
-    const daemonHooks = {
-        SessionStart: [
-            {
-                hooks: [
-                    {
-                        type: "command",
-                        command: "node .memory/mcp-server/start.mjs"
-                    }
-                ]
-            }
-        ]
-    };
-
-    const nextClaudeSettings = {
-        ...currentClaudeSettings,
-        hooks: mergeHookConfig(mergeHookConfig(currentClaudeSettings.hooks || {}, daemonHooks), memoryHooks)
-    };
-    writeJsonFile(claudeSettingsPath, nextClaudeSettings);
-    info(`Updated ${c.bold}.claude/settings.json${c.reset}`);
+    info(`Installed ${c.bold}.memory/${c.reset} runtime scaffold`);
+    info(`MCP client configuration is user-managed; see the README for tool-specific setup and the initial graph compile step.`);
 }
 
 async function migrateMemory(targetDir) {
@@ -664,7 +590,7 @@ async function cmdInit(opts) {
         log("");
         log(`${c.bold}Next steps:${c.reset}`);
         log(`  1. Open your project in your agent of choice`);
-        log(`  2. Verify ${c.cyan}.memory/${c.reset}, ${c.cyan}.mcp.json${c.reset}, and ${c.cyan}.claude/settings.json${c.reset}`);
+        log(`  2. Verify ${c.cyan}.memory/${c.reset} and configure your tool-specific MCP client manually if needed (see README)`);
         log(`  3. Run ${c.cyan}/ideate${c.reset} to start the pipeline`);
         log("");
         log(`${c.dim}Documentation: https://github.com/RepairYourTech/cfsa-antigravity${c.reset}`);
@@ -814,7 +740,6 @@ function cmdStatus() {
         { path: ".memory/wiki/hubs/phases.md", label: "Phase graph hub" },
         { path: ".memory/wiki/hubs/operations.md", label: "Operations graph hub" },
         { path: ".memory/wiki/hubs/surfaces.md", label: "Surface graph hub" },
-        { path: ".mcp.json", label: "MCP config" },
     ];
 
     if (!args.json) {
@@ -869,24 +794,27 @@ function cmdStatus() {
             const mcpConfig = JSON.parse(readFileSync(mcpPath, "utf-8"));
             if (mcpConfig.mcpServers?.["cfsa-memory"]?.args?.includes(".memory/mcp-server/client.mjs")) {
                 if (!args.json) {
-                    info(`  MCP registration ${c.dim}(cfsa-memory configured)${c.reset}`);
+                    info(`  MCP client config ${c.dim}(cfsa-memory configured)${c.reset}`);
                 }
-                statusJson.memoryHealth.push({ label: "MCP registration", status: "present", detail: "cfsa-memory configured" });
+                statusJson.memoryHealth.push({ label: "MCP client config", status: "present", detail: "cfsa-memory configured" });
                 totalInstalled++;
             } else {
                 if (!args.json) {
-                    warn("  MCP registration — cfsa-memory missing or misconfigured");
+                    warn("  MCP client config — present but cfsa-memory is not configured");
                 }
-                statusJson.memoryHealth.push({ label: "MCP registration", status: "missing", detail: "cfsa-memory missing or misconfigured" });
-                totalMissing++;
+                statusJson.memoryHealth.push({ label: "MCP client config", status: "partial", detail: "present but cfsa-memory is not configured" });
             }
         } catch {
             if (!args.json) {
-                warn("  MCP config — invalid JSON");
+                warn("  MCP client config — invalid JSON");
             }
-            statusJson.memoryHealth.push({ label: "MCP config", status: "invalid" });
-            totalMissing++;
+            statusJson.memoryHealth.push({ label: "MCP client config", status: "invalid" });
         }
+    } else {
+        if (!args.json) {
+            warn("  MCP client config — user-managed (not configured here)");
+        }
+        statusJson.memoryHealth.push({ label: "MCP client config", status: "user-managed", detail: "configure your tool manually if needed" });
     }
 
     const claudeSettingsPath = join(targetDir, ".claude", "settings.json");
@@ -896,9 +824,9 @@ function cmdStatus() {
             const hasHooks = Boolean(claudeSettings.hooks?.SessionStart?.length);
             if (hasHooks) {
                 if (!args.json) {
-                    info(`  Claude memory hooks ${c.dim}(configured)${c.reset}`);
+                    info(`  Claude settings ${c.dim}(hooks configured)${c.reset}`);
                 }
-                statusJson.memoryHealth.push({ label: "Claude memory hooks", status: "present", detail: "configured" });
+                statusJson.memoryHealth.push({ label: "Claude settings", status: "present", detail: "hooks configured" });
                 totalInstalled++;
             } else {
                 if (!args.json) {

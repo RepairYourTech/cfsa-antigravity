@@ -438,15 +438,21 @@ else
 fi
 
 # ──────────────────────────────────────
-# 11. MCP registration contract checks
+# 11. Memory runtime install contract checks
 # ──────────────────────────────────────
-if grep -F -q '"cfsa-memory"' "$ROOT_DIR/bin/cli.mjs" && \
-   grep -F -q '.memory/mcp-server/client.mjs' "$ROOT_DIR/bin/cli.mjs" && \
-   grep -F -q '.memory/mcp-server/start.mjs' "$ROOT_DIR/bin/cli.mjs" && \
-   grep -F -q '.mcp.json' "$ROOT_DIR/bin/cli.mjs"; then
-    info "CLI contains unified memory MCP registration contract"
+if grep -F -q 'template/.memory/' "$ROOT_DIR/bin/cli.mjs" && \
+   grep -F -q 'Installed ${c.bold}.memory/${c.reset} runtime scaffold' "$ROOT_DIR/bin/cli.mjs"; then
+    info "CLI contains unified memory runtime install contract"
 else
-    fail "bin/cli.mjs is missing unified memory MCP registration contract"
+    fail "bin/cli.mjs is missing unified memory runtime install contract"
+fi
+
+if grep -F -q 'writeJsonFile(mcpPath' "$ROOT_DIR/bin/cli.mjs" || \
+   grep -F -q 'writeJsonFile(claudeSettingsPath' "$ROOT_DIR/bin/cli.mjs" || \
+   grep -F -q 'mergeHookConfig(mergeHookConfig' "$ROOT_DIR/bin/cli.mjs"; then
+    fail "bin/cli.mjs still auto-manages MCP client config or Claude settings"
+else
+    info "CLI leaves MCP client config and Claude settings user-managed"
 fi
 
 # ──────────────────────────────────────
