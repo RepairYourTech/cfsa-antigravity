@@ -1,0 +1,13 @@
+{
+  "showLineNumber": true,
+  "alwaysUpdateLinks": true,
+  "attachmentFolderPath": "raw/assets",
+  "newFileLocation": "current",
+  "spellcheck": true,
+  "userIgnoreFilters": [
+    "schema/",
+    "mcp-server/",
+    "hooks/",
+    "migrate/"
+  ]
+}
