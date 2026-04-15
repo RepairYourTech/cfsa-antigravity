@@ -1,5 +1,13 @@
 # cfsa-antigravity
 
+## 3.0.2
+
+### Patch Changes
+
+- Fix the unified memory compile pipeline so vault-native spec files are indexed as first-class inputs even when raw memory logs are empty.
+
+  This patch ensures projects with real specs under `.memory/wiki/specs/` get meaningful compile summaries, hubs, and graph/index artifacts without depending on raw JSONL memory records.
+
 ## 3.0.1
 
 ### Patch Changes
