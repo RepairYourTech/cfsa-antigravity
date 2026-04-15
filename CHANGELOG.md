@@ -1,5 +1,13 @@
 # cfsa-antigravity
 
+## 3.0.1
+
+### Patch Changes
+
+- Ship the post-3.0.0 fixes for the unified memory scaffold and MCP setup boundary.
+
+  This patch release commits the actual root `.memory` scaffold and Obsidian vault config, finalizes the MCP ownership boundary so `init` installs only the server/runtime while users configure their own client settings, and updates the docs/checks to include the explicit initial graph compile path for existing projects.
+
 ## 3.0.0
 
 ### Major Changes
