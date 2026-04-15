@@ -57,7 +57,11 @@ Every install now scaffolds a shared `.memory/` root at the project level. It is
 └── migrate/     # legacy memory import helpers
 ```
 
-The installer ships the shared memory runtime into `.memory/`, including the project-local MCP server under `.memory/mcp-server/`. Tool-specific MCP client config is intentionally **not** managed by the kit — users wire their own `.mcp.json` / editor settings for the tools they actually use. The daemon writes runtime state into `.memory/runtime/`, and the semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
+The installer ships the shared memory runtime into `.memory/`, including the project-local MCP server under `.memory/mcp-server/`. Tool-specific MCP client config is intentionally **not** managed by the kit — users wire their own `.mcp.json` / editor settings for the tools they actually use. The daemon writes workspace-local runtime state into `.memory/runtime/`, and clients resolve that state before proxying requests so one workspace does not silently talk to another workspace's daemon. The semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
+
+The practical contract is: point your tool at `.memory/mcp-server/client.mjs`, start the daemon for that workspace, and let the client discover the correct local daemon from `.memory/runtime/cfsa-memory-daemon.json`.
+
+If the daemon health payload reports a different `projectRoot` than the client expects, the client now fails loudly instead of proxying requests to the wrong workspace.
 
 ### MCP client setup and first graph compile
 
@@ -70,20 +74,32 @@ For tools that use a workspace `.mcp.json`, point the tool at the shared server 
   "mcpServers": {
     "cfsa-memory": {
       "command": "node",
+      "args": [".memory/mcp-server/client.mjs"]
+    }
+  }
+}
+```
+
+This is the preferred default because the client resolves the correct workspace-local daemon from `.memory/runtime/cfsa-memory-daemon.json`.
+
+If you need a custom host/port, use env overrides:
+
+```json
+{
+  "mcpServers": {
+    "cfsa-memory": {
+      "command": "node",
       "args": [".memory/mcp-server/client.mjs"],
       "env": {
-        "MEMORY_ROOT": ".memory",
         "CFSA_MEMORY_HOST": "127.0.0.1",
-        "CFSA_MEMORY_PORT": "4317",
-        "CFSA_MEMORY_URL": "http://127.0.0.1:4317/mcp",
-        "CFSA_MEMORY_HEALTH_URL": "http://127.0.0.1:4317/health"
+        "CFSA_MEMORY_PORT": "4317"
       }
     }
   }
 }
 ```
 
-For an existing project, after wiring your MCP client, trigger the initial graph/index build by running the memory compile path (`memory_compile` via MCP, or the direct compile script fallback) before opening Obsidian. Verify files like `.memory/schema/spec-graph.json` and `.memory/wiki/hubs/spec-graph.md` exist, then open Obsidian at `.memory/`.
+For an existing project, after wiring your MCP client, start the workspace-local daemon so it writes `.memory/runtime/cfsa-memory-daemon.json`, then trigger the initial graph/index build by running the memory compile path (`memory_compile` via MCP, or the direct compile script fallback) before opening Obsidian. Verify files like `.memory/schema/spec-graph.json` and `.memory/wiki/hubs/spec-graph.md` exist, then open Obsidian at `.memory/`.
 
 This replaces fragmented runtime-local memory as the canonical project memory layer. Runtime-local memory files remain legacy inputs for migration.
 

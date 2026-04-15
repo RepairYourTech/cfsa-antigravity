@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 3.0.3
+
+### Patch Changes
+
+- Fix workspace-local MCP routing so clients resolve the correct daemon from runtime state, reject cross-workspace mismatches, and document the minimal recommended client configuration.
+
 ## 3.0.2
 
 ### Patch Changes

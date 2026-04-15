@@ -37,6 +37,8 @@ A Claude install also gets the shared `.memory/` runtime scaffold, including:
 
 Tool-specific MCP client config and Claude hook wiring are user-managed. If you want Claude to talk to the shared memory daemon, add the appropriate MCP client config yourself and then run the initial compile before opening Obsidian at `.memory/`.
 
+Claude should point at `.memory/mcp-server/client.mjs`. That client now resolves the daemon from the current workspace's `.memory/runtime/cfsa-memory-daemon.json` and validates the daemon's `projectRoot` from `/health`, so a Claude session in one repo will not silently proxy into another repo's daemon.
+
 All runtimes should read and write shared project memory through `.memory/` and the MCP bridge.
 
 ```text

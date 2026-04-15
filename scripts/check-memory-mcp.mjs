@@ -1,24 +1,39 @@
 #!/usr/bin/env node
 
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 
 const rootDir = resolve(new URL("..", import.meta.url).pathname);
-const serverPath = join(rootDir, "memory-src", "mcp-server", "index.mjs");
 const daemonPath = join(rootDir, "memory-src", "mcp-server", "daemon.mjs");
 const clientPath = join(rootDir, "memory-src", "mcp-server", "client.mjs");
+const runtimePath = join(rootDir, "memory-src", "mcp-server", "runtime.mjs");
 const fixtureRoot = mkdtempSync(join(tmpdir(), "cfsa-memory-mcp-"));
-mkdirSync(join(fixtureRoot, ".memory", "mcp-server"), { recursive: true });
-mkdirSync(join(fixtureRoot, ".memory", "wiki", "specs", "ia"), { recursive: true });
-mkdirSync(join(fixtureRoot, ".memory", "wiki", "specs", "be"), { recursive: true });
-writeFileSync(join(fixtureRoot, ".memory", "wiki", "specs", "ia", "00-auth.md"), "# IA Shard 00 Auth\n", "utf8");
-writeFileSync(join(fixtureRoot, ".memory", "wiki", "specs", "be", "00-auth-be.md"), "# BE 00 Auth\n> **IA Source**: [00-auth.md](../../ia/00-auth.md)\n", "utf8");
+const wrongRoot = mkdtempSync(join(tmpdir(), "cfsa-memory-wrong-"));
+
+function ensureFixture(root) {
+  mkdirSync(join(root, ".memory", "mcp-server"), { recursive: true });
+  mkdirSync(join(root, ".memory", "wiki", "specs", "ia"), { recursive: true });
+  mkdirSync(join(root, ".memory", "wiki", "specs", "be"), { recursive: true });
+  writeFileSync(join(root, ".memory", "wiki", "specs", "ia", "00-auth.md"), "# IA Shard 00 Auth\n", "utf8");
+  writeFileSync(join(root, ".memory", "wiki", "specs", "be", "00-auth-be.md"), "# BE 00 Auth\n> **IA Source**: [00-auth.md](../../ia/00-auth.md)\n", "utf8");
+  copyFileSync(daemonPath, join(root, ".memory", "mcp-server", "daemon.mjs"));
+  copyFileSync(clientPath, join(root, ".memory", "mcp-server", "client.mjs"));
+  copyFileSync(runtimePath, join(root, ".memory", "mcp-server", "runtime.mjs"));
+}
+
+ensureFixture(fixtureRoot);
+ensureFixture(wrongRoot);
+
+function cleanup() {
+  rmSync(fixtureRoot, { recursive: true, force: true });
+  rmSync(wrongRoot, { recursive: true, force: true });
+}
 
 function fail(message) {
   console.error(`[memory-mcp] FAIL: ${message}`);
-  rmSync(fixtureRoot, { recursive: true, force: true });
+  cleanup();
   process.exit(1);
 }
 
@@ -30,23 +45,7 @@ function parseTextResult(response) {
   return JSON.parse(text);
 }
 
-async function run() {
-  const fs = await import("node:fs");
-  fs.copyFileSync(daemonPath, join(fixtureRoot, ".memory", "mcp-server", "daemon.mjs"));
-  fs.copyFileSync(clientPath, join(fixtureRoot, ".memory", "mcp-server", "client.mjs"));
-  const port = String(5300 + Math.floor(Math.random() * 1000));
-  const daemon = spawn("node", [daemonPath], {
-    cwd: fixtureRoot,
-    stdio: ["ignore", "ignore", "inherit"],
-    env: { ...process.env, CFSA_MEMORY_PORT: port, CFSA_MEMORY_HOST: "127.0.0.1" },
-  });
-
-  const child = spawn("node", [clientPath], {
-    cwd: fixtureRoot,
-    stdio: ["pipe", "pipe", "inherit"],
-    env: { ...process.env, CFSA_MEMORY_PORT: port, CFSA_MEMORY_HOST: "127.0.0.1", CFSA_MEMORY_URL: `http://127.0.0.1:${port}/mcp`, CFSA_MEMORY_HEALTH_URL: `http://127.0.0.1:${port}/health` },
-  });
-
+function createRpcHarness(child) {
   let buffer = "";
   const pending = new Map();
   child.stdout.setEncoding("utf8");
@@ -65,12 +64,28 @@ async function run() {
     }
   });
 
-  function request(id, method, params = {}) {
+  return function request(id, method, params = {}) {
     return new Promise((resolveRequest) => {
       pending.set(id, resolveRequest);
       child.stdin.write(`${JSON.stringify({ jsonrpc: "2.0", id, method, params })}\n`);
     });
-  }
+  };
+}
+
+async function run() {
+  const port = String(5300 + Math.floor(Math.random() * 1000));
+  const daemon = spawn("node", [daemonPath], {
+    cwd: fixtureRoot,
+    stdio: ["ignore", "ignore", "inherit"],
+    env: { ...process.env, CFSA_MEMORY_PROJECT_ROOT: fixtureRoot, CFSA_MEMORY_PORT: port, CFSA_MEMORY_HOST: "127.0.0.1" },
+  });
+
+  const child = spawn("node", [clientPath], {
+    cwd: fixtureRoot,
+    stdio: ["pipe", "pipe", "inherit"],
+    env: { ...process.env, CFSA_MEMORY_PROJECT_ROOT: fixtureRoot, CFSA_MEMORY_PORT: port, CFSA_MEMORY_HOST: "127.0.0.1", CFSA_MEMORY_URL: `http://127.0.0.1:${port}/mcp`, CFSA_MEMORY_HEALTH_URL: `http://127.0.0.1:${port}/health` },
+  });
+  const request = createRpcHarness(child);
 
   const initialize = await request(1, "initialize", {});
   if (initialize.result?.serverInfo?.name !== "cfsa-memory") {
@@ -151,10 +166,23 @@ async function run() {
     fail(`Lint failed: ${JSON.stringify(linted)}`);
   }
 
-  console.log("[memory-mcp] PASS: initialize, tools/list, flush, compile, query, graph-query, lint");
+  const mismatchClient = spawn("node", [clientPath], {
+    cwd: wrongRoot,
+    stdio: ["pipe", "pipe", "inherit"],
+    env: { ...process.env, CFSA_MEMORY_PROJECT_ROOT: wrongRoot, CFSA_MEMORY_PORT: port, CFSA_MEMORY_HOST: "127.0.0.1", CFSA_MEMORY_URL: `http://127.0.0.1:${port}/mcp`, CFSA_MEMORY_HEALTH_URL: `http://127.0.0.1:${port}/health` },
+  });
+  const mismatchRequest = createRpcHarness(mismatchClient);
+  const mismatch = await mismatchRequest(99, "initialize", {});
+  const mismatchMessage = mismatch.error?.message || "";
+  if (!mismatchMessage.includes("Workspace mismatch")) {
+    fail(`Expected workspace mismatch error, got: ${JSON.stringify(mismatch)}`);
+  }
+
+  console.log("[memory-mcp] PASS: workspace-local routing works and cross-workspace mismatch is rejected");
+  mismatchClient.kill();
   child.kill();
   daemon.kill();
-  rmSync(fixtureRoot, { recursive: true, force: true });
+  cleanup();
 }
 
 run().catch((error) => fail(error instanceof Error ? error.message : String(error)));

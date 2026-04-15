@@ -5,12 +5,14 @@ import { memoryGraphQuery } from "./tools/graph.mjs";
 import { memoryIngest, memoryLogDaily, memoryGetActiveBlockers } from "./tools/ingest.mjs";
 import { memoryLint } from "./tools/lint.mjs";
 import { memoryContext, memoryQuery, memorySemanticStatus } from "./tools/query.mjs";
-import { clearDaemonState, writeDaemonState } from "./runtime.mjs";
+import { clearDaemonState, resolveProjectRoot, workspaceMemoryRoot, writeDaemonState } from "./runtime.mjs";
 
 const host = process.env.CFSA_MEMORY_HOST || "127.0.0.1";
 const preferredPort = Number(process.env.CFSA_MEMORY_PORT || 4317);
-const projectRoot = process.cwd();
+const projectRoot = resolveProjectRoot();
+const memoryRoot = workspaceMemoryRoot(projectRoot);
 let actualPort = preferredPort;
+const startedAt = new Date().toISOString();
 
 const tools = {
   memory_flush: memoryFlush,
@@ -44,8 +46,11 @@ function statePayload(extra = {}) {
     host,
     port: actualPort,
     requestedPort: preferredPort,
+    endpoint: `http://${host}:${actualPort}/mcp`,
     healthUrl: `http://${host}:${actualPort}/health`,
-    startedAt: new Date().toISOString(),
+    projectRoot,
+    memoryRoot,
+    startedAt,
     ...extra,
   };
 }

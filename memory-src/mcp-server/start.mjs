@@ -1,9 +1,9 @@
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { clearDaemonState, processExists, readDaemonState, waitForHealth } from "./runtime.mjs";
+import { clearDaemonState, processExists, readDaemonState, resolveProjectRoot, waitForHealth } from "./runtime.mjs";
 
-const root = process.cwd();
+const root = resolveProjectRoot();
 const daemonPath = join(root, ".memory", "mcp-server", "daemon.mjs");
 if (!existsSync(daemonPath)) {
   console.error(`Missing daemon at ${daemonPath}`);
@@ -25,10 +25,12 @@ if (current?.pid && processExists(current.pid)) {
 }
 
 const child = spawn("node", [daemonPath], {
+  cwd: root,
   detached: true,
   stdio: "ignore",
   env: {
     ...process.env,
+    CFSA_MEMORY_PROJECT_ROOT: root,
     CFSA_MEMORY_HOST: host,
     CFSA_MEMORY_PORT: String(port),
   },

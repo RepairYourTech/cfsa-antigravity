@@ -48,6 +48,8 @@ The kit ships multiple runtime trees in this repository:
 
 The `.memory/` directory is not just an internal store; it is intended to be an Obsidian-friendly vault within the project space so humans and agents can browse the same memory corpus directly. It also mirrors durable `.memory/wiki/specs/` artifacts into graph-friendly vault notes so IA/BE/FE specs, phase plans, and related knowledge become traversable Obsidian graph nodes. Runtime clients should connect to one shared project-local memory daemon rather than each spawning their own isolated server process.
 
+That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryRoot`, and endpoint metadata into `.memory/runtime/cfsa-memory-daemon.json` and its `/health` payload; the client resolves the local workspace daemon from that runtime state and rejects mismatched workspace identity instead of trusting a shared default port.
+
 ### Antigravity Runtime Components
 
 ```text

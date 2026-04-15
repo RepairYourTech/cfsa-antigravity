@@ -176,6 +176,8 @@ npx cfsa-antigravity init
 
 The kit installs the memory **server/runtime** only. `.mcp.json` and other tool-specific MCP client settings are user-managed.
 
+The MCP routing contract is workspace-local: the daemon writes `.memory/runtime/cfsa-memory-daemon.json`, the client reads that file for the current workspace, then validates the daemon's `projectRoot` from `/health` before proxying requests. This prevents cross-workspace collisions when multiple projects have daemons running.
+
 ### Initial graph compile for existing projects
 
 After installing or updating the `.memory` runtime in an existing project:
