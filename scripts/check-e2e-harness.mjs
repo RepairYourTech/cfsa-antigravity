@@ -51,6 +51,9 @@ try {
   if (!compiled.ok || (compiled.specGraphNodes ?? 0) < 1 || (compiled.specGraphEdges ?? 0) < 1) {
     fail(`Compile did not emit graph outputs: ${JSON.stringify(compiled)}`);
   }
+  if ((compiled.knowledgeEntries ?? 0) < 4 || (compiled.chunkEntries ?? 0) < 1) {
+    fail(`Compile did not index spec files as first-class entries: ${JSON.stringify(compiled)}`);
+  }
 
   const specGraphPath = join(fixtureRoot, ".memory", "schema", "spec-graph.json");
   const specGraphHubPath = join(fixtureRoot, ".memory", "wiki", "hubs", "spec-graph.md");

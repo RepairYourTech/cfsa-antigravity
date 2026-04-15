@@ -2,6 +2,7 @@ import { join } from "node:path";
 import {
   chunkText,
   ensureMemoryScaffold,
+  getFileText,
   getMemoryRoot,
   listFilesRecursively,
   readJsonl,
@@ -84,8 +85,64 @@ export function compileMemory(options = {}) {
   const knowledge = records.filter((record) => !["pattern", "decision", "blocker"].includes(record.type));
 
   const knowledgeDir = join(memoryRoot, "wiki", "knowledge");
+  const specsRoot = join(memoryRoot, "wiki", "specs");
   const indexEntries = [];
   const chunkEntries = [];
+  const specFiles = listFilesRecursively(specsRoot)
+    .filter((filePath) => filePath.endsWith(".md"))
+    .filter((filePath) => !filePath.endsWith("README.md"))
+    .filter((filePath) => !filePath.endsWith(".gitkeep"));
+
+  const specTypeForPath = (relativePath) => {
+    if (relativePath.includes('/specs/ia/')) return 'ia-spec';
+    if (relativePath.includes('/specs/be/')) return 'be-spec';
+    if (relativePath.includes('/specs/fe/')) return 'fe-spec';
+    if (relativePath.includes('/specs/phases/')) return 'phase-plan';
+    if (relativePath.includes('/specs/ideation/')) return 'ideation';
+    if (relativePath.includes('/specs/audits/')) return 'audit';
+    if (relativePath.includes('/specs/architecture/')) return 'architecture';
+    return 'spec';
+  };
+
+  const specTitleForText = (relativePath, text) => {
+    const heading = text.split("\n").find((line) => line.startsWith("# "));
+    if (heading) {
+      return heading.replace(/^#\s+/, '').trim();
+    }
+    return relativePath.split('/').at(-1)?.replace(/\.md$/, '') ?? relativePath;
+  };
+
+  for (const filePath of specFiles) {
+    const text = getFileText(filePath, '');
+    if (!text.trim()) {
+      continue;
+    }
+    const relativePath = toRelativePath(projectRoot, filePath);
+    const type = specTypeForPath(relativePath);
+    const title = specTitleForText(relativePath, text);
+    indexEntries.push({
+      id: `spec:${relativePath.replace(/^\.memory\/wiki\/specs\//, '').replace(/\.md$/, '')}`,
+      type,
+      title,
+      path: relativePath,
+      source: relativePath,
+      agent: 'spec-vault',
+      timestamp: 'spec-vault',
+      excerpt: text.slice(0, 240),
+    });
+
+    for (const [index, chunk] of chunkText(text).entries()) {
+      chunkEntries.push({
+        id: `spec:${relativePath}:${index + 1}`,
+        parentId: `spec:${relativePath.replace(/^\.memory\/wiki\/specs\//, '').replace(/\.md$/, '')}`,
+        path: relativePath,
+        text: chunk,
+      });
+    }
+  }
+
+  const seenIndexEntryIds = new Set(indexEntries.map((entry) => entry.id));
+  const seenChunkEntryIds = new Set(chunkEntries.map((entry) => entry.id));
 
   const getRecordPath = (record) => {
     if (record.type === "pattern") {
@@ -111,24 +168,32 @@ export function compileMemory(options = {}) {
 
   for (const record of records) {
     const absolutePath = getRecordPath(record);
-    indexEntries.push({
-      id: record.id,
-      type: record.type,
-      title: record.title ?? record.id,
-      path: toRelativePath(projectRoot, absolutePath),
-      source: record.source,
-      agent: record.agent,
-      timestamp: record.timestamp,
-      excerpt: record.text.slice(0, 240),
-    });
+    if (!seenIndexEntryIds.has(record.id)) {
+      indexEntries.push({
+        id: record.id,
+        type: record.type,
+        title: record.title ?? record.id,
+        path: toRelativePath(projectRoot, absolutePath),
+        source: record.source,
+        agent: record.agent,
+        timestamp: record.timestamp,
+        excerpt: record.text.slice(0, 240),
+      });
+      seenIndexEntryIds.add(record.id);
+    }
 
     for (const [index, chunk] of chunkText(record.text).entries()) {
+      const chunkId = `${record.id}:${index + 1}`;
+      if (seenChunkEntryIds.has(chunkId)) {
+        continue;
+      }
       chunkEntries.push({
-        id: `${record.id}:${index + 1}`,
+        id: chunkId,
         parentId: record.id,
         path: toRelativePath(projectRoot, absolutePath),
         text: chunk,
       });
+      seenChunkEntryIds.add(chunkId);
     }
   }
 
