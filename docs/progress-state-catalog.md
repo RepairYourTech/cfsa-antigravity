@@ -12,6 +12,14 @@ All runtimes must read and write pipeline progress at:
 
 This path owns phase progress, slice checklists, session logs, and the spec-pipeline tracker.
 
+Kit installation sync state is also project-owned and lives at:
+
+```text
+.memory/pipeline/kit-sync.md
+```
+
+This path owns the upstream URL, last synced commit, last synced timestamp, kit version, and installed runtime list.
+
 ## Runtime Paths
 
 The following paths are not canonical progress stores and must not be referenced by workflow, skill, rule, or instruction files as active state locations:
@@ -37,6 +45,7 @@ These paths may appear only as legacy migration source paths.
 | Kit architecture docs | Reclassified runtime-local progress folders as legacy migration inputs only |
 | Template build/check scripts | Moved scaffold and integrity checks to `.memory/pipeline/progress/` |
 | Shipped scaffold | Removed pre-shipped runtime progress folders; added `.memory/pipeline/progress/` scaffold |
+| Kit sync state | Moved upstream sync baseline from runtime folders to `.memory/pipeline/kit-sync.md` |
 
 ## Intentional Legacy References
 

@@ -45,7 +45,7 @@ const RUNTIME_DISPLAY = {
 function discoverRuntimes() {
     if (!existsSync(TEMPLATE_DIR)) return [];
     return readdirSync(TEMPLATE_DIR, { withFileTypes: true })
-        .filter(e => e.isDirectory() && e.name.startsWith(".") && existsSync(join(TEMPLATE_DIR, e.name, "kit-sync.md")))
+        .filter(e => e.isDirectory() && Object.hasOwn(RUNTIME_DISPLAY, e.name))
         .map(e => {
             const meta = RUNTIME_DISPLAY[e.name];
             return {
@@ -732,6 +732,7 @@ function cmdStatus() {
 
     const memoryChecks = [
         { path: ".memory", label: "Unified memory root" },
+        { path: ".memory/pipeline/kit-sync.md", label: "Kit sync state" },
         { path: ".memory/mcp-server/daemon.mjs", label: "Memory MCP daemon" },
         { path: ".memory/mcp-server/client.mjs", label: "Memory MCP client" },
         { path: ".memory/runtime", label: "Memory daemon runtime dir" },

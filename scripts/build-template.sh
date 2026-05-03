@@ -146,23 +146,26 @@ EOF
 EOF
 fi
 
-# --- Generate kit-sync.md (sync tracking for installations) ---
+# --- Generate canonical kit sync state (sync tracking for installations) ---
 COMMIT_HASH=$(git rev-parse HEAD)
 KIT_VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
 BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 info "Generating kit sync state (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
-for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.codex/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md" "$TEMPLATE_DIR/.factory/kit-sync.md"; do
-[[ -d "$(dirname "$sync_file")" ]] || continue
-cat > "$sync_file" << EOF
+mkdir -p "$TEMPLATE_DIR/.memory/pipeline"
+cat > "$TEMPLATE_DIR/.memory/pipeline/kit-sync.md" << EOF
 # Kit Sync State
 
 upstream: https://github.com/RepairYourTech/cfsa-antigravity
 last_synced_commit: $COMMIT_HASH
 last_synced_at: $BUILD_TIMESTAMP
 kit_version: $KIT_VERSION
+installed_runtimes:
+  - agent
+  - codex
+  - claude
+  - factory
 EOF
-done
 
 # --- Summary ---
 file_count=$(find "$TEMPLATE_DIR" -type f | wc -l | tr -d ' ')

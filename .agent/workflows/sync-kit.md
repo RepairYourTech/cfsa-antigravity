@@ -16,10 +16,10 @@ Pull improvements from the upstream [cfsa-antigravity](https://github.com/Repair
 
 ## 0. Read sync state
 
-Read `.agent/kit-sync.md` in the project root.
+Read `.memory/pipeline/kit-sync.md` in the project root.
 
 - **File exists** → extract `last_synced_commit`, `upstream`, and `kit_version` values. Proceed to Step 1.
-- **File missing** → **HARD STOP**: "No sync tracking file found. This file is auto-generated during kit installation. To fix: run `npx cfsa-antigravity init --force` to reinstall the kit with sync tracking, or manually create `.agent/kit-sync.md` with the upstream URL and the commit hash of your last known kit version."
+- **File missing** → **HARD STOP**: "No sync tracking file found. This file is auto-generated during kit installation. To fix: run `npx cfsa-antigravity init --force` to reinstall the kit with sync tracking, or manually create `.memory/pipeline/kit-sync.md` with the upstream URL and the commit hash of your last known kit version."
 
 ---
 
@@ -237,7 +237,7 @@ Read the upstream repository's `package.json` file and extract the `"version"` f
 
 **Validation gate**: Before writing, verify the extracted version matches `/^\d+\.\d+\.\d+$/`. If it doesn't (e.g., it's `main`, `latest`, or empty) → **STOP**: "Could not extract a valid semver version from the upstream package.json. Found: `[value]`. Check that the upstream URL is correct and the package.json has a valid `version` field."
 
-Write or update `.agent/kit-sync.md`:
+Write or update `.memory/pipeline/kit-sync.md`:
 
 ```markdown
 # Kit Sync State
@@ -246,6 +246,11 @@ upstream: https://github.com/RepairYourTech/cfsa-antigravity
 last_synced_commit: <current upstream HEAD commit hash — full 40-char SHA>
 last_synced_at: <ISO 8601 timestamp, e.g. 2026-03-17T16:04:40Z>
 kit_version: <semver from upstream package.json "version" field, e.g. 2.10.0>
+installed_runtimes:
+  - agent
+  - codex
+  - claude
+  - factory
 ```
 
 This file is committed to the project repo — it records which kit version the project is on and serves as the baseline for the next sync.

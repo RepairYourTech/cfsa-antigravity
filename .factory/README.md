@@ -8,12 +8,13 @@ This directory contains the CFSA (Constraint-First Specification Architecture) p
 .factory/
 ├── skills/              # All pipeline skills (workflows, utilities, rules, setup)
 ├── skill-library/       # Stack-specific skills provisioned by bootstrap
-├── instructions/        # Template files with {{PLACEHOLDER}} markers
-└── kit-sync.md          # Upstream sync tracking
+└── instructions/        # Template files with {{PLACEHOLDER}} markers
 
 Project root:
 └── .memory/
-    └── pipeline/progress/ # Canonical pipeline progress tracking for all runtimes
+    └── pipeline/
+        ├── progress/     # Canonical pipeline progress tracking for all runtimes
+        └── kit-sync.md   # Canonical upstream sync tracking
 
 Factory should connect as an MCP client to the shared daemon rather than spawning its own memory server.
 

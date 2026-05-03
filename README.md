@@ -135,7 +135,7 @@ The kit evolves independently of your project. To pull improvements into an exis
 This performs a **semantic merge** — it applies new workflows, skills, and rules from the upstream kit while preserving your project-specific values (tech stack, validation commands, filled placeholders). It will never overwrite your project decisions.
 
 - First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
-- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md`, `.codex/kit-sync.md`, `.claude/kit-sync.md`, or `.factory/kit-sync.md`) so it knows what changed since last update
+- Tracks sync state in `.memory/pipeline/kit-sync.md` so every runtime uses the same update baseline
 - Flags any structural migrations needed (e.g., ideation format changes)
 
 ## What Init Adds
@@ -145,6 +145,7 @@ A fresh `init` now installs:
 - `docs/`
 - shared `.memory/`
 - the shared memory MCP server/runtime under `.memory/mcp-server/`
+- canonical kit sync state at `.memory/pipeline/kit-sync.md`
 - the rest of the `.memory` scaffold needed to compile graph/index artifacts locally
 
 Tool-specific MCP client config (such as `.mcp.json`) is user-managed and documented above.

@@ -1,5 +1,13 @@
 # cfsa-antigravity
 
+## 3.1.1
+
+### Patch Changes
+
+- Move kit sync state to `.memory/pipeline/kit-sync.md`.
+
+  Runtime-local `kit-sync.md` files are no longer shipped or used as runtime discovery markers. The CLI now discovers runtimes from known runtime directories, and `/sync-kit` reads and writes one project-owned sync baseline under `.memory/pipeline/`.
+
 ## 3.1.0
 
 ### Minor Changes

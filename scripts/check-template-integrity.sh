@@ -127,16 +127,16 @@ else
     fail ".memory/pipeline/progress/ missing"
 fi
 
-if [[ -f "$ROOT_DIR/.codex/kit-sync.md" ]]; then
-    info ".codex/kit-sync.md present"
+if [[ -f "$ROOT_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info ".memory/pipeline/kit-sync.md present"
 else
-    fail ".codex/kit-sync.md missing"
+    fail ".memory/pipeline/kit-sync.md missing"
 fi
 
-if [[ -f "$TEMPLATE_DIR/.codex/kit-sync.md" ]]; then
-    info "template/.codex/kit-sync.md present"
+if [[ -f "$TEMPLATE_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info "template/.memory/pipeline/kit-sync.md present"
 else
-    fail "template/.codex/kit-sync.md missing — template rebuild needed"
+    fail "template/.memory/pipeline/kit-sync.md missing — template rebuild needed"
 fi
 
 if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
@@ -343,16 +343,16 @@ else
     fail ".memory/pipeline/progress/ missing"
 fi
 
-if [[ -f "$ROOT_DIR/.claude/kit-sync.md" ]]; then
-    info ".claude/kit-sync.md present"
+if [[ -f "$ROOT_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info ".memory/pipeline/kit-sync.md present"
 else
-    fail ".claude/kit-sync.md missing"
+    fail ".memory/pipeline/kit-sync.md missing"
 fi
 
-if [[ -f "$TEMPLATE_DIR/.claude/kit-sync.md" ]]; then
-    info "template/.claude/kit-sync.md present"
+if [[ -f "$TEMPLATE_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info "template/.memory/pipeline/kit-sync.md present"
 else
-    fail "template/.claude/kit-sync.md missing — template rebuild needed"
+    fail "template/.memory/pipeline/kit-sync.md missing — template rebuild needed"
 fi
 
 if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
@@ -455,16 +455,16 @@ else
     fail ".memory/pipeline/progress/ missing"
 fi
 
-if [[ -f "$ROOT_DIR/.factory/kit-sync.md" ]]; then
-    info ".factory/kit-sync.md present"
+if [[ -f "$ROOT_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info ".memory/pipeline/kit-sync.md present"
 else
-    fail ".factory/kit-sync.md missing"
+    fail ".memory/pipeline/kit-sync.md missing"
 fi
 
-if [[ -f "$TEMPLATE_DIR/.factory/kit-sync.md" ]]; then
-    info "template/.factory/kit-sync.md present"
+if [[ -f "$TEMPLATE_DIR/.memory/pipeline/kit-sync.md" ]]; then
+    info "template/.memory/pipeline/kit-sync.md present"
 else
-    fail "template/.factory/kit-sync.md missing — template rebuild needed"
+    fail "template/.memory/pipeline/kit-sync.md missing — template rebuild needed"
 fi
 
 if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
@@ -515,7 +515,9 @@ else
     memory_drift=$(echo "$memory_drift" | grep -v "Only in .*template/.memory/wiki: index.md" \
         | grep -v "Only in .*template/.memory/wiki: patterns.md" \
         | grep -v "Only in .*template/.memory/wiki: decisions.md" \
-        | grep -v "Only in .*template/.memory/wiki: blockers.md" || true)
+        | grep -v "Only in .*template/.memory/wiki: blockers.md" \
+        | grep -v "Files .*memory-src/pipeline/kit-sync.md and .*template/.memory/pipeline/kit-sync.md differ" \
+        | grep -v "Only in .*template/.memory/pipeline: kit-sync.md" || true)
 
     memory_drift_count=$(echo "$memory_drift" | grep -c . || true)
     if [[ "$memory_drift_count" -gt 0 && -n "$memory_drift" ]]; then
