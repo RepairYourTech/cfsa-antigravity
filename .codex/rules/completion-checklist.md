@@ -31,7 +31,7 @@ A unit of work is only DONE when:
 
 1. **The Code**: Implementation meets the contract and acceptance criteria.
 2. **The Tests**: All tests pass (validation step is green).
-3. **The Tracking**: Progress markdown files in `.codex/progress/` are updated.
+3. **The Tracking**: Progress markdown files in `.memory/pipeline/progress/` are updated.
    - Acceptance criteria marked `[x]`
    - Slice/Task marked `[x]`
    - Phase progress fractions updated (e.g., `3/10` → `4/10`)
@@ -42,10 +42,10 @@ A unit of work is only DONE when:
    - `decisions.md` — Any non-trivial decisions logged per Protocol 06
    - `blockers.md` — Any blockers hit logged with status and impact
    - See rule: `memory-capture` for triggers and format
-6. **The Session Log**: A session close log exists in `.codex/progress/sessions/`.
+6. **The Session Log**: A session close log exists in `.memory/pipeline/progress/sessions/`.
    - Follow `.codex/skills/session-continuity/protocols/05-session-close.md` — write what was accomplished, deferred, and where the next session should start
 7. **The Next Step**: The user is told what comes next in the pipeline.
-   - Read the pipeline progress file (`.codex/progress/spec-pipeline.md` or equivalent)
+   - Read the pipeline progress file (`.memory/pipeline/progress/spec-pipeline.md` or equivalent)
    - Propose the next valid pipeline command based on current state
    - If multiple options exist, present them as a numbered list with brief context
    - If the pipeline stage is complete, say so explicitly

@@ -6,7 +6,7 @@ Before taking any action on a task:
 - Read the agent config file at project root (`AGENTS.md` for Antigravity, `GEMINI.md` for Gemini CLI, or equivalent for your agent)
 - Read relevant `.claude/instructions/` files for the task type
 - Check [Engineering Standards](../../.memory/wiki/specs/ENGINEERING-STANDARDS.md) for quality bar — if this file doesn't exist yet, the pipeline hasn't reached /create-prd; run /ideate then /create-prd first
-- **Session Resumption**: If `.claude/progress/index.md` exists, read `.claude/skills/session-continuity/protocols/01-session-resumption.md` and follow the **Session Resumption Protocol** to load cross-session context and identify the resumption point
+- **Session Resumption**: If `.memory/pipeline/progress/index.md` exists, read `.claude/skills/session-continuity/protocols/01-session-resumption.md` and follow the **Session Resumption Protocol** to load cross-session context and identify the resumption point
 
 ## 2. Check Skills
 - Scan `.claude/skills/` for applicable skills
@@ -38,7 +38,7 @@ Do NOT mark a task complete until all validations pass.
 After completing a workflow or substantial task:
 
 - **Pattern Extraction**: Read `.claude/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `memory/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
-- **Session Close**: Read `.claude/skills/session-continuity/protocols/05-session-close.md` and follow the **Session Close Protocol**. Write a session log to `.claude/progress/sessions/` so the next session can resume cleanly.
+- **Session Close**: Read `.claude/skills/session-continuity/protocols/05-session-close.md` and follow the **Session Close Protocol**. Write a session log to `.memory/pipeline/progress/sessions/` so the next session can resume cleanly.
 
 > These steps are **not optional**. They are what differentiate a pipeline that gets
 > smarter over time from one that repeats the same mistakes.
@@ -46,7 +46,7 @@ After completing a workflow or substantial task:
 ## 6. Recommend Next Step (MANDATORY)
 
 Before reporting completion via `notify_user`:
-- Check the pipeline progress state (`.claude/progress/spec-pipeline.md` or equivalent)
+- Check the pipeline progress state (`.memory/pipeline/progress/spec-pipeline.md` or equivalent)
 - Propose the next valid pipeline command to the user
 - If multiple valid next steps exist, list them with brief context
 - Never end a conversation without telling the user what to do next

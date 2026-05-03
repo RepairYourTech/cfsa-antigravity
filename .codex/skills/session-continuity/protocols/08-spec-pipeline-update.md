@@ -14,7 +14,7 @@
 1. **Identify the shard and layer** — which shard just got its spec completed,
    and which layer (IA, BE, or FE)?
 
-2. **Update `.codex/progress/spec-pipeline.md`** — before updating any cell, perform these validation checks:
+2. **Update `.memory/pipeline/progress/spec-pipeline.md`** — before updating any cell, perform these validation checks:
 
    (a) Read the `File` column for the shard from the tracker to get the expected file path.
    (b) Confirm the file exists at that path. If not → **skip the update** and report: `"Cannot mark [shard] [layer] as complete — file not found at [path]"`
@@ -44,7 +44,7 @@
 
 6. **Read-back verification** — immediately after updating the tracker:
 
-   (a) Read `.codex/progress/spec-pipeline.md` back.
+   (a) Read `.memory/pipeline/progress/spec-pipeline.md` back.
    (b) Locate the row for the shard that was just updated.
    (c) Verify the column that was just marked shows `complete` (not `not-started`, not unchanged, not any other value).
    (d) If the cell does NOT show `complete`:

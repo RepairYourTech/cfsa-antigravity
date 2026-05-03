@@ -121,10 +121,10 @@ else
     info ".codex/skill-library is local"
 fi
 
-if [[ -d "$ROOT_DIR/.codex/progress" ]]; then
-    info ".codex/progress/ exists"
+if [[ -d "$ROOT_DIR/.memory/pipeline/progress" ]]; then
+    info ".memory/pipeline/progress/ exists"
 else
-    fail ".codex/progress/ missing"
+    fail ".memory/pipeline/progress/ missing"
 fi
 
 if [[ -f "$ROOT_DIR/.codex/kit-sync.md" ]]; then
@@ -139,10 +139,10 @@ else
     fail "template/.codex/kit-sync.md missing — template rebuild needed"
 fi
 
-if [[ -d "$TEMPLATE_DIR/.codex/progress" ]]; then
-    info "template/.codex/progress/ present"
+if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
+    info "template/.memory/pipeline/progress/ present"
 else
-    fail "template/.codex/progress/ missing — template rebuild needed"
+    fail "template/.memory/pipeline/progress/ missing — template rebuild needed"
 fi
 
 if [[ -L "$TEMPLATE_DIR/.codex/skill-library" ]]; then
@@ -337,10 +337,10 @@ else
     info ".claude/skill-library is local"
 fi
 
-if [[ -d "$ROOT_DIR/.claude/progress" ]]; then
-    info ".claude/progress/ exists"
+if [[ -d "$ROOT_DIR/.memory/pipeline/progress" ]]; then
+    info ".memory/pipeline/progress/ exists"
 else
-    fail ".claude/progress/ missing"
+    fail ".memory/pipeline/progress/ missing"
 fi
 
 if [[ -f "$ROOT_DIR/.claude/kit-sync.md" ]]; then
@@ -355,10 +355,10 @@ else
     fail "template/.claude/kit-sync.md missing — template rebuild needed"
 fi
 
-if [[ -d "$TEMPLATE_DIR/.claude/progress" ]]; then
-    info "template/.claude/progress/ present"
+if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
+    info "template/.memory/pipeline/progress/ present"
 else
-    fail "template/.claude/progress/ missing — template rebuild needed"
+    fail "template/.memory/pipeline/progress/ missing — template rebuild needed"
 fi
 
 if [[ -L "$TEMPLATE_DIR/.claude/skill-library" ]]; then
@@ -449,10 +449,10 @@ else
     info ".factory/skill-library is local"
 fi
 
-if [[ -d "$ROOT_DIR/.factory/progress" ]]; then
-    info ".factory/progress/ exists"
+if [[ -d "$ROOT_DIR/.memory/pipeline/progress" ]]; then
+    info ".memory/pipeline/progress/ exists"
 else
-    fail ".factory/progress/ missing"
+    fail ".memory/pipeline/progress/ missing"
 fi
 
 if [[ -f "$ROOT_DIR/.factory/kit-sync.md" ]]; then
@@ -467,10 +467,10 @@ else
     fail "template/.factory/kit-sync.md missing — template rebuild needed"
 fi
 
-if [[ -d "$TEMPLATE_DIR/.factory/progress" ]]; then
-    info "template/.factory/progress/ present"
+if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
+    info "template/.memory/pipeline/progress/ present"
 else
-    fail "template/.factory/progress/ missing — template rebuild needed"
+    fail "template/.memory/pipeline/progress/ missing — template rebuild needed"
 fi
 
 if [[ -L "$TEMPLATE_DIR/.factory/skill-library" ]]; then

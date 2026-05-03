@@ -4,6 +4,7 @@ Source files for the unified `.memory/` scaffold that `npm run build` copies int
 
 ## What lives here
 - `pipeline/` — raw/wiki/schema processing utilities
+- `pipeline/progress/` — canonical pipeline progress scaffold shared by all runtimes
 - `mcp-server/` — stdio MCP server exposing memory tools
 - `hooks/` — Claude Code hook entrypoints
 - `migrate/` — legacy memory migration

@@ -164,8 +164,8 @@ Before acting on any task, detect the current pipeline phase from filesystem mar
 | Decomposition done | IA shards in `.memory/wiki/specs/ia/` | `/write-architecture-spec` |
 | Spec writing | BE/FE specs exist | `/write-be-spec`, `/write-fe-spec` |
 | Planning | Phase plan in `.memory/wiki/specs/phases/` | `/plan-phase` |
-| Workspace setup | Phase plan exists, no `.agent/progress/` content | `/setup-workspace` → `/verify-infrastructure` |
-| Implementation | `.agent/progress/` has content | `/implement-slice` |
+| Workspace setup | Phase plan exists, no `.memory/pipeline/progress/` content | `/setup-workspace` → `/verify-infrastructure` |
+| Implementation | `.memory/pipeline/progress/` has content | `/implement-slice` |
 
 **Use this table to gate every action.** If a user runs a command that doesn't match their current phase, explain what phase they're in and what to run instead.
 

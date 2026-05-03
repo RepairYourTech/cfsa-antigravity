@@ -166,9 +166,9 @@ Read `.agent/skills/prd-templates/references/tdd-testing-policy.md` and run the 
 You may not call `notify_user` until you have edited all four progress file targets (7a–7d).
 
 Verify your edits by reading:
-- `.agent/progress/slices/phase-NN-slice-NN.md` — Status: complete, [x] criteria
-- `.agent/progress/phases/phase-NN.md` — incremented progress fraction
-- `.agent/progress/index.md` — updated overall percentage
+- `.memory/pipeline/progress/slices/phase-NN-slice-NN.md` — Status: complete, [x] criteria
+- `.memory/pipeline/progress/phases/phase-NN.md` — incremented progress fraction
+- `.memory/pipeline/progress/index.md` — updated overall percentage
 
 Your `notify_user` payload **MUST** include:
 1. Raw output from the three reads above

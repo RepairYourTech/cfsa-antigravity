@@ -148,7 +148,7 @@ If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templa
 
 ## 12.7. Completion Gate (MANDATORY)
 
-1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the FE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 8. Go back and run Protocol 08 now before proceeding."
+1. **Verify pipeline tracker** — Read `.memory/pipeline/progress/spec-pipeline.md` and confirm the FE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 8. Go back and run Protocol 08 now before proceeding."
 2. **Verify spec graph refresh** — Confirm Protocol 08 called `memory_compile` and that the compile succeeded. If graph refresh did not run → **STOP**: "Spec graph was not refreshed after tracker update. Run `memory_compile` before proceeding."
 3. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `.memory/wiki/patterns.md`
@@ -167,7 +167,7 @@ Use `notify_user` presenting:
 1. **Spec created** (link)
 2. **Cross-reference verification**
 3. **Ambiguity Gate confirmation**
-4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
+4. **Pipeline State** — read `.memory/pipeline/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
 
 - **More FE specs remain** → "Next: Run `/write-fe-spec` for shard [next-shard-number]"
 - **All FE specs complete** → "All FE specs complete and `/audit-ambiguity fe` has already run (mandatory Step 11 above). If it scored 0% and the Navigation Completeness Check passes (Step 14 below), proceed to `/plan-phase`. If gaps remain, resolve them first."

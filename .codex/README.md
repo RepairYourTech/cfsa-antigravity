@@ -58,7 +58,7 @@ This directory is the standalone Codex runtime for the CFSA pipeline. It sits al
 
 1. **Skills vs Workflows**: Codex uses skills instead of passive workflow markdown files
 2. **Task System**: Uses Codex's task and progress conventions for tracking
-3. **Progress + Shared Memory**: Uses `.codex/progress/` for Codex pipeline state and project-level `.memory/` for canonical cross-runtime memory
+3. **Progress + Shared Memory**: Uses `.memory/pipeline/progress/` for Codex pipeline state and project-level `.memory/` for canonical cross-runtime memory
 4. **Invocation**: Workflows are invoked as skills rather than slash commands in markdown
 5. **MCP**: Codex can connect to the shared `cfsa-memory` MCP bridge when configured by the user
 

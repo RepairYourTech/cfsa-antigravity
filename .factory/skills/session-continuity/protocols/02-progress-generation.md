@@ -12,7 +12,7 @@
 
 1. **Read the phase plan** that was just created (the output of `/plan-phase`).
 
-2. **Create or update `.factory/progress/index.md`**:
+2. **Create or update `.memory/pipeline/progress/index.md`**:
    ```markdown
    # Implementation Progress
 
@@ -27,7 +27,7 @@
    | Phase 1: {{NAME}} | not-started | 0/{{N}} | [→](phases/phase-01.md) |
    ```
 
-3. **Create `.factory/progress/phases/phase-NN.md`**:
+3. **Create `.memory/pipeline/progress/phases/phase-NN.md`**:
    ```markdown
    # Phase {{N}}: {{NAME}}
 
@@ -55,7 +55,7 @@
    - `files:` blocks are NOT written during generation — only during claim (Protocol 9)
    - Subtasks under tagged tasks inherit the parent's surface ownership
 
-4. **Create `.factory/progress/slices/phase-NN-slice-NN.md`** for each slice with ≥3 criteria:
+4. **Create `.memory/pipeline/progress/slices/phase-NN-slice-NN.md`** for each slice with ≥3 criteria:
    ```markdown
    # Phase {{P}} / Slice {{S}}: {{NAME}}
 

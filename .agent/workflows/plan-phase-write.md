@@ -139,7 +139,7 @@ Read `.memory/wiki/specs/phases/phase-N-draft.md` (which was built progressively
 
 ## 6. Generate progress files
 
-Read `.agent/skills/session-continuity/protocols/02-progress-generation.md` and follow the **Progress Generation Protocol** to create tracking files for this phase in `.agent/progress/`.
+Read `.agent/skills/session-continuity/protocols/02-progress-generation.md` and follow the **Progress Generation Protocol** to create tracking files for this phase in `.memory/pipeline/progress/`.
 
 ## 6.5. Bootstrap Completeness Gate
 
@@ -157,4 +157,4 @@ Read the surface stack map from `.agent/instructions/tech-stack.md`. Verify all 
 2. Verify the compile succeeded before presenting completion.
 3. Use `notify_user` to request review of the phase plan and generated progress files, including graph refresh confirmation.
 
-**STOP** — do NOT proceed until the user explicitly approves the phase plan. The only valid next step after approval is `/implement-slice` for the first slice. Read `.agent/progress/` to identify which slice to start with.
+**STOP** — do NOT proceed until the user explicitly approves the phase plan. The only valid next step after approval is `/implement-slice` for the first slice. Read `.memory/pipeline/progress/` to identify which slice to start with.

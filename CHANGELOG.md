@@ -1,5 +1,13 @@
 # cfsa-antigravity
 
+## 3.1.0
+
+### Minor Changes
+
+- Move pipeline progress state to the shared `.memory/pipeline/progress/` scaffold.
+
+  All runtimes now read and write phase progress, slice tracking, session logs, and spec-pipeline state from the project-owned memory tree instead of runtime-local progress folders. Runtime progress folders are no longer shipped as active stores, and legacy progress memory paths remain migration inputs only.
+
 ## 3.0.3
 
 ### Patch Changes

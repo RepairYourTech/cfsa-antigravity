@@ -24,7 +24,7 @@ Explore requirements, map all interactions, and define contracts, data models, a
 
 ## 0. Pipeline State Check
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
    - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
 2. Identify all shards where the IA column = `not-started`.
    - If none → **STOP**: "All IA shards are already complete. Next step: `/write-be-spec`."

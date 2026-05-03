@@ -113,7 +113,7 @@ Read `.agent/skills/parallel-agents/SKILL.md` and `.agent/skills/parallel-featur
 
 Read `.agent/skills/parallel-agents/SKILL.md` and follow its TDD-Order Dispatch methodology for execution order and file isolation.
 
-Log each dispatch phase to `.agent/progress/slices/phase-NN-slice-NN.md` `## Dispatch Log`.
+Log each dispatch phase to `.memory/pipeline/progress/slices/phase-NN-slice-NN.md` `## Dispatch Log`.
 
 ---
 

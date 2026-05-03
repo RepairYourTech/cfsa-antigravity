@@ -13,7 +13,7 @@ have IA specs, BE specs, and FE specs completed.
 
 1. **Read the IA index** — `.memory/wiki/specs/ia/index.md` — to get the list of shards.
 
-2. **Create `.claude/progress/spec-pipeline.md`**:
+2. **Create `.memory/pipeline/progress/spec-pipeline.md`**:
    ```markdown
    # Spec Pipeline Progress
 

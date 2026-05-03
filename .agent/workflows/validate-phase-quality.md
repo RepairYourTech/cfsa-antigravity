@@ -20,7 +20,7 @@ pipeline:
 Run all code quality checks for a completed implementation phase.
 
 **Prerequisite**: All slices in the phase must be complete.
-1. Read `.agent/progress/phases/phase-N.md`
+1. Read `.memory/pipeline/progress/phases/phase-N.md`
 2. Verify every slice shows `complete` status
 3. If any slice is not complete → **STOP**: "Phase N has incomplete slices: [list]. Complete them via `/implement-slice` before running validation."
 

@@ -2,7 +2,7 @@
 name: session-continuity
 description: >
   Cross-session progress tracking, pattern extraction, and session resumption.
-  Gives agents memory across sessions using markdown files in `.agent/progress/`.
+  Gives agents memory across sessions using markdown files in `.memory/pipeline/progress/`.
   Subsumes self-improving-agent — handles both implementation tracking AND
   experiential learning in one skill. Workflows invoke specific protocols by name.
 triggers:
@@ -24,7 +24,7 @@ Without this skill, agents lose all context between sessions. Work restarts from
 scratch, implementations drift without spec accountability, and hard-won patterns
 evaporate. This skill fixes that with five protocols that workflows invoke by name.
 
-Runtime progress remains local to `.agent/progress/`, but canonical cross-runtime memory now lives in `.memory/` and should be read/written through the shared memory files or the `cfsa-memory` MCP bridge.
+Progress state is shared at `.memory/pipeline/progress/`. Cross-runtime memory lives in `.memory/wiki/` and should be read/written through the shared memory files or the `cfsa-memory` MCP bridge.
 
 ### What This Skill Does
 
@@ -52,10 +52,10 @@ This skill defines each protocol with exact steps, file formats, and rules.
 
 ## Directory Structure
 
-All progress state lives in `.agent/progress/`:
+All progress state lives in `.memory/pipeline/progress/`:
 
 ```
-.agent/progress/
+.memory/pipeline/progress/
 ├── index.md                      # Master checklist — phases + overall %
 ├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
 ├── phases/
@@ -93,7 +93,7 @@ for complex ones.
 
 ### Steps
 
-1. **Check if `.agent/progress/index.md` exists**
+1. **Check if `.memory/pipeline/progress/index.md` exists**
    - If no: this is a fresh project with no tracked progress. Skip resumption.
    - If yes: continue.
 
@@ -462,7 +462,7 @@ have IA specs, BE specs, and FE specs completed.
 
 1. **Read the IA index** — `.memory/wiki/specs/ia/index.md` — to get the list of shards.
 
-2. **Create `.agent/progress/spec-pipeline.md`**:
+2. **Create `.memory/pipeline/progress/spec-pipeline.md`**:
    ```markdown
    # Spec Pipeline Progress
 

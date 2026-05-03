@@ -135,7 +135,7 @@ If `.memory/wiki/specs/feature-ledger.md` exists:
 1. Read the ledger and the current phase plan
 2. For each **Must Have** feature assigned to this phase:
    - Verify the `Implemented` column is marked complete
-   - Verify the slice(s) that implement it are marked complete in `.agent/progress/phases/phase-N.md`
+   - Verify the slice(s) that implement it are marked complete in `.memory/pipeline/progress/phases/phase-N.md`
 3. If any Must Have feature assigned to this phase is not implemented → **STOP**: "Phase N has unimplemented Must Have features: [list]. Complete them via `/implement-slice` before marking the phase as validated."
 
 ## 8.8. Boundary stub audit
@@ -158,7 +158,7 @@ Follow the **Validation Report Structure** in `.agent/skills/prd-templates/refer
 
 ## 9.5. Completion Gate (MANDATORY)
 
-1. Update `.agent/progress/` — mark phase as validated
+1. Update `.memory/pipeline/progress/` — mark phase as validated
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `.memory/wiki/patterns.md`
    - Non-trivial decisions made → write to `.memory/wiki/decisions.md`

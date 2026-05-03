@@ -68,7 +68,7 @@ Ensure the document is human-readable, well-structured, and focuses on high-leve
 ## 6. Phase completion gate
 
 Read `.memory/wiki/specs/*-architecture-design.md` → **Phasing** section to determine the total number of planned phases.
-Read `.agent/progress/index.md` to determine the current phase number N and how many phases have `status: complete`.
+Read `.memory/pipeline/progress/index.md` to determine the current phase number N and how many phases have `status: complete`.
 
 ### If completed phases < total phases
 

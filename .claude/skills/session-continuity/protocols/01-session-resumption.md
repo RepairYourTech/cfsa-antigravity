@@ -10,7 +10,7 @@
 
 ## Steps
 
-1. **Check if `.claude/progress/index.md` exists**
+1. **Check if `.memory/pipeline/progress/index.md` exists**
    - If no: this is a fresh project with no tracked progress. Skip resumption.
    - If yes: continue.
 

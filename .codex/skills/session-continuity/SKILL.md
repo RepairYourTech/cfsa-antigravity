@@ -2,7 +2,7 @@
 name: session-continuity
 description: >
   Cross-session progress tracking, pattern extraction, and session resumption.
-  Gives agents memory across sessions using markdown files in `.codex/progress/`.
+  Gives agents memory across sessions using markdown files in `.memory/pipeline/progress/`.
   Subsumes self-improving-agent — handles both implementation tracking AND
   experiential learning in one skill. Workflows invoke specific protocols by name.
 triggers:
@@ -16,7 +16,7 @@ triggers:
 
 Cross-session memory and spec-driven implementation tracking. This skill replaces
 `self-improving-agent` by combining progress tracking with pattern extraction
-in a single, workflow-driven system. Progress tracking remains in `.codex/progress/`, but shared cross-runtime memory now lives in the project-level `.memory/` root.
+in a single, workflow-driven system. Progress tracking is shared at `.memory/pipeline/progress/`; shared cross-runtime memory lives in the project-level `.memory/` root.
 
 ## Overview
 
@@ -50,10 +50,10 @@ This skill defines each protocol with exact steps, file formats, and rules.
 
 ## Directory Structure
 
-All progress state lives in `.codex/progress/`:
+All progress state lives in `.memory/pipeline/progress/`:
 
 ```
-.codex/progress/
+.memory/pipeline/progress/
 ├── index.md                      # Master checklist — phases + overall %
 ├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
 ├── phases/
@@ -91,7 +91,7 @@ for complex ones.
 
 ### Steps
 
-1. **Check if `.codex/progress/index.md` exists**
+1. **Check if `.memory/pipeline/progress/index.md` exists**
    - If no: this is a fresh project with no tracked progress. Skip resumption.
    - If yes: continue.
 
@@ -460,7 +460,7 @@ have IA specs, BE specs, and FE specs completed.
 
 1. **Read the IA index** — `.memory/wiki/specs/ia/index.md` — to get the list of shards.
 
-2. **Create `.codex/progress/spec-pipeline.md`**:
+2. **Create `.memory/pipeline/progress/spec-pipeline.md`**:
    ```markdown
    # Spec Pipeline Progress
 

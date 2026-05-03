@@ -143,8 +143,8 @@ Before reporting completion or proceeding to next shard:
 
 1. **Update checkpoint** — Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all security sections complete.
 2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.memory/wiki/`. Security model decisions are high-impact — every confirmed decision should have `DEC-NNN` entry.
-3. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-4. **Session log** — Write session entry to `.agent/progress/sessions/`.
+3. **Progress update** — Update `.memory/pipeline/progress/` tracking files if they exist.
+4. **Session log** — Write session entry to `.memory/pipeline/progress/sessions/`.
 
 ---
 

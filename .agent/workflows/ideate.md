@@ -132,6 +132,6 @@ Explores constraints, success metrics, and competitive positioning. Runs leaf-no
 Before reporting completion to the user:
 
 1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
-2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+2. **Progress update** — Update `.memory/pipeline/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.memory/pipeline/progress/sessions/`.
 

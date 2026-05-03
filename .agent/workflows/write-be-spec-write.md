@@ -71,7 +71,7 @@ If a shard was classified as **structural reference** with 0 BE specs, add a row
 
 ## 9. Update spec pipeline
 
-Read `.agent/skills/session-continuity/protocols/08-spec-pipeline-update.md` and follow the **Spec Pipeline Update Protocol** to mark this shard's BE column as complete in `.agent/progress/spec-pipeline.md`.
+Read `.agent/skills/session-continuity/protocols/08-spec-pipeline-update.md` and follow the **Spec Pipeline Update Protocol** to mark this shard's BE column as complete in `.memory/pipeline/progress/spec-pipeline.md`.
 
 ## 9.5. Iterative deepening passes
 
@@ -154,7 +154,7 @@ If `.memory/wiki/specs/feature-ledger.md` exists, read `.agent/skills/prd-templa
 
 ## 13.7. Completion Gate (MANDATORY)
 
-1. **Verify pipeline tracker** — Read `.agent/progress/spec-pipeline.md` and confirm the BE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 9. Go back and run Protocol 08 now before proceeding."
+1. **Verify pipeline tracker** — Read `.memory/pipeline/progress/spec-pipeline.md` and confirm the BE column for this shard shows `complete`. If it does not → **STOP**: "Pipeline tracker was not updated in Step 9. Go back and run Protocol 08 now before proceeding."
 2. **Verify spec graph refresh** — Confirm Protocol 08 called `memory_compile` and that the compile succeeded. If graph refresh did not run → **STOP**: "Spec graph was not refreshed after tracker update. Run `memory_compile` before proceeding."
 3. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `.memory/wiki/patterns.md`
@@ -176,7 +176,7 @@ Use `notify_user` presenting:
 1. **Spec created** (link)
 2. **Cross-reference verification**
 3. **Ambiguity Gate confirmation**
-4. **Pipeline State** — read `.agent/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
+4. **Pipeline State** — read `.memory/pipeline/progress/spec-pipeline.md` and propose the next step from the **ONLY** permitted options below:
 
 - **More BE specs remain** → "Next: Run `/write-be-spec` for shard [next-shard-number]"
 - **All BE specs complete** → "All BE specs complete and `/audit-ambiguity be` has already run (mandatory Step 12 above). If it scored 0%, proceed to `/write-fe-spec`. If it found gaps, resolve them and re-run `/audit-ambiguity be` before proceeding."

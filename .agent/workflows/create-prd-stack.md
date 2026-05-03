@@ -135,8 +135,8 @@ Read `.agent/workflows/bootstrap-agents.md` and call it with `PIPELINE_STAGE=cre
 Before reporting completion or proceeding to next shard:
 
 1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this shard to `.memory/wiki/`. Tech stack decisions are high-impact — every confirmed decision should have a `DEC-NNN` entry. If nothing to write, confirm: "No new patterns/decisions/blockers."
-2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+2. **Progress update** — Update `.memory/pipeline/progress/` files if they exist.
+3. **Session log** — Write session to `.memory/pipeline/progress/sessions/`.
 
 ---
 

@@ -4,7 +4,7 @@ Run after all parallel agents have completed and QA-GREEN has passed.
 
 ## Pre-Synthesis Plan
 
-Before beginning any synthesis work, write a `## Synthesis Plan` section to the slice file (`.factory/progress/slices/phase-NN-slice-NN.md`) listing:
+Before beginning any synthesis work, write a `## Synthesis Plan` section to the slice file (`.memory/pipeline/progress/slices/phase-NN-slice-NN.md`) listing:
 - All `// BOUNDARY:` stubs found across agent outputs (file path + stub description)
 - All cross-surface integrations to wire (e.g., "BE auth middleware → FE token refresh handler")
 

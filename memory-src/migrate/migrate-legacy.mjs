@@ -10,6 +10,7 @@ const LEGACY_MAP = [
   { source: ".claude/memory/decisions.md", target: "wiki/decisions.md" },
   { source: ".claude/memory/blockers.md", target: "wiki/blockers.md" },
   { source: ".claude/progress/memory", targetDir: "wiki/knowledge", runtime: "claude-progress" },
+  { source: ".codex/progress/memory", targetDir: "wiki/knowledge", runtime: "codex-progress" },
   { source: ".agent/progress/memory", targetDir: "wiki/knowledge", runtime: "agent-progress" },
   { source: ".factory/memory", targetDir: "wiki/knowledge", runtime: "factory-memory" },
   { source: ".factory/progress/memory", targetDir: "wiki/knowledge", runtime: "factory-progress" },

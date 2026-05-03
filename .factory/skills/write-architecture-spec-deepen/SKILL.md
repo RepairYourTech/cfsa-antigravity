@@ -45,7 +45,7 @@ Ensure event-consumer cross-references are valid and bidirectional.
 ### Step 4 — Update indexes and tracker
 
 1. Mark shard complete in `.memory/wiki/specs/ia/index.md`.
-2. Update `.factory/progress/spec-pipeline.md` IA column via protocol.
+2. Update `.memory/pipeline/progress/spec-pipeline.md` IA column via protocol.
 3. Run conditional bootstrap if shard is the architecture-design stack-lock shard.
 
 ### Step 5 — Ambiguity gates and last-shard branch

@@ -56,9 +56,9 @@ The pipeline enforces a **progressive decision lock** — each stage locks decis
 .factory/
 ├── skills/              # All pipeline skills (workflows + rules + utilities as SKILL.md)
 ├── skill-library/       # Factory-owned skill library
-├── instructions/        # Core directives (workflow, tech-stack, patterns)
-└── progress/            # Pipeline progress tracking
+└── instructions/        # Core directives (workflow, tech-stack, patterns)
 .memory/                 # Canonical shared project memory / Obsidian-friendly vault
+├── pipeline/progress/   # Shared pipeline progress tracking
 docs/
 ├── plans/               # User project specifications (output directory)
 │   ├── ideation/
@@ -183,7 +183,7 @@ The `template/` directory is what gets published to npm. It's built from:
 - `docs/` (full directory, but `.memory/wiki/specs/` and `.memory/wiki/specs/audits/` content is stripped)
 - Root config files (`GEMINI.md`, `AGENTS.md`, `CLAUDE.md`, `CODEX.md`)
 
-Session-specific data is excluded (`.agent/progress/*.md` except README, `.claude/progress/*.md` runtime session artifacts where applicable, and `.memory/raw/*` generated runtime captures).
+Session-specific data is excluded (`.memory/pipeline/progress/*.md` runtime session artifacts where applicable, and `.memory/raw/*` generated runtime captures).
 
 ## Key Documentation
 
@@ -217,7 +217,7 @@ If ideation-index.md doesn't exist, the pipeline hasn't started — tell user to
 
 This is enforced by:
 - **Session Continuity Protocols** (`.claude/skills/session-continuity/protocols/`)
-- **Progress Tracking** (`.claude/progress/spec-pipeline.md`)
+- **Progress Tracking** (`.memory/pipeline/progress/spec-pipeline.md`)
 - **Pattern Extraction** (`.claude/skills/session-continuity/protocols/04-pattern-extraction.md`)
 
 ## Common Tasks

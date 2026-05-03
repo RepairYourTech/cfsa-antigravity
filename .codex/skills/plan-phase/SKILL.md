@@ -16,7 +16,7 @@ Runs phase planning in two shards: preflight → write.
 ## Prerequisites
 
 1. IA, BE, and FE spec layers are fully complete
-2. Phase progression state exists in `.codex/progress/`
+2. Phase progression state exists in `.memory/pipeline/progress/`
 3. Architecture phasing section and spec indexes are available
 
 ## Step-by-Step
@@ -44,7 +44,7 @@ Call skill: `plan-phase-write`
 Expected outputs:
 - `.memory/wiki/specs/phases/phase-N.md`
 - `.memory/wiki/specs/phases/phase-N-draft.md`
-- generated progress files in `.codex/progress/`
+- generated progress files in `.memory/pipeline/progress/`
 - verified bootstrap/map completeness for planning prerequisites
 
 ## Completion Checklist

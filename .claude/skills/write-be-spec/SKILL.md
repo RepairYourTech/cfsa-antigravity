@@ -16,14 +16,14 @@ Runs BE specification authoring in two shards: classify → write.
 ## Prerequisites
 
 1. IA shard(s) are complete and marked ✅ in `.memory/wiki/specs/ia/index.md`
-2. `.claude/progress/spec-pipeline.md` exists
+2. `.memory/pipeline/progress/spec-pipeline.md` exists
 3. BE conventions/index files exist under `.memory/wiki/specs/be/`
 
 ## Step-by-Step
 
 ### Step 0 — Pipeline-state shard selection
 
-1. Read `.claude/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
 2. Find shards where IA is `complete` and BE is `not-started`.
 3. Select lowest-numbered eligible shard unless user explicitly overrides.
 4. If none remain, stop and recommend `/write-fe-spec`.
@@ -45,7 +45,7 @@ Call skill: `write-be-spec-write`
 Expected outputs:
 - Full BE spec file(s) in `.memory/wiki/specs/be/`
 - Updated `.memory/wiki/specs/be/index.md`
-- Updated `.claude/progress/spec-pipeline.md` BE status
+- Updated `.memory/pipeline/progress/spec-pipeline.md` BE status
 - Ambiguity gate results + next allowed command
 
 ## Quality Gate

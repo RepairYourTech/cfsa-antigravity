@@ -121,7 +121,7 @@ Call skill: `setup/setup-verify`
 
 After successful verification, initialize progress tracking:
 
-1. Create master progress file at `.factory/progress/spec-pipeline.md`
+1. Create master progress file at `.memory/pipeline/progress/spec-pipeline.md`
 2. Set initial state: "Ready to start ideation"
 3. Create session log for today
 4. Recommend next step: `/ideate`

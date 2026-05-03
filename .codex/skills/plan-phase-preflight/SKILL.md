@@ -14,13 +14,13 @@ parameters:
 ## Prerequisites
 
 1. Approved IA/BE/FE specs exist
-2. Progress state files exist under `.codex/progress/`
+2. Progress state files exist under `.memory/pipeline/progress/`
 
 ## Step-by-Step
 
 ### Step 0 — Phase sequencing gate
 
-1. Read `.codex/progress/index.md` for current phase number.
+1. Read `.memory/pipeline/progress/index.md` for current phase number.
 2. If planning Phase N>1, verify Phase N-1 is complete and has passing `/validate-phase`.
 3. Run architecture map freshness warning gate for N>1 (warning + user resolution).
 

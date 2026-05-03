@@ -25,10 +25,10 @@ Pre-flight checks before slice planning: phase sequencing, skill loading, comple
 
 ## 0. Phase sequencing gate
 
-Read `.agent/progress/index.md` to identify the current phase number N.
+Read `.memory/pipeline/progress/index.md` to identify the current phase number N.
 
 - **If N = 1** → this is the first phase. Skip this gate.
-- **If N > 1** → read `.agent/progress/phases/phase-[N-1].md` and verify its status is `complete` with a passing `/validate-phase`. **Hard stop** if the previous phase is not complete: "Phase [N-1] must be complete with a passing `/validate-phase` before planning Phase [N]. Run `/validate-phase` for Phase [N-1] first."
+- **If N > 1** → read `.memory/pipeline/progress/phases/phase-[N-1].md` and verify its status is `complete` with a passing `/validate-phase`. **Hard stop** if the previous phase is not complete: "Phase [N-1] must be complete with a passing `/validate-phase` before planning Phase [N]. Run `/validate-phase` for Phase [N-1] first."
 
   **Architecture map freshness check (N > 1 only)** — warning, not a hard stop.
 

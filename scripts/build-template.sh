@@ -79,28 +79,10 @@ done
 
 # --- Strip dev-only content ---
 
-# Remove .agent/progress/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.agent/progress" ]]; then
-    info "Cleaning .agent/progress/ (session-specific data)"
-    find "$TEMPLATE_DIR/.agent/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
-fi
-
-# Remove .codex/progress/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.codex/progress" ]]; then
-    info "Cleaning .codex/progress/ (session-specific data)"
-    find "$TEMPLATE_DIR/.codex/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
-fi
-
-# Remove .claude/progress/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.claude/progress" ]]; then
-    info "Cleaning .claude/progress/ (session-specific data)"
-    find "$TEMPLATE_DIR/.claude/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
-fi
-
-# Remove .factory/progress/ contents (session-specific)
-if [[ -d "$TEMPLATE_DIR/.factory/progress" ]]; then
-    info "Cleaning .factory/progress/ (session-specific data)"
-    find "$TEMPLATE_DIR/.factory/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+# Remove canonical progress contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.memory/pipeline/progress" ]]; then
+    info "Cleaning .memory/pipeline/progress/ (session-specific data)"
+    find "$TEMPLATE_DIR/.memory/pipeline/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
 # Remove any authoritative vault spec content from template/.memory/wiki/specs/ (project-specific)
@@ -121,6 +103,10 @@ if [[ -d "$TEMPLATE_DIR/.memory" ]]; then
         "$TEMPLATE_DIR/.memory/raw/events" \
         "$TEMPLATE_DIR/.memory/raw/daily" \
         "$TEMPLATE_DIR/.memory/raw/assets" \
+        "$TEMPLATE_DIR/.memory/pipeline/progress/phases" \
+        "$TEMPLATE_DIR/.memory/pipeline/progress/slices" \
+        "$TEMPLATE_DIR/.memory/pipeline/progress/sessions" \
+        "$TEMPLATE_DIR/.memory/pipeline/progress/memory" \
         "$TEMPLATE_DIR/.memory/wiki/knowledge" \
         "$TEMPLATE_DIR/.memory/schema"
 
@@ -136,12 +122,18 @@ EOF
     if [[ -f "$TEMPLATE_DIR/.memory/wiki/README.md" ]]; then :; fi
 
     find "$TEMPLATE_DIR/.memory/raw" -type f ! -name ".gitkeep" -delete 2>/dev/null || true
+    find "$TEMPLATE_DIR/.memory/pipeline/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
     find "$TEMPLATE_DIR/.memory/wiki/knowledge" -type f ! -name "README.md" ! -name ".gitkeep" -delete 2>/dev/null || true
     find "$TEMPLATE_DIR/.memory/schema" -type f ! -name "*.json" -delete 2>/dev/null || true
 
     touch "$TEMPLATE_DIR/.memory/raw/sessions/.gitkeep"
     touch "$TEMPLATE_DIR/.memory/raw/events/.gitkeep"
     touch "$TEMPLATE_DIR/.memory/raw/daily/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/pipeline/progress/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/pipeline/progress/phases/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/pipeline/progress/slices/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/pipeline/progress/sessions/.gitkeep"
+    touch "$TEMPLATE_DIR/.memory/pipeline/progress/memory/.gitkeep"
     touch "$TEMPLATE_DIR/.memory/wiki/knowledge/.gitkeep"
 
     cat > "$TEMPLATE_DIR/.memory/config.json" << 'EOF'

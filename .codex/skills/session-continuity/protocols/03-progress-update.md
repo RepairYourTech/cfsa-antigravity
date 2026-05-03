@@ -10,9 +10,9 @@
 
 ## Steps
 
-1. **Mark tasks and acceptance criteria `[x]`** in the slice's tracking location (use the exact files in the `.codex/progress/` directory, NEVER guess the path):
-   - If slice has its own file: update `.codex/progress/slices/phase-NN-slice-NN.md`
-   - If inline: update `.codex/progress/phases/phase-NN.md`
+1. **Mark tasks and acceptance criteria `[x]`** in the slice's tracking location (use the exact files in the `.memory/pipeline/progress/` directory, NEVER guess the path):
+   - If slice has its own file: update `.memory/pipeline/progress/slices/phase-NN-slice-NN.md`
+   - If inline: update `.memory/pipeline/progress/phases/phase-NN.md`
 
 2. **Release any claimed tasks** — if the completed task had `[!]`:
    - Change status from `[/]` to `[x]`
@@ -42,7 +42,7 @@
    **Progress**: 4/7 slices
    ```
 
-5. **Update `.codex/progress/index.md`** — recalculate overall progress:
+5. **Update `.memory/pipeline/progress/index.md`** — recalculate overall progress:
    ```markdown
    **Overall**: 12/20 slices (60%)
    ```

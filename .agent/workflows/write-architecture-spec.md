@@ -41,7 +41,7 @@ Fill in a skeleton IA shard with full interaction details, data models, access c
 
 ### Step 0 — Pipeline State Check
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
    - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
 2. Identify all shards where the IA column = `not-started`.
    - If none → **STOP**: "All IA shards are already complete. Next step: `/write-be-spec`."
@@ -84,6 +84,6 @@ Read .agent/skills/code-review-pro/SKILL.md and apply its adversarial review dis
 Before reporting completion to the user:
 
 1. **Memory check** — Apply rule `memory-capture`. Write any patterns, decisions, or blockers from this workflow to `.memory/wiki/`. If nothing to write, confirm: "No new patterns/decisions/blockers."
-2. **Progress update** — Update `.agent/progress/` tracking files if they exist.
-3. **Session log** — Write session entry to `.agent/progress/sessions/`.
+2. **Progress update** — Update `.memory/pipeline/progress/` tracking files if they exist.
+3. **Session log** — Write session entry to `.memory/pipeline/progress/sessions/`.
 

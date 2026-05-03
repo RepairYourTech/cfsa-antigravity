@@ -16,7 +16,7 @@ Runs FE specification authoring in two shards: classify → write.
 ## Prerequisites
 
 1. BE spec for target shard is complete
-2. `.factory/progress/spec-pipeline.md` exists
+2. `.memory/pipeline/progress/spec-pipeline.md` exists
 3. FE conventions/index files exist under `.memory/wiki/specs/fe/`
 4. Design system and brand guidance are available for visual surfaces
 
@@ -24,7 +24,7 @@ Runs FE specification authoring in two shards: classify → write.
 
 ### Step 0 — Pipeline-state shard selection
 
-1. Read `.factory/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
 2. Find shards where BE is `complete` and FE is `not-started`.
 3. Select lowest-numbered eligible shard unless user explicitly overrides.
 4. If none remain, stop and recommend `/plan-phase`.
@@ -47,7 +47,7 @@ Call skill: `write-fe-spec-write`
 Expected outputs:
 - Full FE spec file(s) in `.memory/wiki/specs/fe/`
 - Updated `.memory/wiki/specs/fe/index.md`
-- Updated `.factory/progress/spec-pipeline.md` FE status
+- Updated `.memory/pipeline/progress/spec-pipeline.md` FE status
 - Ambiguity + navigation completeness gate outcomes
 
 ## Quality Gate

@@ -100,4 +100,4 @@ Use `notify_user` to present: IA directory, BE index, FE index, master index, sp
 
 ### Next step
 
-**STOP** — do NOT proceed to any other workflow. The only valid next step is `/write-architecture-spec` starting with the lowest-numbered shard per `.agent/progress/spec-pipeline.md`.
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/write-architecture-spec` starting with the lowest-numbered shard per `.memory/pipeline/progress/spec-pipeline.md`.

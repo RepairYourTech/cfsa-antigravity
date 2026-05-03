@@ -162,4 +162,4 @@ Enter parallel mode when the slice's tasks contain surface tags (`BE`, `FE`, `QA
 
 ### Progress Logging
 
-Log each dispatch phase to `.factory/progress/slices/phase-NN-slice-NN.md` under `## Dispatch Log`.
+Log each dispatch phase to `.memory/pipeline/progress/slices/phase-NN-slice-NN.md` under `## Dispatch Log`.

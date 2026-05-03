@@ -13,7 +13,6 @@ The kit ships multiple runtime trees in this repository:
 ```text
 .agent/                      # Antigravity runtime
 ├── instructions/
-├── progress/
 ├── rules/
 ├── skill-library/
 ├── skills/
@@ -21,7 +20,6 @@ The kit ships multiple runtime trees in this repository:
 
 .codex/                      # Codex runtime
 ├── instructions/
-├── progress/
 ├── rules/
 ├── skill-library/
 └── skills/
@@ -29,19 +27,19 @@ The kit ships multiple runtime trees in this repository:
 .claude/                     # Claude Code runtime
 ├── commands/
 ├── instructions/
-├── progress/
 ├── rules/
 ├── skill-library/
 └── skills/
 
 .factory/                    # Factory Droid runtime
 ├── instructions/
-├── progress/
 ├── skill-library/
 └── skills/
 
 .memory/                     # Canonical shared project memory / Obsidian vault
 ├── .obsidian/
+├── pipeline/
+│   └── progress/            # Canonical phase, slice, session, and spec-pipeline state
 ├── raw/
 ├── wiki/
 ├── schema/
@@ -51,7 +49,7 @@ The kit ships multiple runtime trees in this repository:
 └── migrate/
 ```
 
-`.agent/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets and state.
+`.agent/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets. Shared project state lives under `.memory/`.
 
 The `.memory/` directory is not just an internal store; it is intended to be an Obsidian-friendly vault within the project space so humans and agents can browse the same memory corpus directly. It also mirrors durable `.memory/wiki/specs/` artifacts into graph-friendly vault notes so IA/BE/FE specs, phase plans, and related knowledge become traversable Obsidian graph nodes. Runtime clients should connect to one shared project-local memory daemon rather than each spawning their own isolated server process.
 
@@ -62,7 +60,6 @@ That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryR
 ```text
 .agent/
 ├── instructions/    # Core directives (the "brainstem")
-├── progress/        # State and memory (the "hippocampus")
 ├── rules/           # Non-negotiable constraints (the "laws")
 ├── skill-library/   # Installable skill packages (the "toolbox")
 ├── skills/          # Active capabilities (the "tools")
@@ -74,7 +71,6 @@ That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryR
 ```text
 .codex/
 ├── instructions/    # Core directives for Codex runtime
-├── progress/        # Codex pipeline state
 ├── rules/           # Always-on constraints
 ├── skill-library/   # Codex-owned installable skill packages
 └── skills/          # Active Codex capabilities, including pipeline workflow skills
@@ -86,7 +82,6 @@ That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryR
 .claude/
 ├── commands/        # Slash command shims
 ├── instructions/    # Core directives for Claude runtime
-├── progress/        # Claude pipeline state
 ├── rules/           # Always-on constraints
 ├── skill-library/   # Claude-owned installable skill packages
 ├── skills/          # Active Claude capabilities
@@ -247,12 +242,12 @@ Each CX entry includes which nodes interact, confidence level, 5 synthesis quest
 
 Agents are inherently stateless across conversations. The kit uses the **Session Continuity** protocol to provide a persistent memory system.
 
-### Runtime progress directories
+### Canonical Progress Directory
 
-Antigravity uses `.agent/progress/`. Codex uses `.codex/progress/`. Claude Code uses `.claude/progress/`. They serve the same purpose: phase tracking, spec-pipeline tracking, and session resumption.
+All runtimes use `.memory/pipeline/progress/` for phase tracking, spec-pipeline tracking, and session resumption. Runtime-local progress folders are legacy migration inputs only; new workflow, skill, and rule instructions must not point agents at `.agent/progress/`, `.codex/progress/`, `.claude/progress/`, or `.factory/progress/`.
 
 ```text
-.agent/progress/ or .codex/progress/ or .claude/progress/
+.memory/pipeline/progress/
 ├── index.md                      # Master checklist — phases + overall %
 ├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
 ├── phases/
@@ -269,7 +264,7 @@ Antigravity uses `.agent/progress/`. Codex uses `.codex/progress/`. Claude Code 
 
 > **Adaptive Granularity Rule**: A slice gets its own file in `slices/` only when it has ≥3 acceptance criteria. Slices with 1–2 criteria are tracked inline in the phase file. This prevents file explosion for simple specs while giving granular tracking for complex ones.
 
-> **Runtime vs. pre-shipped files**: The `phases/`, `slices/`, and `sessions/` directories and their contents are created at runtime by `/plan-phase` (Protocol 2: Progress Generation) and `/implement-slice` (Protocol 3: Progress Update). They do not ship pre-created. The only files that ship as part of the kit in `memory/` are the three empty seed files (`patterns.md`, `blockers.md`, `decisions.md`).
+> **Runtime vs. pre-shipped files**: The `phases/`, `slices/`, `sessions/`, and `memory/` directories ship as empty scaffolds under `.memory/pipeline/progress/`. Runtime-generated markdown inside them is created by `/plan-phase` (Protocol 2: Progress Generation), `/implement-slice` (Protocol 3: Progress Update), and session close.
 
 ### Flow
 
@@ -284,16 +279,16 @@ The only canonical memory system shipped by the kit is the project-level `.memor
 
 - `.claude/memory/` is bridge documentation only
 - `.factory/memory/` is bridge documentation only
-- `.agent/progress/memory/` and `.factory/progress/memory/` are legacy migration inputs, not primary memory stores
+- `.agent/progress/memory/`, `.codex/progress/memory/`, `.claude/progress/memory/`, and `.factory/progress/memory/` are legacy migration inputs, not primary memory stores
 
 All new shared memory behavior should target `.memory/`.
 
 ### Unified memory architecture
 
-The kit now separates runtime execution state from shared project memory:
+The kit now separates runtime execution assets from shared project state:
 
-- Runtime progress still lives under `.agent/progress/`, `.codex/progress/`, `.claude/progress/`, and `.factory/progress/`
-- Canonical cross-runtime memory lives under `.memory/`
+- Canonical progress state lives under `.memory/pipeline/progress/`
+- Canonical cross-runtime memory lives under `.memory/wiki/`
 - Claude can use hooks in `.claude/settings.json` to flush and compile memory automatically when the user chooses to wire them
 - All runtimes can access the same memory through their own MCP client config -> `cfsa-memory` -> `.memory/mcp-server/client.mjs` -> shared daemon `.memory/mcp-server/daemon.mjs`
 
@@ -335,7 +330,7 @@ The power of the kit comes from how these modules interact:
 
 *   **Workflows call Skills:** A workflow like `/create-prd` will explicitly instruct the agent to use the `technical-writer` and `brainstorming` skills.
 *   **Rules constrain Workflows:** While a workflow dictates the *steps*, the rules dictate *how* those steps are performed (e.g., `/implement-slice` must obey `tdd-contract-first.md`).
-*   **State informs Execution:** Each runtime reads from its own progress directory (`.agent/progress/`, `.codex/progress/`, `.claude/progress/`, or `.factory/progress/`) to contextualize execution based on past decisions and current active phases.
+*   **State informs Execution:** Each runtime reads from the shared progress directory (`.memory/pipeline/progress/`) to contextualize execution based on past decisions and current active phases.
 
 ### Frontmatter `skills:` Semantic
 

@@ -26,7 +26,7 @@ Identify the target IA shard, classify it, load skills, and read all source mate
 
 ## 0. Pipeline State Check
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
    - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
 2. Identify all shards where the BE column = `not-started` AND the IA column = `complete`.
    - If no shards have IA `complete` → **STOP**: "IA layer not complete — run `/write-architecture-spec` first."

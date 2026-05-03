@@ -20,7 +20,7 @@ parameters:
 
 ### Step 0 — Pipeline and map guards
 
-1. Read `.codex/progress/spec-pipeline.md` and select target shard.
+1. Read `.memory/pipeline/progress/spec-pipeline.md` and select target shard.
 2. Verify required stack map values exist in `.codex/instructions/tech-stack.md`:
    - Databases
    - Security

@@ -22,7 +22,7 @@ Operational setup of the project workspace, CI/CD pipeline, hosting platform, an
 
 ## 0. Pre-flight
 
-1. Read `.agent/skills/session-continuity/SKILL.md` and follow its session-open protocol. Check `.agent/progress/sessions/` for any previous session working on `setup-workspace`. If found → read the session close log to determine which shards completed and resume from the next incomplete shard.
+1. Read `.agent/skills/session-continuity/SKILL.md` and follow its session-open protocol. Check `.memory/pipeline/progress/sessions/` for any previous session working on `setup-workspace`. If found → read the session close log to determine which shards completed and resume from the next incomplete shard.
 2. Read the approved phase plan from `.memory/wiki/specs/phases/phase-N.md`
 3. Read `.memory/wiki/specs/*-architecture-design.md` for the architecture pattern
 
@@ -70,7 +70,7 @@ After all 4 shards complete, run `/verify-infrastructure` with trigger `workspac
 
 ## 2.5. Completion Gate (MANDATORY)
 
-1. Update `.agent/progress/` — mark workspace setup as complete
+1. Update `.memory/pipeline/progress/` — mark workspace setup as complete
 2. Scan this conversation for memory-capture triggers (see rule: `memory-capture`):
    - Patterns observed → write to `.memory/wiki/patterns.md`
    - Non-trivial decisions made → write to `.memory/wiki/decisions.md`

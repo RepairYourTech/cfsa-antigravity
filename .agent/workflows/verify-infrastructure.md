@@ -196,7 +196,7 @@ Read `.memory/wiki/specs/*-architecture-design.md` section `## Observability Arc
 
 ## 6.7. Spec pipeline integrity check
 
-1. Read `.agent/progress/spec-pipeline.md` — verify all IA/BE/FE columns show ✅ for all shards included in the current phase
+1. Read `.memory/pipeline/progress/spec-pipeline.md` — verify all IA/BE/FE columns show ✅ for all shards included in the current phase
 2. If `.memory/wiki/specs/feature-ledger.md` exists:
    - Read the ledger and verify no **Must Have** features have gaps in IA/BE/FE coverage
    - If any Must Have feature has an empty column → **STOP**: "Feature `[ID: name]` is missing `[column]` coverage. Complete the spec before proceeding to implementation."

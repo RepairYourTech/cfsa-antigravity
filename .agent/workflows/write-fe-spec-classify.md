@@ -26,7 +26,7 @@ Identify the target FE spec, classify it, load skills, and read all source mater
 
 ## 0. Pipeline State Check
 
-1. Read `.agent/progress/spec-pipeline.md`.
+1. Read `.memory/pipeline/progress/spec-pipeline.md`.
    - If the file does not exist → **STOP**: "No pipeline tracker found. Run `/decompose-architecture` first."
 2. Identify all shards where the FE column = `not-started` AND the BE column = `complete`.
    - If no shards have BE `complete` → **STOP**: "BE layer not complete — run `/write-be-spec` first."
