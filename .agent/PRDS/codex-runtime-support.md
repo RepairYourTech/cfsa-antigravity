@@ -39,7 +39,7 @@ Make Codex a documented, installable, maintainable runtime on par with the exist
 ### Runtime support
 
 - Codex must be a first-class install target
-- Codex support may reuse the shared `.agent/` runtime instead of introducing a fully separate runtime tree
+- Codex support must ship a standalone `.codex/` runtime tree so Codex can discover workflow skills and runtime assets in its native project directory
 - A dedicated `CODEX.md` guidance file must exist in source and template output
 
 ### CLI support
@@ -70,7 +70,7 @@ Make Codex a documented, installable, maintainable runtime on par with the exist
 
 Prefer a surgical extension of the current runtime model:
 
-1. Reuse the shared `.agent/` runtime for Codex rather than maintaining a redundant fork
+1. Adapt the standalone skill-based runtime shape for Codex under `.codex/`
 2. Add a Codex-specific root guidance file for parity and discoverability
 3. Add an explicit installer/status path for Codex
 4. Update source-of-truth docs first, then CLI/build logic, then published template expectations

@@ -27,6 +27,14 @@ mkdir -p "$TEMPLATE_DIR"
 info "Copying .agent/"
 cp -a "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent"
 
+# .codex/ — full directory
+if [[ -d "$ROOT_DIR/.codex" ]]; then
+    info "Copying .codex/"
+    cp -a "$ROOT_DIR/.codex" "$TEMPLATE_DIR/.codex"
+else
+    warn ".codex/ directory not found — skipping"
+fi
+
 # .claude/ — full directory except transient worktrees
 if [[ -d "$ROOT_DIR/.claude" ]]; then
     info "Copying .claude/"
@@ -75,6 +83,12 @@ done
 if [[ -d "$TEMPLATE_DIR/.agent/progress" ]]; then
     info "Cleaning .agent/progress/ (session-specific data)"
     find "$TEMPLATE_DIR/.agent/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
+fi
+
+# Remove .codex/progress/ contents (session-specific)
+if [[ -d "$TEMPLATE_DIR/.codex/progress" ]]; then
+    info "Cleaning .codex/progress/ (session-specific data)"
+    find "$TEMPLATE_DIR/.codex/progress" -type f -name "*.md" ! -name "README.md" -delete 2>/dev/null || true
 fi
 
 # Remove .claude/progress/ contents (session-specific)
@@ -146,7 +160,8 @@ KIT_VERSION=$(node -p "require('$ROOT_DIR/package.json').version")
 BUILD_TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 info "Generating kit sync state (commit: ${COMMIT_HASH:0:8}, version: $KIT_VERSION)"
-for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md" "$TEMPLATE_DIR/.factory/kit-sync.md"; do
+for sync_file in "$TEMPLATE_DIR/.agent/kit-sync.md" "$TEMPLATE_DIR/.codex/kit-sync.md" "$TEMPLATE_DIR/.claude/kit-sync.md" "$TEMPLATE_DIR/.factory/kit-sync.md"; do
+[[ -d "$(dirname "$sync_file")" ]] || continue
 cat > "$sync_file" << EOF
 # Kit Sync State
 

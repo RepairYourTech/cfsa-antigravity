@@ -2,7 +2,7 @@
 
 **Purpose:** Provide a high-level map of the agentic machinery that powers CFSA Antigravity.
 
-This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes. The shared `.agent/` runtime serves Antigravity and Codex-style installs, while `.claude/` owns Claude-specific execution assets. A shared project-level `.memory/` root now provides the canonical cross-runtime memory layer.
+This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes. The `.agent/` runtime serves Antigravity-style installs, `.codex/` serves Codex installs, and `.claude/` owns Claude-specific execution assets. A shared project-level `.memory/` root now provides the canonical cross-runtime memory layer.
 
 ---
 
@@ -11,13 +11,20 @@ This document serves as a guide to understanding how the CFSA kit is organized a
 The kit ships multiple runtime trees in this repository:
 
 ```text
-.agent/                      # Shared Antigravity/Codex runtime
+.agent/                      # Antigravity runtime
 ├── instructions/
 ├── progress/
 ├── rules/
 ├── skill-library/
 ├── skills/
 └── workflows/
+
+.codex/                      # Codex runtime
+├── instructions/
+├── progress/
+├── rules/
+├── skill-library/
+└── skills/
 
 .claude/                     # Claude Code runtime
 ├── commands/
@@ -44,7 +51,7 @@ The kit ships multiple runtime trees in this repository:
 └── migrate/
 ```
 
-`.agent/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the shared `.agent/` runtime plus the root `CODEX.md` guidance file rather than a separate runtime tree. Each runtime owns its own execution assets and state.
+`.agent/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets and state.
 
 The `.memory/` directory is not just an internal store; it is intended to be an Obsidian-friendly vault within the project space so humans and agents can browse the same memory corpus directly. It also mirrors durable `.memory/wiki/specs/` artifacts into graph-friendly vault notes so IA/BE/FE specs, phase plans, and related knowledge become traversable Obsidian graph nodes. Runtime clients should connect to one shared project-local memory daemon rather than each spawning their own isolated server process.
 
@@ -60,6 +67,17 @@ That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryR
 ├── skill-library/   # Installable skill packages (the "toolbox")
 ├── skills/          # Active capabilities (the "tools")
 └── workflows/       # Structured processes (the "playbooks")
+```
+
+### Codex Runtime Components
+
+```text
+.codex/
+├── instructions/    # Core directives for Codex runtime
+├── progress/        # Codex pipeline state
+├── rules/           # Always-on constraints
+├── skill-library/   # Codex-owned installable skill packages
+└── skills/          # Active Codex capabilities, including pipeline workflow skills
 ```
 
 ### Claude Runtime Components
@@ -231,10 +249,10 @@ Agents are inherently stateless across conversations. The kit uses the **Session
 
 ### Runtime progress directories
 
-Antigravity uses `.agent/progress/`. Claude Code uses `.claude/progress/`. Both serve the same purpose: phase tracking, spec-pipeline tracking, and session resumption.
+Antigravity uses `.agent/progress/`. Codex uses `.codex/progress/`. Claude Code uses `.claude/progress/`. They serve the same purpose: phase tracking, spec-pipeline tracking, and session resumption.
 
 ```text
-.agent/progress/ or .claude/progress/
+.agent/progress/ or .codex/progress/ or .claude/progress/
 ├── index.md                      # Master checklist — phases + overall %
 ├── spec-pipeline.md              # Spec completion tracker (IA/BE/FE per shard)
 ├── phases/
@@ -274,7 +292,7 @@ All new shared memory behavior should target `.memory/`.
 
 The kit now separates runtime execution state from shared project memory:
 
-- Runtime progress still lives under `.agent/progress/`, `.claude/progress/`, and `.factory/progress/`
+- Runtime progress still lives under `.agent/progress/`, `.codex/progress/`, `.claude/progress/`, and `.factory/progress/`
 - Canonical cross-runtime memory lives under `.memory/`
 - Claude can use hooks in `.claude/settings.json` to flush and compile memory automatically when the user chooses to wire them
 - All runtimes can access the same memory through their own MCP client config -> `cfsa-memory` -> `.memory/mcp-server/client.mjs` -> shared daemon `.memory/mcp-server/daemon.mjs`
@@ -317,7 +335,7 @@ The power of the kit comes from how these modules interact:
 
 *   **Workflows call Skills:** A workflow like `/create-prd` will explicitly instruct the agent to use the `technical-writer` and `brainstorming` skills.
 *   **Rules constrain Workflows:** While a workflow dictates the *steps*, the rules dictate *how* those steps are performed (e.g., `/implement-slice` must obey `tdd-contract-first.md`).
-*   **State informs Execution:** Each runtime reads from its own progress directory (`.agent/progress/` or `.claude/progress/`) to contextualize execution based on past decisions and current active phases.
+*   **State informs Execution:** Each runtime reads from its own progress directory (`.agent/progress/`, `.codex/progress/`, `.claude/progress/`, or `.factory/progress/`) to contextualize execution based on past decisions and current active phases.
 
 ### Frontmatter `skills:` Semantic
 
@@ -439,7 +457,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ## 6. Kit Maintenance Checklist
 
-**When a new workflow or shard is added to a runtime tree (`.agent/workflows/` or `.claude/skills/<workflow>/SKILL.md`):**
+**When a new workflow or shard is added to a runtime tree (`.agent/workflows/`, `.codex/skills/<workflow>/SKILL.md`, or `.claude/skills/<workflow>/SKILL.md`):**
 
 - [ ] Add a row to the `AGENTS.md` Pipeline Workflow Table
 - [ ] Add a matching row to the `GEMINI.md` Pipeline Workflow Table (must stay in sync with `AGENTS.md`)
@@ -447,7 +465,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 - [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
 - [ ] If the workflow introduces a new skill, add it to the matching runtime's `skill-library/MANIFEST.md`
 
-**When a new rule is added to a runtime tree (`.agent/rules/` or `.claude/rules/`):**
+**When a new rule is added to a runtime tree (`.agent/rules/`, `.codex/rules/`, or `.claude/rules/`):**
 
 - [ ] Add a row to the `GEMINI.md` Agent Rules table
 - [ ] If the rule uses `{{PLACEHOLDER}}` values, follow the placeholder checklist below
@@ -476,6 +494,8 @@ Examples:
 
 ```bash
 echo '.agent/' >> .git/info/exclude
+# or
+echo '.codex/' >> .git/info/exclude
 # or
 echo '.claude/' >> .git/info/exclude
 ```

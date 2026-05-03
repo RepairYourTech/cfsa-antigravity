@@ -35,7 +35,8 @@ const error = (msg) => { console.error(`${c.red}✗${c.reset} ${msg}`); };
 
 // --- Runtime display names (fallback to directory name for unknown runtimes) ---
 const RUNTIME_DISPLAY = {
-    ".agent":   { name: "Antigravity",   desc: "Antigravity, Cursor, Codex, Gemini CLI" },
+    ".agent":   { name: "Antigravity",   desc: "Antigravity, Cursor, Gemini CLI" },
+    ".codex":   { name: "Codex",         desc: "Standalone Codex runtime" },
     ".claude":  { name: "Claude Code",   desc: "Standalone Claude Code runtime" },
     ".factory": { name: "Factory Droid", desc: "Standalone Factory Droid runtime" },
 };
@@ -206,10 +207,10 @@ ${c.bold}Examples:${c.reset}
   npx cfsa-antigravity init
 
   ${c.dim}# Non-interactive — install specific runtimes${c.reset}
-  npx cfsa-antigravity init --agent claude,factory
+  npx cfsa-antigravity init --agent codex,claude
 
   ${c.dim}# Install a single runtime${c.reset}
-  npx cfsa-antigravity init --agent factory
+  npx cfsa-antigravity init --agent codex
 
   ${c.dim}# Install into a specific directory${c.reset}
   npx cfsa-antigravity init --agent claude --path ./my-project
@@ -326,7 +327,7 @@ function ensureTemplateDir() {
 function resolveAgentNames(agentNames, available) {
     const resolved = [];
     for (const name of agentNames) {
-        // Try exact dir match first (.agent, .claude, .factory)
+        // Try exact dir match first (.agent, .codex, .claude, .factory)
         const dotName = name.startsWith(".") ? name : `.${name}`;
         const match = available.find(r => r.dir === dotName);
         if (match) {
@@ -339,8 +340,8 @@ function resolveAgentNames(agentNames, available) {
             resolved.push(byName);
             continue;
         }
-        // Legacy single-agent names: "antigravity" / "codex" → .agent
-        if (name === "antigravity" || name === "codex") {
+        // Legacy single-agent name: "antigravity" → .agent
+        if (name === "antigravity") {
             const agentRt = available.find(r => r.dir === ".agent");
             if (agentRt && !resolved.find(r => r.dir === ".agent")) {
                 resolved.push(agentRt);

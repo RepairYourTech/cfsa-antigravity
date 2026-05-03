@@ -35,7 +35,8 @@ npx cfsa-antigravity init --agent claude,factory
 
 Runtimes are auto-detected from the template. Currently shipped:
 
-- **Antigravity** (`.agent/`) -- Antigravity, Cursor, Codex, Gemini CLI
+- **Antigravity** (`.agent/`) -- Antigravity, Cursor, Gemini CLI
+- **Codex** (`.codex/`) -- Standalone Codex runtime
 - **Claude Code** (`.claude/`) -- Standalone Claude Code runtime
 - **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
 
@@ -110,7 +111,7 @@ Keep the installed runtime directory out of shared `.gitignore` rules when your 
 
 Examples:
 1. Antigravity install → keep `.agent/` out of `.gitignore`
-2. Codex install → keep `.agent/` out of `.gitignore`
+2. Codex install → keep `.codex/` out of `.gitignore`
 3. Claude install → keep `.claude/` out of `.gitignore`
 4. Factory install → keep `.factory/` out of `.gitignore`
 5. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
@@ -134,13 +135,13 @@ The kit evolves independently of your project. To pull improvements into an exis
 This performs a **semantic merge** — it applies new workflows, skills, and rules from the upstream kit while preserving your project-specific values (tech stack, validation commands, filled placeholders). It will never overwrite your project decisions.
 
 - First sync does a full comparison; subsequent syncs are incremental (commit-scoped)
-- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md`, `.claude/kit-sync.md`, or `.factory/kit-sync.md`) so it knows what changed since last update
+- Tracks sync state in the installed agent runtime (`.agent/kit-sync.md`, `.codex/kit-sync.md`, `.claude/kit-sync.md`, or `.factory/kit-sync.md`) so it knows what changed since last update
 - Flags any structural migrations needed (e.g., ideation format changes)
 
 ## What Init Adds
 
 A fresh `init` now installs:
-- your selected runtime directories (`.agent/`, `.claude/`, `.factory/`)
+- your selected runtime directories (`.agent/`, `.codex/`, `.claude/`, `.factory/`)
 - `docs/`
 - shared `.memory/`
 - the shared memory MCP server/runtime under `.memory/mcp-server/`

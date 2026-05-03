@@ -217,6 +217,7 @@ The current implementation uses a local semantic backend designed to be upgraded
 ```bash
 git clone https://github.com/RepairYourTech/cfsa-antigravity.git
 cp -r cfsa-antigravity/.agent /path/to/your-project/
+cp -r cfsa-antigravity/.codex /path/to/your-project/
 cp -r cfsa-antigravity/docs /path/to/your-project/
 cp cfsa-antigravity/GEMINI.md /path/to/your-project/
 cp cfsa-antigravity/AGENTS.md /path/to/your-project/
@@ -228,7 +229,7 @@ cp cfsa-antigravity/CODEX.md /path/to/your-project/
 | Agent | What to Do |
 |-------|------------|
 | **Antigravity** | Both `AGENTS.md` and `GEMINI.md` are present — bootstrap fills both during `/create-prd`. |
-| **Codex** | Use `CODEX.md` for repo guidance and the shared `.agent/` runtime installed via `cfsa-antigravity init --agent codex`. |
+| **Codex** | Use `CODEX.md` for repo guidance and the standalone `.codex/` runtime installed via `cfsa-antigravity init --agent codex`. |
 | **Gemini CLI** | `GEMINI.md` is your agent config. Bootstrap fills it during `/create-prd`. |
 | **Claude Code** | Use the standalone `.claude/` runtime installed via `cfsa-antigravity init --agent claude` |
 | **Factory Droid** | Use the standalone `.factory/` runtime installed via `cfsa-antigravity init --agent factory` |
@@ -242,7 +243,7 @@ cp cfsa-antigravity/CODEX.md /path/to/your-project/
 > Do not hide the runtime directory your agent/editor needs to index.
 >
 > - Antigravity-style installs use `.agent/`
-> - Codex installs also use `.agent/`
+> - Codex installs use `.codex/`
 > - Claude Code installs use `.claude/`
 > - Factory Droid installs use `.factory/`
 >

@@ -12,6 +12,10 @@ readonly TEMPLATE_DIR="$ROOT_DIR/template"
 readonly CHAR_LIMIT=12000
 
 errors=0
+src_dirs_file=""
+tpl_dirs_file=""
+src_r_file=""
+tpl_r_file=""
 
 info()  { echo "[integrity] ✅ $*"; }
 fail()  { echo "[integrity] ❌ $*" >&2; errors=$((errors + 1)); }
@@ -73,7 +77,97 @@ else
 fi
 
 # ──────────────────────────────────────
-# 4. .claude/ directory drift
+# 4. .codex/ directory drift
+# ──────────────────────────────────────
+if [[ -d "$ROOT_DIR/.codex" ]]; then
+    if [[ ! -d "$TEMPLATE_DIR/.codex" ]]; then
+        fail "template/.codex/ missing — template rebuild needed"
+    else
+        drift_output=$(diff -rq "$ROOT_DIR/.codex" "$TEMPLATE_DIR/.codex" 2>/dev/null \
+            | grep -v "progress/memory" \
+            | grep -v "kit-sync.md" || true)
+
+        drift_count=$(echo "$drift_output" | grep -c . || true)
+
+        if [[ "$drift_count" -gt 0 && -n "$drift_output" ]]; then
+            fail ".codex/ has $drift_count drifted file(s) from template/.codex/"
+            echo "$drift_output" | head -10 >&2
+        else
+            info ".codex/ in sync"
+        fi
+    fi
+fi
+
+# ──────────────────────────────────────
+# 5. Codex standalone runtime guard
+# ──────────────────────────────────────
+codex_refs_file=$(mktemp)
+trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$codex_refs_file"' EXIT
+
+if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$ROOT_DIR/.codex" \
+    --include='*.md' \
+    --exclude='README.md' \
+    --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$codex_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected cross-runtime reference(s) under .codex/"
+    head -10 "$codex_refs_file" >&2
+else
+    info "No runtime .agent/.claude/.factory references remain under .codex/"
+fi
+
+if [[ ! -d "$ROOT_DIR/.codex/skill-library" || -L "$ROOT_DIR/.codex/skill-library" ]]; then
+    fail ".codex/skill-library must exist as a real directory"
+else
+    info ".codex/skill-library is local"
+fi
+
+if [[ -d "$ROOT_DIR/.codex/progress" ]]; then
+    info ".codex/progress/ exists"
+else
+    fail ".codex/progress/ missing"
+fi
+
+if [[ -f "$ROOT_DIR/.codex/kit-sync.md" ]]; then
+    info ".codex/kit-sync.md present"
+else
+    fail ".codex/kit-sync.md missing"
+fi
+
+if [[ -f "$TEMPLATE_DIR/.codex/kit-sync.md" ]]; then
+    info "template/.codex/kit-sync.md present"
+else
+    fail "template/.codex/kit-sync.md missing — template rebuild needed"
+fi
+
+if [[ -d "$TEMPLATE_DIR/.codex/progress" ]]; then
+    info "template/.codex/progress/ present"
+else
+    fail "template/.codex/progress/ missing — template rebuild needed"
+fi
+
+if [[ -L "$TEMPLATE_DIR/.codex/skill-library" ]]; then
+    fail "template/.codex/skill-library must not be a symlink"
+else
+    info "template/.codex/skill-library is local"
+fi
+
+if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$TEMPLATE_DIR/.codex" \
+    --include='*.md' \
+    --exclude='README.md' \
+    --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$codex_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected cross-runtime reference(s) in template/.codex/"
+    head -10 "$codex_refs_file" >&2
+else
+    info "No runtime .agent/.claude/.factory references remain in template/.codex/"
+fi
+
+if [[ "$errors" -eq 0 ]]; then
+    info "Codex standalone integrity checks passed"
+fi
+
+# ──────────────────────────────────────
+# 6. .claude/ directory drift
 # ──────────────────────────────────────
 if [[ -d "$ROOT_DIR/.claude" ]]; then
     if [[ ! -d "$TEMPLATE_DIR/.claude" ]]; then
@@ -101,7 +195,7 @@ if [[ -d "$ROOT_DIR/.claude" ]]; then
 fi
 
 # ──────────────────────────────────────
-# 5. docs/ directory drift (structure only — content is stripped)
+# 7. docs/ directory drift (structure only — content is stripped)
 # ──────────────────────────────────────
 if [[ ! -d "$TEMPLATE_DIR/docs" ]]; then
     fail "template/docs/ missing — template rebuild needed"
@@ -138,7 +232,7 @@ else
 fi
 
 # ──────────────────────────────────────
-# 6. Workflow character limit check
+# 8. Workflow character limit check
 # ──────────────────────────────────────
 over_limit=0
 for f in "$ROOT_DIR/.agent/workflows/"*.md; do
@@ -160,6 +254,15 @@ while IFS= read -r wf_name; do
         fi
     fi
 
+    codex_skill="$ROOT_DIR/.codex/skills/$wf_name/SKILL.md"
+    if [[ -f "$codex_skill" ]]; then
+        sz=$(wc -c < "$codex_skill" | tr -d ' ')
+        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
+            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
+            over_limit=$((over_limit + 1))
+        fi
+    fi
+
     factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
     [[ -f "$factory_skill" ]] || continue
     sz=$(wc -c < "$factory_skill" | tr -d ' ')
@@ -175,14 +278,14 @@ if [[ "$over_limit" -eq 0 ]]; then
 fi
 
 # ──────────────────────────────────────
-# 7. Claude standalone runtime guard
+# 9. Claude standalone runtime guard
 # ──────────────────────────────────────
 claude_workflows_file=$(mktemp)
 claude_commands_file=$(mktemp)
 missing_commands_file=$(mktemp)
 extra_commands_file=$(mktemp)
 claude_agent_refs_file=$(mktemp)
-trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file"' EXIT
+trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$codex_refs_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file"' EXIT
 
 find "$ROOT_DIR/.claude/commands" -maxdepth 1 -name "*.md" -type f -print \
     | sed 's|.*/||' \
@@ -286,7 +389,7 @@ if [[ "$errors" -eq 0 ]]; then
 fi
 
 # ──────────────────────────────────────
-# 8. .factory/ directory drift
+# 10. .factory/ directory drift
 # ──────────────────────────────────────
 if [[ -d "$ROOT_DIR/.factory" ]]; then
     if [[ ! -d "$TEMPLATE_DIR/.factory" ]]; then
@@ -309,10 +412,10 @@ if [[ -d "$ROOT_DIR/.factory" ]]; then
 fi
 
 # ──────────────────────────────────────
-# 9. Factory standalone runtime guard
+# 11. Factory standalone runtime guard
 # ──────────────────────────────────────
 factory_refs_file=$(mktemp)
-trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file" "$factory_refs_file"' EXIT
+trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$codex_refs_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file" "$factory_refs_file"' EXIT
 
 # No .agent/ references in .factory/
 if grep -R -n "\.agent/" "$ROOT_DIR/.factory" \
@@ -390,7 +493,7 @@ if [[ "$errors" -eq 0 ]]; then
 fi
 
 # ──────────────────────────────────────
-# 10. Unified memory scaffold checks
+# 12. Unified memory scaffold checks
 # ──────────────────────────────────────
 if [[ ! -d "$ROOT_DIR/memory-src" ]]; then
     fail "memory-src/ missing from project root"
@@ -438,7 +541,7 @@ else
 fi
 
 # ──────────────────────────────────────
-# 11. Memory runtime install contract checks
+# 13. Memory runtime install contract checks
 # ──────────────────────────────────────
 if grep -F -q 'template/.memory/' "$ROOT_DIR/bin/cli.mjs" && \
    grep -F -q 'Installed ${c.bold}.memory/${c.reset} runtime scaffold' "$ROOT_DIR/bin/cli.mjs"; then
@@ -456,7 +559,7 @@ else
 fi
 
 # ──────────────────────────────────────
-# 12. Summary
+# 14. Summary
 # ──────────────────────────────────────
 echo ""
 if [[ "$errors" -gt 0 ]]; then
