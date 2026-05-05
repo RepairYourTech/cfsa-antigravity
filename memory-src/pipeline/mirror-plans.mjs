@@ -69,10 +69,16 @@ export function mirrorPlansIntoVault(options = {}) {
     return { ok: true, mirroredCount: 0, mirrored: [] };
   }
 
+  // Defense in depth: never re-mirror a file that is itself a generated mirror.
+  // Generated mirrors always carry `vault_primary: true` in their frontmatter.
+  const isGeneratedMirror = (filePath) =>
+    /^---[\s\S]{0,500}?\n\s*vault_primary:\s*true\b/m.test(getFileText(filePath, "").slice(0, 600));
+
   const sourceFiles = listFilesRecursively(specsRoot)
     .filter((filePath) => filePath.endsWith(".md"))
     .filter((filePath) => !filePath.endsWith("README.md"))
-    .filter((filePath) => !filePath.endsWith(".gitkeep"));
+    .filter((filePath) => !filePath.endsWith(".gitkeep"))
+    .filter((filePath) => !isGeneratedMirror(filePath));
 
   const mirrored = [];
   for (const sourceFile of sourceFiles) {
@@ -84,6 +90,13 @@ export function mirrorPlansIntoVault(options = {}) {
     }
 
     const destinationPath = graphNotePath(memoryRoot, relativeSpecPath, bucket);
+    // Structural guard: refuse to write inside the source specs tree. The mirror
+    // output must be structurally separate from the input or recursion is possible.
+    if (destinationPath === specsRoot || destinationPath.startsWith(specsRoot + "/")) {
+      throw new Error(
+        `mirror-plans: refusing to write inside source specs tree (would corrupt sources): ${destinationPath}`,
+      );
+    }
     ensureDir(join(memoryRoot, "wiki", bucket));
     setFileText(destinationPath, buildGraphNote({ relativeSpecPath, sourceText, type, bucket }));
 
