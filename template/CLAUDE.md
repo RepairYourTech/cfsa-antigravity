@@ -14,7 +14,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Installation & Maintenance
 ```bash
-npm run build          # Build template/ from the maintained .agent/, .claude/, and .factory/ trees for publishing
+npm run build          # Build template/ from the maintained .agents/, .claude/, and .factory/ trees for publishing
 npm run check          # Verify template integrity
 npm run changeset      # Create a changeset for versioning
 npm test              # Run tests (if present)
@@ -66,7 +66,7 @@ docs/
 │   ├── be/
 │   └── fe/
 └── audits/              # Ambiguity audits
-template/                # Built from .agent/ + .claude/ + .factory/ + root configs for npm publishing (DO NOT EDIT DIRECTLY)
+template/                # Built from .agents/ + .claude/ + .factory/ + root configs for npm publishing (DO NOT EDIT DIRECTLY)
 bin/cli.mjs              # CLI entry point
 ```
 
@@ -177,7 +177,7 @@ git push
 ### What Gets Published
 
 The `template/` directory is what gets published to npm. It's built from:
-- `.agent/` (full directory)
+- `.agents/` (full directory)
 - `.claude/` (full directory)
 - `.factory/` (full directory)
 - `docs/` (full directory, but `.memory/wiki/specs/` and `.memory/wiki/specs/audits/` content is stripped)
@@ -224,7 +224,7 @@ This is enforced by:
 
 ### Adding a New Workflow
 
-1. If you're changing Antigravity, edit `.agent/workflows/your-workflow.md`
+1. If you're changing Antigravity, edit `.agents/skills/your-workflow/SKILL.md`
 2. If you're changing Claude, edit `.claude/skills/your-workflow/SKILL.md`
 3. If you're changing Factory, create `.factory/skills/your-workflow/SKILL.md`
 4. If the workflow should exist in all runtimes, add the matching counterpart in each tree
@@ -235,14 +235,14 @@ This is enforced by:
 
 ### Adding a New Skill
 
-1. Create it in the runtime you are extending (`.agent/skill-library/[category]/[skill-name]/`, `.claude/skill-library/[category]/[skill-name]/`, or `.factory/skill-library/[category]/[skill-name]/`)
+1. Create it in the runtime you are extending (`.agents/skill-library/[category]/[skill-name]/`, `.claude/skill-library/[category]/[skill-name]/`, or `.factory/skill-library/[category]/[skill-name]/`)
 2. Add `SKILL.md` with YAML frontmatter (name, description)
 3. Add it to the matching runtime's `skill-library/MANIFEST.md`
 4. Follow stack-specific pattern if needed (e.g., `references/typescript.md`)
 
 ### Updating Templates
 
-1. Edit files in `.agent/`, `.claude/`, or `docs/` (never edit `template/` directly)
+1. Edit files in `.agents/`, `.claude/`, or `docs/` (never edit `template/` directly)
 2. Run `npm run build` to sync changes to `template/`
 3. Verify with `npm run check`
 4. Commit and create PR

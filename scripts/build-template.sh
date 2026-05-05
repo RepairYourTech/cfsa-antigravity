@@ -23,9 +23,9 @@ mkdir -p "$TEMPLATE_DIR"
 
 # --- Copy kit components ---
 
-# .agent/ — full directory
-info "Copying .agent/"
-cp -a "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent"
+# .agents/ — full directory
+info "Copying .agents/"
+cp -a "$ROOT_DIR/.agents" "$TEMPLATE_DIR/.agents"
 
 # .codex/ — full directory
 if [[ -d "$ROOT_DIR/.codex" ]]; then
@@ -161,7 +161,7 @@ last_synced_commit: $COMMIT_HASH
 last_synced_at: $BUILD_TIMESTAMP
 kit_version: $KIT_VERSION
 installed_runtimes:
-  - agent
+  - agents
   - codex
   - claude
   - factory

@@ -35,7 +35,7 @@ npx cfsa-antigravity init --agent claude,factory
 
 Runtimes are auto-detected from the template. Currently shipped:
 
-- **Antigravity** (`.agent/`) -- Antigravity, Cursor, Gemini CLI
+- **Antigravity** (`.agents/`) -- Antigravity, Cursor, Gemini CLI
 - **Codex** (`.codex/`) -- Standalone Codex runtime
 - **Claude Code** (`.claude/`) -- Standalone Claude Code runtime
 - **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
@@ -110,7 +110,7 @@ If you are using an editor that indexes agent files for slash commands, do not h
 Keep the installed runtime directory out of shared `.gitignore` rules when your tool needs to index it. Prefer `.git/info/exclude` for local-only exclusions.
 
 Examples:
-1. Antigravity install → keep `.agent/` out of `.gitignore`
+1. Antigravity install → keep `.agents/` out of `.gitignore`
 2. Codex install → keep `.codex/` out of `.gitignore`
 3. Claude install → keep `.claude/` out of `.gitignore`
 4. Factory install → keep `.factory/` out of `.gitignore`
@@ -141,7 +141,7 @@ This performs a **semantic merge** — it applies new workflows, skills, and rul
 ## What Init Adds
 
 A fresh `init` now installs:
-- your selected runtime directories (`.agent/`, `.codex/`, `.claude/`, `.factory/`)
+- your selected runtime directories (`.agents/`, `.codex/`, `.claude/`, `.factory/`)
 - `docs/`
 - shared `.memory/`
 - the shared memory MCP server/runtime under `.memory/mcp-server/`

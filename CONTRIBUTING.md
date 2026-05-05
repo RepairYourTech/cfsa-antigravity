@@ -41,9 +41,9 @@ git checkout -b issue-123-short-description
 
 | Area | Examples |
 |------|----------|
-| **Skills** | New skills in `.agent/skills/` or `.agent/skill-library/` |
-| **Workflows** | Improvements to pipeline workflows in `.agent/workflows/` |
-| **Rules** | Refinements to agent rules in `.agent/rules/` |
+| **Skills** | New skills in `.agents/skills/` or `.agents/skill-library/` |
+| **Workflows** | Improvements to pipeline workflows in `.agents/skills/` |
+| **Rules** | Refinements to agent rules in `.agents/rules/` |
 | **Documentation** | Better explanations, examples, typo fixes |
 | **CLI** | Improvements to `bin/cli.mjs` |
 
@@ -52,7 +52,7 @@ git checkout -b issue-123-short-description
 - Workflows must be under **12,000 characters**
 - Skills must follow the `SKILL.md` format with YAML frontmatter
 - Shared content goes in `prd-templates/references/`, not inlined in workflows
-- Don't modify `.agent/instructions/` templates unless you understand the `{{PLACEHOLDER}}` system
+- Don't modify `.agents/instructions/` templates unless you understand the `{{PLACEHOLDER}}` system
 - Don't add npm dependencies — the CLI is zero-dependency by design
 - Run `npm run build` to verify template integrity before submitting
 

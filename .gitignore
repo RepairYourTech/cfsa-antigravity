@@ -4,7 +4,7 @@ node_modules/
 package-lock.json
 
 # Kit development tools (not distributed)
-.agent/skills/antigravity-workflows/
+.agents/skills/antigravity-workflows/
 
 # Project-specific authoritative vault content
 # Canonical pipeline docs live under .memory/wiki/specs/
@@ -13,10 +13,10 @@ package-lock.json
 !.memory/wiki/specs/**/.gitkeep
 
 # Session-specific agent data
-.agent/progress/slices/
-.agent/progress/blockers/
-.agent/progress/memory/*.md
-!.agent/progress/memory/README.md
+.agents/progress/slices/
+.agents/progress/blockers/
+.agents/progress/memory/*.md
+!.agents/progress/memory/README.md
 
 # Audit / comparison files (dev only)
 _audit/

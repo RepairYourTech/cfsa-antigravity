@@ -128,28 +128,28 @@ Once a stage is locked, downstream stages may not contradict it. To change a loc
 
 | Guide | Description |
 |-------|-------------|
-| 🛠️ [Workflow](.agent/instructions/workflow.md) | Execution sequence & principles |
-| 💻 [Tech Stack](.agent/instructions/tech-stack.md) | Technology decisions & skill mappings |
-| 📐 [Patterns](.agent/instructions/patterns.md) | Code conventions & architecture patterns |
-| 📁 [Structure](.agent/instructions/structure.md) | Directory layout & protected files |
-| ⌨️ [Commands](.agent/instructions/commands.md) | Dev, test, lint, build commands |
+| 🛠️ [Workflow](.agents/instructions/workflow.md) | Execution sequence & principles |
+| 💻 [Tech Stack](.agents/instructions/tech-stack.md) | Technology decisions & skill mappings |
+| 📐 [Patterns](.agents/instructions/patterns.md) | Code conventions & architecture patterns |
+| 📁 [Structure](.agents/instructions/structure.md) | Directory layout & protected files |
+| ⌨️ [Commands](.agents/instructions/commands.md) | Dev, test, lint, build commands |
 
 ### Agent Rules
 
-Rules in `.agent/rules/` are **always active** — they apply to every task, every session:
+Rules in `.agents/rules/` are **always active** — they apply to every task, every session:
 
 | Rule | What It Enforces |
 |------|-----------------|
-| 🔒 [security-first](.agent/rules/security-first.md) | PII isolation, input validation, secret handling |
-| 📜🧪 [tdd-contract-first](.agent/rules/tdd-contract-first.md) | `{{CONTRACT_LIBRARY}}` schemas before implementation, tests ARE the spec |
-| 🔲 [vertical-slices](.agent/rules/vertical-slices.md) | All four surfaces or it's not done |
-| 🎯📏 [specificity-standards](.agent/rules/specificity-standards.md) | Testable acceptance criteria, exhaustive spec depth |
-| 🧩 [extensibility](.agent/rules/extensibility.md) | File limits, directory docs, anti-spaghetti |
-| 🚧 [boundary-not-placeholder](.agent/rules/boundary-not-placeholder.md) | Boundary stubs vs banned lazy placeholders |
-| 🗣️ [question-vs-command](.agent/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
-| 🎯 [decision-classification](.agent/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
-| ✅ [completion-checklist](.agent/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
-| 📖 [source-before-ask](.agent/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
+| 🔒 [security-first](.agents/rules/security-first.md) | PII isolation, input validation, secret handling |
+| 📜🧪 [tdd-contract-first](.agents/rules/tdd-contract-first.md) | `{{CONTRACT_LIBRARY}}` schemas before implementation, tests ARE the spec |
+| 🔲 [vertical-slices](.agents/rules/vertical-slices.md) | All four surfaces or it's not done |
+| 🎯📏 [specificity-standards](.agents/rules/specificity-standards.md) | Testable acceptance criteria, exhaustive spec depth |
+| 🧩 [extensibility](.agents/rules/extensibility.md) | File limits, directory docs, anti-spaghetti |
+| 🚧 [boundary-not-placeholder](.agents/rules/boundary-not-placeholder.md) | Boundary stubs vs banned lazy placeholders |
+| 🗣️ [question-vs-command](.agents/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
+| 🎯 [decision-classification](.agents/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
+| ✅ [completion-checklist](.agents/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
+| 📖 [source-before-ask](.agents/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
 
 ### Installed Skills
 
@@ -188,4 +188,4 @@ graph TD
 
 ### Mandatory Validation
 
-**CRITICAL:** Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.
+**CRITICAL:** Run the Validation Cmd from `.agents/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.

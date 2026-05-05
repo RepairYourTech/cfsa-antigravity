@@ -242,7 +242,7 @@ cp cfsa-antigravity/CODEX.md /path/to/your-project/
 >
 > Do not hide the runtime directory your agent/editor needs to index.
 >
-> - Antigravity-style installs use `.agent/`
+> - Antigravity-style installs use `.agents/`
 > - Codex installs use `.codex/`
 > - Claude Code installs use `.claude/`
 > - Factory Droid installs use `.factory/`

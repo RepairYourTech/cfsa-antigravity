@@ -2,9 +2,9 @@ import { join } from "node:path";
 import { ensureDir, fileExists, getFileText, getMemoryRoot, getProjectRoot, listFilesRecursively, setFileText, slugify, toRelativePath } from "./utils.mjs";
 
 function graphBucket(relativeSpecPath) {
-  if (relativeSpecPath.startsWith(".memory/wiki/specs/ia/")) return { bucket: "specs/ia", type: "ia-spec" };
-  if (relativeSpecPath.startsWith(".memory/wiki/specs/be/")) return { bucket: "specs/be", type: "be-spec" };
-  if (relativeSpecPath.startsWith(".memory/wiki/specs/fe/")) return { bucket: "specs/fe", type: "fe-spec" };
+  if (relativeSpecPath.startsWith(".memory/wiki/specs/ia/")) return { bucket: "spec-mirrors/ia", type: "ia-spec" };
+  if (relativeSpecPath.startsWith(".memory/wiki/specs/be/")) return { bucket: "spec-mirrors/be", type: "be-spec" };
+  if (relativeSpecPath.startsWith(".memory/wiki/specs/fe/")) return { bucket: "spec-mirrors/fe", type: "fe-spec" };
   if (relativeSpecPath.startsWith(".memory/wiki/specs/phases/")) return { bucket: "phases", type: "phase-plan" };
   if (relativeSpecPath.startsWith(".memory/wiki/specs/ideation/")) return { bucket: "ideation", type: "ideation" };
   if (relativeSpecPath.startsWith(".memory/wiki/specs/audits/")) return { bucket: "audits", type: "audit" };
@@ -99,10 +99,6 @@ export function mirrorPlansIntoVault(options = {}) {
     mirroredCount: mirrored.length,
     mirrored,
   };
-}
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log(JSON.stringify(mirrorPlansIntoVault(), null, 2));
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

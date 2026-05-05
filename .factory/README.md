@@ -76,7 +76,7 @@ All skills live directly under `.factory/skills/`:
 Each skill directory contains a `SKILL.md` with YAML frontmatter and markdown instructions, plus optional supporting files (references, scripts, templates).
 ```
 
-This directory is the standalone Factory Droid runtime for the CFSA pipeline. It operates independently of the Antigravity (`.agent/`) and Claude Code (`.claude/`) runtimes.
+This directory is the standalone Factory Droid runtime for the CFSA pipeline. It operates independently of the Antigravity (`.agents/`) and Claude Code (`.claude/`) runtimes.
 
 ## Key Differences from Other Runtimes
 

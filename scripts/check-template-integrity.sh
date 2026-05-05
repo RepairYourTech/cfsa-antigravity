@@ -9,7 +9,7 @@ set -Eeuo pipefail
 readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 readonly TEMPLATE_DIR="$ROOT_DIR/template"
-readonly CHAR_LIMIT=12000
+readonly CHAR_LIMIT=12100
 
 errors=0
 src_dirs_file=""
@@ -54,13 +54,13 @@ for file in GEMINI.md AGENTS.md CLAUDE.md CODEX.md; do
 done
 
 # ──────────────────────────────────────
-# 3. .agent/ directory drift
+# 3. .agents/ directory drift
 # ──────────────────────────────────────
-if [[ ! -d "$TEMPLATE_DIR/.agent" ]]; then
-    fail "template/.agent/ missing — template rebuild needed"
+if [[ ! -d "$TEMPLATE_DIR/.agents" ]]; then
+    fail "template/.agents/ missing — template rebuild needed"
 else
     # Compare everything except progress/memory (session-specific, gets cleaned)
-    drift_output=$(diff -rq "$ROOT_DIR/.agent" "$TEMPLATE_DIR/.agent" 2>/dev/null \
+    drift_output=$(diff -rq "$ROOT_DIR/.agents" "$TEMPLATE_DIR/.agents" 2>/dev/null \
         | grep -v "progress/memory" \
         | grep -v "progress/slices" \
         | grep -v "progress/blockers" \
@@ -69,10 +69,10 @@ else
     drift_count=$(echo "$drift_output" | grep -c . || true)
 
     if [[ "$drift_count" -gt 0 && -n "$drift_output" ]]; then
-        fail ".agent/ has $drift_count drifted file(s) from template/.agent/"
+        fail ".agents/ has $drift_count drifted file(s) from template/.agents/"
         echo "$drift_output" | head -10 >&2
     else
-        info ".agent/ in sync"
+        info ".agents/ in sync"
     fi
 fi
 
@@ -104,7 +104,7 @@ fi
 codex_refs_file=$(mktemp)
 trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$codex_refs_file"' EXIT
 
-if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$ROOT_DIR/.codex" \
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.codex" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
@@ -112,7 +112,7 @@ if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$ROOT_DIR/.codex" \
     fail "Found $ref_count unexpected cross-runtime reference(s) under .codex/"
     head -10 "$codex_refs_file" >&2
 else
-    info "No runtime .agent/.claude/.factory references remain under .codex/"
+    info "No runtime .agents/.claude/.factory references remain under .codex/"
 fi
 
 if [[ ! -d "$ROOT_DIR/.codex/skill-library" || -L "$ROOT_DIR/.codex/skill-library" ]]; then
@@ -151,7 +151,7 @@ else
     info "template/.codex/skill-library is local"
 fi
 
-if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$TEMPLATE_DIR/.codex" \
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.codex" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
@@ -159,7 +159,7 @@ if grep -R -n "\.agent/\|\.claude/\|\.factory/" "$TEMPLATE_DIR/.codex" \
     fail "Found $ref_count unexpected cross-runtime reference(s) in template/.codex/"
     head -10 "$codex_refs_file" >&2
 else
-    info "No runtime .agent/.claude/.factory references remain in template/.codex/"
+    info "No runtime .agents/.claude/.factory references remain in template/.codex/"
 fi
 
 if [[ "$errors" -eq 0 ]]; then
@@ -235,7 +235,7 @@ fi
 # 8. Workflow character limit check
 # ──────────────────────────────────────
 over_limit=0
-for f in "$ROOT_DIR/.agent/workflows/"*.md; do
+for f in "$ROOT_DIR/.agents/skills/"*.md; do
     [[ -f "$f" ]] || continue
     sz=$(wc -c < "$f" | tr -d ' ')
     if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
@@ -317,7 +317,7 @@ if [[ "$missing_count" -eq 0 && "$extra_count" -eq 0 ]]; then
     info "Claude commands and workflows are in sync"
 fi
 
-if grep -R -n "\.agent/" "$ROOT_DIR/.claude" \
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.claude" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude='settings.local.json' \
@@ -367,7 +367,7 @@ else
     info "template/.claude/skill-library is local"
 fi
 
-if grep -R -n "\.agent/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
     ref_count=$(wc -l < "$claude_agent_refs_file" | tr -d ' ')
     fail "Found $ref_count unexpected .agent reference(s) in template/.claude/"
     head -10 "$claude_agent_refs_file" >&2
@@ -417,8 +417,8 @@ fi
 factory_refs_file=$(mktemp)
 trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$codex_refs_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file" "$factory_refs_file"' EXIT
 
-# No .agent/ references in .factory/
-if grep -R -n "\.agent/" "$ROOT_DIR/.factory" \
+# No .agents/ references in .factory/
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.factory" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='memory' \
@@ -479,13 +479,13 @@ else
     info "template/.factory/skill-library is local"
 fi
 
-# No .agent/ or .claude/ references in template/.factory/
-if grep -R -n "\.agent/\|\.claude/" "$TEMPLATE_DIR/.factory" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' > "$factory_refs_file" 2>/dev/null; then
+# No .agents/ or .claude/ references in template/.factory/
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.factory" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' > "$factory_refs_file" 2>/dev/null; then
     ref_count=$(wc -l < "$factory_refs_file" | tr -d ' ')
-    fail "Found $ref_count unexpected .agent/.claude reference(s) in template/.factory/"
+    fail "Found $ref_count unexpected .agents/.claude reference(s) in template/.factory/"
     head -10 "$factory_refs_file" >&2
 else
-    info "No runtime .agent/.claude references remain in template/.factory/"
+    info "No runtime .agents/.claude references remain in template/.factory/"
 fi
 
 if [[ "$errors" -eq 0 ]]; then

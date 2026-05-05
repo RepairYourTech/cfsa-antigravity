@@ -9,9 +9,9 @@ Welcome to the project's shared memory vault.
 - [[wiki/blockers]] — compiled blockers
 
 ## Graph hubs
-- [[wiki/specs/ia]] — IA spec graph notes
-- [[wiki/specs/be]] — BE spec graph notes
-- [[wiki/specs/fe]] — FE spec graph notes
+- [[wiki/spec-mirrors/ia]] — IA spec graph notes
+- [[wiki/spec-mirrors/be]] — BE spec graph notes
+- [[wiki/spec-mirrors/fe]] — FE spec graph notes
 - [[wiki/phases]] — phase and slice notes
 - [[wiki/ideation]] — ideation notes
 - [[wiki/architecture]] — architecture notes

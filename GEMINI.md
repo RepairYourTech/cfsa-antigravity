@@ -108,32 +108,32 @@ Once locked, downstream stages may not contradict. To change a locked decision, 
 
 | Guide | Description |
 |-------|-------------|
-| 🛠️ [Workflow](.agent/instructions/workflow.md) | Execution sequence |
-| 💻 [Tech Stack](.agent/instructions/tech-stack.md) | Technology decisions |
-| 📐 [Patterns](.agent/instructions/patterns.md) | Code conventions |
-| 📁 [Structure](.agent/instructions/structure.md) | Directory layout |
-| ⌨️ [Commands](.agent/instructions/commands.md) | Dev, test, lint, build |
+| 🛠️ [Workflow](.agents/instructions/workflow.md) | Execution sequence |
+| 💻 [Tech Stack](.agents/instructions/tech-stack.md) | Technology decisions |
+| 📐 [Patterns](.agents/instructions/patterns.md) | Code conventions |
+| 📁 [Structure](.agents/instructions/structure.md) | Directory layout |
+| ⌨️ [Commands](.agents/instructions/commands.md) | Dev, test, lint, build |
 
 ### Agent Rules
 
-Rules in `.agent/rules/` are **always active** — they apply to every task, every session:
+Rules in `.agents/rules/` are **always active** — they apply to every task, every session:
 
 | Rule | What It Enforces |
 |------|-----------------|
-| 🔒 [security-first](.agent/rules/security-first.md) | PII isolation, input validation, secret handling |
-| 📜🧪 [tdd-contract-first](.agent/rules/tdd-contract-first.md) | `{{CONTRACT_LIBRARY}}` schemas before implementation, tests ARE the spec |
-| 🔲 [vertical-slices](.agent/rules/vertical-slices.md) | All four surfaces or it's not done |
-| 🎯📏 [specificity-standards](.agent/rules/specificity-standards.md) | Testable acceptance criteria, exhaustive spec depth |
-| 🧩 [extensibility](.agent/rules/extensibility.md) | File limits, directory docs, anti-spaghetti |
-| 🚧 [boundary-not-placeholder](.agent/rules/boundary-not-placeholder.md) | Boundary stubs vs banned lazy placeholders |
-| 🗣️ [question-vs-command](.agent/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
-| 🎯 [decision-classification](.agent/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
-| ✅ [completion-checklist](.agent/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
-| 🧠 [memory-capture](.agent/rules/memory-capture.md) | Patterns, decisions, blockers written every conversation |
-| 🔢 [single-question](.agent/rules/single-question.md) | One question at a time, options + pros/cons + recommendation |
-| 🐛 [debug-by-test](.agent/rules/debug-by-test.md) | Failing test before any fix — reproduce first, fix second |
-| 🔍 [skill-mcp-first](.agent/rules/skill-mcp-first.md) | Check skills and MCPs before reasoning on your own |
-| 📖 [source-before-ask](.agent/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
+| 🔒 [security-first](.agents/rules/security-first.md) | PII isolation, input validation, secret handling |
+| 📜🧪 [tdd-contract-first](.agents/rules/tdd-contract-first.md) | `{{CONTRACT_LIBRARY}}` schemas before implementation, tests ARE the spec |
+| 🔲 [vertical-slices](.agents/rules/vertical-slices.md) | All four surfaces or it's not done |
+| 🎯📏 [specificity-standards](.agents/rules/specificity-standards.md) | Testable acceptance criteria, exhaustive spec depth |
+| 🧩 [extensibility](.agents/rules/extensibility.md) | File limits, directory docs, anti-spaghetti |
+| 🚧 [boundary-not-placeholder](.agents/rules/boundary-not-placeholder.md) | Boundary stubs vs banned lazy placeholders |
+| 🗣️ [question-vs-command](.agents/rules/question-vs-command.md) | Questions = discuss, Commands = act, Ambiguous = ask |
+| 🎯 [decision-classification](.agents/rules/decision-classification.md) | Product = user, Architecture = options, Implementation = agent |
+| ✅ [completion-checklist](.agents/rules/completion-checklist.md) | Code ≠ done. Code + tests + tracking = done |
+| 🧠 [memory-capture](.agents/rules/memory-capture.md) | Patterns, decisions, blockers written every conversation |
+| 🔢 [single-question](.agents/rules/single-question.md) | One question at a time, options + pros/cons + recommendation |
+| 🐛 [debug-by-test](.agents/rules/debug-by-test.md) | Failing test before any fix — reproduce first, fix second |
+| 🔍 [skill-mcp-first](.agents/rules/skill-mcp-first.md) | Check skills and MCPs before reasoning on your own |
+| 📖 [source-before-ask](.agents/rules/source-before-ask.md) | Read relevant source docs before every question — no decisions from summaries |
 
 ### Installed Skills
 
@@ -188,4 +188,4 @@ graph TD
 
 ### Mandatory Validation
 
-Run the Validation Cmd from `.agent/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.
+Run the Validation Cmd from `.agents/instructions/commands.md` after **EVERY** code change. Do not finish a task until all pass.

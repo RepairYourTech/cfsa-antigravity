@@ -25,7 +25,7 @@ This path owns the upstream URL, last synced commit, last synced timestamp, kit 
 The following paths are not canonical progress stores and must not be referenced by workflow, skill, rule, or instruction files as active state locations:
 
 ```text
-.agent/progress/
+.agents/progress/
 .codex/progress/
 .claude/progress/
 .factory/progress/

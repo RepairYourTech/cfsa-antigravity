@@ -2,7 +2,7 @@
 
 **Purpose:** Provide a high-level map of the agentic machinery that powers CFSA Antigravity.
 
-This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes. The `.agent/` runtime serves Antigravity-style installs, `.codex/` serves Codex installs, and `.claude/` owns Claude-specific execution assets. A shared project-level `.memory/` root now provides the canonical cross-runtime memory layer.
+This document serves as a guide to understanding how the CFSA kit is organized across its agent runtimes. The `.agents/` runtime serves Antigravity-style installs, `.codex/` serves Codex installs, and `.claude/` owns Claude-specific execution assets. A shared project-level `.memory/` root now provides the canonical cross-runtime memory layer.
 
 ---
 
@@ -11,7 +11,7 @@ This document serves as a guide to understanding how the CFSA kit is organized a
 The kit ships multiple runtime trees in this repository:
 
 ```text
-.agent/                      # Antigravity runtime
+.agents/                      # Antigravity runtime
 ├── instructions/
 ├── rules/
 ├── skill-library/
@@ -49,7 +49,7 @@ The kit ships multiple runtime trees in this repository:
 └── migrate/
 ```
 
-`.agent/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets. Shared project state lives under `.memory/`.
+`.agents/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets. Shared project state lives under `.memory/`.
 
 The `.memory/` directory is not just an internal store; it is intended to be an Obsidian-friendly vault within the project space so humans and agents can browse the same memory corpus directly. It also mirrors durable `.memory/wiki/specs/` artifacts into graph-friendly vault notes so IA/BE/FE specs, phase plans, and related knowledge become traversable Obsidian graph nodes. Runtime clients should connect to one shared project-local memory daemon rather than each spawning their own isolated server process.
 
@@ -58,7 +58,7 @@ That routing is now workspace-safe: the daemon publishes `projectRoot`, `memoryR
 ### Antigravity Runtime Components
 
 ```text
-.agent/
+.agents/
 ├── instructions/    # Core directives (the "brainstem")
 ├── rules/           # Non-negotiable constraints (the "laws")
 ├── skill-library/   # Installable skill packages (the "toolbox")
@@ -244,7 +244,7 @@ Agents are inherently stateless across conversations. The kit uses the **Session
 
 ### Canonical Progress Directory
 
-All runtimes use `.memory/pipeline/progress/` for phase tracking, spec-pipeline tracking, and session resumption. Runtime-local progress folders are legacy migration inputs only; new workflow, skill, and rule instructions must not point agents at `.agent/progress/`, `.codex/progress/`, `.claude/progress/`, or `.factory/progress/`.
+All runtimes use `.memory/pipeline/progress/` for phase tracking, spec-pipeline tracking, and session resumption. Runtime-local progress folders are legacy migration inputs only; new workflow, skill, and rule instructions must not point agents at `.agents/progress/`, `.codex/progress/`, `.claude/progress/`, or `.factory/progress/`.
 
 ```text
 .memory/pipeline/progress/
@@ -279,7 +279,7 @@ The only canonical memory system shipped by the kit is the project-level `.memor
 
 - `.claude/memory/` is bridge documentation only
 - `.factory/memory/` is bridge documentation only
-- `.agent/progress/memory/`, `.codex/progress/memory/`, `.claude/progress/memory/`, and `.factory/progress/memory/` are legacy migration inputs, not primary memory stores
+- `.agents/progress/memory/`, `.codex/progress/memory/`, `.claude/progress/memory/`, and `.factory/progress/memory/` are legacy migration inputs, not primary memory stores
 
 All new shared memory behavior should target `.memory/`.
 
@@ -452,7 +452,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 
 ## 6. Kit Maintenance Checklist
 
-**When a new workflow or shard is added to a runtime tree (`.agent/workflows/`, `.codex/skills/<workflow>/SKILL.md`, or `.claude/skills/<workflow>/SKILL.md`):**
+**When a new workflow or shard is added to a runtime tree (`.agents/skills/`, `.codex/skills/<workflow>/SKILL.md`, or `.claude/skills/<workflow>/SKILL.md`):**
 
 - [ ] Add a row to the `AGENTS.md` Pipeline Workflow Table
 - [ ] Add a matching row to the `GEMINI.md` Pipeline Workflow Table (must stay in sync with `AGENTS.md`)
@@ -460,7 +460,7 @@ Workflows are designed to end with explicit NEXT STEPS. An agent shouldn't guess
 - [ ] If the workflow uses new prd-template reference files, add them to `prd-templates/SKILL.md`
 - [ ] If the workflow introduces a new skill, add it to the matching runtime's `skill-library/MANIFEST.md`
 
-**When a new rule is added to a runtime tree (`.agent/rules/`, `.codex/rules/`, or `.claude/rules/`):**
+**When a new rule is added to a runtime tree (`.agents/rules/`, `.codex/rules/`, or `.claude/rules/`):**
 
 - [ ] Add a row to the `GEMINI.md` Agent Rules table
 - [ ] If the rule uses `{{PLACEHOLDER}}` values, follow the placeholder checklist below
@@ -488,7 +488,7 @@ Do not hide the runtime directory your tool needs to index. If you need local-on
 Examples:
 
 ```bash
-echo '.agent/' >> .git/info/exclude
+echo '.agents/' >> .git/info/exclude
 # or
 echo '.codex/' >> .git/info/exclude
 # or

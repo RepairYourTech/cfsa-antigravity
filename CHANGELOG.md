@@ -1,5 +1,18 @@
 # cfsa-antigravity
 
+## 4.0.0
+
+### Major Changes
+
+- Rename `.agent/` directory to `.agents/` across the kit (instructions, rules, skills, skill-library, PRDS, TASKS). This is a breaking change for existing installations — consumers must rename their `.agent/` folder to `.agents/` (or re-run the installer) and update any tooling that references the old path.
+
+  Additional changes bundled in this release:
+
+  - Plan-phase workflow updates across `.claude`, `.codex`, and `.factory` runtimes
+  - Memory pipeline: legacy migration, compile, and plan-mirror improvements
+  - Build/check scripts updated to reflect new `.agents/` path
+  - Documentation refresh (README, CLAUDE.md, AGENTS.md, GEMINI.md, kit-architecture, progress-state-catalog)
+
 ## 3.1.1
 
 ### Patch Changes
