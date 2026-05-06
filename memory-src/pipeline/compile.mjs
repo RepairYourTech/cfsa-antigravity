@@ -10,7 +10,6 @@ import {
   toRelativePath,
   writeJson,
 } from "./utils.mjs";
-import { mirrorPlansIntoVault } from "./mirror-plans.mjs";
 import { buildSpecGraph } from "./spec-graph.mjs";
 import { buildSemanticIndex } from "./semantic.mjs";
 
@@ -70,7 +69,6 @@ export function compileMemory(options = {}) {
   const projectRoot = options.projectRoot ?? process.cwd();
   const memoryRoot = options.memoryRoot ?? getMemoryRoot(projectRoot);
   ensureMemoryScaffold(memoryRoot);
-  const mirroredPlans = mirrorPlansIntoVault({ projectRoot, memoryRoot });
   const specGraph = buildSpecGraph({ projectRoot, memoryRoot });
 
   const rawFiles = [
@@ -312,9 +310,9 @@ export function compileMemory(options = {}) {
     "",
     `- **IA ↔ BE ↔ FE graph nodes**: ${iaEntries.length + beEntries.length + feEntries.length}`,
     "",
-    "- [[spec-mirrors/ia|IA Specs]]",
-    "- [[spec-mirrors/be|BE Specs]]",
-    "- [[spec-mirrors/fe|FE Specs]]",
+    "- [[specs/ia/ia-index|IA Specs]]",
+    "- [[specs/be/be-index|BE Specs]]",
+    "- [[specs/fe/fe-index|FE Specs]]",
     "",
     "## Cross-layer navigation",
     "",
@@ -391,7 +389,6 @@ export function compileMemory(options = {}) {
   writeJson(join(memoryRoot, "schema", "summary.json"), {
     compiledAt: new Date().toISOString(),
     rawFiles: rawFiles.length,
-    mirroredPlans: mirroredPlans.mirroredCount,
     knowledgeEntries: indexEntries.length,
     chunkEntries: chunkEntries.length,
     semanticEntries: semanticIndex.count,
@@ -406,7 +403,6 @@ export function compileMemory(options = {}) {
   return {
     ok: true,
     rawFiles: rawFiles.length,
-    mirroredPlans: mirroredPlans.mirroredCount,
     knowledgeEntries: indexEntries.length,
     chunkEntries: chunkEntries.length,
     semanticEntries: semanticIndex.count,
