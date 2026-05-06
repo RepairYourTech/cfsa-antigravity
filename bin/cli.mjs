@@ -200,7 +200,6 @@ ${c.bold}Init Options:${c.reset}
   --dry-run           Preview what would be copied without making changes
   --quiet             Suppress output (for CI/CD — installs all runtimes)
   --memory            Scaffold unified .memory/ and MCP integration
-  --migrate-memory    Scaffold .memory/ and migrate legacy runtime memory
 
 ${c.bold}Examples:${c.reset}
   ${c.dim}# Interactive — pick which runtimes to install${c.reset}
@@ -225,7 +224,7 @@ ${c.bold}Examples:${c.reset}
 
 // --- Parse Arguments ---
 function parseArgs(args) {
-    const parsed = { command: null, agents: null, force: false, dryRun: false, path: null, quiet: false, memory: false, migrateMemory: false, json: false };
+    const parsed = { command: null, agents: null, force: false, dryRun: false, path: null, quiet: false, memory: false, json: false };
 
     let i = 0;
     while (i < args.length) {
@@ -271,10 +270,6 @@ function parseArgs(args) {
                 break;
             case "--memory":
                 parsed.memory = true;
-                break;
-            case "--migrate-memory":
-                parsed.memory = true;
-                parsed.migrateMemory = true;
                 break;
             case "--json":
                 parsed.json = true;
@@ -424,18 +419,6 @@ function installMemoryScaffold(targetDir, opts) {
     info(`MCP client configuration is user-managed; see the README for tool-specific setup and the initial graph compile step.`);
 }
 
-async function migrateMemory(targetDir) {
-    const migratePath = join(targetDir, ".memory", "migrate", "migrate-legacy.mjs");
-    if (!existsSync(migratePath)) {
-        error("Unified memory migration script not found after scaffold.");
-        exit(1);
-    }
-
-    const migrationModule = await import(pathToFileURL(migratePath).href);
-    const result = migrationModule.migrateLegacyMemory({ projectRoot: targetDir });
-    info(`Migrated legacy memory (${result.migratedCount} item(s))`);
-}
-
 // --- Install runtimes ---
 function installRuntimes(runtimes, targetDir, opts) {
     let totalCopied = 0;
@@ -569,9 +552,6 @@ async function cmdInit(opts) {
     const { totalCopied, totalSkipped } = installRuntimes(selected, targetDir, opts);
 
     installMemoryScaffold(targetDir, opts);
-    if (opts.migrateMemory && !opts.dryRun) {
-        await migrateMemory(targetDir);
-    }
 
     if (!opts.dryRun) {
         const compilePath = join(targetDir, ".memory", "pipeline", "compile.mjs");

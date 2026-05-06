@@ -24,8 +24,7 @@ Project root canonical memory / Obsidian vault:
 ├── wiki/                # Compiled patterns, decisions, blockers, and knowledge
 ├── schema/              # Machine-readable retrieval artifacts
 ├── mcp-server/          # Shared memory MCP server
-├── hooks/               # Claude hook entrypoints
-└── migrate/             # Legacy memory import helpers
+└── hooks/               # Claude hook entrypoints
 ```
 
 The `.memory/` directory is the canonical project memory layer and is designed to function as an Obsidian-friendly vault inside the project. `.claude/memory/` exists only for Claude-native bridge guidance and session-specific conventions.

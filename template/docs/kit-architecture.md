@@ -45,8 +45,7 @@ The kit ships multiple runtime trees in this repository:
 ├── schema/
 ├── mcp-server/              # shared daemon + per-runtime client entrypoints
 ├── runtime/                 # daemon pid/state files
-├── hooks/
-└── migrate/
+└── hooks/
 ```
 
 `.agents/`, `.codex/`, `.claude/`, and `.factory/` implement the same CFSA pipeline for different agent environments. Codex uses the `.codex/` runtime plus the root `CODEX.md` guidance file. Each runtime owns its own execution assets. Shared project state lives under `.memory/`.

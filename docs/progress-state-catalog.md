@@ -51,7 +51,6 @@ These paths may appear only as legacy migration source paths.
 
 Old runtime progress paths are intentionally retained in:
 
-- `memory-src/migrate/migrate-legacy.mjs`
 - `docs/kit-architecture.md`
 
 Those references describe migration inputs only. They are not instructions for active workflow state.

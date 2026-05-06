@@ -7,7 +7,7 @@
     "version": "changeset version",
     "prebuild": "./scripts/build-template.sh",
     "build": "./scripts/build-template.sh",
-    "check": "./scripts/check-template-integrity.sh && node ./scripts/check-memory-mcp.mjs && node ./scripts/check-memory-migration.mjs && node ./scripts/check-vault-contract.mjs && node ./scripts/check-e2e-harness.mjs",
+    "check": "./scripts/check-template-integrity.sh && node ./scripts/check-memory-mcp.mjs && node ./scripts/check-vault-contract.mjs && node ./scripts/check-e2e-harness.mjs",
     "prepare": "husky || true"
   },
   "bin": {

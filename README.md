@@ -29,7 +29,6 @@ npx cfsa-antigravity init --agent claude,factory
 | `cfsa-antigravity init --dry-run` | Preview what would be installed |
 | `cfsa-antigravity init --path ./dir` | Install into specific directory |
 | `cfsa-antigravity init --memory` | Scaffold unified `.memory/` + MCP integration |
-| `cfsa-antigravity init --migrate-memory` | Scaffold unified memory and import legacy runtime memory |
 
 ### Available runtimes
 
@@ -54,8 +53,7 @@ Every install now scaffolds a shared `.memory/` root at the project level. It is
 ├── schema/      # machine-readable index/chunk artifacts
 ├── mcp-server/  # shared project-local MCP daemon + per-runtime client entrypoints
 ├── runtime/     # daemon pid/state files
-├── hooks/       # Claude hook entrypoints
-└── migrate/     # legacy memory import helpers
+└── hooks/       # Claude hook entrypoints
 ```
 
 The installer ships the shared memory runtime into `.memory/`, including the project-local MCP server under `.memory/mcp-server/`. Tool-specific MCP client config is intentionally **not** managed by the kit — users wire their own `.mcp.json` / editor settings for the tools they actually use. The daemon writes workspace-local runtime state into `.memory/runtime/`, and clients resolve that state before proxying requests so one workspace does not silently talk to another workspace's daemon. The semantic index writes retrieval artifacts into `.memory/schema/semantic-index.json` plus `.memory/schema/semantic-manifest.json`.
@@ -149,10 +147,6 @@ A fresh `init` now installs:
 - the rest of the `.memory` scaffold needed to compile graph/index artifacts locally
 
 Tool-specific MCP client config (such as `.mcp.json`) is user-managed and documented above.
-
-Use `--migrate-memory` when upgrading an older installation that still has runtime-local memory you want imported into `.memory/`.
-
-If migration finds a knowledge-file destination with different existing contents, it preserves both versions by writing a `.conflict-YYYY-MM-DD.md` sibling file for manual reconciliation.
 
 ## Documentation
 

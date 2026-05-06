@@ -7,7 +7,6 @@
   "userIgnoreFilters": [
     "schema/",
     "mcp-server/",
-    "hooks/",
-    "migrate/"
+    "hooks/"
   ]
 }

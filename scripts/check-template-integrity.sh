@@ -531,7 +531,6 @@ else
         "$TEMPLATE_DIR/.memory/pipeline/compile.mjs" \
         "$TEMPLATE_DIR/.memory/mcp-server/index.mjs" \
         "$TEMPLATE_DIR/.memory/hooks/session-start.mjs" \
-        "$TEMPLATE_DIR/.memory/migrate/migrate-legacy.mjs" \
         "$TEMPLATE_DIR/.memory/schema/entry.schema.json" \
         "$TEMPLATE_DIR/.memory/config.json"; do
         if [[ -f "$required" ]]; then

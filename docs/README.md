@@ -186,24 +186,6 @@ After installing or updating the `.memory` runtime in an existing project:
 3. Verify graph/index artifacts exist under `.memory/schema/` and `.memory/wiki/`.
 4. Open Obsidian at `.memory/`.
 
-If you are upgrading an older project with siloed runtime-local memory, run:
-
-```bash
-npx cfsa-antigravity init --migrate-memory
-```
-
-### Migration conflicts
-
-When migration imports runtime-local knowledge files into `.memory/wiki/knowledge/`, an existing destination with different contents is preserved and a sibling conflict file is written:
-
-```text
-.memory/wiki/knowledge/<name>.conflict-YYYY-MM-DD.md
-```
-
-Resolve conflicts by comparing the imported `.conflict-*.md` file with the canonical target file, merging the content you want to keep, then deleting the conflict file once resolved.
-
-Structured legacy files like old `decisions.md`, `patterns.md`, and `blockers.md` are imported through the raw memory pipeline so compile can preserve them in the unified wiki outputs.
-
 ### Semantic backend
 
 The shared memory system now supports a stronger local semantic mode:
