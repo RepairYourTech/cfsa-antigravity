@@ -53,15 +53,27 @@ Read `.agents/skills/prd-templates/references/be-spec-template.md` for the docum
 
 Write decision to disk. Continue below.
 
-### 7.5. Spec complexity gate
+### 7.5. Spec content completeness floor
 
-Count the total lines in the written BE spec file.
+Spec depth is enforced by **content completeness**, not line count. A short spec that omits validation rules, error codes, or auth coverage is broken; a long spec that enumerates them is correct. There is no upper bound on length.
 
-| Lines | Action |
-|-------|--------|
-| **≤ 600** | ✅ Pass |
-| **601–800** | ⚠️ Warning — "This BE spec is [N] lines. Consider splitting if endpoint groups are independently testable." Proceed after acknowledgment. |
-| **> 800** | 🛑 **Hard stop** — "This BE spec is [N] lines and will degrade implementation quality. Split the parent IA shard or separate endpoint groups into distinct BE specs." Present the largest sections with line counts. |
+For **every endpoint** in this spec, verify all of the following are explicitly present:
+
+| Required item | What "present" means |
+|---------------|---------------------|
+| Request schema | Every field with type, constraints (required/optional, min/max, format, enum), and example |
+| Response schema (success) | Full body shape including envelope, pagination metadata, and computed fields |
+| Response schema (each error class) | Body shape for every error code listed below |
+| Validation rules | One row per (field × constraint) with the exact rejection error code and message |
+| Error codes | At minimum: any `4xx` produced by validation, any `4xx` produced by auth/authz, `404` if resource is addressable, `409` if uniqueness or version conflicts apply, `429` if rate-limited, `5xx` for downstream failure cascades |
+| Authorization | One row per role × this endpoint, with allow/deny outcome and any ownership/scoping rule |
+| Idempotency | Explicit statement of behavior on duplicate submission (idempotent / safe-to-retry / not-idempotent + dedupe strategy) |
+| Rate limit | Per-role limit (or "inherits global default" pointing at api-conventions) |
+| Observability | Log fields emitted, metric names incremented, audit-trail entries written |
+
+**Hard gate**: If any cell above is missing for any endpoint, the spec is incomplete. Fill it in. Do **not** count missing items as "implicit," "obvious," or "covered by conventions" — every endpoint must surface its full table even when it inherits from a shared convention.
+
+**Length is informational**: Report the line count for the spec in the index entry as metadata only. Do not stop, warn, or split based on length. Splitting is justified only by domain boundaries (e.g., two unrelated entity groups in one shard) — not by size.
 
 ## 8. Update the BE index
 
@@ -108,9 +120,49 @@ For each endpoint that mutates data:
 Add any new transaction boundary requirements, rollback specifications, or consistency guarantees.
 
 **Pass loop guard**: Track total pass count.
-- Passes 1-3 → mandatory.
-- Pass 4-5 → optional, run if prior pass produced significant additions.
-- **After pass 5** → **STOP**: "5 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
+- Passes 1-7 → mandatory.
+- Passes 8+ → optional, run if prior pass produced significant additions.
+- **After pass 10** → **STOP**: "10 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
+
+### Pass 4: Authorization completeness
+
+Build a role × endpoint matrix for this spec. Every cell must be one of: `allow`, `allow-own-only`, `allow-team-only`, `deny`, or `deny-with-reason-code`. No empty cells, no "tbd," no "see other doc."
+
+For every `allow-*-only` cell, the spec must define:
+- The exact ownership predicate (e.g., `record.created_by == auth.user_id`)
+- The error code returned when the predicate fails
+- Whether the predicate is enforced in the application layer, the database layer (RLS / policies), or both
+
+For every `deny` cell, the spec must define the error code returned. `404` vs `403` for unauthorized reads of existing records must be an explicit decision, not an oversight.
+
+### Pass 5: Observability and audit trail
+
+For every endpoint, enumerate:
+- **Structured log entries** emitted on success, on each error class, and on slow-path / degraded-mode execution
+- **Metrics** incremented: counters (request count, error count per class), histograms (latency, payload size), gauges (in-flight requests if relevant)
+- **Audit-trail entries** for any state-changing endpoint: actor, action verb, target entity ID, timestamp, before/after diff (or pointer to it), correlation ID
+- **Trace span attributes** added to the request span beyond defaults (e.g., `entity.id`, `tenant.id`, `feature.flag.X`)
+
+Add any missing observability hook to the endpoint spec, or to the api-conventions spec if it should be cross-cutting.
+
+### Pass 6: Rate-limit and abuse-protection edge cases
+
+For every endpoint:
+- Anonymous-vs-authenticated rate limits (anonymous must always be stricter; if endpoint is auth-only, state explicitly that anonymous receives `401` before rate-limit logic runs)
+- Per-IP vs per-user vs per-tenant limit boundaries
+- Burst behavior (token-bucket vs fixed-window)
+- Behavior when limit is exceeded: `429` with `Retry-After` header, log event, metric increment
+- Abuse pattern handling: brute-force detection on auth endpoints, enumeration protection (return same response for "user not found" and "wrong password"), mass-assignment protection (whitelist allowed fields explicitly per endpoint)
+
+### Pass 7: Failure-mode partial-state hygiene
+
+For every multi-step endpoint (e.g., create-then-link-then-notify):
+- Identify each external dependency (database, queue, email, third-party API)
+- For each, specify behavior when that dependency fails: rollback, compensate, queue-for-retry, fail-and-surface-to-user
+- Identify which combinations of partial failures are possible
+- Specify the user-facing error code and message for each combination
+
+If the endpoint cannot guarantee atomicity, the spec must say so explicitly and define the reconciliation strategy.
 
 ## 10. Cross-reference check
 

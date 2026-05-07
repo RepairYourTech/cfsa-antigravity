@@ -24,12 +24,11 @@ parameters:
 2. Write FE spec sections using FE template and conventions.
 3. Include split-group metadata for split-origin specs when applicable.
 
-### Step 2 — Complexity gate
+### Step 2 — Content completeness floor (replaces line-count gate)
 
-Apply line-count thresholds:
-- <=600 pass
-- 601-800 warn
-- >800 hard stop and split recommendation
+For every component, view, and form, verify all of: state enumeration (idle/loading/error-per-class/empty/success/optimistic-pending/optimistic-rollback/disabled/degraded), role variants matrix with no empty cells (full/read-only/partial-hidden/disabled/not-rendered with specific fields/actions), form fields with validation + error copy + on-blur vs on-submit behavior, empty/loading/error UI copy + retry affordances, responsive interaction-behavior changes per breakpoint, accessibility inventory per interactive element (keyboard binding + focus order + screen-reader text + ARIA), navigation (back/deep-link/bookmark/multi-tab/unsaved-changes), and network-degradation behavior (loading-threshold + retry + offline).
+
+Hard gate: any missing cell on any component blocks the spec from advancing. Inheritance from design system must be cited per component; "implicit" is not allowed. Length is informational only.
 
 ### Step 3 — Index and tracker updates
 
@@ -38,12 +37,15 @@ Apply line-count thresholds:
 
 ### Step 4 — Iterative deepening passes
 
-Run multi-pass refinement:
+Run multi-pass refinement (passes 1–7 mandatory, 8–10 conditional, hard stop after 10):
 1. state synchronization and source-of-truth behavior
 2. degraded network behavior and retry semantics
 3. user-flow sequencing and persistence behavior
 4. responsive/touch interaction gap analysis
-5. optional convergence pass (loop guard enforced)
+5. state enumeration completeness (per-class error UI, optimistic states, degraded states, transition triggers, persistence across nav)
+6. role-conditional rendering exhaustion (role × component matrix with no empty cells; specify hidden fields, disabled actions, layout-slot collapse)
+7. accessibility edge-case enumeration (keyboard, focus management, screen-reader announcements, color/contrast, motion preferences)
+8–10. additional convergence passes if prior pass produced significant additions
 
 ### Step 5 — Cross-reference + ambiguity gates
 

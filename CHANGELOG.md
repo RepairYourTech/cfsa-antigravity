@@ -1,5 +1,14 @@
 # cfsa-antigravity
 
+## 6.1.0
+
+### Minor Changes
+
+- Pipeline depth-quality overhaul: removed the arbitrary 25-slice and 25-shard hard caps; dropped forced L-slice splitting; replaced BE/FE spec line-count complexity gates with content-completeness floors covering every endpoint/component dimension; added a spec-derived slice depth floor in `/plan-phase` and a depth-ratio gate in `/implement-slice` that fail the slice if delivered tests don't cover the spec floor; expanded mandatory deepening passes for BE (authorization completeness, observability, rate-limit/abuse, partial-state hygiene) and FE (state enumeration, role-conditional rendering, accessibility edge cases). New shared reference `prd-templates/references/slice-depth-floor.md` defines the formula and anti-cheat rules.
+- Cross-runtime progress consistency enforcement. Adds `scripts/check-progress-consistency.mjs` (ships via template) that detects drift between slice files, phase files, and the master index. Hardens session-continuity Protocol 1 (Session Resumption) with a mandatory drift scan before trusting the resume point. Hardens Protocol 3 (Progress Update) with read-back-verify-retry-STOP for each write, mandatory verifier run before exit, and a `## Completion Signature` block stamped on every completed slice. `/implement-slice` Step 6/7/8 across all four runtimes (.agents, .claude, .factory, .codex) now blocks `notify_user` until the verifier returns exit 0. Fixes the failure mode where work completed in one runtime was invisible to another runtime resuming the project.
+
+  Also normalizes blockers/decisions/patterns memory paths in `.claude` and `.codex` runtimes from the legacy `memory/*.md` to the shared `.memory/wiki/*.md` location, so all four runtimes write project memory to the same vault files.
+
 ## 6.0.0
 
 ### Major Changes

@@ -88,7 +88,7 @@ The decomposition should produce a shard count proportional to the ideation dept
 | **Small** | 3–5 | 4–8 | Most domains map 1:1 to shards |
 | **Medium** | 6–8 | 7–14 | Some multi-domain splits expected |
 | **Large** | 9–12 | 12–20 | Cross-cutting shards multiply; enforce sub-feature limits aggressively |
-| **Deep** | 13+ | 16–25 | Maximum recommended. Beyond 25 → consider surface-level decomposition or domain grouping |
+| **Deep** | 13+ | 16+ | Beyond 25 → review whether each additional shard reflects a true domain boundary or an over-decomposition; do not force a cap if boundaries are real |
 
 ### Total Count Thresholds (Post-Skeleton Check)
 
@@ -98,6 +98,6 @@ After all shard skeletons are created in Step 5, count the total:
 |--------------|--------|
 | **≤ 20** | ✅ Proceed |
 | **21–25** | ⚠️ Warning — "Decomposition produced [N] shards. This will require [N × 3] spec documents (IA + BE + FE) and proportional phase planning. Confirm this is the intended scope or consider grouping related domains." |
-| **> 25** | 🛑 **Hard stop** — "Decomposition produced [N] shards. This exceeds the recommended maximum for sequential agent processing. Present a domain grouping proposal that reduces shard count to ≤ 25." |
+| **> 25** | ⚠️ Informational — "Decomposition produced [N] shards. This is fine if each shard reflects an independent domain boundary. Review the boundary justification for any shard with strong dependency coupling to a sibling and merge if the coupling indicates the same domain." Proceed after acknowledgment. |
 
-> **Why 25 max**: Each shard produces ~3 spec documents (IA + BE + FE). At 25 shards, that's 75 spec documents. Beyond this, cross-layer consistency checks become unreliable and phase planning produces impractical slice counts.
+> **Why no upper cap**: Shard count must reflect domain boundaries, not an arbitrary processing limit. The justification for splitting or merging shards is **dependency coupling**, not count: shards with high mutual dependency belong together; shards with independent domains belong apart. Spec quality is enforced by the per-shard content-completeness floors in BE/FE, not by limiting total shard count. If 35 shards each represent a distinct domain, 35 shards is correct.

@@ -41,14 +41,13 @@ For each FE spec in the phase scope:
 
 The resulting list of slices is derived from the spec, not estimated from feature names. Do not aggregate slices by domain name or by "it feels like one feature."
 
-Estimate complexity (S/M/L) per derived slice. Flag any slice estimated L — these are candidates for further splitting before ordering begins.
+Estimate complexity (S/M/L) per derived slice as informational metadata only. **Do not split, merge, or drop slices to hit a complexity target.** Slice count is determined by the spec, never by an arbitrary cap.
 
-**L-slice enforcement**: Any slice marked **L** MUST be reviewed for splitting before Step 3. Present L slices to user: "These slices are estimated Large. Split each into 2-3 smaller slices, or confirm L is acceptable?" Wait for confirmation. Do not proceed to ordering with unreviewed L slices.
+**L-slice handling (informational)**: If a slice is estimated L, surface it in the phase plan with the L tag and a one-line note explaining why it is large (e.g., "covers 4 endpoints with shared transaction boundary"). Splitting an L slice is permitted only when the spec itself contains a natural seam (e.g., two independent BE endpoints) — never to satisfy a count target.
 
-**Slice count sanity check**: After splitting, count total slices.
-- **1-15 slices** → normal.
-- **16-25 slices** → warn: "Phase has [N] slices. Consider splitting into two phases if unrelated domains are grouped together."
-- **>25 slices** → **STOP**: "Phase has [N] slices — this is too many for one phase. Split into Phase N and Phase N+1, keeping dependency order intact."
+**Slice count is informational**: Report the total slice count in the phase plan header. Do not stop, warn, or restructure based on count alone. A phase has as many slices as the spec produces. If the count feels uncomfortable, the correct response is to verify the spec is correctly scoped to this phase, not to compress slices.
+
+**Phase splitting** is justified only by **dependency boundaries** (e.g., "auth must ship before any auth-gated feature"), not by slice count. If two independent domains are grouped in one phase by the architecture's phasing section, that is the architecture's call, not the planner's.
 
 **Good slice**: "User can submit an entity claim form" (one named user flow from the FE interaction spec)
 **Bad slice**: "Implement entity management" (domain name, not a spec-derived user flow)
@@ -128,6 +127,18 @@ Read `.agents/skills/prd-templates/references/operational-templates.md` for the 
 - `FE`: Pages, components, styling, interactions, client-side logic
 - `QA`: Test writing (RED phase — runs FIRST), test verification (GREEN phase — runs LAST)
 - No tag: Contract/schema work, shared infra — handled sequentially by orchestrator
+
+## 4.4. Slice depth floor (mandatory — derived from spec)
+
+Read `.agents/skills/prd-templates/references/slice-depth-floor.md` in full. For every slice, compute the **minimum acceptance-criteria count** using the formula in that file. Annotate the slice in `phase-N-draft.md` with the computed floor and its breakdown.
+
+**Hard gate**:
+1. The acceptance-criteria count written in Step 4 MUST equal or exceed the computed floor for every slice. If it does not, return to Step 4 and add the missing criteria — every missing criterion must trace to a concrete spec item (validation rule, error code, role, state, edge case) that the slice covers.
+2. Apply the **Spec Thinness Detection** table from `slice-depth-floor.md`. If any slice's referenced spec section produces zero items in a required category, **STOP**. Do not write shallow criteria from a thin spec. Tell the user: "Spec [BE/FE/IA §...] is too thin to produce a meaningful slice. Run `/resolve-ambiguity [path]` before continuing." Wait for the spec to be deepened, then re-run this step.
+
+The floor is the **minimum**, not the maximum. Implementers may add criteria beyond the floor; they may not write fewer.
+
+This step exists to prevent shallow slices from being green-lit by the criteria-counting gate. Without it, a slice can be planned with 3 criteria when its specs collectively define 18 items that need explicit verification.
 
 ## 4.5. Identify parallel groups (TDD order)
 

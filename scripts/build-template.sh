@@ -77,6 +77,18 @@ for file in GEMINI.md AGENTS.md CLAUDE.md CODEX.md; do
     fi
 done
 
+# Runtime-agnostic helper scripts that installed projects need at runtime
+# (referenced by Protocol 1 drift scan and Protocol 3 consistency check).
+mkdir -p "$TEMPLATE_DIR/scripts"
+for runtime_script in check-progress-consistency.mjs; do
+    if [[ -f "$ROOT_DIR/scripts/$runtime_script" ]]; then
+        info "Copying scripts/$runtime_script"
+        cp "$ROOT_DIR/scripts/$runtime_script" "$TEMPLATE_DIR/scripts/$runtime_script"
+    else
+        warn "scripts/$runtime_script not found — skipping"
+    fi
+done
+
 # --- Strip dev-only content ---
 
 # Remove canonical progress contents (session-specific)

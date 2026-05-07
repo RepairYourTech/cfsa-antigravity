@@ -90,7 +90,23 @@ After GREEN, scan new imports. If any package lacks a corresponding skill direct
 2. Read `.agents/skills/bootstrap-agents/SKILL.md` and invoke `/bootstrap-agents PIPELINE_STAGE=implement-slice` + the new dependency key
 3. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding to REFACTOR.
 
-No new unregistered dependencies → skip to Step 5.
+No new unregistered dependencies → skip to Step 4.9.
+
+## 4.9. Slice depth ratio gate (mandatory — derived from spec)
+
+Read `.agents/skills/prd-templates/references/slice-depth-floor.md` in full. The slice's planned `phase-N.md` entry should already include a computed depth floor and breakdown (added by `/plan-phase-write` § 4.4). If it does not, compute it now from the slice's referenced spec sections.
+
+1. **Count delivered tests** for this slice. A "delivered test" is a test function that:
+   - Lives in this slice's test files (or shared test files with explicit slice-tag comments), AND
+   - Asserts a concrete behavior tied to a specific spec item (a field, a validation rule, an error code, a role, a state, an edge case)
+   - Smoke tests, snapshot tests with no assertions, and "test that it renders" tests do NOT count.
+2. **Compute ratio**: `delivered_tests / depth_floor`.
+3. **Hard gate**:
+   - `ratio >= 1.0` → proceed to Step 5.
+   - `ratio < 1.0` → **STOP**. List every uncovered spec item (per the floor's breakdown). Return to Step 3 (RED), write failing tests for each uncovered item, then proceed through GREEN again. Do not weaken the floor; do not skip uncovered items by claiming they are "implicit." Every floor item must have an explicit test.
+4. **Anti-cheat**: A test that asserts only `expect(result).toBeTruthy()` or `expect(response.status).toBe(200)` does not satisfy a floor item that requires verifying a specific field, error message, role denial, or state transition. Each floor item must be matched to at least one assertion that exercises that item's specific behavior.
+
+Record the ratio and the matched item count in the slice progress file (`.memory/pipeline/progress/slices/<slice-id>.md`) under a `## Depth Ratio` section before proceeding.
 
 ## 5. Refactor
 
@@ -151,7 +167,7 @@ Read `.agents/skills/session-continuity/protocols/11-parallel-synthesis.md` and 
 
 ## 7. Update progress (Mandatory)
 
-**CRITICAL**: You MUST NOT skip progress updates. Read `.agents/skills/session-continuity/protocols/03-progress-update.md` and follow **every step** — physically edit all four file targets (slice, phase, index, memory).
+**CRITICAL**: You MUST NOT skip progress updates. Read `.agents/skills/session-continuity/protocols/03-progress-update.md` and follow **every step** — including the new step 8 (read-back verification), step 9 (cross-file consistency check), and step 10 (Completion Signature stamp). Physically edit all four file targets (slice, phase, index, memory) and run `node scripts/check-progress-consistency.mjs` before exiting this step.
 
 ## 8. Completion Gate
 
@@ -160,19 +176,27 @@ Read `.agents/skills/verification-before-completion/SKILL.md` and apply its disc
 Read `.agents/skills/prd-templates/references/slice-completion-gates.md` and verify every applicable checklist passes:
 - **UI Completeness Check** — FE slices only
 - **Spec Traceability Gate** — all slices
+- **Spec Depth Floor Gate** — all slices
 
 Read `.agents/skills/prd-templates/references/tdd-testing-policy.md` and run the **QA Anti-Cheat Audit** checklist.
 
-You may not call `notify_user` until you have edited all four progress file targets (7a–7d).
+**Cross-runtime progress gate (HARD STOP)**: Run `node scripts/check-progress-consistency.mjs`. If exit code is non-zero, you MAY NOT call `notify_user`. Fix every drift item the script reports, then re-run until exit 0. This gate exists because different agent runtimes (Claude, Antigravity, Codex, Factory) share the same `.memory/pipeline/progress/` tree — a silent partial update here means the next session in any runtime resumes from stale state and may redo or skip work.
+
+You may not call `notify_user` until:
+1. All four progress file targets have been edited (Protocol 3 steps 1–7).
+2. Read-back verification passed for each (Protocol 3 step 8).
+3. `node scripts/check-progress-consistency.mjs` returned exit 0 (Protocol 3 step 9).
+4. Slice file has a `## Completion Signature` block stamped with date, runtime, verifier exit, and depth ratio (Protocol 3 step 10).
 
 Verify your edits by reading:
-- `.memory/pipeline/progress/slices/phase-NN-slice-NN.md` — Status: complete, [x] criteria
+- `.memory/pipeline/progress/slices/phase-NN-slice-NN.md` — Status: complete, [x] criteria, Depth Ratio >= 1.0, Completion Signature present
 - `.memory/pipeline/progress/phases/phase-NN.md` — incremented progress fraction
 - `.memory/pipeline/progress/index.md` — updated overall percentage
 
 Your `notify_user` payload **MUST** include:
 1. Raw output from the three reads above
-2. Updated overall progress (e.g., "Overall progress is now 75% (24/32 slices)")
-3. Explicit next command: Run `/implement-slice` for [next slice name]
+2. Verifier exit code (must be `0`)
+3. Updated overall progress (e.g., "Overall progress is now 75% (24/32 slices)")
+4. Explicit next command: Run `/implement-slice` for [next slice name]
 
 **Infrastructure/Auth slice gate**: If this was the `00-infrastructure` or auth slice, the next command is `/verify-infrastructure`, not `/implement-slice`.

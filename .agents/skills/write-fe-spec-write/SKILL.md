@@ -42,15 +42,26 @@ Read `.agents/skills/prd-templates/references/fe-spec-template.md` for the docum
 
 Write decision to disk. Continue below.
 
-### 6.5. Spec complexity gate
+### 6.5. Spec content completeness floor
 
-Count the total lines in the written FE spec file.
+Spec depth is enforced by **content completeness**, not line count. There is no upper bound on length.
 
-| Lines | Action |
-|-------|--------|
-| **≤ 600** | ✅ Pass |
-| **601–800** | ⚠️ Warning — "This FE spec is [N] lines. Consider splitting if component groups are independently testable." Proceed after acknowledgment. |
-| **> 800** | 🛑 **Hard stop** — "This FE spec is [N] lines and will degrade implementation quality. Split into separate FE specs per component group or page." Present the largest sections with line counts. |
+For **every component, view, and form** in this spec, verify all of the following are explicitly present:
+
+| Required item | What "present" means |
+|---------------|---------------------|
+| State enumeration | Every distinct state defined: `idle`, `loading`, `error` (per error class produced by the BE), `empty`, `success`, plus `optimistic-pending` and `optimistic-rollback` for any optimistic mutation. "Loading" is one state per data dependency, not one shared state. |
+| Role variants | Every cell in the role × component matrix explicitly defined: `full`, `read-only`, `partial-hidden` (with which fields hidden), `disabled` (with which actions disabled), `not-rendered`. No empty cells. |
+| Form fields | Every field with type, validation rules, error message text per rule, on-blur vs on-submit behavior, disabled conditions |
+| Empty / loading / error UI | Concrete copy for empty state, loading skeleton structure, error message + retry affordance per error class |
+| Responsive variants | Every breakpoint that changes interaction behavior (not just layout) listed with the specific behavior change |
+| Accessibility inventory | Per interactive element: WCAG criterion satisfied, keyboard binding, focus order, screen-reader announcement text, ARIA attributes |
+| Navigation behavior | Browser back, deep-link entry, bookmarkability, multi-tab, and unsaved-changes guard for every route |
+| Network degradation | Loading-threshold (when does the loading UI promote to a slow-network UI), retry behavior, offline behavior |
+
+**Hard gate**: If any cell is missing for any component, the spec is incomplete. Fill it in. Do **not** count missing items as "implicit," "obvious," or "covered by the design system" — every component must surface its full table even when it inherits from a shared pattern.
+
+**Length is informational**: Report the line count for the spec in the index entry as metadata only. Splitting is justified only by component-group boundaries (e.g., entirely independent surface areas) — not by size.
 
 ## 7. Update the FE index
 
@@ -105,9 +116,39 @@ For each component with responsive breakpoints defined:
 Add any new touch interaction specs or mobile-specific behavior.
 
 **Pass loop guard**: Track total pass count.
-- Passes 1-4 → mandatory.
-- Pass 5 → optional, run if prior pass produced significant additions.
-- **After pass 5** → **STOP**: "5 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
+- Passes 1-7 → mandatory.
+- Passes 8+ → optional, run if prior pass produced significant additions.
+- **After pass 10** → **STOP**: "10 deepening passes completed. Present remaining gaps to user: continue deepening or accept current spec depth?"
+
+### Pass 5: State enumeration completeness
+
+For each component that consumes data:
+- List every distinct state the component can be in. At minimum: `idle`, `loading`, `error` (one per BE error class returned), `empty`, `success`, `optimistic-pending` (if mutating), `optimistic-rollback` (if mutating), `disabled` (if any role removes interaction), `degraded` (if network slowness has a separate UI).
+- For each state, define: visual treatment, available interactions, transition triggers in/out, and whether it persists across navigation.
+- For each error state, define the user-visible message text per error class, the retry affordance, and whether the user must take action to clear the state.
+- Empty states must include the empty copy + the affordance to leave the empty state (e.g., "Create your first entity").
+
+Flag any component where states were collapsed (e.g., all errors share one "something went wrong" message). Spec must enumerate per-class behavior unless the spec explicitly states uniform handling is the design choice.
+
+### Pass 6: Role-conditional rendering exhaustion
+
+Build a role × component matrix for this spec. Every cell must be one of: `full`, `read-only`, `partial-hidden`, `disabled`, `not-rendered`. No empty cells, no "tbd," no "see other doc."
+
+For every `partial-hidden` cell, list which fields/actions are hidden.
+For every `read-only` cell, list which controls become non-interactive.
+For every `disabled` cell, list which actions are disabled and the user-visible explanation (tooltip, badge, inline message).
+For every `not-rendered` cell, specify whether the layout slot collapses or shows a placeholder.
+
+### Pass 7: Accessibility edge-case enumeration
+
+For every interactive component:
+- **Keyboard**: Tab order, focus trap behavior in modals, escape behavior, arrow-key navigation in composite widgets (menus, tabs, listboxes), enter/space activation.
+- **Screen reader**: Announcement text for state changes (loading start, loading complete, error appeared, success), live-region usage (`polite` vs `assertive`), label-vs-description distinction.
+- **Focus management**: Where focus moves on modal open/close, on route change, on form submit, on async error.
+- **Color and contrast**: Required contrast ratios per element, behavior under high-contrast mode, behavior when color alone conveys state.
+- **Motion**: Respect for `prefers-reduced-motion`, alternative non-animated affordances for motion-conveyed information.
+
+If the spec inherits from a design-system accessibility doc, cite the section explicitly per component — do not leave it implicit.
 
 ## 9. Cross-reference check
 

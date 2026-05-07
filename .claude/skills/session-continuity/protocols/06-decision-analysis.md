@@ -65,7 +65,7 @@ the Devil's Advocate stress-tests and finds flaws. Together they catch blind spo
 
 ## Record
 
-Once converged, write to `memory/decisions.md`:
+Once converged, write to `.memory/wiki/decisions.md`:
 ```markdown
 ### DEC-004: Use middleware over per-route auth (2026-02-15)
 - **Problem**: 12+ routes need identical auth enforcement

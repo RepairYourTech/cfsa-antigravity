@@ -29,10 +29,35 @@
 
 6. **Read `.memory/wiki/decisions.md`** — load key decisions for context.
 
-7. **Summarize for the current task**:
+7. **Drift scan (mandatory — runtime-agnostic)**
+
+   Before trusting the resumption point, run the cross-file consistency verifier:
+
+   ```
+   node scripts/check-progress-consistency.mjs
+   ```
+
+   - Exit 0 → progress files agree across slice/phase/index. Trust the resume point and continue to step 8.
+   - Exit 1 → drift. A previous session (possibly in a different runtime — Claude, Antigravity, Codex, Factory) committed work but did not finish updating all four progress targets. **DO NOT silently re-do or skip past the affected slice.** Surface the verifier's full output to the user with this exact framing:
+
+     ```
+     Progress drift detected from a previous session. Before resuming, the following must be reconciled:
+     <verifier output>
+
+     Likely cause: another runtime completed work but did not finish updating all progress files (Protocol 3 steps 8–10 were skipped or interrupted).
+
+     Recommended action: hand-edit the offending files to match the actual completion state on disk (check `git status`, slice's Completion Signature block, and test pass/fail), then re-run this check. I will not advance until the verifier returns 0.
+     ```
+
+   - Exit 2 → malformed progress files. **STOP**: report and ask the user before attempting repair.
+
+   If `scripts/check-progress-consistency.mjs` does not exist in the project (older installation), note this and recommend `/sync-kit`, then fall back to manually opening `index.md` + the latest in-progress phase file + that phase's slice files and confirming the fractions and checkboxes match before resuming.
+
+8. **Summarize for the current task**:
    ```
    Status: Phase 2 in progress — 3/7 slices complete (43%)
    Last session: Completed auth middleware slice, deferred rate limiting (blocked on Redis)
    Blockers: 1 active — Redis connection config needed
+   Drift scan: clean (verifier exit 0)
    Resume at: Phase 2, Slice 4 — Rate limiting middleware
    ```

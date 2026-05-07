@@ -18,6 +18,14 @@ Non-FE slices skip this block.
 - [ ] No `// DECISION:` annotations exist for behaviors that are actually specified in the BE spec or IA shard (i.e., no spec-defined behavior was treated as an undocumented implementation decision)
 - [ ] The {{CONTRACT_LIBRARY}} contract written in Step 2 matches the delivered implementation field-for-field — no fields added, removed, or renamed during implementation without a corresponding contract update
 
+## Spec Depth Floor Gate (all slices)
+
+- [ ] Slice depth floor was computed from BE/FE/IA spec content during `/plan-phase` and recorded in the phase plan (`.memory/pipeline/progress/phases/phase-N.md`) for this slice
+- [ ] Acceptance criteria count for this slice meets or exceeds the recorded depth floor (slice may not ship with fewer criteria than the floor)
+- [ ] Slice depth ratio (`delivered_tests / depth_floor`) is recorded in `.memory/pipeline/progress/slices/<slice-id>.md` under `## Depth Ratio` and is `≥ 1.0`
+- [ ] Anti-cheat: every floor item has at least one delivered test that asserts the specific spec behavior — no `expect(true).toBeTruthy()`, no bare `expect(res.status).toBe(200)`, no snapshot-only or render-only tests counted toward the floor
+- [ ] Every required category from the spec (validation rules, error codes, authorization rows, idempotency behavior, rate limit behavior, observability hooks for BE; state enumeration, role variants, accessibility inventory, navigation behavior, network-degradation for FE) is represented by ≥1 explicit assertion
+
 ## Resource Cleanup Gate (all slices)
 
 - [ ] Every database client or connection created in this slice has a corresponding cleanup call (`disconnect`, `close`, `end`, `dispose`) in a `finally` block or lifecycle hook

@@ -25,7 +25,7 @@
    | Context-specific | Only applies to this situation | Log in session but don't generalize |
    | Not significant | Routine, nothing new learned | Skip |
 
-3. **Write to `memory/patterns.md`** (only for best-practice or anti-pattern):
+3. **Write to `.memory/wiki/patterns.md`** (only for best-practice or anti-pattern):
    ```markdown
    ### PAT-007: Schema coercion for URL params (2026-02-15)
    - **Type**: best-practice
@@ -48,7 +48,7 @@
    - **Scope creep?** — Did the decision force unplanned work or workarounds?
 
    If the answer to "would you choose differently" is **yes**, log it as a
-   revision candidate in `memory/decisions.md` with the original decision ID:
+   revision candidate in `.memory/wiki/decisions.md` with the original decision ID:
    ```markdown
    ### DEC-004-REVIEW: Middleware decision revisited (2026-02-16)
    - **Original**: DEC-004 — middleware over per-route auth

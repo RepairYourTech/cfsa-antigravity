@@ -28,9 +28,9 @@ parameters:
 1. Derive candidate slices from FE interaction specification user flows.
 2. Map each flow to BE endpoints via source map.
 3. Group only when strict dependency criteria are met.
-4. Size slices (S/M/L).
-5. Enforce L-slice review/split decision before ordering.
-6. Enforce slice count sanity gates (warn at 16–25, hard stop >25).
+4. Size slices (S/M/L) as informational metadata only.
+5. Do not split, merge, or drop slices to hit a complexity target. L slices are surfaced with a one-line note; splitting is permitted only when the spec contains a natural seam.
+6. Slice count is informational only — no warn or hard-stop thresholds. Phase splitting is justified by dependency boundaries, never by count.
 
 ### Step 3 — Spec coverage verification gate
 
@@ -53,6 +53,13 @@ parameters:
 2. Every criterion must include source citation (`[BE §..]`, `[FE §..]`, `[IA §..]`).
 3. Append each completed slice progressively to `phase-N-draft.md`.
 
+### Step 5.5 — Slice depth floor (mandatory)
+
+1. Read `.claude/skills/prd-templates/references/slice-depth-floor.md` in full.
+2. For every slice, compute the minimum acceptance-criteria count using its formula and annotate the slice in `phase-N-draft.md` with the floor and breakdown.
+3. Hard gate: every slice's criteria count MUST equal or exceed the floor. If short, return to Step 5 and add criteria traceable to concrete spec items.
+4. Apply Spec Thinness Detection: if any slice's referenced spec section produces zero items in a required category, STOP and tell the user to run `/resolve-ambiguity` on the thin spec before continuing.
+
 ### Step 6 — Finalize and generate progress artifacts
 
 1. Finalize `phase-N.md` from draft source.
@@ -74,6 +81,7 @@ parameters:
 - [ ] coverage gate passed
 - [ ] dependency ordering complete with infra gates
 - [ ] acceptance criteria written with citations
+- [ ] slice depth floor computed and met for every slice
 - [ ] phase draft and final plan written
 - [ ] progress files generated
 - [ ] spec graph refreshed via `memory_compile`

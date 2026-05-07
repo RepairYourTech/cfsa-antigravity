@@ -36,12 +36,11 @@ Core expectations:
 - testing strategy hooks
 - IA source mapping
 
-### Step 3 — Complexity gate
+### Step 3 — Content completeness floor (replaces line-count gate)
 
-Apply line-count thresholds:
-- <=600 pass
-- 601-800 warn
-- >800 hard stop and split recommendation
+For every endpoint, verify all of: request schema (fields + constraints + examples), success response schema, response schema per error class, validation rules per (field × constraint) with error codes, full error-code matrix (4xx for validation/auth/404/409/429, 5xx for downstream cascades), authorization row per role with allow/deny + ownership predicate, idempotency statement, rate limit (or explicit inheritance), and observability hooks (logs/metrics/audit/spans).
+
+Hard gate: any missing cell on any endpoint blocks the spec from advancing. Inheritance from conventions must be cited; "implicit" is not allowed. Length is informational only.
 
 ### Step 4 — Index and tracker updates
 
@@ -51,11 +50,15 @@ Apply line-count thresholds:
 
 ### Step 5 — Iterative deepening passes
 
-Run multi-pass refinement:
+Run multi-pass refinement (passes 1–7 mandatory, 8–10 conditional, hard stop after 10):
 1. cross-endpoint consistency
 2. sequencing/concurrency scenarios
 3. failure cascade analysis
-4. optional convergence passes up to loop guard threshold
+4. authorization completeness (role × endpoint matrix with no empty cells, ownership predicates, 403 vs 404 decisions)
+5. observability completeness (logs, metrics, audit-trail, trace spans per endpoint)
+6. rate-limit and abuse-protection edge cases (anonymous vs authed limits, burst, enumeration protection, mass-assignment whitelist)
+7. failure-mode partial-state hygiene (per external dependency: rollback / compensate / queue / surface)
+8–10. additional convergence passes if prior pass produced significant additions
 
 ### Step 6 — Cross-reference + ambiguity gates
 

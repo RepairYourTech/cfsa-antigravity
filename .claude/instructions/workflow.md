@@ -37,7 +37,7 @@ Do NOT mark a task complete until all validations pass.
 
 After completing a workflow or substantial task:
 
-- **Pattern Extraction**: Read `.claude/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `memory/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
+- **Pattern Extraction**: Read `.claude/skills/session-continuity/protocols/04-pattern-extraction.md` and follow the **Pattern Extraction Protocol**. Reflect on what worked, what didn't, and log reusable patterns to `.memory/wiki/patterns.md`. Skip only if the task was trivial (routine, nothing new learned).
 - **Session Close**: Read `.claude/skills/session-continuity/protocols/05-session-close.md` and follow the **Session Close Protocol**. Write a session log to `.memory/pipeline/progress/sessions/` so the next session can resume cleanly.
 
 > These steps are **not optional**. They are what differentiate a pipeline that gets

@@ -106,9 +106,9 @@ for complex ones.
    - What was deferred and why?
    - What's the recommended starting point?
 
-5. **Read `memory/blockers.md`** — are there unresolved blockers?
+5. **Read `.memory/wiki/blockers.md`** — are there unresolved blockers?
 
-6. **Read `memory/decisions.md`** — load key decisions for context.
+6. **Read `.memory/wiki/decisions.md`** — load key decisions for context.
 
 7. **Summarize for the current task**:
    ```
@@ -196,9 +196,9 @@ for complex ones.
    ```
 
 5. **Initialize memory files** (only if they don't already exist):
-   - `memory/patterns.md` — empty with header
-   - `memory/blockers.md` — empty with header
-   - `memory/decisions.md` — empty with header
+   - `.memory/wiki/patterns.md` — empty with header
+   - `.memory/wiki/blockers.md` — empty with header
+   - `.memory/wiki/decisions.md` — empty with header
 
 ---
 
@@ -253,7 +253,7 @@ for complex ones.
    - Key files changed
    - Any deviations from the plan
 
-7. **Log blockers** encountered during implementation to `memory/blockers.md`:
+7. **Log blockers** encountered during implementation to `.memory/wiki/blockers.md`:
    ```markdown
    ## Active Blockers
 
@@ -294,7 +294,7 @@ for complex ones.
    | Context-specific | Only applies to this situation | Log in session but don't generalize |
    | Not significant | Routine, nothing new learned | Skip |
 
-3. **Write to `memory/patterns.md`** (only for best-practice or anti-pattern):
+3. **Write to `.memory/wiki/patterns.md`** (only for best-practice or anti-pattern):
    ```markdown
    ### PAT-007: Schema coercion for URL params (2026-02-15)
    - **Type**: best-practice
@@ -317,7 +317,7 @@ for complex ones.
    - **Scope creep?** — Did the decision force unplanned work or workarounds?
 
    If the answer to "would you choose differently" is **yes**, log it as a
-   revision candidate in `memory/decisions.md` with the original decision ID:
+   revision candidate in `.memory/wiki/decisions.md` with the original decision ID:
    ```markdown
    ### DEC-004-REVIEW: Middleware decision revisited (2026-02-16)
    - **Original**: DEC-004 — middleware over per-route auth
@@ -429,7 +429,7 @@ the Devil's Advocate stress-tests and finds flaws. Together they catch blind spo
 
 ### Record
 
-Once converged, write to `memory/decisions.md`:
+Once converged, write to `.memory/wiki/decisions.md`:
 ```markdown
 ### DEC-004: Use middleware over per-route auth (2026-02-15)
 - **Problem**: 12+ routes need identical auth enforcement
