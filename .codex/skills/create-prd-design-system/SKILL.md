@@ -1,69 +1,183 @@
 ---
-name: create-prd-design-system
-description: Lock seven design-system decisions from ideation workflows and persist design-system.md incrementally
-parameters:
-  - name: surfaces
-    type: array
-    required: false
-    description: Optional explicit surfaces override; defaults to ideation constraints
+description: Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, data density, state design language for the create-prd workflow
+parent: create-prd
+shard: design-system
+standalone: true
+position: 1.5
+pipeline:
+  position: 2.15
+  stage: architecture
+  predecessors: [create-prd-stack]
+  successors: [create-prd-architecture]
+  skills: [impeccable, brand-guidelines, prd-templates, technical-writer]
+  calls-bootstrap: false
 ---
 
-## Overview
+// turbo-all
 
+# Create PRD — Design System Decisions
 
-## Prerequisites
+Establish the structural UI architecture — navigation paradigm, layout grid, page archetypes, global component inventory, motion language, data density philosophy, and global state design language. Produces `.memory/wiki/specs/design-system.md` which all FE specs must consume.
 
-1. Stack shard completed
-2. Design direction confirmed in brand-guidelines context
-3. Ideation constraints and structure map available
+**Prerequisite**: Tech stack decisions must be locked (`/create-prd-stack` completed). Design context must exist — run `/impeccable teach` first to establish PRODUCT.md and DESIGN.md, then verify `.agents/skills/brand-guidelines/SKILL.md` has no `{{PLACEHOLDER}}` values.
 
-## Step-by-Step
+---
 
-### Step 0 — Prerequisite and context load
+## 0. Prerequisite check
 
-1. Verify design direction placeholders are resolved.
-2. Read engagement tier from ideation index.
-3. Read constraints, ideation structure map, heavy domains, and CX files.
-4. Enforce stop gate: must read at least one domain index/deep-dive beyond ideation index.
+### 0.1 Load impeccable context
 
-### Step 1 — Checkpoint resumption
+1. Run `node .agents/skills/impeccable/scripts/load-context.mjs` to load PRODUCT.md and DESIGN.md.
+2. If PRODUCT.md is missing, empty, or placeholder → **stop** and tell the user: _"Design context hasn't been established yet. Run `/impeccable teach` first to define the product's users, brand, tone, and design principles."_
+3. Extract from the context: brand register (brand vs product), design direction, color palette (OKLCH or hex), typography, motion philosophy, spatial principles.
 
-1. Resume or initialize design-system shard checkpoint.
-2. Track completion state per decision.
+### 0.2 Verify pipeline placeholders
 
-### Step 2 — Per-decision synthesis and locking (7 decisions)
+4. Read `.agents/skills/brand-guidelines/SKILL.md`.
+5. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → **stop** and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd-stack` first to establish the design direction before designing the system."_
+6. If all placeholders are filled → extract and store for this session: the confirmed `DESIGN_DIRECTION`, color palette, typography choices, motion philosophy, and anti-patterns.
 
-For each decision below:
-1. Write cited ideation synthesis (2-4 bullets) to `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`.
-2. Enforce cite-or-stop gate (minimum one project-specific citation).
-3. Present options, trade-offs, recommendation.
-4. Confirm decision (tier-aware).
-5. Write corresponding section to `.memory/wiki/specs/design-system.md` immediately.
+### 0.3 Source material
 
-Decisions:
-1. Navigation paradigm
-2. Layout grid
-3. Page archetypes
-4. Global component inventory
-5. Motion language
-6. Data density philosophy
-7. Global state design language
+Read `## Engagement Tier` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
-### Step 3 — Completeness verification
+Read the engagement tier protocol (`.agents/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for design system decisions (all 7 decisions are product decisions).
 
-1. Validate all seven sections exist in `.memory/wiki/specs/design-system.md`.
-2. Ensure no placeholders or TBD values remain.
-3. Ensure global component inventory is usable as FE seed inventory.
+1. Read `.memory/wiki/specs/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
+2. Read `.agents/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
+Read `.agents/skills/impeccable/SKILL.md` — for the shared design laws (color, typography, motion, spatial) and the full command reference.
+4. Read `.agents/skills/technical-writer/SKILL.md` — for document writing conventions.
+5. Read `.agents/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `.memory/wiki/specs/design-system.md`.
+6. Note which surfaces are in scope from `## Project Surfaces`.
 
-## Completion Checklist
+### Ideation workflow context
 
-- [ ] Context and prerequisite gates passed
-- [ ] Checkpoint state updated
-- [ ] Seven synthesis sections written
-- [ ] Seven design-system decisions confirmed
-- [ ] design-system.md written progressively
-- [ ] Completeness verification passed
+> **Mandatory.** Navigation paradigms and page archetypes must be driven by actual user workflows, not abstract feature lists.
 
-## Next Steps
+7. Read the `## Structure Map` in `ideation-index.md` — identify the **3 heaviest domains** (highest feature count / deepest nesting)
+8. For each heavy domain: read `{domain}/{domain}-index.md` — extract the Children table to understand the user-facing workflows (what screens exist, what data users interact with, what actions they take)
+9. If any heavy domain has deep dives → read EVERY deep dive file — extract workflow complexity, interaction patterns, data density, real-time requirements, and multi-step user flows that affect navigation and archetype decisions
+10. Read CX files (`ideation-cx.md` + domain CX) — extract cross-domain navigation patterns, shared UI components, and workflow transitions between domains
 
-- Run `create-prd-architecture`
+> ❌ **STOP gate**: If you have not read at least one deep dive file or domain index beyond `ideation-index.md`, you are not ready to make design system decisions. `ideation-index.md` gives you feature names — the domain files give you the workflows those features represent.
+
+### Checkpoint resumption
+
+Read `.agents/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
+
+### Per-decision Ideation Synthesis requirement
+
+Before presenting **each** of the 7 design system decisions below, write a brief **Ideation Synthesis** (2-4 bullets) explaining how the ideation content informs THIS specific decision. Each bullet must cite a specific file. **Append each synthesis as a `## {Decision Name}` section to `.memory/wiki/specs/architecture/prd-working/design-system-synthesis.md`.**
+
+**Cite-or-Stop Gate**: Your synthesis must contain ≥ 1 project-specific finding with a file citation per decision.  Generic reasoning like "this is a complex app, so sidebar navigation" without citing which domains/workflows make it complex → **STOP** and re-read the heavy domain files.
+
+---
+
+## 2. Decision 1 — Navigation paradigm
+
+Present surface-appropriate options from the **Navigation Paradigm Options** section of `design-system-decisions.md`. Present only the options for surfaces in scope. Include tradeoff framing — e.g., sidebar is good for complex apps with deep IA but bad for mobile-first or content-focused sites.
+
+> **Decision prompt**: "Which navigation pattern fits your app's usage pattern and audience?"
+
+**Tier-aware confirmation** *(applies to all 7 decisions in this shard)*:
+- **Interactive/Hybrid** → "Wait for explicit user confirmation" means present and wait.
+- **Auto** → auto-confirm with Deep Think reasoning. Write the decision with `[AUTO-CONFIRMED]` tag. The Auto Tier Review Checkpoint in `/ideate-validate` or the review in Step 9 is where the user can override.
+
+**Wait for explicit user confirmation before proceeding** *(Interactive/Hybrid)* or auto-confirm with Deep Think *(Auto)*.
+
+On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 3. Decision 2 — Layout grid
+
+Ask the user about grid structure per breakpoint (mobile ≤768px, tablet 769–1024px, desktop ≥1025px): columns, gutter, max content width, grid type (CSS Grid / Flexbox / Hybrid).
+
+Provide a **default recommendation** based on the confirmed design direction:
+- Information-dense → 12-column, 24px gutter, 1440px max
+- Editorial/spacious → 12-column, 32px gutter, 1200px max
+- Mobile-first → 4/8/12 column progression, 16px gutter
+
+**Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 4. Decision 3 — Page archetypes
+
+Based on the feature inventory from `ideation-index.md`, propose a named archetype set using the **Page Archetype Options** from `design-system-decisions.md` as a starting point. Each archetype defines named layout zones. For each proposed archetype, produce a layout zones line (pipe-separated) and optionally an ASCII wireframe.
+
+Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 5. Decision 4 — Component hierarchy
+
+Derive the global component list from the confirmed navigation paradigm and page archetypes. Use the **Global Component Categories** from `design-system-decisions.md` as a seed. Global components are those used across multiple archetypes or present on every page.
+
+Present the derived list. Ask: (1) Are any components missing? (2) Should any be feature-local instead of global? (3) Are there project-specific components not covered?
+
+**Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
+
+---
+
+## 6. Decision 5 — Motion language
+
+Present the options from the **Motion Language Options** in `design-system-decisions.md`. Present a recommendation based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 7. Decision 6 — Data density philosophy
+
+Present the options from the **Data Density Options** in `design-system-decisions.md`. If **Hybrid** is selected, ask the user to define per-archetype density rules. **Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 8. Decision 7 — Global state design language
+
+Two-part decision. Present the loading state, error state, and empty state options from the **Global State Design Language Options** in `design-system-decisions.md`. Present recommendations based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
+
+On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+
+---
+
+## 9. Write and verify design-system.md
+
+After all seven decisions, verify that `.memory/wiki/specs/design-system.md` was written progressively and is complete. Use the **design-system.md Output Template** from `design-system-decisions.md` as the canonical structure.
+
+Verify:
+1. All seven sections are present and filled (no placeholders, no TBDs).
+2. The **Global Component Inventory** serves as the Component Inventory Seed.
+3. Every decision references the confirmed design direction for rationale consistency.
+
+If any section is incomplete, loop back to the relevant decision step and resolve with the user.
+
+**Completeness loop guard**: If the same section fails completeness 2 times → **STOP**: present the incomplete section to the user with what's missing and ask: "Provide the missing content directly, or accept this section as-is with a note?"
+
+---
+
+## Completion Gate (MANDATORY)
+
+Before reporting completion or proceeding to next shard:
+
+1. **Update checkpoint** — Write final state to `.memory/wiki/specs/architecture/prd-working/workflow-state.md`: mark all 7 decisions complete, set `current_step: completion`.
+2. **Memory check** — Apply rule `memory-capture`. Write patterns, decisions, or blockers to `.memory/wiki/`. All 7 design system decisions should have `DEC-NNN` entries. If nothing to write, confirm: "No new patterns/decisions/blockers."
+3. **Progress update** — Update `.memory/pipeline/progress/` tracking files if they exist.
+4. **Session log** — Write session entry to `.memory/pipeline/progress/sessions/`.
+
+---
+
+### Next step
+
+**STOP** — do NOT proceed to any other workflow. The only valid next step is `/create-prd-architecture`.
+
+> If invoked standalone, surface via `notify_user` and wait for user confirmation.

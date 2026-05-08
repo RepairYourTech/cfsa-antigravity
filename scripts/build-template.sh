@@ -47,6 +47,27 @@ else
     warn ".claude/ directory not found — skipping"
 fi
 
+# .pi/ — full directory (Pi Coding Agent)
+if [[ -d "$ROOT_DIR/.pi" ]]; then
+    info "Copying .pi/"
+    cp -a "$ROOT_DIR/.pi" "$TEMPLATE_DIR/.pi"
+else
+    warn ".pi/ directory not found — skipping"
+fi
+
+# .github/ — Copilot runtime + repo metadata (exclude kit-specific CI)
+if [[ -d "$ROOT_DIR/.github" ]]; then
+    info "Copying .github/ (Copilot runtime)"
+    cp -a "$ROOT_DIR/.github" "$TEMPLATE_DIR/.github"
+    # Remove kit-specific CI workflows — not appropriate for installed projects
+    if [[ -d "$TEMPLATE_DIR/.github/workflows" ]]; then
+        info "Removing kit-specific CI workflows from template"
+        rm -rf -- "$TEMPLATE_DIR/.github/workflows"
+    fi
+else
+    warn ".github/ directory not found — skipping"
+fi
+
 # .factory/ — full directory
 if [[ -d "$ROOT_DIR/.factory" ]]; then
     info "Copying .factory/"
@@ -153,7 +174,7 @@ EOF
   "version": 1,
   "backend": "jsonl",
   "retrieval": "index-guided",
-  "agents": ["claude", "gemini", "factory", "codex"]
+  "agents": ["claude", "gemini", "factory", "codex", "pi"]
 }
 EOF
 fi
@@ -176,6 +197,8 @@ installed_runtimes:
   - agents
   - codex
   - claude
+  - github
+  - pi
   - factory
 EOF
 

@@ -37,6 +37,8 @@ Runtimes are auto-detected from the template. Currently shipped:
 - **Antigravity** (`.agents/`) -- Antigravity, Cursor, Gemini CLI
 - **Codex** (`.codex/`) -- Standalone Codex runtime
 - **Claude Code** (`.claude/`) -- Standalone Claude Code runtime
+- **Copilot** (`.github/`) -- GitHub Copilot (VS Code / Insiders)
+- **Pi** (`.pi/`) -- Standalone Pi Coding Agent runtime
 - **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
 
 Each runtime is fully standalone with no cross-references. Install any combination side-by-side.
@@ -111,8 +113,9 @@ Examples:
 1. Antigravity install → keep `.agents/` out of `.gitignore`
 2. Codex install → keep `.codex/` out of `.gitignore`
 3. Claude install → keep `.claude/` out of `.gitignore`
-4. Factory install → keep `.factory/` out of `.gitignore`
-5. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
+4. Pi install → keep `.pi/` out of `.gitignore`
+5. Factory install → keep `.factory/` out of `.gitignore`
+6. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
    
 ## Get Started
 

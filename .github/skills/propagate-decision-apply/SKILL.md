@@ -1,0 +1,70 @@
+---
+description: Present each contradiction for approval, flag implicit assumptions for /resolve-ambiguity, run consistency check, and write propagation record
+parent: propagate-decision
+shard: apply
+standalone: true
+position: 2
+pipeline:
+  position: utility
+  stage: quality-gate
+  predecessors: [propagate-decision-scan]
+  successors: []
+  skills: [resolve-ambiguity, technical-writer]
+  calls-bootstrap: false
+---
+
+# Propagate Decision — Apply
+
+Review and apply fixes for explicit contradictions one at a time, flag implicit assumptions, run consistency check, and write propagation record.
+
+> **Prerequisite**: `.memory/wiki/specs/audits/propagation-scan-[date].md` must exist. If not → run `/propagate-decision-scan` first.
+
+---
+
+## 1. Explicit contradictions (one at a time)
+
+Read `.agents/skills/resolve-ambiguity/SKILL.md` for methodology.
+
+Read `.agents/skills/prd-templates/references/decision-propagation.md` → **Contradiction Display Format**.
+
+For each explicit contradiction from the scan report: display using the format and wait for user response (Y/n/skip/stop-and-save).
+
+After applying a fix to a spec document (`.memory/wiki/specs/ia/`, `.memory/wiki/specs/be/`, or `.memory/wiki/specs/fe/`): append `## Changelog` row. If no `## Changelog` exists, add one from the template in `.agents/skills/prd-templates/references/be-spec-template.md`.
+
+---
+
+## 2. Implicit assumptions (one at a time)
+
+Read `.agents/skills/prd-templates/references/decision-propagation.md` → **Assumption Display Format**.
+
+For each implicit assumption: display using the format and wait for user response. Y → add to `.memory/wiki/specs/audits/propagation-ambiguity-[date].md`.
+
+---
+
+## 3. Consistency check on changed documents
+
+For every document that received fixes:
+1. Re-read full document — verify fix applied correctly
+2. Check for remaining old-value references
+3. Check for internal contradictions introduced by fixes
+4. Check cross-references between changed documents
+
+Report issues. **Do not auto-fix** — present to user.
+
+---
+
+## 4. Write propagation record
+
+Read `.agents/skills/technical-writer/SKILL.md` for methodology.
+
+Write `.memory/wiki/specs/audits/propagation-[type]-[date].md` recording: decision type, source document, documents scanned, contradictions found/fixed/skipped, assumptions flagged/ignored, consistency results, timestamp.
+
+---
+
+## 5. Refresh graph and propose next steps
+
+1. Call `memory_compile` after writing the propagation record so corrected specs and removed contradictions are reflected in the graph.
+2. Verify the compile succeeded.
+3. Read `.agents/skills/prd-templates/references/decision-propagation.md` → **Completion Summary Format** and present, including graph refresh confirmation.
+
+If no assumptions flagged → omit `/resolve-ambiguity` recommendation.

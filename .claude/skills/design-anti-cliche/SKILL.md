@@ -1,13 +1,29 @@
 ---
 name: design-anti-cliche
-description: "Universal AI design correction rules. Always active. Prevents the agent from falling into common AI-generated design patterns that produce generic, indistinguishable output. Project-specific brand-guidelines can override any rule here."
+description: "Universal AI design correction rules — SUPERSEDED. The `impeccable` skill now provides 27 deterministic anti-pattern rules plus a 12-rule LLM critique pass, which are more comprehensive and runtime-enforced via the `impeccable` CLI. This file is kept for backward compatibility — the `impeccable` skill's design laws and anti-patterns take precedence."
 ---
 
-# Design Anti-Cliché Rules
+# Design Anti-Cliché Rules — SUPERSEDED by `impeccable`
+
+> **⚠️ This skill is superseded.** The `impeccable` skill's shared design laws, anti-pattern rules, and deterministic checks (CLI + browser extension) provide more comprehensive, runtime-enforced design quality. The `impeccable` anti-patterns are tied to specific design guidance the skill teaches against, include OKLCH color rules, and are actively maintained (25k+ stars).
+>
+> All design work should use `impeccable`'s rules. Use `/impeccable audit` for scored quality checks.
+>
+> The original rules below are preserved for reference. When `impeccable` is active, its rules take precedence over everything below.
+
+## Delegation
+
+When this skill is active and `impeccable` is installed:
+1. `impeccable`'s shared design laws (color, typography, motion, spatial) take precedence
+2. Run `/impeccable audit` for deterministic anti-pattern detection
+3. The CLI `npx impeccable` runs 27 deterministic checks with no LLM or API key
+
+<details>
+<summary>Original anti-cliché rules (superseded — reference only)</summary>
 
 > **Scope**: These rules apply to ALL design work — ideation, spec writing, design system creation, and implementation. They correct universal AI tendencies, not project-specific preferences.
 
-> **Override**: The `brand-guidelines` skill can override ANY rule below. If the user's confirmed brand direction contradicts a rule here (e.g., purple IS the brand color), `brand-guidelines` takes precedence.
+> **Override**: The `impeccable` skill can override ANY rule below. If the user's confirmed brand direction contradicts a rule here, `impeccable`'s DESIGN.md takes precedence.
 
 ---
 
@@ -150,10 +166,12 @@ These rules are **universal defaults**. They can be overridden by:
 2. **Explicit user request** — If the user says "I want a bento grid layout," use it
 3. **Design reference data** — If the searchable design database returns a style that uses a forbidden element and the user confirms it, use it
 
-**Override hierarchy:** User request > brand-guidelines > design-anti-cliche defaults
+**Override hierarchy:** User request > impeccable DESIGN.md > brand-guidelines > design-anti-cliche defaults
 
 When overriding, acknowledge the override:
 ```
 Using glassmorphism per confirmed "Glass" design direction — 
 anti-cliché default overridden by brand-guidelines.
 ```
+
+</details>

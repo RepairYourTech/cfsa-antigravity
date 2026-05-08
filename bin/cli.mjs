@@ -38,6 +38,8 @@ const RUNTIME_DISPLAY = {
     ".agent":   { name: "Antigravity",   desc: "Antigravity, Cursor, Gemini CLI" },
     ".codex":   { name: "Codex",         desc: "Standalone Codex runtime" },
     ".claude":  { name: "Claude Code",   desc: "Standalone Claude Code runtime" },
+    ".pi":      { name: "Pi",            desc: "Standalone Pi Coding Agent runtime" },
+    ".github":  { name: "Copilot",       desc: "GitHub Copilot (VS Code / Insiders)" },
     ".factory": { name: "Factory Droid", desc: "Standalone Factory Droid runtime" },
 };
 

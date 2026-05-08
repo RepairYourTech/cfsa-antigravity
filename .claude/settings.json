@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(cd *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(pnpm *)",
+      "Bash(bun *)",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(go *)",
+      "Bash(rustc *)",
+      "Bash(cargo *)",
+      "Bash(docker *)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(grep *)",
+      "Bash(find *)"
+    ],
+    "deny": []
+  },
+  "enableAllProjectMcpServers": true,
+  "autoCompact": true
+}

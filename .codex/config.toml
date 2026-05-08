@@ -1,0 +1,10 @@
+# Codex CLI — project-level config
+# See: https://developers.openai.com/codex/config-reference
+
+model = "gpt-5.1"
+
+[mcp_servers.context-mode]
+command = "context-mode"
+
+[features]
+codex_git_commit = false

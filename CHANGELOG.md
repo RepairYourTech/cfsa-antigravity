@@ -1,5 +1,16 @@
 # cfsa-antigravity
 
+## 6.2.0
+
+### Minor Changes
+
+- Added Pi (.pi/) and GitHub Copilot (.github/) as fully-supported standalone runtimes:
+  - Complete pipeline infrastructure: skills (101), instructions, rules, skill-library
+  - Native agent configs per runtime (Pi settings.json, Codex config.toml, Claude Code settings.json)
+  - context-mode integration: MCP servers, hooks, routing rules for all 5 runtimes
+  - impeccable frontend design skill with runtime-specific builds
+  - Updated CLI picker, build script, and README
+
 ## 6.1.0
 
 ### Minor Changes
