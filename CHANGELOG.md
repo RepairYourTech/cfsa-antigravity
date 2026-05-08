@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 6.2.1
+
+### Patch Changes
+
+- Fix skill frontmatter names to comply with Pi runtime validation (name must match parent directory, lowercase/hyphens only)
+
 ## 6.2.0
 
 ### Minor Changes

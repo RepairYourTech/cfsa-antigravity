@@ -1,5 +1,5 @@
 ---
-name: database-migration-management
+name: migration-management
 description: Manage database migrations and schema versioning. Use when planning migrations, version control, rollback strategies, or data transformations for any database paradigm.
 ---
 

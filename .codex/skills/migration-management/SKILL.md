@@ -1,5 +1,5 @@
 ---
-name: database-migration-management
+name: migration-management
 description: Manage database migrations and schema versioning. Use when planning migrations, version control, rollback strategies, or data transformations for any database paradigm.
 ---
 
@@ -21,7 +21,7 @@ Implement robust database migration systems with version control, rollback capab
 
 ## Paradigm-Specific References
 
-After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.codex/instructions/tech-stack.md`):
+After reading the methodology below, read the reference matching your surface's Databases column in the surface stack map (`.agents/instructions/tech-stack.md`):
 
 | Paradigm | Reference | Example Stores |
 |----------|-----------|----------------|

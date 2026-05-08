@@ -1,5 +1,5 @@
 ---
-name: Code Review Pro
+name: code-review-pro
 description: Deep code analysis covering security, performance, maintainability, and best practices
 ---
 
