@@ -1,0 +1,139 @@
+---
+description: Scan pipeline state, identify layers with content, check existing audit reports, and build the remediation plan
+parent: remediate-pipeline
+shard: assess
+standalone: true
+position: 1
+pipeline:
+  position: utility
+  stage: quality-gate
+  predecessors: [] # callable standalone
+  successors: [remediate-pipeline-execute]
+  skills: [code-review-pro, prd-templates]
+  calls-bootstrap: false
+---
+
+# Remediate Pipeline — Assess
+
+Scan all five pipeline layers, check for existing audit reports, determine the starting layer, and present a remediation plan for user approval.
+
+> **Prerequisite**: At least one pipeline layer must have completed documents. If `.memory/wiki/specs/ideation/ideation-index.md` does not exist, tell the user to run `/ideate` first.
+
+---
+
+## 0. Pre-check: scan instruction files for unfilled placeholders
+
+Before assessing pipeline layers, scan all instruction files for any `{{` patterns:
+
+1. `AGENTS.md`
+2. `GEMINI.md`
+3. `.agents/instructions/workflow.md`
+4. `.agents/instructions/commands.md`
+5. `.agents/instructions/structure.md`
+6. `.agents/instructions/patterns.md`
+7. `.agents/instructions/tech-stack.md`
+
+**If any unfilled `{{PLACEHOLDER}}` patterns are found**:
+
+> **STOP** — do not proceed with pipeline remediation. Tell the user which files and placeholders are affected and provide remediation commands:
+>
+> | File(s) with unfilled placeholders | Remediation |
+> |------------------------------------|-------------|
+> | `structure.md` (`{{PROJECT_STRUCTURE}}`, `{{ARCHITECTURE_TABLE}}`) | Run `/create-prd-compile` Step 9.5 to generate and lock the directory structure |
+> | `patterns.md` (`{{FRAMEWORK_PATTERNS}}`) | Run `/bootstrap-agents-provision` after confirming the frontend framework |
+> | `AGENTS.md`, `GEMINI.md`, or other files | Run `/bootstrap-agents-fill` then `/bootstrap-agents-provision` with confirmed stack values |
+>
+> Pipeline remediation audits spec documents, but agents use instruction files throughout implementation — broken instruction files must be fixed first.
+>
+> Once all instruction files are clean, re-run `/remediate-pipeline` to audit the spec layers.
+
+**If all instruction files are clean**: Confirm "Instruction files are fully configured." and proceed to the additional checks below.
+
+**Check for unapplied propagation scan:**
+Look for `.memory/wiki/specs/audits/propagation-scan-*.md`. If any exist, check whether a corresponding `.memory/wiki/specs/audits/propagation-[type]-*.md` exists with a newer timestamp. If a scan exists without a completed apply record:
+
+> **STOP** — A decision propagation scan was run but not applied. Run `/propagate-decision-apply` to apply the pending fixes before pipeline remediation. Auditing specs that are inconsistent with locked decisions produces meaningless results.
+
+**Check for unapplied feature evolution:**
+Look for `.memory/wiki/specs/audits/evolve-feature-*.md`. If any exist, check whether the affected layers have been re-audited since the evolution was applied (compare timestamps of the evolution record against the layer audit reports). If layers were updated but not re-audited:
+
+> **Note** — A feature evolution was applied to [layers]. Run `/audit-ambiguity [layer]` to verify the new content meets the quality bar before pipeline remediation proceeds.
+
+If all checks pass, proceed to Step 1.
+
+---
+
+## 1. Scan pipeline layers
+
+Read .agents/skills/code-review-pro/SKILL.md and follow its systematic review methodology.
+
+Check which layers have content by verifying the presence of key files:
+
+| Layer | Key Files to Check | Has Content If… |
+|-------|-------------------|-------------------|
+| Ideation | `.memory/wiki/specs/ideation/ideation-index.md` | File exists, ≥1 domain folder under `domains/` (or `surfaces/`) with `*-index.md` + `*-cx.md`, and domains at `[DEEP]`+ in Structure Map |
+| Architecture | `.memory/wiki/specs/*-architecture-design.md` | At least one dated file exists |
+| IA | `.memory/wiki/specs/ia/index.md` | File exists with ≥1 shard listed |
+| BE | `.memory/wiki/specs/be/index.md` | File exists with ≥1 spec listed |
+| FE | `.memory/wiki/specs/fe/index.md` | File exists with ≥1 spec listed |
+
+For each layer with content, also note:
+- How many documents it contains (shards/specs count)
+- Whether any deep dive files exist (IA layer only)
+- For ideation: count of domain folders, total feature files, and CX files across the fractal tree
+
+---
+
+## 2. Check existing audit reports
+
+For each layer with content, check `.memory/wiki/specs/audits/[layer]-ambiguity-report.md` and `.memory/wiki/specs/audits/audit-scope.md`. Classify each layer using this decision tree:
+
+| Condition | Classification |
+|-----------|---------------|
+| No audit report exists | `needs-audit` |
+| Report exists, score > 0% | `needs-audit` |
+| Report exists, score = 0%, no `## Gaps Fixed` in `audit-scope.md` | `unverified-clean` |
+| Report exists, score = 0%, `## Gaps Fixed` exists but `fixed_by_session` is the current session | `unverified-clean` (same session cannot self-confirm) |
+| Report exists, score = 0%, `## Gaps Fixed` exists from a different session | `confirmed-clean` |
+| No content in layer | `no-content` |
+
+---
+
+## 3. Determine starting layer
+
+**If the user invoked with `@layer` argument**:
+1. Validate that all upstream layers are `confirmed-clean`. If any upstream layer is not confirmed clean, warn the user: "Layer [X] cannot be audited until upstream layers are clean. Starting from [upstream layer] instead."
+2. Start from the first dirty upstream layer, or the requested layer if all upstream layers are clean.
+
+**If no argument**: Start from the first layer (in Vision → Architecture → IA → BE → FE order) that is `needs-audit` or `unverified-clean`.
+
+**If all layers with content are `confirmed-clean`**: "All pipeline layers are already confirmed clean. No remediation needed." Propose the appropriate next pipeline step and exit.
+
+---
+
+## 4. Present remediation plan
+
+Use `notify_user` to present the following:
+
+> ## Pipeline Remediation Plan
+>
+> Layer | Documents | Status | Action
+> Vision | 1 doc | ✅ Confirmed clean | Skip
+> Architecture | 2 docs | ⚠️ Unverified clean | Re-audit to confirm
+> IA | 17 shards + 9 deep dives | 🔴 Needs audit | Audit + remediate
+> BE | 17 specs | 🔴 Needs audit | Audit + remediate
+> FE | — | ⬜ No content | Skip (not started)
+>
+> **Starting from**: IA
+>
+> This will audit the IA layer with adversarial probing, remediate any gaps found, then stop and ask you to confirm with a fresh audit before advancing to BE.
+
+"Does this plan look right? Confirm to proceed, or tell me which layer to start from."
+
+**Do NOT proceed** to Step 5 until the user explicitly confirms the remediation plan.
+
+---
+
+Read `.agents/skills/prd-templates/references/operational-templates.md` for the **Remediation State** template. Create or update `.memory/wiki/specs/audits/remediation-state.md` using the template, filling in layer statuses from Step 2 and the current layer from Step 3.
+
+After writing `remediation-state.md`, proceed to run `.agents/skills/remediate-pipeline-execute/SKILL.md`.

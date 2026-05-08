@@ -1,5 +1,5 @@
 ---
-name: technical-writer
+name: Technical Writer
 description: Create clear, comprehensive technical documentation for any audience
 ---
 
