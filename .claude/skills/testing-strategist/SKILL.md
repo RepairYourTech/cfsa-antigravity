@@ -1,5 +1,5 @@
 ---
-name: Testing Strategist
+name: testing-strategist
 description: Design and implement comprehensive testing strategies. Use when setting up tests, choosing test types, implementing TDD, or improving code quality. Covers unit tests, integration tests, E2E tests, test-driven development, and testing best practices.
 version: 1.0.0
 ---
@@ -10,7 +10,7 @@ Test the right things at the right level — write tests that give you confidenc
 
 ## Stack-Specific References
 
-After reading the methodology below, read the reference matching your surface's Languages column in the surface stack map (`.claude/instructions/tech-stack.md`):
+After reading the methodology below, read the reference matching your surface's Languages column in the surface stack map (`.agents/instructions/tech-stack.md`):
 
 | Language | Reference |
 |----------|-----------|

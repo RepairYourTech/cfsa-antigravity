@@ -1,5 +1,5 @@
 ---
-name: Testing Strategist
+name: testing-strategist
 description: Design and implement comprehensive testing strategies. Use when setting up tests, choosing test types, implementing TDD, or improving code quality. Covers unit tests, integration tests, E2E tests, test-driven development, and testing best practices.
 version: 1.0.0
 ---
