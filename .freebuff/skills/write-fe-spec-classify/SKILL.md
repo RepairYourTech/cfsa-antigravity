@@ -41,7 +41,7 @@ Identify the target FE spec, classify it, load skills, and read all source mater
 
 Before any skill reads, verify that the five placeholder values listed in `requires_placeholders` frontmatter have been filled by `/bootstrap-agents`. For each placeholder, check whether the literal characters `{{` still appear in the value. If **any** are unfilled, emit a **HARD STOP** and do not proceed to Step 0.6.
 
-For the hard stop message format and recovery instructions, see `.agents/skills/prd-templates/references/placeholder-guard-template.md`. For placeholder-to-recovery mappings specific to this workflow, see `.agents/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
+For the hard stop message format and recovery instructions, see `.freebuff/skills/prd-templates/references/placeholder-guard-template.md`. For placeholder-to-recovery mappings specific to this workflow, see `.freebuff/skills/session-continuity/protocols/10-placeholder-verification-gate.md`.
 
 Only proceed to Step 0.6 when all five placeholders report no literal `{{` characters.
 
@@ -49,7 +49,7 @@ Only proceed to Step 0.6 when all five placeholders report no literal `{{` chara
 
 ## 0.6. Brand-guidelines prerequisite check
 
-1. Read `.agents/skills/brand-guidelines/SKILL.md`.
+1. Read `.freebuff/skills/brand-guidelines/SKILL.md`.
 2. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → stop and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd` first to establish the design direction before writing FE specs."_
 3. If all placeholders are filled → extract and store for this session: confirmed design direction, color palette, typography choices, motion philosophy, and anti-patterns. These become requirements for every component spec written in this session.
 
@@ -57,7 +57,7 @@ Only proceed to Step 0.6 when all five placeholders report no literal `{{` chara
 
 ## 0.8. Design system prerequisite check
 
-Read `.agents/skills/prd-templates/references/design-system-prerequisite-check.md` and follow its procedure. Extract all seven decision areas from `.memory/wiki/specs/design-system.md` and run the fail-fast validation checks. If any check fails → stop and instruct the user to run `/create-prd-design-system`.
+Read `.freebuff/skills/prd-templates/references/design-system-prerequisite-check.md` and follow its procedure. Extract all seven decision areas from `.memory/wiki/specs/design-system.md` and run the fail-fast validation checks. If any check fails → stop and instruct the user to run `/create-prd-design-system`.
 
 ---
 
@@ -87,14 +87,14 @@ Not every FE spec maps 1:1 to a BE feature spec. Before writing anything, classi
 
 Determine this shard's surface from its directory path (e.g., `.memory/wiki/specs/fe/web/` → surface `web`; flat `.memory/wiki/specs/fe/` → surface `shared` or the project's single surface).
 
-Read `.agents/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-fe-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
-- `.agents/skills/error-handling-patterns/SKILL.md`
-- `.agents/skills/testing-strategist/SKILL.md`
-- `.agents/skills/technical-writer/SKILL.md`
+Read `.freebuff/skills/prd-templates/references/skill-loading-protocol.md` and follow the **Skill Loading Protocol** for the `write-fe-spec-classify` workflow. Load all categories listed in its table for this workflow, plus these bundled skills:
+- `.freebuff/skills/error-handling-patterns/SKILL.md`
+- `.freebuff/skills/testing-strategist/SKILL.md`
+- `.freebuff/skills/technical-writer/SKILL.md`
 
 ### Ambiguity resolution
 
-When writing the FE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA/BE specs, **do not guess**. Load and follow `.agents/skills/resolve-ambiguity/SKILL.md` to resolve it first.
+When writing the FE spec, if any requirement cannot be resolved from `ideation-index.md`, `architecture-design.md`, `data-placement-strategy.md`, or upstream IA/BE specs, **do not guess**. Load and follow `.freebuff/skills/resolve-ambiguity/SKILL.md` to resolve it first.
 
 ## 4. Read source documents
 
@@ -124,11 +124,11 @@ These are frontend concerns that the BE spec doesn't fully capture.
 
 **Accessibility extraction gate** (Step 4c gate):
 
-Read `.agents/skills/prd-templates/references/fe-classification-procedures.md` § **Accessibility Extraction Gate** and follow its procedure. Build the five-column accessibility inventory table, apply the thin a11y coverage flag (< 3 specs for an interactive feature triggers a user choice gate), and carry the inventory forward as inline annotations in `## Component Inventory` during `/write-fe-spec-write`.
+Read `.freebuff/skills/prd-templates/references/fe-classification-procedures.md` § **Accessibility Extraction Gate** and follow its procedure. Build the five-column accessibility inventory table, apply the thin a11y coverage flag (< 3 specs for an interactive feature triggers a user choice gate), and carry the inventory forward as inline annotations in `## Component Inventory` during `/write-fe-spec-write`.
 
 ### Step 4c.5 — Conditional rendering enumeration
 
-Read `.agents/skills/prd-templates/references/fe-classification-procedures.md` § **Conditional Rendering Enumeration** and follow its procedure. Build the role × feature rendering matrix from the IA shard's `## Access Control`, map every non-trivial cell to a named component variant, and flag unspecified role × feature combinations with a "define or apply closest-tier default?" gate.
+Read `.freebuff/skills/prd-templates/references/fe-classification-procedures.md` § **Conditional Rendering Enumeration** and follow its procedure. Build the role × feature rendering matrix from the IA shard's `## Access Control`, map every non-trivial cell to a named component variant, and flag unspecified role × feature combinations with a "define or apply closest-tier default?" gate.
 
 ### 4d. Resolve cross-shard references
 If the IA shard references other shards for UI-relevant content (e.g., "navigation behavior
@@ -176,5 +176,5 @@ Call `notify_user` presenting:
 
 Once approved, run `/write-fe-spec-write`.
 
-> **Seed the spec file**: After classification is approved, read `.agents/skills/prd-templates/references/fe-spec-template.md` for the **FE Spec Seed Stub** (under the `## FE Spec Seed Stub` heading at the bottom of the file). Also read `.agents/skills/prd-templates/references/be-spec-template.md` for the Referenced Material Inventory format. Create the spec file at `.memory/wiki/specs/fe/[NN-feature-name].md` using the stub, filling in classification details, Referenced Material Inventory, and Design Requirements from above.
+> **Seed the spec file**: After classification is approved, read `.freebuff/skills/prd-templates/references/fe-spec-template.md` for the **FE Spec Seed Stub** (under the `## FE Spec Seed Stub` heading at the bottom of the file). Also read `.freebuff/skills/prd-templates/references/be-spec-template.md` for the Referenced Material Inventory format. Create the spec file at `.memory/wiki/specs/fe/[NN-feature-name].md` using the stub, filling in classification details, Referenced Material Inventory, and Design Requirements from above.
 

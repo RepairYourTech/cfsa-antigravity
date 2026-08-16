@@ -19,7 +19,7 @@ Transform the ideation output into a production-grade architecture design docume
 **Input**: `.memory/wiki/specs/ideation/ideation-index.md` (must exist and be approved)
 **Output**: `.memory/wiki/specs/YYYY-MM-DD-architecture-design.md` + `.memory/wiki/specs/ENGINEERING-STANDARDS.md` + `.memory/wiki/specs/data-placement-strategy.md`
 
-> **Depth standard**: Every section must be specified to the point where a developer cannot misinterpret it. The specificity-standards rule (`.agents/rules/specificity-standards.md`) applies to every word of the output.
+> **Depth standard**: Every section must be specified to the point where a developer cannot misinterpret it. The specificity-standards rule (`.freebuff/rules/specificity-standards.md`) applies to every word of the output.
 
 ---
 
@@ -42,7 +42,7 @@ Pay special attention to **Project Surfaces** in `meta/constraints.md` — it de
 
 Read `## Engagement Tier` from `ideation-index.md`. If not set, ask the user and write immediately.
 
-Read `.agents/skills/prd-templates/references/engagement-tier-protocol.md` — each shard reads the tier and adapts gates.
+Read `.freebuff/skills/prd-templates/references/engagement-tier-protocol.md` — each shard reads the tier and adapts gates.
 
 ---
 
@@ -56,7 +56,7 @@ Read the `## Progress Summary` table in `ideation-index.md`. Check these thresho
 | Total leaf features | ≥ 50 |
 | Total surfaces | ≥ 2 (multi-product projects) |
 
-**If ANY threshold is met** → read `.agents/skills/prd-templates/references/deep-ideation-loading-protocol.md` and follow its full procedure. This produces a **Domain Digest Table** written to `.memory/wiki/specs/architecture-draft.md` as `## Ideation Digest`.
+**If ANY threshold is met** → read `.freebuff/skills/prd-templates/references/deep-ideation-loading-protocol.md` and follow its full procedure. This produces a **Domain Digest Table** written to `.memory/wiki/specs/architecture-draft.md` as `## Ideation Digest`.
 
 **If no threshold is met** → skip this step. The standard `ideation-index.md` read from Step 1 is sufficient.
 
@@ -68,7 +68,7 @@ Read the `## Progress Summary` table in `ideation-index.md`. Check these thresho
 
 Read each skill SKILL.md listed in the frontmatter `skills` array.
 
-Check `.agents/skills/` for stack-specific skills. Read `.agents/skills/find-skills/SKILL.md` for community skill discovery.
+Check `.freebuff/skills/` for stack-specific skills. Read `.freebuff/skills/find-skills/SKILL.md` for community skill discovery.
 
 ---
 
@@ -76,11 +76,11 @@ Check `.agents/skills/` for stack-specific skills. Read `.agents/skills/find-ski
 
 | # | Shard | What It Does |
 |---|-------|-------------|
-| 1 | [`create-prd-stack`](.agents/skills/create-prd-stack/SKILL.md) | Constraint-first discovery, tech stack decisions with bootstrap firing |
-| 1.5 | [`create-prd-design-system`](.agents/skills/create-prd-design-system/SKILL.md) | Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, state design language → `.memory/wiki/specs/design-system.md` |
-| 2 | [`create-prd-architecture`](.agents/skills/create-prd-architecture/SKILL.md) | System architecture, data strategy, data placement strategy document |
-| 3 | [`create-prd-security`](.agents/skills/create-prd-security/SKILL.md) | Security model, compliance escalation, integration points |
-| 4 | [`create-prd-compile`](.agents/skills/create-prd-compile/SKILL.md) | Development methodology, phasing, compile architecture-design.md + ENGINEERING-STANDARDS.md |
+| 1 | [`create-prd-stack`](.freebuff/skills/create-prd-stack/SKILL.md) | Constraint-first discovery, tech stack decisions with bootstrap firing |
+| 1.5 | [`create-prd-design-system`](.freebuff/skills/create-prd-design-system/SKILL.md) | Navigation paradigm, layout grid, page archetypes, component hierarchy, motion, state design language → `.memory/wiki/specs/design-system.md` |
+| 2 | [`create-prd-architecture`](.freebuff/skills/create-prd-architecture/SKILL.md) | System architecture, data strategy, data placement strategy document |
+| 3 | [`create-prd-security`](.freebuff/skills/create-prd-security/SKILL.md) | Security model, compliance escalation, integration points |
+| 4 | [`create-prd-compile`](.freebuff/skills/create-prd-compile/SKILL.md) | Development methodology, phasing, compile architecture-design.md + ENGINEERING-STANDARDS.md |
 
 > **Progressive working artifact**: `.memory/wiki/specs/architecture-draft.md` is written incrementally by shards 1–3 and read by shard 4 to compile the final dated `architecture-design.md`.
 
@@ -88,13 +88,13 @@ Check `.agents/skills/` for stack-specific skills. Read `.agents/skills/find-ski
 
 ## Orchestration
 
-Create `.memory/wiki/specs/architecture/prd-working/` directory if it does not exist. Read `.agents/skills/prd-templates/references/workflow-checkpoint-protocol.md` — all shards use this checkpoint system.
+Create `.memory/wiki/specs/architecture/prd-working/` directory if it does not exist. Read `.freebuff/skills/prd-templates/references/workflow-checkpoint-protocol.md` — all shards use this checkpoint system.
 
-### Step A — Run `.agents/skills/create-prd-stack/SKILL.md`
-### Step A.5 — Run `.agents/skills/create-prd-design-system/SKILL.md`
-### Step B — Run `.agents/skills/create-prd-architecture/SKILL.md`
-### Step C — Run `.agents/skills/create-prd-security/SKILL.md`
-### Step D — Run `.agents/skills/create-prd-compile/SKILL.md`
+### Step A — Run `.freebuff/skills/create-prd-stack/SKILL.md`
+### Step A.5 — Run `.freebuff/skills/create-prd-design-system/SKILL.md`
+### Step B — Run `.freebuff/skills/create-prd-architecture/SKILL.md`
+### Step C — Run `.freebuff/skills/create-prd-security/SKILL.md`
+### Step D — Run `.freebuff/skills/create-prd-compile/SKILL.md`
 
 **Shard failure recovery**: If any shard (A through D) fails mid-execution:
 1. Check `.memory/wiki/specs/architecture/prd-working/workflow-state.md` for the checkpoint — it shows exact step, item, and next action
@@ -108,9 +108,9 @@ Create `.memory/wiki/specs/architecture/prd-working/` directory if it does not e
 
 ### Self-check against Architecture rubric
 
-Read `.agents/skills/pipeline-rubrics/references/architecture-rubric.md` and apply all 15 dimensions as the self-check.
+Read `.freebuff/skills/pipeline-rubrics/references/architecture-rubric.md` and apply all 15 dimensions as the self-check.
 
-Read `.agents/skills/prd-templates/references/architecture-completeness-checklist.md` and verify all items.
+Read `.freebuff/skills/prd-templates/references/architecture-completeness-checklist.md` and verify all items.
 
 For any dimension that scores ⚠️ or ❌ → resolve it NOW. Loop back to the relevant shard.
 

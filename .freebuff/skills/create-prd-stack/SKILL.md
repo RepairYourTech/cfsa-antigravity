@@ -23,7 +23,7 @@ Build the decision constraints map from the ideation output, then walk through e
 
 ## 2.4. Checkpoint resumption
 
-Read `.agents/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure in the protocol. If it does not exist → initialize a fresh checkpoint for this shard.
+Read `.freebuff/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure in the protocol. If it does not exist → initialize a fresh checkpoint for this shard.
 
 ---
 
@@ -36,7 +36,7 @@ Before any tech stack decision, read `.memory/wiki/specs/ideation/meta/constrain
 
 Also read `.memory/wiki/specs/ideation/ideation-index.md` — specifically `## Structural Classification` (authoritative surface list and project shape) and `## Engagement Tier` (gate behavior for this session).
 
-Read the engagement tier protocol (`.agents/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for tech stack decisions.
+Apply engagement-tier behavior (`.freebuff/skills/prd-templates/references/engagement-tier-protocol.md`).
 
 Build the constraints map:
 
@@ -46,7 +46,6 @@ Build the constraints map:
 
 Present the constraints map to the user before starting tech decisions *(Interactive/Hybrid)* or auto-confirm with Deep Think reasoning *(Auto)*. Constraints narrow the option space — some decisions may be obvious. Skip those with a brief rationale.
 
-Read `.agents/skills/tech-stack-catalog/references/constraint-questions.md` for the per-axis constraint questions to ask before presenting options.
 
 ## 2.7. Build Ideation Relevance Index
 
@@ -81,8 +80,7 @@ This index is your working checklist. Before each axis, consult it and read the 
 
 Read the **Project Surfaces** section from `.memory/wiki/specs/ideation/meta/constraints.md` to determine which decision axes apply.
 
-Read `.agents/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.agents/skills/tech-stack-catalog/SKILL.md`.
-Read .agents/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.
+Read `.freebuff/skills/tech-stack-catalog/SKILL.md` and follow its per-axis constraint-first selection methodology. Present only the `surface-decision-tables.md` tables for applicable surfaces.
 
 > ⚠️ **Skip the `Database` axis** from the surface decision tables during this generic per-axis loop. All persistence decisions are handled exclusively by the **Database: Persistence Map Interview** section below.
 
@@ -90,29 +88,29 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 
 **Per-axis flow**:
 1. **Consult Ideation Relevance Index**: Look up this axis in the index built in Step 2.7. Read EVERY file listed for this axis — not optional, not "skim", not "check if relevant". Read them.
-2. **Read constraint questions**: Read `.agents/skills/tech-stack-catalog/references/constraint-questions.md` for this axis. Answer all **Tier 1 (self-answer from ideation)** questions using what you just read. These are questions YOU answer — do not ask the user.
+2. **Read constraint questions**: Read `.freebuff/skills/tech-stack-catalog/references/constraint-questions.md` for this axis. Answer all **Tier 1 (self-answer from ideation)** questions using what you just read. These are questions YOU answer — do not ask the user.
 3. **Write Ideation Synthesis**: Before talking to the user, write a 3-5 bullet synthesis of project-specific findings relevant to this axis. Each bullet must cite a specific file (e.g., "From `diagnostics/diagnostics-deep-dive.md`: multi-agent orchestration with persistent task queues requires..."). **Append this synthesis as a `## {Axis Name}` section to `.memory/wiki/specs/architecture/prd-working/stack-synthesis.md`.**
 4. **Cite-or-Stop Gate**: Your Ideation Synthesis must contain **≥ 2 project-specific findings with file citations**. If you cannot produce 2 citations → you have not read deeply enough → **STOP** and re-read the deep dives and CX files listed in the index. Generic findings like "the app needs a database" do not count.
 5. **Synthesis verification gate (HARD)**: Read `.memory/wiki/specs/architecture/prd-working/workflow-state.md` and verify `synthesis_written: true` for this axis. If `false` → **STOP** — you skipped step 3. Write synthesis first.
 6. **Ask Tier 2 questions**: Present your Ideation Synthesis alongside the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis.
 7. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to an ideation finding.
-8. Follow the decision confirmation protocol (`.agents/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
-9. Fire bootstrap with only that key: read `.agents/skills/bootstrap-agents/SKILL.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
+8. Follow the decision confirmation protocol (`.freebuff/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
+9. Fire bootstrap with only that key: read `.freebuff/skills/bootstrap-agents/SKILL.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol. If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
 10. **Update checkpoint**: Write current progress to `.memory/wiki/specs/architecture/prd-working/workflow-state.md` — mark this axis complete, set next axis, reset `synthesis_written: false`, populate `pending_reads` from the Ideation Relevance Index for the next axis. Move to next axis.
 
-> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each separately. Database axis (Persistence Map Interview) is also independent.
+> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` fire separately; the Database axis uses the Persistence Map Interview.
 
 Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. One decision at a time.
 
-**User indecision**: Uncertain → present recommendation with reasoning. Still uncertain → apply `.agents/skills/resolve-ambiguity/SKILL.md`. Still undecided → lock as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
+**User indecision**: Uncertain → present recommendation with reasoning. Still uncertain → apply `.freebuff/skills/resolve-ambiguity/SKILL.md`. Still undecided → lock as "[Agent-recommended, user deferred]" (revisitable via `/propagate-decision`).
 
-> **Decision recording**: For each confirmed decision, follow `.agents/skills/session-continuity/protocols/06-decision-analysis.md` — record to `.memory/wiki/decisions.md` with upstream/downstream effects.
+> **Decision recording**: For each confirmed decision, follow `.freebuff/skills/session-continuity/protocols/06-decision-analysis.md` — record to `.memory/wiki/decisions.md` with upstream/downstream effects.
 
 ### Database: Persistence Map Interview
 
 Instead of a single DATABASE decision pass, use the following structured persistence map interview to identify all required stores.
 
-Read .agents/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`) after each store is confirmed.
+Read .freebuff/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store. **HARD GATE**: Follow the bootstrap verification protocol after each store is confirmed.
 
 ### Design Direction
 
@@ -122,13 +120,13 @@ After `/impeccable teach` completes:
 1. Read the resulting `PRODUCT.md` and `DESIGN.md` files
 2. Extract the confirmed design direction, color palette, typography, and motion philosophy
 3. Fire bootstrap with `DESIGN_DIRECTION=[confirmed direction]`, `PRIMARY_COLOR=[extracted]`, `HEADING_FONT=[extracted]`, etc.
-4. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`).
+4. **HARD GATE**: Follow the bootstrap verification protocol.
 
 > The legacy `design-direction` SKILL.md now delegates to this flow. The `brand-guidelines` SKILL.md bridges the pipeline's `{{PLACEHOLDER}}` system with `impeccable`'s PRODUCT.md/DESIGN.md — both are kept in sync.
 
 ### Development tooling
 
-Read `.agents/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`) — verify every key.
+Read `.freebuff/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file. **HARD GATE**: Follow the bootstrap verification protocol — verify every key.
 
 ### After each tech decision
 
@@ -136,7 +134,7 @@ Read each installed skill's SKILL.md before proceeding. Append the confirmed dec
 
 ### Fill kit templates (progressive bootstrap)
 
-Read `.agents/skills/bootstrap-agents/SKILL.md` and call it with `PIPELINE_STAGE=create-prd` plus only the keys just decided. Bootstrap runs after **each confirmed decision**, not in a batch at the end. At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename.
+Read `.freebuff/skills/bootstrap-agents/SKILL.md` and call it with `PIPELINE_STAGE=create-prd` plus only the keys just decided. Bootstrap runs after **each confirmed decision**, not in a batch at the end. At the end of all tech decisions, call bootstrap once more with `ARCHITECTURE_DOC` set to the dated filename.
 
 ## Completion Gate (MANDATORY)
 

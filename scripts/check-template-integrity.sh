@@ -263,6 +263,15 @@ while IFS= read -r wf_name; do
         fi
     fi
 
+    freebuff_skill="$ROOT_DIR/.freebuff/skills/$wf_name/SKILL.md"
+    if [[ -f "$freebuff_skill" ]]; then
+        sz=$(wc -c < "$freebuff_skill" | tr -d ' ')
+        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
+            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
+            over_limit=$((over_limit + 1))
+        fi
+    fi
+
     factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
     [[ -f "$factory_skill" ]] || continue
     sz=$(wc -c < "$factory_skill" | tr -d ' ')
@@ -490,6 +499,117 @@ fi
 
 if [[ "$errors" -eq 0 ]]; then
     info "Factory standalone integrity checks passed"
+fi
+
+# ──────────────────────────────────────
+# 11b. .freebuff/ directory drift
+# ──────────────────────────────────────
+if [[ -d "$ROOT_DIR/.freebuff" ]]; then
+    if [[ ! -d "$TEMPLATE_DIR/.freebuff" ]]; then
+        fail "template/.freebuff/ missing — template rebuild needed"
+    else
+        drift_output=$(diff -rq "$ROOT_DIR/.freebuff" "$TEMPLATE_DIR/.freebuff" 2>/dev/null \
+            | grep -v "memory/sessions" \
+            | grep -v "progress/memory" \
+            | grep -v "kit-sync.md" \
+            | grep -v "settings.local.json" || true)
+
+        drift_count=$(echo "$drift_output" | grep -c . || true)
+
+        if [[ "$drift_count" -gt 0 && -n "$drift_output" ]]; then
+            fail ".freebuff/ has $drift_count drifted file(s) from template/.freebuff/"
+            echo "$drift_output" | head -10 >&2
+        else
+            info ".freebuff/ in sync"
+        fi
+    fi
+fi
+
+# ──────────────────────────────────────
+# 11c. Freebuff standalone runtime guard
+# ──────────────────────────────────────
+freebuff_refs_file=$(mktemp)
+trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$src_r_file" "$tpl_r_file" "$codex_refs_file" "$claude_workflows_file" "$claude_commands_file" "$missing_commands_file" "$extra_commands_file" "$claude_agent_refs_file" "$factory_refs_file" "$freebuff_refs_file"' EXIT
+
+# Freebuff commands must reference their own skills
+for command_file in "$ROOT_DIR/.freebuff/commands"/*.md; do
+    [[ -f "$command_file" ]] || continue
+    command_name=$(basename "$command_file" .md)
+    expected_reference=$(printf 'Reference: `.freebuff/skills/%s/SKILL.md`.' "$command_name")
+    if ! grep -F -q "$expected_reference" "$command_file"; then
+        fail "$(basename "$command_file") does not reference its Freebuff workflow file"
+    fi
+done
+
+# Freebuff must be self-contained (no cross-runtime asset references)
+if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.codex/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.freebuff" \
+    --include='*.md' \
+    --exclude='README.md' \
+    --exclude-dir='memory' \
+    --exclude-dir='progress' > "$freebuff_refs_file" 2>/dev/null; then
+    ref_count=$(wc -l < "$freebuff_refs_file" | tr -d ' ')
+    fail "Found $ref_count unexpected cross-runtime reference(s) under .freebuff/"
+    head -10 "$freebuff_refs_file" >&2
+else
+    info "No runtime cross-runtime references remain under .freebuff/"
+fi
+
+if [[ ! -d "$ROOT_DIR/.freebuff/skill-library" || -L "$ROOT_DIR/.freebuff/skill-library" ]]; then
+    fail ".freebuff/skill-library must exist as a real directory"
+else
+    info ".freebuff/skill-library is local"
+fi
+
+if [[ -L "$TEMPLATE_DIR/.freebuff/skill-library" ]]; then
+    fail "template/.freebuff/skill-library must not be a symlink"
+else
+    info "template/.freebuff/skill-library is local"
+fi
+
+if [[ "$errors" -eq 0 ]]; then
+    info "Freebuff standalone integrity checks passed"
+fi
+
+# ──────────────────────────────────────
+# 11d. .zcode/ directory drift
+# ──────────────────────────────────────
+if [[ -d "$ROOT_DIR/.zcode" ]]; then
+    if [[ ! -d "$TEMPLATE_DIR/.zcode" ]]; then
+        fail "template/.zcode/ missing — template rebuild needed"
+    else
+        drift_output=$(diff -rq "$ROOT_DIR/.zcode" "$TEMPLATE_DIR/.zcode" 2>/dev/null || true)
+        drift_count=$(echo "$drift_output" | grep -c . || true)
+
+        if [[ "$drift_count" -gt 0 && -n "$drift_output" ]]; then
+            fail ".zcode/ has $drift_count drifted file(s) from template/.zcode/"
+            echo "$drift_output" | head -10 >&2
+        else
+            info ".zcode/ in sync"
+        fi
+    fi
+fi
+
+# ──────────────────────────────────────
+# 11e. ZCode standalone runtime guard
+# ──────────────────────────────────────
+# ZCode command shims must point at the shared .agents/ skill library
+for command_file in "$ROOT_DIR/.zcode/commands"/*.md; do
+    [[ -f "$command_file" ]] || continue
+    command_name=$(basename "$command_file" .md)
+    expected_reference=$(printf 'Reference: `.agents/skills/%s/SKILL.md`.' "$command_name")
+    if ! grep -F -q "$expected_reference" "$command_file"; then
+        fail "$(basename "$command_file") does not reference its shared .agents/ workflow file"
+    fi
+done
+
+if [[ ! -f "$ROOT_DIR/.zcode/config.json" ]]; then
+    fail ".zcode/config.json missing"
+else
+    info ".zcode/config.json present"
+fi
+
+if [[ "$errors" -eq 0 ]]; then
+    info "ZCode standalone integrity checks passed"
 fi
 
 # ──────────────────────────────────────

@@ -7,7 +7,7 @@ description: "Apply the confirmed design direction to all visual surfaces. This 
 
 > **Status**: {{#if DESIGN_DIRECTION}}Active{{else}}⚠️ UNFILLED — Run `/impeccable teach` to establish design direction before using this skill{{/if}}
 >
-> **Bridge mode**: This file now reads from the `impeccable` skill's context files. When `PRODUCT.md` and `DESIGN.md` exist at the project root (written by `/impeccable teach` and `/impeccable document`), values from those files take precedence over the placeholder slots below. Run `node .agents/skills/impeccable/scripts/load-context.mjs` to load the current design context.
+> **Bridge mode**: This file now reads from the `impeccable` skill's context files. When `PRODUCT.md` and `DESIGN.md` exist at the project root (written by `/impeccable teach` and `/impeccable document`), values from those files take precedence over the placeholder slots below. Run `node .freebuff/skills/impeccable/scripts/load-context.mjs` to load the current design context.
 
 ## Design Direction
 

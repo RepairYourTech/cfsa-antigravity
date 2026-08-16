@@ -32,7 +32,7 @@ Check installed skills for frontend-relevant coverage:
 - Web performance optimization skill
 - i18n / localization skill (if needed)
 
-If a needed skill is missing, check if a matching entry exists in `.agents/skill-library/MANIFEST.md`. Read `.agents/skills/bootstrap-agents/SKILL.md` and execute its utility instructions immediately with the appropriate stack key to install it. **HARD GATE**: Follow the bootstrap verification protocol (`.agents/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding.
+If a needed skill is missing, check if a matching entry exists in `.freebuff/skill-library/MANIFEST.md`. Read `.freebuff/skills/bootstrap-agents/SKILL.md` and execute its utility instructions immediately with the appropriate stack key to install it. **HARD GATE**: Follow the bootstrap verification protocol (`.freebuff/skills/prd-templates/references/bootstrap-verification-protocol.md`). Confirm the matching skill is installed before proceeding.
 
 ---
 
@@ -40,8 +40,8 @@ If a needed skill is missing, check if a matching entry exists in `.agents/skill
 
 | # | Shard | What It Does |
 |---|-------|-------------|
-| 1 | [`write-fe-spec-classify`](.agents/skills/write-fe-spec-classify/SKILL.md) | Classifies the target, loads skills, reads all source documents + cross-references + deep dives |
-| 2 | [`write-fe-spec-write`](.agents/skills/write-fe-spec-write/SKILL.md) | Writes the FE spec, updates indexes, runs ambiguity gate, checks for new dependencies |
+| 1 | [`write-fe-spec-classify`](.freebuff/skills/write-fe-spec-classify/SKILL.md) | Classifies the target, loads skills, reads all source documents + cross-references + deep dives |
+| 2 | [`write-fe-spec-write`](.freebuff/skills/write-fe-spec-write/SKILL.md) | Writes the FE spec, updates indexes, runs ambiguity gate, checks for new dependencies |
 
 ---
 
@@ -58,11 +58,11 @@ If a needed skill is missing, check if a matching entry exists in `.agents/skill
 4. Present: "Pipeline tracker shows **shard [NN — name]** is the next shard needing an FE spec. Proceeding. Say 'override' to pick a different one."
 5. Pass the selected shard to Step A.
 
-### Step A — Run `.agents/skills/write-fe-spec-classify/SKILL.md`
+### Step A — Run `.freebuff/skills/write-fe-spec-classify/SKILL.md`
 
 Identifies the target FE spec, classifies it (feature spec / cross-cutting), loads the skill bundle, reads all source documents (BE spec, IA shard, cross-shard references, deep dives with FE implications), and reads cross-cutting FE specs.
 
-### Step B — Run `.agents/skills/write-fe-spec-write/SKILL.md`
+### Step B — Run `.freebuff/skills/write-fe-spec-write/SKILL.md`
 
 Writes the FE spec to `.memory/wiki/specs/fe/`, updates the FE index, runs cross-reference checks and the ambiguity gate, checks for new dependencies (firing bootstrap if needed), and presents for review.
 
@@ -72,7 +72,7 @@ Writes the FE spec to `.memory/wiki/specs/fe/`, updates the FE index, runs cross
 
 **BLOCKING GATE** — Do NOT call `notify_user` or proceed to the next step until ALL items pass:
 
-Read .agents/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
+Read .freebuff/skills/code-review-pro/SKILL.md and apply its adversarial review discipline to each checklist item.
 
 - [ ] Every component has a props interface
 - [ ] Every interactive element has defined behavior

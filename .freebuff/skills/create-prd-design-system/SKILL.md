@@ -19,7 +19,9 @@ pipeline:
 
 Establish the structural UI architecture — navigation paradigm, layout grid, page archetypes, global component inventory, motion language, data density philosophy, and global state design language. Produces `.memory/wiki/specs/design-system.md` which all FE specs must consume.
 
-**Prerequisite**: Tech stack decisions must be locked (`/create-prd-stack` completed). Design context must exist — run `/impeccable teach` first to establish PRODUCT.md and DESIGN.md, then verify `.agents/skills/brand-guidelines/SKILL.md` has no `{{PLACEHOLDER}}` values.
+**Prerequisite**: Tech stack decisions must be locked (`/create-prd-stack` completed). Design context must exist — run `/impeccable teach` first to establish PRODUCT.md and DESIGN.md, then verify `.freebuff/skills/brand-guidelines/SKILL.md` has no `{{PLACEHOLDER}}` values.
+
+> All `design-system.md` section writes below follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -27,13 +29,13 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 
 ### 0.1 Load impeccable context
 
-1. Run `node .agents/skills/impeccable/scripts/load-context.mjs` to load PRODUCT.md and DESIGN.md.
+1. Run `node .freebuff/skills/impeccable/scripts/load-context.mjs` to load PRODUCT.md and DESIGN.md.
 2. If PRODUCT.md is missing, empty, or placeholder → **stop** and tell the user: _"Design context hasn't been established yet. Run `/impeccable teach` first to define the product's users, brand, tone, and design principles."_
 3. Extract from the context: brand register (brand vs product), design direction, color palette (OKLCH or hex), typography, motion philosophy, spatial principles.
 
 ### 0.2 Verify pipeline placeholders
 
-4. Read `.agents/skills/brand-guidelines/SKILL.md`.
+4. Read `.freebuff/skills/brand-guidelines/SKILL.md`.
 5. Scan for any `{{PLACEHOLDER}}` values that are still unfilled. If any exist → **stop** and tell the user: _"Design direction hasn't been confirmed yet. Run `/create-prd-stack` first to establish the design direction before designing the system."_
 6. If all placeholders are filled → extract and store for this session: the confirmed `DESIGN_DIRECTION`, color palette, typography choices, motion philosophy, and anti-patterns.
 
@@ -41,13 +43,13 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 
 Read `## Engagement Tier` from `.memory/wiki/specs/ideation/ideation-index.md`.
 
-Read the engagement tier protocol (`.agents/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for design system decisions (all 7 decisions are product decisions).
+Read the engagement tier protocol (`.freebuff/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for design system decisions (all 7 decisions are product decisions).
 
 1. Read `.memory/wiki/specs/ideation/meta/constraints.md` — extract the **Project Surfaces** section. Read `.memory/wiki/specs/ideation/ideation-index.md` — extract the feature inventory from the MoSCoW Summary.
-2. Read `.agents/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
-Read `.agents/skills/impeccable/SKILL.md` — for the shared design laws (color, typography, motion, spatial) and the full command reference.
-4. Read `.agents/skills/technical-writer/SKILL.md` — for document writing conventions.
-5. Read `.agents/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `.memory/wiki/specs/design-system.md`.
+2. Read `.freebuff/skills/brand-guidelines/SKILL.md` — extract the confirmed `DESIGN_DIRECTION`.
+Read `.freebuff/skills/impeccable/SKILL.md` — for the shared design laws (color, typography, motion, spatial) and the full command reference.
+4. Read `.freebuff/skills/technical-writer/SKILL.md` — for document writing conventions.
+5. Read `.freebuff/skills/prd-templates/references/design-system-decisions.md` — all decision option menus and the output template for `.memory/wiki/specs/design-system.md`.
 6. Note which surfaces are in scope from `## Project Surfaces`.
 
 ### Ideation workflow context
@@ -63,7 +65,7 @@ Read `.agents/skills/impeccable/SKILL.md` — for the shared design laws (color,
 
 ### Checkpoint resumption
 
-Read `.agents/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
+Read `.freebuff/skills/prd-templates/references/workflow-checkpoint-protocol.md`. Check if `.memory/wiki/specs/architecture/prd-working/workflow-state.md` exists. If it exists and `active_shard` matches this file → follow the resumption procedure (skip completed decisions, resume from `next_action`). If not → initialize a fresh checkpoint.
 
 ### Per-decision Ideation Synthesis requirement
 
@@ -85,7 +87,7 @@ Present surface-appropriate options from the **Navigation Paradigm Options** sec
 
 **Wait for explicit user confirmation before proceeding** *(Interactive/Hybrid)* or auto-confirm with Deep Think *(Auto)*.
 
-On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately.
 
 ---
 
@@ -100,7 +102,7 @@ Provide a **default recommendation** based on the confirmed design direction:
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`.
 
 ---
 
@@ -110,7 +112,7 @@ Based on the feature inventory from `ideation-index.md`, propose a named archety
 
 Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`.
 
 ---
 
@@ -122,7 +124,7 @@ Present the derived list. Ask: (1) Are any components missing? (2) Should any be
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
+On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
 
 ---
 
@@ -130,7 +132,7 @@ On confirmation, write the `## Global Component Inventory` section to `.memory/w
 
 Present the options from the **Motion Language Options** in `design-system-decisions.md`. Present a recommendation based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`.
 
 ---
 
@@ -138,7 +140,7 @@ On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/d
 
 Present the options from the **Data Density Options** in `design-system-decisions.md`. If **Hybrid** is selected, ask the user to define per-archetype density rules. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`.
 
 ---
 
@@ -146,7 +148,7 @@ On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki
 
 Two-part decision. Present the loading state, error state, and empty state options from the **Global State Design Language Options** in `design-system-decisions.md`. Present recommendations based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.agents/skills/prd-templates/references/write-verification-protocol.md`).
+On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`.
 
 ---
 
