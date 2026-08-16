@@ -1,5 +1,11 @@
 # cfsa-antigravity
 
+## 6.3.1
+
+### Patch Changes
+
+- Fix the Antigravity runtime installer key (`.agent` → `.agents`) so the `.agents/` runtime is discovered and installable, and refresh the README runtime list to include Freebuff and ZCode.
+
 ## 6.3.0
 
 ### Minor Changes
