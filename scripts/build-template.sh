@@ -84,6 +84,14 @@ else
     warn ".freebuff/ directory not found — skipping"
 fi
 
+# .zcode/ — full directory
+if [[ -d "$ROOT_DIR/.zcode" ]]; then
+    info "Copying .zcode/"
+    cp -a "$ROOT_DIR/.zcode" "$TEMPLATE_DIR/.zcode"
+else
+    warn ".zcode/ directory not found — skipping"
+fi
+
 # docs/ — full directory
 info "Copying docs/"
 cp -a "$ROOT_DIR/docs" "$TEMPLATE_DIR/docs"
@@ -182,7 +190,7 @@ EOF
   "version": 1,
   "backend": "jsonl",
   "retrieval": "index-guided",
-  "agents": ["claude", "gemini", "factory", "codex", "pi", "freebuff"]
+  "agents": ["claude", "gemini", "factory", "codex", "pi", "freebuff", "zcode"]
 }
 EOF
 fi
@@ -209,6 +217,7 @@ installed_runtimes:
   - pi
   - factory
   - freebuff
+  - zcode
 EOF
 
 # --- Summary ---

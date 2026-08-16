@@ -1,0 +1,9 @@
+---
+description: Run the architecture design workflow
+---
+
+
+Use skill: `create-prd`.
+Reference: `.agents/skills/create-prd/SKILL.md`.
+
+If arguments are provided, apply them as workflow context: $ARGUMENTS

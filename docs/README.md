@@ -216,6 +216,7 @@ cp cfsa-antigravity/CODEX.md /path/to/your-project/
 | **Claude Code** | Use the standalone `.claude/` runtime installed via `cfsa-antigravity init --agent claude` |
 | **Factory Droid** | Use the standalone `.factory/` runtime installed via `cfsa-antigravity init --agent factory` |
 | **Freebuff** | Use the standalone `.freebuff/` runtime installed via `cfsa-antigravity init --agent freebuff` |
+| **ZCode** | Use the standalone `.zcode/` runtime installed via `cfsa-antigravity init --agent zcode` |
 | **Cursor** | Reference from `.cursorrules` or your Cursor config |
 | **Windsurf** | Reference from `.windsurfrules` or equivalent |
 | **Other** | Follow your agent's convention for loading system instructions |
@@ -230,6 +231,7 @@ cp cfsa-antigravity/CODEX.md /path/to/your-project/
 > - Claude Code installs use `.claude/`
 > - Factory Droid installs use `.factory/`
 > - Freebuff installs use `.freebuff/`
+> - ZCode installs use `.zcode/`
 >
 > **Recommended Solution:** Keep the installed runtime directory out of shared `.gitignore` rules and use `.git/info/exclude` for local-only exclusions.
 

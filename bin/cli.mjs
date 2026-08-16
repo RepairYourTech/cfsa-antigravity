@@ -42,6 +42,7 @@ const RUNTIME_DISPLAY = {
     ".github":  { name: "Copilot",       desc: "GitHub Copilot (VS Code / Insiders)" },
     ".factory": { name: "Factory Droid", desc: "Standalone Factory Droid runtime" },
     ".freebuff": { name: "Freebuff",      desc: "Standalone Freebuff runtime" },
+    ".zcode":   { name: "ZCode",         desc: "Standalone ZCode runtime" },
 };
 
 // --- Discover available runtimes from template/ ---
