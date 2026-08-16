@@ -98,12 +98,21 @@ if [[ -d "$ROOT_DIR/.codex" ]]; then
 fi
 
 # ──────────────────────────────────────
+# Cross-runtime reference allowlist
+# ──────────────────────────────────────
+# Standalone runtimes may reference `.agents/` (the shared canonical library
+# of skills, rules, instructions, and the skill-library manifest). These
+# "bridge-mode" references are intentional. References to any OTHER
+# standalone runtime (.claude/, .codex/, .factory/, .freebuff/, .zcode/)
+# remain violations.
+
+# ──────────────────────────────────────
 # 5. Codex standalone runtime guard
 # ──────────────────────────────────────
 codex_refs_file=$(mktemp)
 trap 'rm -f "$src_dirs_file" "$tpl_dirs_file" "$codex_refs_file"' EXIT
 
-if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.codex" \
+if grep -R -nE "\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.freebuff/(workflows|skills|commands|rules|instructions|skill-library)/|\.zcode/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.codex" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
@@ -111,7 +120,7 @@ if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-lib
     fail "Found $ref_count unexpected cross-runtime reference(s) under .codex/"
     head -10 "$codex_refs_file" >&2
 else
-    info "No runtime .agents/.claude/.factory references remain under .codex/"
+    info "No runtime cross-runtime references remain under .codex/"
 fi
 
 if [[ ! -d "$ROOT_DIR/.codex/skill-library" || -L "$ROOT_DIR/.codex/skill-library" ]]; then
@@ -150,7 +159,7 @@ else
     info "template/.codex/skill-library is local"
 fi
 
-if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.codex" \
+if grep -R -nE "\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.freebuff/(workflows|skills|commands|rules|instructions|skill-library)/|\.zcode/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.codex" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='progress' > "$codex_refs_file" 2>/dev/null; then
@@ -158,7 +167,7 @@ if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-lib
     fail "Found $ref_count unexpected cross-runtime reference(s) in template/.codex/"
     head -10 "$codex_refs_file" >&2
 else
-    info "No runtime .agents/.claude/.factory references remain in template/.codex/"
+    info "No runtime cross-runtime references remain in template/.codex/"
 fi
 
 if [[ "$errors" -eq 0 ]]; then
@@ -270,7 +279,7 @@ if [[ "$missing_count" -eq 0 && "$extra_count" -eq 0 ]]; then
     info "Claude commands and workflows are in sync"
 fi
 
-if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.claude" \
+if grep -R -nE "\.codex/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.freebuff/(workflows|skills|commands|rules|instructions|skill-library)/|\.zcode/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.claude" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude='settings.local.json' \
@@ -278,10 +287,10 @@ if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-lib
     --exclude-dir='progress' \
     --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
     ref_count=$(wc -l < "$claude_agent_refs_file" | tr -d ' ')
-    fail "Found $ref_count unexpected .agent reference(s) under .claude/"
+    fail "Found $ref_count unexpected cross-runtime reference(s) under .claude/"
     head -10 "$claude_agent_refs_file" >&2
 else
-    info "No runtime .agent references remain under .claude/"
+    info "No runtime cross-runtime references remain under .claude/"
 fi
 
 if [[ ! -d "$ROOT_DIR/.claude/skill-library" || -L "$ROOT_DIR/.claude/skill-library" ]]; then
@@ -320,12 +329,12 @@ else
     info "template/.claude/skill-library is local"
 fi
 
-if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
+if grep -R -nE "\.codex/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.freebuff/(workflows|skills|commands|rules|instructions|skill-library)/|\.zcode/(workflows|skills|commands|rules|instructions|skill-library)/" "$TEMPLATE_DIR/.claude" --include='*.md' --exclude='README.md' --exclude-dir='memory' --exclude-dir='progress' --exclude-dir='worktrees' > "$claude_agent_refs_file"; then
     ref_count=$(wc -l < "$claude_agent_refs_file" | tr -d ' ')
-    fail "Found $ref_count unexpected .agent reference(s) in template/.claude/"
+    fail "Found $ref_count unexpected cross-runtime reference(s) in template/.claude/"
     head -10 "$claude_agent_refs_file" >&2
 else
-    info "No runtime .agent references remain in template/.claude/"
+    info "No runtime cross-runtime references remain in template/.claude/"
 fi
 
 for command_file in "$ROOT_DIR/.claude/commands"/*.md; do
@@ -486,7 +495,7 @@ for command_file in "$ROOT_DIR/.freebuff/commands"/*.md; do
 done
 
 # Freebuff must be self-contained (no cross-runtime asset references)
-if grep -R -nE "\.agents/(workflows|skills|commands|rules|instructions|skill-library)/|\.codex/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.claude/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.freebuff" \
+if grep -R -nE "\.claude/(workflows|skills|commands|rules|instructions|skill-library)/|\.codex/(workflows|skills|commands|rules|instructions|skill-library)/|\.factory/(workflows|skills|commands|rules|instructions|skill-library)/|\.zcode/(workflows|skills|commands|rules|instructions|skill-library)/" "$ROOT_DIR/.freebuff" \
     --include='*.md' \
     --exclude='README.md' \
     --exclude-dir='memory' \
@@ -631,6 +640,6 @@ if [[ "$errors" -gt 0 ]]; then
     echo "[integrity] FAILED — $errors issue(s) found. Run 'npm run build' to rebuild the template."
     exit 1
 else
-    echo "[integrity] PASSED — template fully in sync, all limits respected."
+    echo "[integrity] PASSED — template fully in sync."
     exit 0
 fi
