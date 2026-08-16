@@ -35,7 +35,7 @@ const error = (msg) => { console.error(`${c.red}✗${c.reset} ${msg}`); };
 
 // --- Runtime display names (fallback to directory name for unknown runtimes) ---
 const RUNTIME_DISPLAY = {
-    ".agent":   { name: "Antigravity",   desc: "Antigravity, Cursor, Gemini CLI" },
+    ".agents":  { name: "Antigravity",   desc: "Antigravity, Cursor, Gemini CLI" },
     ".codex":   { name: "Codex",         desc: "Standalone Codex runtime" },
     ".claude":  { name: "Claude Code",   desc: "Standalone Claude Code runtime" },
     ".pi":      { name: "Pi",            desc: "Standalone Pi Coding Agent runtime" },
@@ -326,7 +326,7 @@ function ensureTemplateDir() {
 function resolveAgentNames(agentNames, available) {
     const resolved = [];
     for (const name of agentNames) {
-        // Try exact dir match first (.agent, .codex, .claude, .factory)
+        // Try exact dir match first (.agents, .codex, .claude, .factory)
         const dotName = name.startsWith(".") ? name : `.${name}`;
         const match = available.find(r => r.dir === dotName);
         if (match) {
@@ -339,10 +339,10 @@ function resolveAgentNames(agentNames, available) {
             resolved.push(byName);
             continue;
         }
-        // Legacy single-agent name: "antigravity" → .agent
+        // Legacy single-agent name: "antigravity" → .agents
         if (name === "antigravity") {
-            const agentRt = available.find(r => r.dir === ".agent");
-            if (agentRt && !resolved.find(r => r.dir === ".agent")) {
+            const agentRt = available.find(r => r.dir === ".agents");
+            if (agentRt && !resolved.find(r => r.dir === ".agents")) {
                 resolved.push(agentRt);
             }
             continue;

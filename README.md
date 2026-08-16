@@ -2,7 +2,7 @@
 
 > Constraint-First Specification Architecture — production-grade from line one
 
-A pipeline that turns a raw idea into exhaustively specified, test-driven, production-quality code through progressive gates. Stack-agnostic. Built for Antigravity on Linux/WSL. Every line of code is production-grade from the moment it's written.
+A pipeline that turns a raw idea into exhaustively specified, test-driven, production-quality code through progressive gates. Stack-agnostic. Agent-agnostic. Cross-platform. Ships standalone runtimes for Antigravity, Claude Code, Codex, Copilot, Factory Droid, Freebuff, Pi, and ZCode. Every line of code is production-grade from the moment it's written.
 
 ## Quick Install
 
@@ -15,7 +15,7 @@ This launches an interactive picker where you select which agent runtimes to ins
 For CI/CD or non-interactive use, specify runtimes directly:
 
 ```bash
-npx cfsa-antigravity init --agent claude,factory
+npx cfsa-antigravity init --agent claude,freebuff,zcode
 ```
 
 ## CLI
@@ -23,7 +23,7 @@ npx cfsa-antigravity init --agent claude,factory
 | Command | Description |
 |---------|-------------|
 | `cfsa-antigravity init` | Interactive multi-select runtime installer |
-| `cfsa-antigravity init --agent claude,factory` | Non-interactive install of specific runtimes |
+| `cfsa-antigravity init --agent claude,freebuff,zcode` | Non-interactive install of specific runtimes |
 | `cfsa-antigravity status` | Check all installed runtimes + unfilled placeholders |
 | `cfsa-antigravity init --force` | Overwrite existing installation |
 | `cfsa-antigravity init --dry-run` | Preview what would be installed |
@@ -35,13 +35,15 @@ npx cfsa-antigravity init --agent claude,factory
 Runtimes are auto-detected from the template. Currently shipped:
 
 - **Antigravity** (`.agents/`) -- Antigravity, Cursor, Gemini CLI
-- **Codex** (`.codex/`) -- Standalone Codex runtime
 - **Claude Code** (`.claude/`) -- Standalone Claude Code runtime
+- **Codex** (`.codex/`) -- Standalone Codex runtime
 - **Copilot** (`.github/`) -- GitHub Copilot (VS Code / Insiders)
-- **Pi** (`.pi/`) -- Standalone Pi Coding Agent runtime
 - **Factory Droid** (`.factory/`) -- Standalone Factory Droid runtime
+- **Freebuff** (`.freebuff/`) -- Standalone Freebuff runtime
+- **Pi** (`.pi/`) -- Standalone Pi Coding Agent runtime
+- **ZCode** (`.zcode/`) -- Standalone ZCode runtime
 
-Each runtime is fully standalone with no cross-references. Install any combination side-by-side.
+Runtimes are self-contained and can be installed side-by-side in any combination. ZCode ships as a thin shim over the shared `.agents/skills/` library; the other runtimes are fully standalone.
 
 ## Unified Project Memory
 
@@ -111,11 +113,14 @@ Keep the installed runtime directory out of shared `.gitignore` rules when your 
 
 Examples:
 1. Antigravity install → keep `.agents/` out of `.gitignore`
-2. Codex install → keep `.codex/` out of `.gitignore`
-3. Claude install → keep `.claude/` out of `.gitignore`
-4. Pi install → keep `.pi/` out of `.gitignore`
-5. Factory install → keep `.factory/` out of `.gitignore`
-6. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
+2. Claude Code install → keep `.claude/` out of `.gitignore`
+3. Codex install → keep `.codex/` out of `.gitignore`
+4. Copilot install → keep `.github/` out of `.gitignore`
+5. Factory Droid install → keep `.factory/` out of `.gitignore`
+6. Freebuff install → keep `.freebuff/` out of `.gitignore`
+7. Pi install → keep `.pi/` out of `.gitignore`
+8. ZCode install → keep `.zcode/` out of `.gitignore`
+9. Use `.git/info/exclude` for local exclusions instead of changing shared ignore rules
    
 ## Get Started
 
@@ -142,7 +147,7 @@ This performs a **semantic merge** — it applies new workflows, skills, and rul
 ## What Init Adds
 
 A fresh `init` now installs:
-- your selected runtime directories (`.agents/`, `.codex/`, `.claude/`, `.factory/`)
+- your selected runtime directories (`.agents/`, `.claude/`, `.codex/`, `.github/`, `.factory/`, `.freebuff/`, `.pi/`, `.zcode/`)
 - `docs/`
 - shared `.memory/`
 - the shared memory MCP server/runtime under `.memory/mcp-server/`
