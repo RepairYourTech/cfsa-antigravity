@@ -21,8 +21,6 @@ Establish the structural UI architecture — navigation paradigm, layout grid, p
 
 **Prerequisite**: Tech stack decisions must be locked (`/create-prd-stack` completed). Design context must exist — run `/impeccable teach` first to establish PRODUCT.md and DESIGN.md, then verify `.freebuff/skills/brand-guidelines/SKILL.md` has no `{{PLACEHOLDER}}` values.
 
-> All `design-system.md` section writes below follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
-
 ---
 
 ## 0. Prerequisite check
@@ -87,7 +85,7 @@ Present surface-appropriate options from the **Navigation Paradigm Options** sec
 
 **Wait for explicit user confirmation before proceeding** *(Interactive/Hybrid)* or auto-confirm with Deep Think *(Auto)*.
 
-On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately.
+On confirmation, write the `## Navigation Paradigm` section to `.memory/wiki/specs/design-system.md` immediately. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -102,7 +100,7 @@ Provide a **default recommendation** based on the confirmed design direction:
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`.
+On confirmation, write the `## Layout Grid` table to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -112,7 +110,7 @@ Based on the feature inventory from `ideation-index.md`, propose a named archety
 
 Present the proposed archetypes to the user. Ask whether any are missing or should be renamed. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`.
+On confirmation, write the `## Page Archetypes` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -124,7 +122,7 @@ Present the derived list. Ask: (1) Are any components missing? (2) Should any be
 
 **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
+On confirmation, write the `## Global Component Inventory` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`). This serves as the **Component Inventory Seed** — all FE specs must consume (not re-invent) these global components.
 
 ---
 
@@ -132,7 +130,7 @@ On confirmation, write the `## Global Component Inventory` section to `.memory/w
 
 Present the options from the **Motion Language Options** in `design-system-decisions.md`. Present a recommendation based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`.
+On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -140,7 +138,7 @@ On confirmation, write the `## Motion Language` section to `.memory/wiki/specs/d
 
 Present the options from the **Data Density Options** in `design-system-decisions.md`. If **Hybrid** is selected, ask the user to define per-archetype density rules. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`.
+On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 
@@ -148,7 +146,7 @@ On confirmation, write the `## Data Density Philosophy` section to `.memory/wiki
 
 Two-part decision. Present the loading state, error state, and empty state options from the **Global State Design Language Options** in `design-system-decisions.md`. Present recommendations based on the confirmed design direction. **Wait for explicit user confirmation before proceeding.**
 
-On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`.
+On confirmation, write the `## Global State Design Language` section to `.memory/wiki/specs/design-system.md`. Follow the write verification protocol (`.freebuff/skills/prd-templates/references/write-verification-protocol.md`).
 
 ---
 

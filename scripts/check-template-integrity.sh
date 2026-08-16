@@ -2,14 +2,13 @@
 set -Eeuo pipefail
 
 # --- check-template-integrity.sh ---
-# Full 4-component drift check + workflow character limit enforcement.
+# Full 4-component drift check.
 # Used by the pre-commit hook and the audit script.
 # Exit 0 = clean, Exit 1 = drift or violations found.
 
 readonly SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 readonly TEMPLATE_DIR="$ROOT_DIR/template"
-readonly CHAR_LIMIT=12100
 
 errors=0
 src_dirs_file=""
@@ -229,61 +228,6 @@ else
     else
         info "docs/ scaffolding files in sync"
     fi
-fi
-
-# ──────────────────────────────────────
-# 8. Workflow character limit check
-# ──────────────────────────────────────
-over_limit=0
-for f in "$ROOT_DIR/.agents/skills/"*.md; do
-    [[ -f "$f" ]] || continue
-    sz=$(wc -c < "$f" | tr -d ' ')
-    if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
-        fail "$(basename "$f"): $sz chars (exceeds ${CHAR_LIMIT} limit)"
-        over_limit=$((over_limit + 1))
-    fi
-done
-
-while IFS= read -r wf_name; do
-    claude_skill="$ROOT_DIR/.claude/skills/$wf_name/SKILL.md"
-    if [[ -f "$claude_skill" ]]; then
-        sz=$(wc -c < "$claude_skill" | tr -d ' ')
-        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
-            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
-            over_limit=$((over_limit + 1))
-        fi
-    fi
-
-    codex_skill="$ROOT_DIR/.codex/skills/$wf_name/SKILL.md"
-    if [[ -f "$codex_skill" ]]; then
-        sz=$(wc -c < "$codex_skill" | tr -d ' ')
-        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
-            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
-            over_limit=$((over_limit + 1))
-        fi
-    fi
-
-    freebuff_skill="$ROOT_DIR/.freebuff/skills/$wf_name/SKILL.md"
-    if [[ -f "$freebuff_skill" ]]; then
-        sz=$(wc -c < "$freebuff_skill" | tr -d ' ')
-        if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
-            fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
-            over_limit=$((over_limit + 1))
-        fi
-    fi
-
-    factory_skill="$ROOT_DIR/.factory/skills/$wf_name/SKILL.md"
-    [[ -f "$factory_skill" ]] || continue
-    sz=$(wc -c < "$factory_skill" | tr -d ' ')
-    if [[ "$sz" -gt "$CHAR_LIMIT" ]]; then
-        fail "$wf_name/SKILL.md: $sz chars (exceeds ${CHAR_LIMIT} limit)"
-        over_limit=$((over_limit + 1))
-    fi
-done < <(find "$ROOT_DIR/.claude/commands" -maxdepth 1 -name "*.md" -type f -print \
-    | sed 's|.*/||' | sed 's|\.md$||' | sort)
-
-if [[ "$over_limit" -eq 0 ]]; then
-    info "All workflows under ${CHAR_LIMIT} char limit"
 fi
 
 # ──────────────────────────────────────

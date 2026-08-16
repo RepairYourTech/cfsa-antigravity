@@ -36,7 +36,7 @@ Before any tech stack decision, read `.memory/wiki/specs/ideation/meta/constrain
 
 Also read `.memory/wiki/specs/ideation/ideation-index.md` — specifically `## Structural Classification` (authoritative surface list and project shape) and `## Engagement Tier` (gate behavior for this session).
 
-Apply engagement-tier behavior (`.freebuff/skills/prd-templates/references/engagement-tier-protocol.md`).
+Read the engagement tier protocol (`.freebuff/skills/prd-templates/references/engagement-tier-protocol.md`) — apply the tier behavior for tech stack decisions.
 
 Build the constraints map:
 
@@ -46,6 +46,7 @@ Build the constraints map:
 
 Present the constraints map to the user before starting tech decisions *(Interactive/Hybrid)* or auto-confirm with Deep Think reasoning *(Auto)*. Constraints narrow the option space — some decisions may be obvious. Skip those with a brief rationale.
 
+Read `.freebuff/skills/tech-stack-catalog/references/constraint-questions.md` for the per-axis constraint questions to ask before presenting options.
 
 ## 2.7. Build Ideation Relevance Index
 
@@ -80,7 +81,8 @@ This index is your working checklist. Before each axis, consult it and read the 
 
 Read the **Project Surfaces** section from `.memory/wiki/specs/ideation/meta/constraints.md` to determine which decision axes apply.
 
-Read `.freebuff/skills/tech-stack-catalog/SKILL.md` and follow its per-axis constraint-first selection methodology. Present only the `surface-decision-tables.md` tables for applicable surfaces.
+Read `.freebuff/skills/tech-stack-catalog/references/surface-decision-tables.md` and present only the tables for applicable surfaces. For each axis, use the option presentation format from `.freebuff/skills/tech-stack-catalog/SKILL.md`.
+Read .freebuff/skills/tech-stack-catalog/SKILL.md and follow its per-axis constraint-first selection methodology.
 
 > ⚠️ **Skip the `Database` axis** from the surface decision tables during this generic per-axis loop. All persistence decisions are handled exclusively by the **Database: Persistence Map Interview** section below.
 
@@ -95,10 +97,10 @@ Score Fit from 1–5 based on how well the option matches the constraints map. I
 6. **Ask Tier 2 questions**: Present your Ideation Synthesis alongside the **Tier 2 (user-facing)** constraint questions from `constraint-questions.md` for this axis.
 7. **Filter and present options**: Combine ideation synthesis + user answers to filter options. Present the filtered option table with recommendation. Every strength/risk must reference a concrete project requirement — no generic "good ecosystem" or "scalable" without tying it to an ideation finding.
 8. Follow the decision confirmation protocol (`.freebuff/skills/prd-templates/references/decision-confirmation-protocol.md`) — tier-aware.
-9. Fire bootstrap with only that key: read `.freebuff/skills/bootstrap-agents/SKILL.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol. If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
+9. Fire bootstrap with only that key: read `.freebuff/skills/bootstrap-agents/SKILL.md` and call with `PIPELINE_STAGE=create-prd` + the confirmed key. **HARD GATE**: Follow the bootstrap verification protocol (`.freebuff/skills/prd-templates/references/bootstrap-verification-protocol.md`). If bootstrap verification fails: 1st failure → retry once. 2nd failure → **STOP**: ask user "Retry, skip, or abort?"
 10. **Update checkpoint**: Write current progress to `.memory/wiki/specs/architecture/prd-working/workflow-state.md` — mark this axis complete, set next axis, reset `synthesis_written: false`, populate `pending_reads` from the Ideation Relevance Index for the next axis. Move to next axis.
 
-> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` fire separately; the Database axis uses the Persistence Map Interview.
+> **Backend bootstrap keys**: `BACKEND_FRAMEWORK` and `API_LAYER` are distinct keys — fire each separately. Database axis (Persistence Map Interview) is also independent.
 
 Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Think reasoning *(Auto)* — no "TBD" allowed. One decision at a time.
 
@@ -110,7 +112,7 @@ Get explicit user decisions *(Interactive/Hybrid)* or auto-select with Deep Thin
 
 Instead of a single DATABASE decision pass, use the following structured persistence map interview to identify all required stores.
 
-Read .freebuff/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store. **HARD GATE**: Follow the bootstrap verification protocol after each store is confirmed.
+Read .freebuff/skills/database-schema-design/SKILL.md and follow its Persistence Map Interview methodology (Sub-steps A–E). Fire bootstrap per the skill's instructions for each confirmed store. **HARD GATE**: Follow the bootstrap verification protocol (`.freebuff/skills/prd-templates/references/bootstrap-verification-protocol.md`) after each store is confirmed.
 
 ### Design Direction
 
@@ -120,13 +122,13 @@ After `/impeccable teach` completes:
 1. Read the resulting `PRODUCT.md` and `DESIGN.md` files
 2. Extract the confirmed design direction, color palette, typography, and motion philosophy
 3. Fire bootstrap with `DESIGN_DIRECTION=[confirmed direction]`, `PRIMARY_COLOR=[extracted]`, `HEADING_FONT=[extracted]`, etc.
-4. **HARD GATE**: Follow the bootstrap verification protocol.
+4. **HARD GATE**: Follow the bootstrap verification protocol (`.freebuff/skills/prd-templates/references/bootstrap-verification-protocol.md`).
 
 > The legacy `design-direction` SKILL.md now delegates to this flow. The `brand-guidelines` SKILL.md bridges the pipeline's `{{PLACEHOLDER}}` system with `impeccable`'s PRODUCT.md/DESIGN.md — both are kept in sync.
 
 ### Development tooling
 
-Read `.freebuff/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file. **HARD GATE**: Follow the bootstrap verification protocol — verify every key.
+Read `.freebuff/skills/tech-stack-catalog/references/dev-tooling-decisions.md` for the tooling axes and bootstrap keys. After the user confirms all development tooling, fire bootstrap immediately with all keys listed in that reference file. **HARD GATE**: Follow the bootstrap verification protocol (`.freebuff/skills/prd-templates/references/bootstrap-verification-protocol.md`) — verify every key.
 
 ### After each tech decision
 
