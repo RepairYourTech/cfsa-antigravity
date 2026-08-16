@@ -41,6 +41,7 @@ const RUNTIME_DISPLAY = {
     ".pi":      { name: "Pi",            desc: "Standalone Pi Coding Agent runtime" },
     ".github":  { name: "Copilot",       desc: "GitHub Copilot (VS Code / Insiders)" },
     ".factory": { name: "Factory Droid", desc: "Standalone Factory Droid runtime" },
+    ".freebuff": { name: "Freebuff",      desc: "Standalone Freebuff runtime" },
 };
 
 // --- Discover available runtimes from template/ ---

@@ -1,0 +1,6 @@
+Run write-be-spec-write workflow.
+
+Use skill: `write-be-spec-write`.
+Reference: `.freebuff/skills/write-be-spec-write/SKILL.md`.
+
+If arguments are provided, apply them as workflow context: $ARGUMENTS

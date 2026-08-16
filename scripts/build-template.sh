@@ -76,6 +76,14 @@ else
     warn ".factory/ directory not found — skipping"
 fi
 
+# .freebuff/ — full directory
+if [[ -d "$ROOT_DIR/.freebuff" ]]; then
+    info "Copying .freebuff/"
+    cp -a "$ROOT_DIR/.freebuff" "$TEMPLATE_DIR/.freebuff"
+else
+    warn ".freebuff/ directory not found — skipping"
+fi
+
 # docs/ — full directory
 info "Copying docs/"
 cp -a "$ROOT_DIR/docs" "$TEMPLATE_DIR/docs"
@@ -174,7 +182,7 @@ EOF
   "version": 1,
   "backend": "jsonl",
   "retrieval": "index-guided",
-  "agents": ["claude", "gemini", "factory", "codex", "pi"]
+  "agents": ["claude", "gemini", "factory", "codex", "pi", "freebuff"]
 }
 EOF
 fi
@@ -200,6 +208,7 @@ installed_runtimes:
   - github
   - pi
   - factory
+  - freebuff
 EOF
 
 # --- Summary ---
