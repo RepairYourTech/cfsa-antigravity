@@ -1,5 +1,12 @@
 # cfsa-antigravity
 
+## 6.3.0
+
+### Minor Changes
+
+- 51bfd4a: Add a `--agent freebuff` target to `cfsa-antigravity init`, shipping a standalone `.freebuff/` CFSA runtime (skills, rules, instructions, commands, and skill library) derived from the Claude Code runtime.
+- 51bfd4a: Add a `--agent zcode` target to `cfsa-antigravity init`, shipping a `.zcode/` workspace runtime (slash commands, MCP config, and graphify hooks) that reuses the shared `.agents/` skill library.
+
 ## 6.2.1
 
 ### Patch Changes
